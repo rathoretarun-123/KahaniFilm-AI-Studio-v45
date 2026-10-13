@@ -86,7 +86,16 @@ public class HundredPassSoakTest {
             assertFalse("timeline pass " + pass + " title=" + story.title, film.segs.isEmpty());
             assertTrue("duration pass " + pass, film.duration > 0f);
 
-            Film.Shot shot = film.shots.get(0);
+            Film.Seg sceneSegment = null;
+            for (Film.Seg segment : film.segs) {
+                if (segment.type == Film.S_SCENE) { sceneSegment = segment; break; }
+            }
+            assertNotNull("no scene segment pass " + pass + " title=" + story.title, sceneSegment);
+            Film.Shot shot = null;
+            for (Film.Shot candidate : film.shots) {
+                if (candidate.t >= sceneSegment.t0 && candidate.t < sceneSegment.t1) { shot = candidate; break; }
+            }
+            assertNotNull("no scene shot pass " + pass + " title=" + story.title, shot);
             float time = shot.t + Math.min(0.25f, Math.max(0.05f, shot.dur * 0.25f));
             frame.eraseColor(0xFF202020);
             new Renderer(film, art).render(gfx, time);
