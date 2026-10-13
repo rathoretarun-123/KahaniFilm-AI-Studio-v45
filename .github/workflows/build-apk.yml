@@ -89,11 +89,13 @@ jobs:
           mkdir -p "$HOME/.cache/kahani"
           curl -fL --retry 3 -o "$HOME/.cache/kahani/android-all-14.jar" https://repo1.maven.org/maven2/org/robolectric/android-all/14-robolectric-10818077/android-all-14-robolectric-10818077.jar
 
-      - name: Test production-plan validation and insertion
+      - name: Run production-plan, app regression, and 100-pass soak tests
         shell: bash
         run: |
-          gradle -p tools/robotest test --tests com.tarun.kahani.ProductionPlanTest
-          gradle -p tools/robotest test --tests com.tarun.kahani.HundredPassSoakTest
+          gradle -p tools/robotest test \
+            --tests com.tarun.kahani.ProductionPlanTest \
+            --tests com.tarun.kahani.AppTest \
+            --tests com.tarun.kahani.HundredPassSoakTest
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
