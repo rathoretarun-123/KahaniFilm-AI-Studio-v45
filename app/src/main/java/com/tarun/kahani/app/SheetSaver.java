@@ -374,7 +374,7 @@ final class SheetSaver {
         int split = 0;
         int unreadable = 0, files = 0;
         for (byte[] d : datas) {
-            if (++files > MainActivity.MAX_ANGLE_PICTURES) break;       // v39: up to 100 pictures (v26: 10), each up to 10 angles
+            if (++files > MainActivity.MAX_ANGLE_PICTURES) break;       // character/place reference batches are capped at 18 images
             if (d == null || d.length < 16) { unreadable++; continue; }
             // v28: a sheet is read at up to 2600 px wide where the heap allows, so every figure cut from it
             // (a tenth of the sheet) is sharp enough for a close-up and its face large enough to read
@@ -468,7 +468,7 @@ final class SheetSaver {
             float[] angles = new float[pics.size()];
             java.util.Arrays.fill(angles, Float.NaN);
             float[] slotAngles = {com.tarun.kahani.core.Angles.FRONT, com.tarun.kahani.core.Angles.THREE_QUARTER, com.tarun.kahani.core.Angles.SIDE, com.tarun.kahani.core.Angles.BACK};
-            // v34: the main picture is the best of all the pictures given (up to 100): a front (else a three-quarter)
+            // The main picture is the best of all the pictures given (up to 18): a front (else a three-quarter)
             // with a face, standing, calm, sure, well lit and large — so the card's picture is always one of the new ones
             long maxArea = 1;
             for (Object[] o : pics) maxArea = Math.max(maxArea, (long) (Integer) o[1] * (Integer) o[2]);
