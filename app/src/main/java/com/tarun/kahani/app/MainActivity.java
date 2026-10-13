@@ -849,12 +849,12 @@ public class MainActivity extends Activity {
                 public void onClick(View v) { anglesFor(ft, t[1]); }
             }));
         }
-        if (n == 0) m.addView(Ui.text(this, "Every character and place has a picture. More angles can be added from the Studio cards.", 13, Ui.GREEN, false));
+        if (n == 0) m.addView(Ui.text(this, "Every required character, place and story prop has a picture. More references can be added from the Studio cards.", 13, Ui.GREEN, false));
         // v26: the scenes the director adds (the journey into every new place) ask for their own pictures here
         for (final com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
             final boolean has = project.manifestLine("scene", x.key) != null;
             final String tgt = "angles:scene:" + x.key + ":" + x.label;
-            m.addView(Ui.small(this, (has ? "✅ " : "🎬 ") + x.label + (has ? " — more angles" : " — add its pictures (up to 100 at once)"), has ? Ui.GREEN : Ui.PRIMARY_DARK, new View.OnClickListener() {
+            m.addView(Ui.small(this, (has ? "✅ " : "🎬 ") + x.label + (has ? " — more angles" : " — add its pictures (up to 18 references)"), has ? Ui.GREEN : Ui.PRIMARY_DARK, new View.OnClickListener() {
                 public void onClick(View v) { anglesFor(tgt, x.label); }
             }));
         }
