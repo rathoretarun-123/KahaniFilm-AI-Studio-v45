@@ -161,7 +161,7 @@ public final class FilmJob implements Runnable {
 
     /** Stable fingerprint of production-analysis inputs; excludes generated outputs and volatile timestamps. */
     private String productionFingerprint(String script) {
-        StringBuilder b = new StringBuilder();
+        StringBuilder b = new StringBuilder("conferenceProtocol=disney-pixar-inspired-editorial-director-final-v1\\n");
         b.append("script=").append(script).append("\nmanifest=").append(project.read("cast.txt"))
                 .append("\nprojectSettings=").append(project.read("settings.txt"))
                 .append("\nonline=").append(Prefs.online(ctx))

@@ -42,6 +42,11 @@ public final class ProductionPlan {
         if (!(parsed instanceof Map)) { out.warnings.add("Invalid production report"); return out; }
         out.valid = true;
         Map<?, ?> root = (Map<?, ?>) parsed;
+        if (!"director".equalsIgnoreCase(text(root.get("final_decision_by")))) {
+            out.readyToRender = false;
+            out.warnings.add("Production plan lacks explicit final sign-off by the director.");
+            return out;
+        }
         Object ready = root.get("ready_to_render");
         if (ready instanceof Boolean) out.readyToRender = ((Boolean) ready).booleanValue();
         else { out.readyToRender = false; out.warnings.add("Production chair omitted the required ready_to_render decision."); }

@@ -63,6 +63,13 @@ public class ProductionPlanTest {
         assertFalse(r.warnings.isEmpty());
     }
 
+    @Test public void missingDirectorSignoffBlocksRendering() {
+        ProductionPlan.Result r = ProductionPlan.apply(story(), "{\\"ready_to_render\\":true,\\"scene_insertions\\":[]}");
+        assertTrue(r.valid);
+        assertFalse(r.readyToRender);
+        assertTrue(r.warnings.toString().contains("director"));
+    }
+
     @Test public void malformedReportIsInvalidAndDoesNotInsert() {
         Story s = story();
         ProductionPlan.Result r = ProductionPlan.apply(s, "not json");
