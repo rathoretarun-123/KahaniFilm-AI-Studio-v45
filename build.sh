@@ -31,7 +31,10 @@ if ! javac -nowarn -source 8 -target 8 -encoding UTF-8 -bootclasspath "$ALL_JAR:
 fi
 test -f $B/classes/com/tarun/kahani/app/MainActivity.class
 echo "[3/6] dex"
-dalvik-exchange --dex --min-sdk-version=26 --output=$B/classes.dex $B/classes
+# dalvik-exchange was removed from current Android SDK packages; use the installed D8 tool.
+mkdir -p "$B/dex"
+d8 --min-api 26 --lib "$ALL_JAR" --output="$B/dex" "$B/classes"
+cp "$B/dex/classes.dex" "$B/classes.dex"
 echo "[4/6] package"
 cp $B/base.apk $B/unsigned.apk
 (cd $B && zip -q -j unsigned.apk classes.dex)
