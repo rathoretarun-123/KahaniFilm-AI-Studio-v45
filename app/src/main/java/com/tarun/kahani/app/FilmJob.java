@@ -256,7 +256,7 @@ public final class FilmJob implements Runnable {
             if (project.has(productionFile)) {
                 com.tarun.kahani.core.ProductionPlan.Result plan = com.tarun.kahani.core.ProductionPlan.apply(story, project.read(productionFile));
                 if (!plan.valid) info = "Production conference report could not be validated; original story retained.";
-                else if (!plan.readyToRender) throw new IllegalStateException("The independent reader, director and technical director found blocking questions or missing production requirements. Review the production report for this script before rendering.");
+                else if (!plan.readyToRender) throw new IllegalStateException("Production review needs resolution before rendering:\\n" + com.tarun.kahani.core.ProductionPlan.blockingSummary(project.read(productionFile)));
                 else if (plan.scenesAdded > 0) info = "Production conference added " + plan.scenesAdded + " approved connective/reaction shot scene(s); authored dialogue and story events were preserved.";
             }
 
