@@ -250,6 +250,16 @@ public final class FilmJob implements Runnable {
                 }
             }
 
+            // Apply only reader/director/technical-director proposals explicitly marked auto_apply by the production chair.
+            // The report is script-hash scoped; original dialogue and original scene content are preserved.
+            String productionFile = "production_review_" + hash(script) + ".json";
+            if (project.has(productionFile)) {
+                com.tarun.kahani.core.ProductionPlan.Result plan = com.tarun.kahani.core.ProductionPlan.apply(story, project.read(productionFile));
+                if (!plan.valid) info = "Production conference report could not be validated; original story retained.";
+                else if (!plan.readyToRender) throw new IllegalStateException("The independent reader, director and technical director found blocking questions or missing production requirements. Review the production report for this script before rendering.");
+                else if (plan.scenesAdded > 0) info = "Production conference added " + plan.scenesAdded + " approved connective/reaction shot scene(s); authored dialogue and story events were preserved.";
+            }
+
             // the phone's library first: pictures and voices that clearly fit, no button needed
             step("Director is looking through your library…", 0.025f);
             String fromLib = remake ? "" : AutoLibrary.fill(ctx, project, story);
