@@ -108,9 +108,10 @@ public class HundredPassSoakTest {
                 hash *= 1099511628211L;
             }
             if (varied < 8) blankFrames++;
-            if (pass % 40 == 0) {
+            // Use a step relatively prime to the 20-template corpus so the sheet samples different seeds.
+            if (pass % 37 == 0 && pass / 37 < 25) {
                 hashes.add(hash);
-                int sample = pass / 40;
+                int sample = pass / 37;
                 int col = sample % 5, row = sample / 5;
                 Rect dest = new Rect(col * 96, row * 54, col * 96 + 96, row * 54 + 54);
                 canvas.drawBitmap(frame, null, dest, paint);
