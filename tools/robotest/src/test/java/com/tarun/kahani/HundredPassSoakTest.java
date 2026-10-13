@@ -168,7 +168,7 @@ public class HundredPassSoakTest {
             Paint shade = new Paint();
             shade.setColor(0xAA000000);
             int pageIndex = 0, cell = 0;
-            for (float time = 0f; time < film.duration; time += 2f) {
+            for (float time = 0f; time < film.duration; time += 0.5f) {
                 frame.eraseColor(0xFF202020);
                 renderer.render(gfx, time);
                 int col = cell % cols, row = cell / cols;
