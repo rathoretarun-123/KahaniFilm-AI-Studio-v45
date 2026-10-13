@@ -89,13 +89,21 @@ jobs:
           mkdir -p "$HOME/.cache/kahani"
           curl -fL --retry 3 -o "$HOME/.cache/kahani/android-all-14.jar" https://repo1.maven.org/maven2/org/robolectric/android-all/14-robolectric-10818077/android-all-14-robolectric-10818077.jar
 
-      - name: Run production-plan, app regression, and 100-pass soak tests
+      - name: Run production-plan, app regression, and 1,000-pass render soak tests
         shell: bash
         run: |
           gradle -p tools/robotest test \
             --tests com.tarun.kahani.ProductionPlanTest \
             --tests com.tarun.kahani.AppTest \
             --tests com.tarun.kahani.HundredPassSoakTest
+      - name: Upload generated visual audit contact sheet
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: KahaniFilm-1000-pass-visual-audit
+          path: tools/robotest/build/frames/generated_1000_contact_sheet.jpg
+          if-no-files-found: warn
+          retention-days: 30
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
