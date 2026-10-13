@@ -335,6 +335,32 @@ public final class ScriptAI {
         return cloud.ask(system, script.toString(), true);
     }
 
+    /**
+     * Three-role conference: reader proposes implied story needs, director turns approved intent into coverage,
+     * technical director challenges feasibility/continuity, then a chair reconciles disagreements. The result is a
+     * review/handoff, not an unapproved rewrite of the user's screenplay.
+     */
+    public static String productionConference(Cloud cloud, Story st) throws IOException {
+        String reader = productionReview(cloud, st);
+        String directorSystem = "You are the creative film director, independent from the reader. Read the screenplay summary and reader report. Preserve author intent and dialogue. Turn explicit story beats plus high-confidence inferences into proposed visual staging and shot coverage; label every speculative addition. Do not claim an asset exists. Reply only JSON with keys: beat_map, proposed_scenes_and_shots, required_entities, performance_and_emotion, unresolved_questions, reader_proposals_accepted, reader_proposals_rejected_with_reason, technical_handoff.";
+        String director = cloud.ask(directorSystem, "SCREENPLAY SUMMARY:\\n" + conferenceScript(st) + "\\nREADER REPORT:\\n" + reader, true);
+        String tdSystem = "You are the independent technical director and continuity supervisor. Challenge the director's proposal for renderability, persistent references, character/costume/location continuity, screen direction, prop state/contact, motion, dialogue timing, sound and export QA. Do not erase emotional intent merely to simplify. Return only JSON with keys: blocking_failures, reference_asset_requests, continuity_locks, shot_feasibility, dialogue_lipsync_plan, sound_plan, qc_matrix (each check must be PASS/FAIL/NEEDS_HUMAN_REVIEW), changes_required, acceptable_tradeoffs.";
+        String technical = cloud.ask(tdSystem, "SCREENPLAY SUMMARY:\\n" + conferenceScript(st) + "\\nREADER REPORT:\\n" + reader + "\\nDIRECTOR PROPOSAL:\\n" + director, true);
+        String chairSystem = "You are the production chair reconciling three independent roles: story reader, creative director and technical director. Preserve the user's story and dialogue. Resolve disagreements explicitly; distinguish canon, safe inference, approval-required invention, and technical blocker. Do not state an asset is present unless verified. Return only JSON with keys: canon_facts, approved_inferences, approval_required, final_beat_map, final_shot_plan, asset_requests, continuity_bible, dialogue_and_sound_plan, technical_blockers, qc_matrix, role_disagreements, human_questions, ready_to_render (boolean). If blocking ambiguity or missing essential references exist, set ready_to_render false and list them; never silently invent a major plot event. This is a plan, not proof of rendered quality.";
+        return cloud.ask(chairSystem, "SCREENPLAY SUMMARY:\\n" + conferenceScript(st) + "\\nREADER REPORT:\\n" + reader + "\\nDIRECTOR PROPOSAL:\\n" + director + "\\nTECHNICAL DIRECTOR REVIEW:\\n" + technical, true);
+    }
+
+    private static String conferenceScript(Story st) {
+        StringBuilder b = new StringBuilder();
+        b.append("TITLE: ").append(Bible.oneLine(st.title)).append("\\nCAST:\\n");
+        for (Story.CharacterDef ch : st.characters) b.append("- ").append(Bible.oneLine(ch.displayName + " " + ch.description)).append("\\n");
+        b.append("PLACES:\\n"); for (Story.PlaceDef pl : st.places) b.append("- ").append(Bible.oneLine(pl.name + " " + pl.description)).append("\\n");
+        b.append("PROPS:\\n"); for (Story.PlaceDef it : st.things) b.append("- ").append(Bible.oneLine(it.name + " " + it.description)).append("\\n");
+        for (int i=0;i<st.scenes.size();i++) { Story.Scene sc=st.scenes.get(i); b.append("SCENE ").append(i+1).append(": ").append(Bible.oneLine(sc.title+" "+sc.setting)).append("\\n");
+            for (Story.Beat bt:sc.beats) b.append(bt.type==Story.Beat.DIALOGUE?"DIALOGUE ":"ACTION ").append(Bible.oneLine(bt.speakerRaw+" "+bt.manner+" "+bt.text)).append("\\n"); }
+        return b.toString();
+    }
+
     /** The nature and physics effects the film engine can show, in the words the director understands. */
     public static final String[] CUES = {"rain", "heavy rain", "light rain", "rain stopped", "storm", "dust storm", "strong wind", "breeze",
             "wind stopped", "thunder and lightning", "snow", "fog", "fog cleared", "campfire", "candles", "diyas", "torches", "fireflies",
