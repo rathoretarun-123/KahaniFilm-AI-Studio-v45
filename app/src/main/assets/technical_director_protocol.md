@@ -138,3 +138,18 @@ If any false, DO NOT GENERATE. Fix prompt first.
 **FINAL LAW:** Pixar quality comes from 100 perfect 3-second shots, not 1 bad 60-second shot. Always think in 3-second static shots.
 
 Hardcode this protocol.
+
+
+## 13. Script-to-animation production gate (research-informed)
+
+Treat the film as a linked production, not a sequence of unrelated prompt calls. Established workflows use shot-level storyboards and a master edit timeline; reference-guided generators recommend saving reusable character/environment references and building angle/outfit plates; rigged animation workflows use controllable rigs and keyed sequences. Apply these principles within the capabilities actually available in this app.
+
+1. **Script fidelity:** read the complete script first. Create a beat sheet with each beat's purpose, emotional change, causal event, cast, location, props, dialogue and intended duration. Preserve the story's essential events and ending.
+2. **Coverage and animatic:** plan shot order, approximate durations, establishing views, action coverage, reactions, inserts and transitions. Each added shot must improve clarity, emotion, rhythm or continuity—not pad runtime. Review a low-resolution animatic before expensive final renders.
+3. **Canonical asset identity:** resolve every character, place, prop and costume to a persistent approved asset ID and version. Prefer a neutral base and multiple approved angle/outfit plates; never silently replace an approved design. Uncertain matches require review.
+4. **Continuity ledger:** track screen direction, eyelines, character positions, prop owner/state, contact points, costume variant, lighting direction, time of day, emotional state and previous-shot end pose. Check both sides of every cut.
+5. **Performance and dialogue:** lock exact dialogue and audio duration before final animation. Prefer timestamped character/word alignment from a supported speech provider when available. Audio-energy/text heuristics are fallback approximations, not phoneme alignment. Preserve pauses and reactions; do not force every line into arbitrary short chunks if it damages performance.
+6. **Animation:** use image-conditioned short clips where the connected provider supports it; use rigged/keyframed motion when the asset and runtime support a true rig. Prioritize anticipation, weight, arcs, foot contact, hand-object interaction, eye focus, secondary motion and deliberate holds. Do not claim true 3D or skeletal control when a sprite approximation is being used.
+7. **Sound and edit:** include dialogue, room tone, location ambience, motivated Foley, music and transitions. Duck music under speech, avoid clipping, preserve intentional silence, and check sync at the final frame rate.
+8. **Quality assurance:** review preview renders at normal speed and frame-by-frame around defects. Inspect identity, face, anatomy, silhouette, temporal stability, contact/weight, lip-sync, prop continuity, shot transitions, audio clipping, black frames, missing assets, output dimensions, frame rate and file integrity. Repair the smallest defective shot and recheck adjacent cuts.
+9. **Honest status:** every check must be PASS, FAIL or NEEDS HUMAN REVIEW. A checklist or prompt does not prove visual quality. Never certify feature-film quality without watching and listening to the actual rendered output.
