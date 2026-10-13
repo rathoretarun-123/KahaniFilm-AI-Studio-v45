@@ -223,6 +223,19 @@ public final class FilmJob implements Runnable {
                 if (sc == null) for (java.util.Map.Entry<String, Float> e : ed.charScale.entrySet()) if (c.displayName.contains(e.getKey()) || c.aliases.contains(e.getKey())) sc = e.getValue();
                 if (sc != null && c.look != null) c.look.height *= sc;
             }
+            // Independent reader pass: identify implied but necessary coverage and hand it to the directors.
+            // Proposals are cached as review notes, never silently inserted as canon or dialogue.
+            if (Prefs.online(ctx) && !project.has("production_review_" + hash(script) + ".json")) {
+                step("Independent reader is checking missing beats, places and objects…", 0.018f);
+                try {
+                    String review = ScriptAI.productionReview(Prefs.cloud(ctx), story);
+                    Object parsedReview = com.tarun.kahani.core.Cloud.jsonIn(review);
+                    if (parsedReview != null) project.write("production_review_" + hash(script) + ".json", review);
+                    else info = "Independent reader review returned invalid structured output; continuing with the original script.";
+                } catch (Exception reviewError) {
+                    info = "Independent reader review unavailable; continuing with the original script and existing director checks.";
+                }
+            }
             // the AI reads the story once more for nature and physics, also what is only implied (kept per script)
             String cueFile = "cues_" + hash(script) + ".json";
             if (project.has(cueFile)) ScriptAI.applyCues(story, project.read(cueFile));
