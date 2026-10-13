@@ -61,43 +61,54 @@ public final class ProductionPlan {
         }
         Object inserts = root.get("scene_insertions");
         if (!(inserts instanceof List)) return out;
-        int total = 0;
-        for (Object raw : (List<?>) inserts) {
-            if (total >= 8 || !(raw instanceof Map)) break;
-            Map<?, ?> item = (Map<?, ?>) raw;
-            if (!yes(item.get("auto_apply")) || number(item.get("confidence")) < 0.85) continue;
-            int after = (int) number(item.get("after_scene"));
-            if (after < 1 || after > story.scenes.size()) continue;
-            String title = text(item.get("title"));
-            String setting = text(item.get("setting"));
-            if (title.isEmpty() || setting.isEmpty() || !knownPlace(story, setting)) continue;
-            List<Story.CharacterDef> cast = new ArrayList<Story.CharacterDef>();
-            Object names = item.get("cast");
-            boolean ok = true;
-            if (names instanceof List) for (Object name : (List<?>) names) {
-                Story.CharacterDef found = character(story, text(name));
-                if (found == null || found.voiceOnly) { ok = false; break; }
-                cast.add(found);
+        // Apply in original-scene order even when the model returns proposals out of order.
+        final List<?> proposals = (List<?>) inserts;
+        final int originalSceneCount = story.scenes.size();
+        final java.util.Set<String> insertedKeys = new java.util.HashSet<String>();
+        for (int after = 1; after <= originalSceneCount && out.scenesAdded < 8; after++) {
+            for (Object raw : proposals) {
+                if (out.scenesAdded >= 8) break;
+                if (!(raw instanceof Map)) continue;
+                Map<?, ?> item = (Map<?, ?>) raw;
+                if ((int) number(item.get("after_scene")) != after
+                        || !yes(item.get("auto_apply")) || number(item.get("confidence")) < 0.85) continue;
+                String title = text(item.get("title"));
+                String setting = text(item.get("setting"));
+                String purpose = text(item.get("purpose"));
+                if (title.isEmpty() || setting.isEmpty() || !knownPlace(story, setting)) continue;
+                List<Story.CharacterDef> cast = new ArrayList<Story.CharacterDef>();
+                Object names = item.get("cast");
+                boolean ok = names instanceof List;
+                if (names instanceof List) for (Object name : (List<?>) names) {
+                    String characterName = text(name);
+                    Story.CharacterDef found = character(story, characterName);
+                    if (characterName.isEmpty() || found == null || found.voiceOnly) { ok = false; break; }
+                    cast.add(found);
+                }
+                Object actions = item.get("actions");
+                if (!ok || !(actions instanceof List) || ((List<?>) actions).isEmpty() || ((List<?>) actions).size() > 3) continue;
+                StringBuilder keyBuilder = new StringBuilder(title.toLowerCase(java.util.Locale.ROOT))
+                        .append('|').append(setting.toLowerCase(java.util.Locale.ROOT)).append('|')
+                        .append(after).append('|').append(purpose.toLowerCase(java.util.Locale.ROOT));
+                for (Object action : (List<?>) actions) keyBuilder.append('|').append(text(action).toLowerCase(java.util.Locale.ROOT));
+                if (!insertedKeys.add(keyBuilder.toString())) continue;
+                Story.Scene scene = new Story.Scene();
+                scene.title = title; scene.setting = setting;
+                if (!purpose.isEmpty()) scene.beats.add(Story.Beat.direction("Visual purpose: " + purpose));
+                for (Object action : (List<?>) actions) {
+                    String value = text(action);
+                    if (value.length() > 500) value = value.substring(0, 500);
+                    if (!value.isEmpty()) scene.beats.add(Story.Beat.direction(value));
+                }
+                if (!cast.isEmpty()) {
+                    StringBuilder present = new StringBuilder("Present: ");
+                    for (int ci = 0; ci < cast.size(); ci++) { if (ci > 0) present.append(", "); present.append(cast.get(ci).displayName); }
+                    scene.beats.add(0, Story.Beat.direction(present.toString()));
+                }
+                if (scene.beats.isEmpty()) continue;
+                story.scenes.add(after + out.scenesAdded, scene);
+                out.scenesAdded++;
             }
-            Object actions = item.get("actions");
-            if (!ok || !(actions instanceof List) || ((List<?>) actions).isEmpty() || ((List<?>) actions).size() > 3) continue;
-            Story.Scene scene = new Story.Scene();
-            scene.title = title; scene.setting = setting;
-            String purpose = text(item.get("purpose"));
-            if (!purpose.isEmpty()) scene.beats.add(Story.Beat.direction("Visual purpose: " + purpose));
-            for (Object action : (List<?>) actions) {
-                String value = text(action);
-                if (value.length() > 500) value = value.substring(0, 500);
-                if (!value.isEmpty()) scene.beats.add(Story.Beat.direction(value));
-            }
-            if (!cast.isEmpty()) {
-                StringBuilder present = new StringBuilder("Present: ");
-                for (int ci = 0; ci < cast.size(); ci++) { if (ci > 0) present.append(", "); present.append(cast.get(ci).displayName); }
-                scene.beats.add(0, Story.Beat.direction(present.toString()));
-            }
-            if (scene.beats.isEmpty()) continue;
-            story.scenes.add(after + out.scenesAdded, scene);
-            out.scenesAdded++; total++;
         }
         for (int i = 0; i < story.scenes.size(); i++) {
             Story.Scene scene = story.scenes.get(i);

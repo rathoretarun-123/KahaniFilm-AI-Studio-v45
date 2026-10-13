@@ -159,6 +159,29 @@ public final class FilmJob implements Runnable {
         return Runtime.getRuntime().maxMemory();
     }
 
+    /** Stable fingerprint of production-analysis inputs; excludes generated outputs and volatile timestamps. */
+    private String productionFingerprint(String script) {
+        StringBuilder b = new StringBuilder();
+        b.append("script=").append(script).append("\nmanifest=").append(project.read("cast.txt"))
+                .append("\nprojectSettings=").append(project.read("settings.txt"))
+                .append("\nonline=").append(Prefs.online(ctx))
+                .append("|autoArt=").append(Prefs.autoArt(ctx))
+                .append("|freeObjects=").append(Prefs.freeObjects(ctx))
+                .append("|studio3d=").append(Prefs.studio3d(ctx))
+                .append("|ask3d=").append(Prefs.ask3d(ctx))
+                .append("|askUploads=").append(Prefs.askUploads(ctx));
+        java.util.List<String> inventory = new java.util.ArrayList<String>();
+        for (Library.Item item : Library.get(ctx).items) {
+            File file = item.path == null ? null : new File(item.path);
+            inventory.add(item.type + "|" + item.kind + "|" + item.id + "|" + item.name + "|"
+                    + item.tags + "|" + item.meta + "|" + item.source + "|"
+                    + (file != null && file.isFile() ? file.length() + ":" + file.lastModified() : "missing"));
+        }
+        java.util.Collections.sort(inventory);
+        for (String item : inventory) b.append("\nasset=").append(item);
+        return b.toString();
+    }
+
     static String hash(String s) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-1");
@@ -223,14 +246,19 @@ public final class FilmJob implements Runnable {
                 if (sc == null) for (java.util.Map.Entry<String, Float> e : ed.charScale.entrySet()) if (c.displayName.contains(e.getKey()) || c.aliases.contains(e.getKey())) sc = e.getValue();
                 if (sc != null && c.look != null) c.look.height *= sc;
             }
+            // Cache against every input that can change production analysis: screenplay, project cast/reference
+            // manifest, production settings and verified library inventory. A script-only key leaves stale
+            // blocker decisions and asset assumptions after references or settings change.
+            String productionKey = hash(productionFingerprint(script));
+            String productionFile = "production_review_" + productionKey + ".json";
             // Independent reader pass: identify implied but necessary coverage and hand it to the directors.
             // Proposals are cached as review notes, never silently inserted as canon or dialogue.
-            if (Prefs.online(ctx) && !project.has("production_review_" + hash(script) + ".json")) {
+            if (Prefs.online(ctx) && !project.has(productionFile)) {
                 step("Independent reader is checking missing beats, places and objects…", 0.018f);
                 try {
                     String review = ScriptAI.productionConference(Prefs.cloud(ctx), story);
                     Object parsedReview = com.tarun.kahani.core.Cloud.jsonIn(review);
-                    if (parsedReview != null) project.write("production_review_" + hash(script) + ".json", review);
+                    if (parsedReview != null) project.write(productionFile, review);
                     else info = "Independent reader review returned invalid structured output; continuing with the original script.";
                 } catch (Exception reviewError) {
                     info = "Independent reader review unavailable; continuing with the original script and existing director checks.";
@@ -252,7 +280,6 @@ public final class FilmJob implements Runnable {
 
             // Apply only reader/director/technical-director proposals explicitly marked auto_apply by the production chair.
             // The report is script-hash scoped; original dialogue and original scene content are preserved.
-            String productionFile = "production_review_" + hash(script) + ".json";
             if (project.has(productionFile)) {
                 com.tarun.kahani.core.ProductionPlan.Result plan = com.tarun.kahani.core.ProductionPlan.apply(story, project.read(productionFile));
                 if (!plan.valid) info = "Production conference report could not be validated; original story retained.";
