@@ -25,6 +25,9 @@ jobs:
 
       - name: Set up Android SDK
         uses: android-actions/setup-android@v3
+        with:
+          # "tools" was removed from the Android SDK repository; install only current packages.
+          packages: platform-tools
 
       - name: Accept Android SDK licences
         shell: bash
