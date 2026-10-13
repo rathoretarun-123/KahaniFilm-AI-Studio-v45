@@ -490,15 +490,17 @@ public class MainActivity extends Activity {
         Prefs.put(this, "angles.from", from == null ? "" : from);
         Prefs.put(this, "angles.project", project == null ? "" : project.dir.getAbsolutePath());
         final boolean more = tgt.startsWith("angles:char:") || tgt.startsWith("angles:scene:");
-        final String[] optsAll = {"🖼  Photos / gallery — up to 100 at once", "📁  Files (Downloads, WhatsApp…) — up to 100", "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
+        final String[] optsAll = {"🖼  Photos / gallery — up to 18 at once", "📁  Files (Downloads, WhatsApp…) — up to 18", "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
         final String[] opts = more ? optsAll : java.util.Arrays.copyOf(optsAll, optsAll.length - 1);
         // v38: the explanation and the choices as buttons in one view — a dialog with both a message and a list of
         // items shows only the message on a phone (the choices were never seen: "a pop-up with no option to upload")
         final AlertDialog[] dlg = new AlertDialog[1];
         LinearLayout box = Ui.column(this);
         box.setPadding(Ui.dp(this, 16), Ui.dp(this, 8), Ui.dp(this, 16), Ui.dp(this, 8));
-        box.addView(Ui.text(this, "Front, three-quarter, side and back for a character; a wide view and its reverse for a place; front, side and rear for a thing. "
-                + "A picture that holds several angles side by side is split by the director into separate pictures. Every picture is saved in the library as " + what + ".", 13, Ui.SUB, false));
+        box.addView(Ui.text(this, "Upload up to 18 reference images for this character or place: one full-front, one full-back, two side views, two three-quarter views, and up to ten additional images. "
+                + "For contact sheets, use a clear grid of up to 3 columns × 2 rows; the director splits panels into individual pictures when it can identify them. "
+                + "For individual uploads, use this order where practical: front, back, side 1, side 2, three-quarter 1, three-quarter 2, then extras. The director also analyses each image rather than relying only on position. "
+                + "References saved to the private library can be reused in future films. If an element cannot be identified confidently during production, pause and request a clearer reference instead of guessing. " + what + ".", 13, Ui.SUB, false));
         for (int i = 0; i < opts.length; i++) {
             final int w = i;
             box.addView(Ui.button(this, opts[i], i < 2 ? Ui.PRIMARY : Ui.BLUE, new View.OnClickListener() {
@@ -737,8 +739,8 @@ public class MainActivity extends Activity {
      * picture its reverse angle (drawn behind the reverse shots), a thing's first picture its insert; every
      * picture goes into the tarunkahani library as the same thing. Real camera photos of people become avatars.
      */
-    /** v39: how many pictures one upload of angles, poses or views takes (the photo picker allows as many). */
-    static final int MAX_ANGLE_PICTURES = 100;
+    /** Reference upload contract: front + back + two sides + two three-quarter views + up to ten extras. */
+    static final int MAX_ANGLE_PICTURES = 18;
 
     /**
      * v39: the chosen pictures, each read from the phone when it is used (once, in order) — the list holds the
@@ -2999,7 +3001,7 @@ public class MainActivity extends Activity {
             List<Uri> uris = new ArrayList<Uri>();
             if (data.getClipData() != null) for (int i = 0; i < data.getClipData().getItemCount(); i++) uris.add(data.getClipData().getItemAt(i).getUri());
             else if (data.getData() != null) uris.add(data.getData());
-            // v39: up to 100 pictures at once (it was 10: "60 pictures for each character and it takes only a few"),
+            // Reference upload contract: at most 18 images per character/place batch,
             // each read only when the director comes to it — a hundred photos are never in memory together
             if (uris.size() > MAX_ANGLE_PICTURES) { toast("The first " + MAX_ANGLE_PICTURES + " pictures are used"); uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES)); }
             final String tgt = anglesTarget != null ? anglesTarget : Prefs.get(this, "angles.target", "").length() > 0 ? Prefs.get(this, "angles.target", "") : null;
