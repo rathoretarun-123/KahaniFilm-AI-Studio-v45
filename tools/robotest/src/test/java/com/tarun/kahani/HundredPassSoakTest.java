@@ -100,6 +100,16 @@ public class HundredPassSoakTest {
             assertNotNull("no scene shot pass " + pass + " title=" + story.title, shot);
             float time = shot.t + Math.min(0.25f, Math.max(0.05f, shot.dur * 0.25f));
             frame.eraseColor(0xFF202020);
+            if (pass == 0) {
+                // Isolate Android Canvas/Gfx from the scene renderer.
+                gfx.color(0xFFFF0000);
+                gfx.rect(4, 4, 24, 24);
+                int directPixel = frame.getPixel(10, 10);
+                System.out.println("DIRECT_GFX_TEST pixel=" + Integer.toHexString(directPixel)
+                        + " bitmap=" + frame.getWidth() + "x" + frame.getHeight()
+                        + " gfx=" + gfx.width() + "x" + gfx.height());
+                frame.eraseColor(0xFF202020);
+            }
             new Renderer(film, art).render(gfx, time);
             if (pass == 0) {
                 int minLum = 255, maxLum = 0, nonDark = 0;
