@@ -8,7 +8,9 @@ sourceSets {
 dependencies {
     compileOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
     testCompileOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
-    testRuntimeOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
+    // Robolectric loads its instrumented Android framework in its sandbox. Do not put the raw
+    // android-all jar on the host test runtime classpath: it can bypass sandbox instrumentation
+    // and make Canvas/Bitmap operations appear to succeed without changing pixels.
     testImplementation 'junit:junit:4.13.2'
     testImplementation('org.robolectric:robolectric:4.14.1') { exclude group: 'androidx.test'; exclude group: 'androidx.test.espresso' }
 }
