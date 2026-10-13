@@ -110,7 +110,7 @@ public class HundredPassSoakTest {
                     if (rgb != 0 && rgb != 0x202020) nonDark++;
                 }
                 Film.Seg active = film.segAt(time);
-                System.out.println("RENDER_DIAGNOSTIC pass=0 time=" + time + " segmentType=" + (active == null ? -1 : active.type) + " segmentStart=" + (active == null ? -1 : active.t0) + " segmentEnd=" + (active == null ? -1 : active.t1) + " minLum=" + minLum + " maxLum=" + maxLum + " nonDarkPixels=" + nonDark + " backdrops=" + art.backdrops.size() + " sprites=" + art.sprites.size());
+                System.out.println("RENDER_DIAGNOSTIC pass=0 time=" + time + " segmentType=" + (active == null ? -1 : active.type) + " segmentStart=" + (active == null ? -1 : active.t0) + " segmentEnd=" + (active == null ? -1 : active.t1) + " minLum=" + minLum + " maxLum=" + maxLum + " nonDarkPixels=" + nonDark + " backdrops=" + art.scenes.size() + " sprites=" + art.sprites.size());
             }
             int varied = 0;
             long hash = 1469598103934665603L;
