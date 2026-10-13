@@ -312,6 +312,29 @@ public final class ScriptAI {
         return h;
     }
 
+    /**
+     * Independent story reader: infers missing but necessary visual beats, entities, continuity risks and
+     * questions for the Director/Technical Director. It proposes; it never silently rewrites the author's story.
+     * Output is structured JSON for an approval/production report, not executable scene data.
+     */
+    public static String productionReview(Cloud cloud, Story st) throws IOException {
+        StringBuilder script = new StringBuilder();
+        script.append("TITLE: ").append(Bible.oneLine(st.title)).append("\\nCAST:\\n");
+        for (Story.CharacterDef ch : st.characters) script.append("- ").append(Bible.oneLine(ch.displayName + " " + ch.description)).append("\\n");
+        script.append("PLACES:\\n");
+        for (Story.PlaceDef pl : st.places) script.append("- ").append(Bible.oneLine(pl.name + " " + pl.description)).append("\\n");
+        script.append("PROPS/THINGS:\\n");
+        for (Story.PlaceDef it : st.things) script.append("- ").append(Bible.oneLine(it.name + " " + it.description)).append("\\n");
+        for (int si = 0; si < st.scenes.size(); si++) {
+            Story.Scene sc = st.scenes.get(si);
+            script.append("SCENE ").append(si + 1).append(": ").append(Bible.oneLine(sc.title + " " + sc.setting)).append("\\n");
+            for (Story.Beat bt : sc.beats) script.append(bt.type == Story.Beat.DIALOGUE ? "DIALOGUE " : "ACTION ")
+                    .append(Bible.oneLine(bt.speakerRaw + " " + bt.manner + " " + bt.text)).append("\\n");
+        }
+        String system = "You are an independent story reader and script supervisor for an animated film. Think like a perceptive human reader: infer likely staging, visible objects, geography, time, weather, reactions, transitions and causal steps that the text implies but does not spell out. Do not invent major plot events, new dialogue, motives or a different ending. Distinguish explicit facts from inference and uncertainty. Then act as a separate reviewer of the Director's proposed coverage and the Technical Director's production feasibility. Return ONLY JSON with keys: beats (ordered emotional/causal beats), inferred_details (each with scene, category character|place|prop|costume|background|action|sound|reaction|transition, proposal, evidence, confidence 0..1, requires_approval boolean), continuity_risks (scene, risk, remedy), missing_coverage (scene, shot_type, purpose), questions (only blocking ambiguities), director_handoff (concise actionable staging cues), technical_handoff (reference needs, continuity locks, motion/dialogue risks, QC checks). Keep the author's plot and dialogue intact. Never claim that an inferred entity is already in the library. Script:\\n";
+        return cloud.ask(system, script.toString(), true);
+    }
+
     /** The nature and physics effects the film engine can show, in the words the director understands. */
     public static final String[] CUES = {"rain", "heavy rain", "light rain", "rain stopped", "storm", "dust storm", "strong wind", "breeze",
             "wind stopped", "thunder and lightning", "snow", "fog", "fog cleared", "campfire", "candles", "diyas", "torches", "fireflies",
