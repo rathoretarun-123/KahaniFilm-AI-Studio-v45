@@ -58,7 +58,7 @@ public class ProductionPlanTest {
     }
 
     @Test public void missingReadinessDecisionBlocksRendering() {
-        ProductionPlan.Result r = ProductionPlan.apply(story(), "{\"scene_insertions\":[]}");
+        ProductionPlan.Result r = ProductionPlan.apply(story(), "{\"final_decision_by\":\"director\",\"scene_insertions\":[]}");
         assertTrue(r.valid); assertFalse(r.readyToRender);
         assertFalse(r.warnings.isEmpty());
     }
