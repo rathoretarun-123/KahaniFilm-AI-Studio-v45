@@ -822,9 +822,9 @@ public class MainActivity extends Activity {
         if (st == null || st.scenes.isEmpty()) return;
         List<String[]> miss = AutoLibrary.missingForUser(project, st);
         LinearLayout m = Ui.card(this);
-        m.addView(Ui.text(this, "📷 The director's plan: every character, place and thing below gets a picture of its own (up to 100 pictures each from the phone, "
-                + "the camera or the library; a sheet of several angles is split). Each new place also gets an establishing moment of its own. "
-                + "Pictures added while a film is being made are used from the next make.", 13, Ui.SUB, false));
+        m.addView(Ui.text(this, "📷 The director's plan: every character, place and thing below gets its own reference. Upload up to 18 images per character or place (front, back, two sides, two three-quarter views and up to ten extras). "
+                + "Contact sheets are split into separate images when the panels can be identified; references are stored in the private library for future films. Each new place also gets an establishing moment of its own. "
+                + "If a required element cannot be identified confidently, the director should pause and ask you for a clearer reference instead of guessing. Pictures added while a film is being made are used from the next make.", 13, Ui.SUB, false));
         m.addView(Ui.small(this, "📚 Search my library for this story", Ui.GREEN, new View.OnClickListener() {
             public void onClick(View v) { libraryMatches(false); }
         }));
