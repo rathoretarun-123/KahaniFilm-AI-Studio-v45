@@ -81,7 +81,7 @@ public final class ProductionPlan {
                 scene.beats.add(0, Story.Beat.direction(present.toString()));
             }
             if (scene.beats.isEmpty()) continue;
-            story.scenes.add(after + result.scenesAdded, scene);
+            story.scenes.add(after + out.scenesAdded, scene);
             out.scenesAdded++; total++;
         }
         for (int i = 0; i < story.scenes.size(); i++) {
