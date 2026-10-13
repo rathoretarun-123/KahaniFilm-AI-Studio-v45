@@ -101,7 +101,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: KahaniFilm-1000-pass-visual-audit
-          path: tools/robotest/build/frames/generated_1000_contact_sheet.jpg
+          path: tools/robotest/build/frames/
           if-no-files-found: warn
           retention-days: 30
 

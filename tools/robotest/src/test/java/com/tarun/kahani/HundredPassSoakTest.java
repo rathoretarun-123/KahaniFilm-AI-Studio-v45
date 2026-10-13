@@ -64,6 +64,8 @@ public class HundredPassSoakTest {
         label.setColor(0xFFFFFFFF);
         label.setTextSize(8f);
         Set<Long> hashes = new HashSet<Long>();
+        File out = new File(System.getProperty("kahani.out", "build/frames"));
+        assertTrue("create visual audit directory", out.isDirectory() || out.mkdirs());
         int rendered = 0, scenes = 0, shots = 0, dialogue = 0, blankFrames = 0;
 
         for (int pass = 0; pass < 1000; pass++) {
@@ -133,8 +135,9 @@ public class HundredPassSoakTest {
         assertTrue("near-blank rendered frames " + blankFrames, blankFrames < 10);
         assertTrue("visual diversity in sampled frames " + hashes.size(), hashes.size() >= 10);
 
-        File out = new File(System.getProperty("kahani.out", "build/frames"));
-        assertTrue("create visual audit directory", out.isDirectory() || out.mkdirs());
+        // Traverse the full timeline of every seed film at two-second intervals.
+        int fullFilmSamples = renderFullFilmTimelines(corpus, out, frame, gfx);
+        assertTrue("full-film timeline samples missing", fullFilmSamples >= 200);
         File sheetFile = new File(out, "generated_1000_contact_sheet.jpg");
         try (FileOutputStream stream = new FileOutputStream(sheetFile)) {
             assertTrue("contact sheet encoded", sheet.compress(Bitmap.CompressFormat.JPEG, 80, stream));
@@ -145,4 +148,60 @@ public class HundredPassSoakTest {
         frame.recycle();
         sheet.recycle();
     }
+    private int renderFullFilmTimelines(String[] corpus, File out, Bitmap frame, AndroidGfx gfx) throws Exception {
+        int total = 0;
+        final int cols = 5, rows = 5, cellW = 160, cellH = 90;
+        for (int filmIndex = 0; filmIndex < corpus.length; filmIndex++) {
+            Story story = ScriptParser.parse(corpus[filmIndex]);
+            Director director = new Director(story, new Director.Options());
+            Film film = director.prepare();
+            Art art = new Art();
+            film = director.direct(art);
+            assertTrue("full film duration " + filmIndex, film.duration > 0f);
+            Renderer renderer = new Renderer(film, art);
+            Bitmap page = Bitmap.createBitmap(cols * cellW, rows * cellH, Bitmap.Config.ARGB_8888);
+            Canvas pageCanvas = new Canvas(page);
+            Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
+            Paint labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+            labelPaint.setColor(0xFFFFFFFF);
+            labelPaint.setTextSize(9f);
+            Paint shade = new Paint();
+            shade.setColor(0xAA000000);
+            int pageIndex = 0, cell = 0;
+            for (float time = 0f; time < film.duration; time += 2f) {
+                frame.eraseColor(0xFF202020);
+                renderer.render(gfx, time);
+                int col = cell % cols, row = cell / cols;
+                Rect dst = new Rect(col * cellW, row * cellH, (col + 1) * cellW, (row + 1) * cellH);
+                pageCanvas.drawBitmap(frame, null, dst, bitmapPaint);
+                pageCanvas.drawRect(col * cellW, row * cellH, (col + 1) * cellW, row * cellH + 13, shade);
+                pageCanvas.drawText(String.format(java.util.Locale.ROOT, "t=%.0fs", time),
+                        col * cellW + 4, row * cellH + 10, labelPaint);
+                cell++;
+                total++;
+                if (cell == cols * rows) {
+                    saveTimelinePage(page, out, filmIndex, pageIndex++);
+                    pageCanvas.drawColor(0xFF202020);
+                    cell = 0;
+                }
+            }
+            if (cell > 0) saveTimelinePage(page, out, filmIndex, pageIndex);
+            page.recycle();
+            System.out.println("FULL_FILM_AUDIT film=" + (filmIndex + 1) + "/" + corpus.length
+                    + " durationSeconds=" + film.duration + " samples=" + (int)Math.ceil(film.duration / 2f));
+        }
+        System.out.println("FULL_FILM_AUDIT_SUMMARY films=" + corpus.length + " samples=" + total
+                + " intervalSeconds=2 output=" + out.getAbsolutePath());
+        return total;
+    }
+
+    private void saveTimelinePage(Bitmap page, File out, int filmIndex, int pageIndex) throws Exception {
+        File file = new File(out, String.format(java.util.Locale.ROOT,
+                "fullfilm_story%02d_page%02d.jpg", filmIndex + 1, pageIndex + 1));
+        try (FileOutputStream stream = new FileOutputStream(file)) {
+            assertTrue("encode full-film timeline page " + file.getName(),
+                    page.compress(Bitmap.CompressFormat.JPEG, 82, stream));
+        }
+    }
+
 }
