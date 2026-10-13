@@ -14,6 +14,28 @@ public final class ProductionPlan {
         public boolean readyToRender = true;
         public final List<String> warnings = new ArrayList<String>();
     }
+    /** Human-readable blocker summary shown when the production chair says the film is not ready. */
+    public static String blockingSummary(String report) {
+        Object parsed = Json.parseLoose(report);
+        if (!(parsed instanceof Map)) return "The production report is invalid. Re-run the reader/director review or inspect the saved report.";
+        Map<?, ?> root = (Map<?, ?>) parsed;
+        StringBuilder b = new StringBuilder();
+        appendField(b, "Questions", root.get("human_questions"));
+        appendField(b, "Technical blockers", root.get("technical_blockers"));
+        appendField(b, "Asset requests", root.get("asset_requests"));
+        appendField(b, "Role disagreements", root.get("role_disagreements"));
+        String s = b.toString().trim();
+        if (s.isEmpty()) s = "The production chair marked this plan not ready. Review the saved production report.";
+        return s.length() > 1800 ? s.substring(0, 1800) + "…" : s;
+    }
+    private static void appendField(StringBuilder b, String label, Object value) {
+        if (value == null) return;
+        String s = value instanceof String ? ((String) value).trim() : Json.write(value);
+        if (s.isEmpty() || "[]".equals(s) || "{}".equals(s)) return;
+        if (b.length() > 0) b.append("\\n");
+        b.append(label).append(": ").append(s);
+    }
+
     public static Result apply(Story story, String report) {
         Result out = new Result();
         Object parsed = Json.parseLoose(report);
