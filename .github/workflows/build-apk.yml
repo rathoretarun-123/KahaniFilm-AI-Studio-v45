@@ -12,59 +12,64 @@ permissions:
 jobs:
   build:
     runs-on: ubuntu-24.04
+
     steps:
       - name: Check out source
         uses: actions/checkout@v4
-        with:
-          ref: kahanifilm-development
 
-      - name: Set up Java
+      - name: Set up Java 17
         uses: actions/setup-java@v4
         with:
           distribution: temurin
           java-version: "17"
 
-          - name: Set up Android SDK
+      - name: Set up Android SDK
         uses: android-actions/setup-android@v3
-        with:
-          cmdline-tools-version: "latest"
 
-      - name: Install Android build tools
+      - name: Install Android SDK packages
+        shell: bash
+        run: |
+          yes | sdkmanager --licenses >/dev/null || true
+          sdkmanager "platforms;android-23" "platforms;android-34" "build-tools;34.0.0"
+          sudo apt-get update
+          sudo apt-get install -y curl zip unzip
+          echo "$ANDROID_HOME/build-tools/34.0.0" >> "$GITHUB_PATH"
+
+      - name: Prepare build environment
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl zip unzip
-          sdkmanager "platforms;android-23" "platforms;android-34" "build-tools;34.0.0"
-          echo "$ANDROID_HOME/build-tools/34.0.0" >> "$GITHUB_PATH"
-
-      - name: Set Android framework paths
-        shell: bash
-        run: |
-          echo "ANDROID_JAR=$ANDROID_HOME/platforms/android-23/android.jar" >> "$GITHUB_ENV"
-          echo "ALL_JAR=$ANDROID_HOME/platforms/android-34/android.jar" >> "$GITHUB_ENV"
-
-      - name: Prepare D8 and debug signing key
-        shell: bash
-        run: |
-          set -euo pipefail
-          mkdir -p tools build
-          curl -fsSL https://dl.google.com/dl/android/maven2/com/android/tools/r8/8.3.37/r8-8.3.37.jar -o /tmp/r8.jar
-          printf '#!/usr/bin/env bash\nexec java -cp /tmp/r8.jar com.android.tools.r8.D8 "$@"\n' > /tmp/dalvik-exchange
-          chmod +x /tmp/dalvik-exchange
-          echo "/tmp" >> "$GITHUB_PATH"
-          keytool -genkeypair -keystore tools/debug.keystore -storepass android -keypass android -alias kahani -keyalg RSA -keysize 2048 -validity 10000 -dname "CN=KahaniFilm Debug,O=Local,C=IN"
+          sudo apt-get install -y openjdk-17-jdk
+          mkdir -p "$HOME/.android"
+          keytool -genkeypair -v \
+            -keystore tools/debug.keystore \
+            -storepass android \
+            -keypass android \
+            -alias kahani \
+            -keyalg RSA \
+            -keysize 2048 \
+            -validity 10000 \
+            -dname "CN=KahaniFilm,O=Development,C=IN" \
+            -noprompt
+        continue-on-error: true
 
       - name: Build APK
         shell: bash
+        env:
+          ANDROID_JAR: ${{ env.ANDROID_HOME }}/platforms/android-23/android.jar
+          ALL_JAR: ${{ env.ANDROID_HOME }}/platforms/android-34/android.jar
         run: |
-          set -euo pipefail
           bash ./build.sh
-          test -s release/KahaniFilm.apk
 
-      - name: Upload debug APK
+      - name: Verify APK
+        shell: bash
+        run: |
+          test -s release/KahaniFilm.apk
+          ls -lh release/KahaniFilm.apk
+
+      - name: Upload APK
         uses: actions/upload-artifact@v4
         with:
           name: KahaniFilm-debug-apk
           path: release/KahaniFilm.apk
           if-no-files-found: error
-          retention-days: 7
