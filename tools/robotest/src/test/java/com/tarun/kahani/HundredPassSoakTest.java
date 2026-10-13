@@ -129,22 +129,26 @@ public class HundredPassSoakTest {
             if (pass % 100 == 99) System.out.println("SOAK_PROGRESS " + (pass + 1) + "/1000");
         }
 
-        assertEquals(1000, rendered);
-        assertTrue("dialogue coverage " + dialogue, dialogue > 1000);
-        assertTrue("shot coverage " + shots, shots > 5000);
-        assertTrue("near-blank rendered frames " + blankFrames, blankFrames < 10);
-        assertTrue("visual diversity in sampled frames " + hashes.size(), hashes.size() >= 10);
-
-        // Traverse the full timeline of every seed film at two-second intervals.
-        int fullFilmSamples = renderFullFilmTimelines(corpus, out, frame, gfx);
-        assertTrue("full-film timeline samples missing", fullFilmSamples >= 200);
+        // Write visual evidence BEFORE quality gates. A failing render must still leave
+        // reviewable timeline pages in CI artifacts rather than only a poster/thumbnail.
         File sheetFile = new File(out, "generated_1000_contact_sheet.jpg");
         try (FileOutputStream stream = new FileOutputStream(sheetFile)) {
             assertTrue("contact sheet encoded", sheet.compress(Bitmap.CompressFormat.JPEG, 80, stream));
         }
+        // Audit the complete timeline of every seed film at half-second intervals.
+        int fullFilmSamples = renderFullFilmTimelines(corpus, out, frame, gfx);
         System.out.println("SOAK_SUMMARY cases=" + rendered + " scenes=" + scenes + " shots=" + shots
                 + " dialogueLines=" + dialogue + " nearBlankFrames=" + blankFrames
-                + " sampledVisualHashes=" + hashes.size() + " contactSheet=" + sheetFile.getAbsolutePath());
+                + " sampledVisualHashes=" + hashes.size() + " fullFilmSamples=" + fullFilmSamples
+                + " contactSheet=" + sheetFile.getAbsolutePath());
+
+        // Keep the quality gates strict, but run them only after the evidence has been saved.
+        assertEquals(1000, rendered);
+        assertTrue("dialogue coverage " + dialogue, dialogue > 1000);
+        assertTrue("shot coverage " + shots, shots > 5000);
+        assertTrue("full-film timeline samples missing: " + fullFilmSamples, fullFilmSamples >= 200);
+        assertTrue("near-blank rendered frames " + blankFrames, blankFrames < 10);
+        assertTrue("visual diversity in sampled frames " + hashes.size(), hashes.size() >= 10);
         frame.recycle();
         sheet.recycle();
     }
