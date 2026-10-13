@@ -655,11 +655,15 @@ public final class FilmJob implements Runnable {
     public volatile int pictureChoice;
     public void choosePictures(int choice) { pictureChoice = choice; picturesWaiting = false; }
 
-    /** v34: the characters and places of the story with no picture yet (names to show). */
+    /** Missing visual references that must be offered to the user before the director invents a substitute. */
     java.util.List<String> neededPictures(com.tarun.kahani.core.Story story) {
         java.util.List<String> out = new java.util.ArrayList<String>();
         try {
-            for (String[] t : AutoLibrary.missingTargets(project, story)) if (t[0].startsWith("char:") || t[0].startsWith("place:")) out.add(t[1]);
+            for (String[] t : AutoLibrary.missingTargets(project, story)) {
+                // Character, location and story-prop references all block this gate. Titles/end cards are not
+                // identity assets and are deliberately excluded. The progress screen exposes upload buttons.
+                if (t[0].startsWith("char:") || t[0].startsWith("place:") || t[0].startsWith("shot:")) out.add(t[1]);
+            }
         } catch (Throwable ignored) { }
         return out;
     }
