@@ -106,6 +106,7 @@ jobs:
           retention-days: 30
 
       - name: Upload APK
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: KahaniFilm-debug-apk
