@@ -101,6 +101,17 @@ public class HundredPassSoakTest {
             float time = shot.t + Math.min(0.25f, Math.max(0.05f, shot.dur * 0.25f));
             frame.eraseColor(0xFF202020);
             new Renderer(film, art).render(gfx, time);
+            if (pass == 0) {
+                int minLum = 255, maxLum = 0, nonDark = 0;
+                for (int py = 0; py < height; py++) for (int px = 0; px < width; px++) {
+                    int rgb = frame.getPixel(px, py) & 0x00FFFFFF;
+                    int lum = (((rgb >> 16) & 255) * 30 + ((rgb >> 8) & 255) * 59 + (rgb & 255) * 11) / 100;
+                    minLum = Math.min(minLum, lum); maxLum = Math.max(maxLum, lum);
+                    if (rgb != 0 && rgb != 0x202020) nonDark++;
+                }
+                Film.Seg active = film.segAt(time);
+                System.out.println("RENDER_DIAGNOSTIC pass=0 time=" + time + " segmentType=" + (active == null ? -1 : active.type) + " segmentStart=" + (active == null ? -1 : active.t0) + " segmentEnd=" + (active == null ? -1 : active.t1) + " minLum=" + minLum + " maxLum=" + maxLum + " nonDarkPixels=" + nonDark + " backdrops=" + art.backdrops.size() + " sprites=" + art.sprites.size());
+            }
             int varied = 0;
             long hash = 1469598103934665603L;
             for (int y = 0; y < height; y += 6) for (int x = 0; x < width; x += 6) {
