@@ -91,7 +91,9 @@ jobs:
 
       - name: Test production-plan validation and insertion
         shell: bash
-        run: gradle -p tools/robotest test --tests com.tarun.kahani.ProductionPlanTest
+        run: |
+          gradle -p tools/robotest test --tests com.tarun.kahani.ProductionPlanTest
+          gradle -p tools/robotest test --tests com.tarun.kahani.HundredPassSoakTest
 
       - name: Upload APK
         uses: actions/upload-artifact@v4
