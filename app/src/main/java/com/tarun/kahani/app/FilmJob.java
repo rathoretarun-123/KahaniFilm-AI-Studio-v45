@@ -228,7 +228,7 @@ public final class FilmJob implements Runnable {
             if (Prefs.online(ctx) && !project.has("production_review_" + hash(script) + ".json")) {
                 step("Independent reader is checking missing beats, places and objects…", 0.018f);
                 try {
-                    String review = ScriptAI.productionReview(Prefs.cloud(ctx), story);
+                    String review = ScriptAI.productionConference(Prefs.cloud(ctx), story);
                     Object parsedReview = com.tarun.kahani.core.Cloud.jsonIn(review);
                     if (parsedReview != null) project.write("production_review_" + hash(script) + ".json", review);
                     else info = "Independent reader review returned invalid structured output; continuing with the original script.";
