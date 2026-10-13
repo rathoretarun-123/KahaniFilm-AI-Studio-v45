@@ -33,7 +33,7 @@ public class ProductionPlanTest {
     @Test public void sortsInsertionsByOriginalSceneAndPreservesAuthoredContent() {
         Story s = story();
         Story.Scene originalFirst = s.scenes.get(0), originalSecond = s.scenes.get(1);
-        String report = "{\"ready_to_render\":true,\"scene_insertions\":["
+        String report = "{\"final_decision_by\":\"director\",\"ready_to_render\":true,\"scene_insertions\":["
                 + insertion(2, "Second bridge", "Garden", "\"Maya\"", "She pauses by the gate.") + ","
                 + insertion(1, "First bridge", "Garden", "\"Maya\"", "She looks toward the gate.") + ","
                 + insertion(1, "First bridge", "Garden", "\"Maya\"", "She looks toward the gate.") + "]}";
@@ -50,7 +50,7 @@ public class ProductionPlanTest {
 
     @Test public void rejectsUnknownPlacesAndCharacters() {
         Story s = story();
-        String report = "{\"ready_to_render\":true,\"scene_insertions\":["
+        String report = "{\"final_decision_by\":\"director\",\"ready_to_render\":true,\"scene_insertions\":["
                 + insertion(1, "Unknown place", "Moon base", "\"Maya\"", "She looks around.") + ","
                 + insertion(1, "Unknown cast", "Garden", "\"Ghost\"", "She looks around.") + "]}";
         ProductionPlan.Result r = ProductionPlan.apply(s, report);
@@ -64,7 +64,7 @@ public class ProductionPlanTest {
     }
 
     @Test public void missingDirectorSignoffBlocksRendering() {
-        ProductionPlan.Result r = ProductionPlan.apply(story(), "{\\"ready_to_render\\":true,\\"scene_insertions\\":[]}");
+        ProductionPlan.Result r = ProductionPlan.apply(story(), "{\"ready_to_render\":true,\"scene_insertions\":[]}");
         assertTrue(r.valid);
         assertFalse(r.readyToRender);
         assertTrue(r.warnings.toString().contains("director"));
