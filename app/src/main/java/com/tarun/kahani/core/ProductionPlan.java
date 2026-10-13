@@ -44,6 +44,21 @@ public final class ProductionPlan {
         Map<?, ?> root = (Map<?, ?>) parsed;
         Object ready = root.get("ready_to_render");
         if (ready instanceof Boolean) out.readyToRender = ((Boolean) ready).booleanValue();
+        else { out.readyToRender = false; out.warnings.add("Production chair omitted the required ready_to_render decision."); }
+        Object assetsObj = root.get("approved_assets");
+        if (assetsObj instanceof List) for (Object raw : (List<?>) assetsObj) {
+            if (!(raw instanceof Map)) continue;
+            Map<?, ?> asset = (Map<?, ?>) raw;
+            String category = text(asset.get("category")).toLowerCase(java.util.Locale.ROOT);
+            String name = text(asset.get("name"));
+            String description = text(asset.get("description"));
+            if (name.isEmpty() || number(asset.get("confidence")) < 0.85 || yes(asset.get("requires_approval"))) continue;
+            if ("place".equals(category) || "background".equals(category)) {
+                if (!hasPlace(story, name)) { Story.PlaceDef place = new Story.PlaceDef(); place.name = name; place.description = description; story.places.add(place); out.assetsAdded++; }
+            } else if ("prop".equals(category)) {
+                if (!hasThing(story, name)) { Story.PlaceDef prop = new Story.PlaceDef(); prop.name = name; prop.description = description; story.things.add(prop); out.assetsAdded++; }
+            }
+        }
         Object inserts = root.get("scene_insertions");
         if (!(inserts instanceof List)) return out;
         int total = 0;
@@ -90,6 +105,14 @@ public final class ProductionPlan {
             scene.heading = (story.hindi ? "दृश्य " : "Scene ") + (i + 1);
         }
         return out;
+    }
+    private static boolean hasPlace(Story story, String name) {
+        for (Story.PlaceDef p : story.places) if (p.name.equalsIgnoreCase(name)) return true;
+        return false;
+    }
+    private static boolean hasThing(Story story, String name) {
+        for (Story.PlaceDef p : story.things) if (p.name.equalsIgnoreCase(name)) return true;
+        return false;
     }
     private static Story.CharacterDef character(Story s, String n) {
         for (Story.CharacterDef c : s.characters) {
