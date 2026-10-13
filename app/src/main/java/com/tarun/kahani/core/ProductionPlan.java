@@ -53,8 +53,13 @@ public final class ProductionPlan {
                 if (value.length() > 500) value = value.substring(0, 500);
                 if (!value.isEmpty()) scene.beats.add(Story.Beat.direction(value));
             }
+            if (!cast.isEmpty()) {
+                StringBuilder present = new StringBuilder("Present: ");
+                for (int ci = 0; ci < cast.size(); ci++) { if (ci > 0) present.append(", "); present.append(cast.get(ci).displayName); }
+                scene.beats.add(0, Story.Beat.direction(present.toString()));
+            }
             if (scene.beats.isEmpty()) continue;
-            story.scenes.add(after, scene);
+            story.scenes.add(after + result.scenesAdded, scene);
             out.scenesAdded++; total++;
         }
         for (int i = 0; i < story.scenes.size(); i++) {
