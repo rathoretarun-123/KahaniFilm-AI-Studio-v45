@@ -7,6 +7,10 @@ import json, math, struct, wave, zipfile, zlib
 from pathlib import Path
 R=Path(__file__).resolve().parents[2]
 ARCHIVES=[R/"KahaniFilm-v42-source-part3-test-sheets.zip",R/"KahaniFilm-v42-source-part4-test-stories-and-pictures.zip"]
+EXPECTED_SHA256={
+ "KahaniFilm-v42-source-part3-test-sheets.zip":"c96867fc92e0d354b84fef7723fcc2d481361833e3439df7b9c9e639e6b5cc56",
+ "KahaniFilm-v42-source-part4-test-stories-and-pictures.zip":"fe105a3263f0334fb48cb43a64819f40aaf23492c1ee671a27b926168a6f16f9",
+}
 restored=[]; synthetic=[]; missing=[]
 def png(w,h,seed,cols=5,rows=2,scene=False):
  p=bytearray([248,248,246]*(w*h))
@@ -45,6 +49,11 @@ def main():
  # Prefer the original source archives; preserve existing files and paths.
  for zpath in ARCHIVES:
   if not zpath.is_file():continue
+  import hashlib
+  actual=hashlib.sha256(zpath.read_bytes()).hexdigest()
+  expected=EXPECTED_SHA256.get(zpath.name)
+  if expected and actual != expected:
+   raise SystemExit(f"Source fixture archive checksum mismatch for {zpath.name}: {actual}")
   with zipfile.ZipFile(zpath) as z:
    for n in z.namelist():
     marker="/tools/testdata/"
