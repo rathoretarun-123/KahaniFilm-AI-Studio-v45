@@ -88,7 +88,9 @@ jobs:
         shell: bash
         run: |
           mkdir -p "$HOME/.cache/kahani"
-          curl -fL --retry 3 -o "$HOME/.cache/kahani/android-all-14.jar" https://repo1.maven.org/maven2/org/robolectric/android-all/14-robolectric-10818077/android-all-14-robolectric-10818077.jar
+          URL_PATH="org/robolectric/android-all/14-robolectric-10818077/android-all-14-robolectric-10818077.jar"
+          curl -fL --retry 3 --retry-delay 2 -o "$HOME/.cache/kahani/android-all-14.jar" "https://repo.maven.apache.org/maven2/$URL_PATH" \
+            || curl -fL --retry 3 --retry-delay 2 -o "$HOME/.cache/kahani/android-all-14.jar" "https://repo1.maven.org/maven2/$URL_PATH"
 
       - name: Run production-plan, app regression, and 1,000-pass render soak tests
         shell: bash
