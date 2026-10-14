@@ -2994,7 +2994,7 @@ public class MainActivity extends Activity {
                     byte[] b;
                     try { b = Project.readAll(in); } finally { try { in.close(); } catch (Exception ignored) {} }
                     String ext = scriptName.contains(".") ? scriptName.substring(scriptName.lastIndexOf('.')).toLowerCase(Locale.US) : ".txt";
-                    if (!ext.matches("\\.(txt|md|srt|text)")) ext = ".txt";
+                    if (!ext.matches("\\.(txt|md|srt|text)")) throw new IOException("Choose a .txt, .md, .srt or .text screenplay file");
                     String content = new String(b, "UTF-8");
                     if (content.trim().length() == 0) throw new IOException("Screenplay is empty");
                     Library.Item item = library.addBytes(Library.SCRIPT, "screenplay-or-text", scriptName.replaceAll("\\.[^.]+$", ""),
