@@ -6,6 +6,10 @@ on:
     branches:
       - kahanifilm-development
 
+concurrency:
+  group: build-apk-${{ github.ref }}
+  cancel-in-progress: true
+
 permissions:
   contents: read
 
