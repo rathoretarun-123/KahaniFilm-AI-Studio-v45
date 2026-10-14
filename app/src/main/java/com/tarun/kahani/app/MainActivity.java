@@ -4548,7 +4548,8 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 try {
                     Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    i.setType("application/zip");
+                    i.setType("*/*");
+                    i.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/zip", "application/x-zip-compressed", "application/octet-stream"});
                     i.addCategory(Intent.CATEGORY_OPENABLE);
                     i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
                     startActivityForResult(i, REQ_IMPORT_BUNDLE);
