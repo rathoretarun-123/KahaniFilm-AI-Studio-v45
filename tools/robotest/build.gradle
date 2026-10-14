@@ -8,10 +8,9 @@ sourceSets {
 dependencies {
     compileOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
     testCompileOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
-    // Keep the Android API classes available to test initialization. Robolectric provides
-    // its instrumented framework inside the sandbox; this runtime dependency restores classes
-    // required by the current test runner/bootstrap.
-    testRuntimeOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
+    // Do not put the raw android-all framework on the test runtime classpath.
+    // Robolectric must supply its instrumented Android classes; raw framework classes make
+    // Canvas/Bitmap calls behave like SDK stubs and produce blank rendered frames.
     testImplementation 'junit:junit:4.13.2'
     testImplementation('org.robolectric:robolectric:4.14.1') { exclude group: 'androidx.test'; exclude group: 'androidx.test.espresso' }
 }
