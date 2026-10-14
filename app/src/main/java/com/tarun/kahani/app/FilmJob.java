@@ -287,9 +287,10 @@ public final class FilmJob implements Runnable {
                 else if (plan.scenesAdded > 0) info = "Production conference added " + plan.scenesAdded + " approved connective/reaction shot scene(s); authored dialogue and story events were preserved.";
             }
 
-            // the phone's library first: pictures and voices that clearly fit, no button needed
-            step("Director is looking through your library…", 0.025f);
-            String fromLib = remake ? "" : AutoLibrary.fill(ctx, project, story);
+            // Respect upload-first intake: private-library reuse is explicit in Studio, never automatic during a render.
+            // Missing required references are requested below before the user chooses a substitute or generated asset.
+            step("Preparing the current film's references…", 0.025f);
+            String fromLib = "";
             // v39: earlier uploads read again (seated, half-length) and each front made a whole standing figure — the
             // rigged picture that plays the film, and the source of the angles Studio 3D makes
             try { Studio3DArt.reframe(project); } catch (Throwable ignored) { }
