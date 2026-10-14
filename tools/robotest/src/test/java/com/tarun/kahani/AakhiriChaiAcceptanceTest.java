@@ -43,10 +43,12 @@ public class AakhiriChaiAcceptanceTest {
 
     @Test public void continuityAndNoSlideshowRequirementsStayDocumented() throws Exception {
         String source = screenplay();
-        assertTrue(source.contains("नीली बाल्टी"));
-        assertTrue(source.contains("कढ़ाई वाला रूमाल"));
-        assertTrue(source.contains("दृश्य 3 में दो कुल्हड़ दिए जाते हैं"));
-        assertTrue(source.contains("स्थिर चित्रों की स्लाइडशो-शैली"));
-        assertTrue(source.contains("अंतिम pull-back"));
+        assertTrue("rain bucket continuity must be explicit", source.contains("नीली बाल्टी"));
+        assertTrue("embroidered handkerchief must be tracked", source.contains("कढ़ाई वाला"));
+        assertTrue("scene three serves the two visitors", source.contains("वे दो भरे कुल्हड़ मीरा और आरव को देते हैं"));
+        assertTrue("Raghu keeps the third cup for himself", source.contains("दृश्य 3 में तीसरा कुल्हड़ रघु काका अपने लिए रखते हैं"));
+        assertTrue("the ending accounts for all three empty cups", source.contains("तीन खाली कुल्हड़ हैं—मीरा, आरव और रघु के"));
+        assertTrue("camera coverage includes the final pull-back", source.contains("अंतिम pull-back"));
+        assertTrue("a still-image slideshow is not accepted as a film", source.contains("स्थिर चित्रों की स्लाइडशो-शैली"));
     }
 }
