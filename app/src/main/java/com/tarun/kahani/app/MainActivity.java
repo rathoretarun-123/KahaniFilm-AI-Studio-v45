@@ -1172,26 +1172,17 @@ public class MainActivity extends Activity {
             if (library.byId(project.setting("vsample." + c.displayName, "")) == null) noVoice++;
         }
         for (Story.Scene sc : st.scenes) if (sceneFile(sc) == null) noBg++;
-        // first visit: offer pictures already in the library (from earlier stories) that fit this story
-        boolean offered = false;
-        if (!"1".equals(project.setting("libChecked", "0")) && noPic == st.characters.size() && st.characters.size() > 0) {
-            project.setSetting("libChecked", "1");
-            for (Library.Item it : library.find(Library.PIC, null, null)) if (!it.builtIn) { offered = true; break; }
-            if (offered) libraryMatches(true);
-        }
-        if (!offered && !"1".equals(project.setting("voiceChecked", "0")) && noVoice == st.characters.size() && st.characters.size() > 0) {
-            // (after the pictures, or on the next visit) offer saved voices that fit the voices the script describes
-            project.setSetting("voiceChecked", "1");
-            boolean any = false;
-            for (Library.Item it : library.find(Library.VOICE, null, null)) if (!it.builtIn) { any = true; break; }
-            if (any) voiceMatches(true);
-        }
+        // Asset intake order: show upload controls on this filmmaking page first. Private-library matching
+        // remains available through the explicit buttons below, only after the filmmaker chooses it.
+        // This avoids silently reusing an old character/place/voice before the user has supplied current references.
+        project.setSetting("assetUploadFirst", "1");
         LinearLayout sum = Ui.card(this);
         sum.addView(Ui.title(this, "📜 " + st.title));
         sum.addView(Ui.text(this, "Language: " + (st.hinglish ? "Hinglish (spoken in Hindi, ends with \"समाप्त\")" : st.hindi ? "Hindi (ends with \"समाप्त\")" : "English (ends with \"The End\")")
                 + "\nCharacters: " + st.characters.size() + "   •   Parts: " + st.scenes.size() + "   •   Lines: " + st.dialogueCount()
                 + (st.hasNarrator ? "\nNarrator voice: yes (the story has a narrator)" : ""), 15, Ui.TEXT, false));
         String miss = "Still missing:\n• " + noPic + " character pictures  • " + noVoice + " voice samples  • " + noBg + " backgrounds"
+                + "\nUpload this film's references first. If you want to reuse an earlier asset, choose the explicit library button below."
                 + "\nAnything you don't add, the studio creates with AI in 3D style when you make the film (internet), or draws itself offline.";
         sum.addView(Ui.text(this, miss, 14, noPic + noVoice + noBg == 0 ? Ui.GREEN : Ui.PRIMARY_DARK, false));
         if (noPic + noBg > 0) sum.addView(Ui.small(this, "🧊 Build all " + (noPic + noBg) + " missing pictures in 3D now (on the phone)", Ui.PRIMARY_DARK, new View.OnClickListener() {
