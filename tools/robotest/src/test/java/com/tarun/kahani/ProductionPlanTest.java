@@ -95,6 +95,26 @@ public class ProductionPlanTest {
         assertEquals("I am here.", s.scenes.get(0).beats.get(0).text);
     }
 
+    @Test public void approvedShotPlanPreservesCameraTimingPropAndSoundInstructions() {
+        Story s = story();
+        String report = "{\"final_decision_by\":\"director\","
+                + "\"conference_contract_version\":1,\"conference_contract_valid\":true,"
+                + "\"director_final_decision\":\"Approved\",\"director_decisions\":[{\"issue\":\"edit-1\",\"decision\":\"adapt\"}],"
+                + "\"ready_to_render\":true,\"final_shot_plan\":[{\"scene\":1,"
+                + "\"framing\":\"close-up\",\"camera_movement\":\"slow push-in\","
+                + "\"visual_action\":\"Maya sets the cup down\",\"prop_interaction\":\"fingers release cup on table\","
+                + "\"duration_seconds\":\"3.5\",\"pause_before_dialogue\":\"1 second hold\","
+                + "\"sound_cue\":\"cup touches wood; room tone\"}]}";
+        ProductionPlan.Result r = ProductionPlan.apply(s, report);
+        assertTrue(r.valid); assertTrue(r.readyToRender);
+        String cue = s.scenes.get(0).beats.get(s.scenes.get(0).beats.size() - 1).text;
+        assertTrue(cue.contains("camera_movement=slow push-in"));
+        assertTrue(cue.contains("prop_interaction=fingers release cup on table"));
+        assertTrue(cue.contains("duration=3.5"));
+        assertTrue(cue.contains("dialogue_pause=1 second hold"));
+        assertTrue(cue.contains("sound=cup touches wood; room tone"));
+    }
+
     @Test public void conferenceVersionOneRejectsFalseContractEvenWithDirectorName() {
         ProductionPlan.Result r = ProductionPlan.apply(story(),
                 "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,"
