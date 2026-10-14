@@ -577,7 +577,7 @@ public final class FilmJob implements Runnable {
             if (film.duration > 30 * 60 + 30) warning = "The film is longer than 30 minutes (" + fmt((long) film.duration) + ") — it will take longer to make.";
             film.subtitles = ed.subtitles;
             filmSeconds = film.duration;
-            { int[] psz = ed.size(); plannedFrames = (int) Math.ceil(film.duration * (Prefs.fps30(ctx) ? 30 : 24)); plannedW = psz[0]; plannedH = psz[1]; }
+            { int[] psz = ed.size(); plannedFrames = (int) Math.ceil(film.duration * (Prefs.fps60(ctx) ? 60 : Prefs.fps30(ctx) ? 30 : 24)); plannedW = psz[0]; plannedH = psz[1]; }
             updateEta();
             check();
             // pipeline steps 1-2: the Character Lock Sheet of every character and the Location Lock Plate of every
@@ -619,7 +619,7 @@ public final class FilmJob implements Runnable {
 
             // ---------------- video
             int[] want = ed.size();
-            int fps = Prefs.fps30(ctx) ? 30 : 24;          // smooth motion (v23): 30 fps unless switched off in Settings
+            int fps = Prefs.fps60(ctx) ? 60 : Prefs.fps30(ctx) ? 30 : 24; // 60 fps is opt-in; the device encoder and render time must sustain it
             File out = new File(project.dir, "film_new.mp4");
             Grade grade = new Grade(ed);
             // if this phone's encoder refuses a size, try smaller ones automatically
