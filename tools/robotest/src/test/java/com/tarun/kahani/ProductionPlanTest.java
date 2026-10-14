@@ -36,7 +36,7 @@ public class ProductionPlanTest {
         String report = "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,\"conference_contract_valid\":true,\"director_final_decision\":\"Approved\",\"director_decisions\":[{\"issue\":\"coverage\",\"decision\":\"accept\"}],\"ready_to_render\":true,\"scene_insertions\":["
                 + insertion(2, "Second bridge", "Garden", "\"Maya\"", "She pauses by the gate.") + ","
                 + insertion(1, "First bridge", "Garden", "\"Maya\"", "She looks toward the gate.") + ","
-                + insertion(1, "First bridge", "Garden", "\"Maya\"", "She looks toward the gate.") + "]}";
+                + insertion(1, "First bridge", "Garden", "\"Maya\"", "She looks toward the gate.")+ "],\"final_shot_plan\":[{\"scene\":1,\"visual_action\":\"Maya pauses at the gate\"}]}";
         ProductionPlan.Result r = ProductionPlan.apply(s, report);
         assertTrue(r.valid); assertTrue(r.readyToRender); assertEquals(2, r.scenesAdded);
         assertEquals(4, s.scenes.size());
@@ -52,7 +52,7 @@ public class ProductionPlanTest {
         Story s = story();
         String report = "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,\"conference_contract_valid\":true,\"director_final_decision\":\"Approved\",\"director_decisions\":[{\"issue\":\"coverage\",\"decision\":\"accept\"}],\"ready_to_render\":true,\"scene_insertions\":["
                 + insertion(1, "Unknown place", "Moon base", "\"Maya\"", "She looks around.") + ","
-                + insertion(1, "Unknown cast", "Garden", "\"Ghost\"", "She looks around.") + "]}";
+                + insertion(1, "Unknown cast", "Garden", "\"Ghost\"", "She looks around.")+ "],\"final_shot_plan\":[{\"scene\":1,\"visual_action\":\"Maya looks around\"}]}";
         ProductionPlan.Result r = ProductionPlan.apply(s, report);
         assertEquals(0, r.scenesAdded); assertEquals(2, s.scenes.size());
     }
@@ -139,7 +139,7 @@ public class ProductionPlanTest {
         ProductionPlan.Result r = ProductionPlan.apply(story(),
                 "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,"
                 + "\"conference_contract_valid\":true,\"director_final_decision\":\"Go\","
-                + "\"director_decisions\":[],\"final_shot_plan\":[{\"scene\":99,"
+                + "\"director_decisions\":[{\"issue\":\"coverage\",\"decision\":\"accept\"}],\"final_shot_plan\":[{\"scene\":99,"
                 + "\"visual_action\":\"She turns\"}],\"ready_to_render\":true}");
         assertTrue(r.valid); assertFalse(r.readyToRender);
         assertTrue(r.warnings.toString().contains("no usable scene-indexed"));
