@@ -29,7 +29,11 @@ public class AakhiriChaiDesktopRenderTest {
         assertFalse("screenplay has scenes", story.scenes.isEmpty());
         Director director = new Director(story, new Director.Options());
         Art art = new Art();
+        // Phase one constructs the Film and dialogue state; direct() stages phase two into it.
+        Film prepared = director.prepare();
+        assertNotNull("director prepared a film", prepared);
         Film film = director.direct(art);
+        assertSame("direct() must complete the prepared film", prepared, film);
         assertNotNull(film);
         assertFalse("director produced shots", film.shots.isEmpty());
 

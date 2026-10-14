@@ -2,12 +2,7 @@ package com.tarun.kahani;
 
 import static org.junit.Assert.*;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Paint;
-import android.graphics.Rect;
-
-import com.tarun.kahani.app.AndroidGfx;
+import com.tarun.kahani.jvm.AwtGfx;
 import com.tarun.kahani.core.Art;
 import com.tarun.kahani.core.Director;
 import com.tarun.kahani.core.Film;
@@ -16,18 +11,16 @@ import com.tarun.kahani.core.ScriptParser;
 import com.tarun.kahani.core.Story;
 
 import org.junit.Test;
-import org.junit.runner.RunWith;
-import org.robolectric.RobolectricTestRunner;
-import org.robolectric.annotation.GraphicsMode;
-
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.Graphics2D;
+import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileOutputStream;
+import javax.imageio.ImageIO;
 import java.util.HashSet;
 import java.util.Set;
 
-/** 1,000 deterministic generated-script planning/render regression cases plus visual audit sheet. */
-@RunWith(RobolectricTestRunner.class)
-@GraphicsMode(GraphicsMode.Mode.NATIVE)
+/** 1,000 deterministic planning passes plus pixel-accurate audit using the production core renderer off-device. */
 public class HundredPassSoakTest {
     private static final String[] ACTIONS = {
         "A soft breeze stirs the leaves near the doorway",
@@ -57,14 +50,13 @@ public class HundredPassSoakTest {
         String[] corpus = SoakStories.all();
         assertEquals("curated multilingual seed corpus", 20, corpus.length);
         final int width = 320, height = 180;
-        Bitmap frame = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
-        AndroidGfx gfx = new AndroidGfx(frame, 2);
-        Bitmap sheet = Bitmap.createBitmap(480, 270, Bitmap.Config.ARGB_8888);
-        Canvas canvas = new Canvas(sheet);
-        Paint paint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-        Paint label = new Paint(Paint.ANTI_ALIAS_FLAG);
-        label.setColor(0xFFFFFFFF);
-        label.setTextSize(8f);
+        BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
+        AwtGfx gfx = new AwtGfx(frame);
+        BufferedImage sheet = new BufferedImage(480, 270, BufferedImage.TYPE_INT_RGB);
+        Graphics2D canvas = sheet.createGraphics();
+        canvas.setColor(new Color(0xFF202020, true));
+        canvas.fillRect(0, 0, sheet.getWidth(), sheet.getHeight());
+        canvas.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 8));
         Set<Long> hashes = new HashSet<Long>();
         File out = new File(System.getProperty("kahani.out", "build/frames"));
         assertTrue("create visual audit directory", out.isDirectory() || out.mkdirs());
@@ -101,33 +93,23 @@ public class HundredPassSoakTest {
             }
             assertNotNull("no scene shot pass " + pass + " title=" + story.title, shot);
             float time = shot.t + Math.min(0.25f, Math.max(0.05f, shot.dur * 0.25f));
-            frame.eraseColor(0xFF202020);
+            clearFrame(frame, 0xFF202020);
             if (pass == 0) {
-                // Isolate Android Canvas/Gfx from the scene renderer.
+                // Verify the pixel-accurate adapter independently before auditing the actual renderer.
                 gfx.color(0xFFFF0000);
                 gfx.rect(4, 4, 24, 24);
-                int directPixel = frame.getPixel(10, 10);
-                System.out.println("DIRECT_GFX_TEST pixel=" + Integer.toHexString(directPixel)
+                int directPixel = frame.getRGB(10, 10);
+                System.out.println("DIRECT_AWT_GFX_TEST pixel=" + Integer.toHexString(directPixel)
                         + " bitmap=" + frame.getWidth() + "x" + frame.getHeight()
                         + " gfx=" + gfx.width() + "x" + gfx.height());
-                // Separate a Canvas/Robolectric runtime issue from an AndroidGfx adapter issue.
-                if (directPixel != 0xFFFF0000) {
-                    Canvas directCanvas = new Canvas(frame);
-                    Paint directPaint = new Paint();
-                    directPaint.setColor(0xFF00FF00);
-                    directCanvas.drawRect(40, 4, 64, 28, directPaint);
-                    int canvasPixel = frame.getPixel(46, 10);
-                    System.out.println("DIRECT_CANVAS_TEST pixel=" + Integer.toHexString(canvasPixel));
-                    assertEquals("Android Canvas must draw into the software bitmap", 0xFF00FF00, canvasPixel);
-                    fail("AndroidGfx primitive failed while raw Canvas works; investigate adapter");
-                }
-                frame.eraseColor(0xFF202020);
+                assertEquals("AwtGfx primitive must draw into the audit frame", 0xFFFF0000, directPixel);
+                clearFrame(frame, 0xFF202020);
             }
             new Renderer(film, art).render(gfx, time);
             if (pass == 0) {
                 int minLum = 255, maxLum = 0, nonDark = 0;
                 for (int py = 0; py < height; py++) for (int px = 0; px < width; px++) {
-                    int rgb = frame.getPixel(px, py) & 0x00FFFFFF;
+                    int rgb = frame.getRGB(px, py) & 0x00FFFFFF;
                     int lum = (((rgb >> 16) & 255) * 30 + ((rgb >> 8) & 255) * 59 + (rgb & 255) * 11) / 100;
                     minLum = Math.min(minLum, lum); maxLum = Math.max(maxLum, lum);
                     if (rgb != 0 && rgb != 0x202020) nonDark++;
@@ -138,7 +120,7 @@ public class HundredPassSoakTest {
             int varied = 0;
             long hash = 1469598103934665603L;
             for (int y = 0; y < height; y += 6) for (int x = 0; x < width; x += 6) {
-                int rgb = frame.getPixel(x, y) & 0x00FFFFFF;
+                int rgb = frame.getRGB(x, y) & 0x00FFFFFF;
                 if (rgb != 0x00202020 && rgb != 0x00000000) varied++;
                 hash ^= rgb;
                 hash *= 1099511628211L;
@@ -149,12 +131,12 @@ public class HundredPassSoakTest {
                 hashes.add(hash);
                 int sample = pass / 37;
                 int col = sample % 5, row = sample / 5;
-                Rect dest = new Rect(col * 96, row * 54, col * 96 + 96, row * 54 + 54);
-                canvas.drawBitmap(frame, null, dest, paint);
-                Paint shade = new Paint();
-                shade.setColor(0xAA000000);
-                canvas.drawRect(col * 96, row * 54, col * 96 + 96, row * 54 + 10, shade);
-                canvas.drawText("case " + (pass + 1), col * 96 + 3, row * 54 + 8, label);
+                int x0 = col * 96, y0 = row * 54;
+                canvas.drawImage(frame, x0, y0, 96, 54, null);
+                canvas.setColor(new Color(0xAA000000, true));
+                canvas.fillRect(x0, y0, 96, 10);
+                canvas.setColor(Color.WHITE);
+                canvas.drawString("case " + (pass + 1), x0 + 3, y0 + 8);
             }
             rendered++;
             scenes += story.scenes.size();
@@ -166,9 +148,7 @@ public class HundredPassSoakTest {
         // Write visual evidence BEFORE quality gates. A failing render must still leave
         // reviewable timeline pages in CI artifacts rather than only a poster/thumbnail.
         File sheetFile = new File(out, "generated_1000_contact_sheet.jpg");
-        try (FileOutputStream stream = new FileOutputStream(sheetFile)) {
-            assertTrue("contact sheet encoded", sheet.compress(Bitmap.CompressFormat.JPEG, 80, stream));
-        }
+        assertTrue("contact sheet encoded", ImageIO.write(sheet, "jpg", sheetFile));
         // Audit the complete timeline of every seed film at half-second intervals.
         int fullFilmSamples = renderFullFilmTimelines(corpus, out, frame, gfx);
         System.out.println("SOAK_SUMMARY cases=" + rendered + " scenes=" + scenes + " shots=" + shots
@@ -183,10 +163,9 @@ public class HundredPassSoakTest {
         assertTrue("full-film timeline samples missing: " + fullFilmSamples, fullFilmSamples >= 200);
         assertTrue("near-blank rendered frames " + blankFrames, blankFrames < 10);
         assertTrue("visual diversity in sampled frames " + hashes.size(), hashes.size() >= 10);
-        frame.recycle();
-        sheet.recycle();
+        canvas.dispose();
     }
-    private int renderFullFilmTimelines(String[] corpus, File out, Bitmap frame, AndroidGfx gfx) throws Exception {
+    private int renderFullFilmTimelines(String[] corpus, File out, BufferedImage frame, AwtGfx gfx) throws Exception {
         int total = 0;
         final int cols = 5, rows = 5, cellW = 160, cellH = 90;
         for (int filmIndex = 0; filmIndex < corpus.length; filmIndex++) {
@@ -197,34 +176,33 @@ public class HundredPassSoakTest {
             film = director.direct(art);
             assertTrue("full film duration " + filmIndex, film.duration > 0f);
             Renderer renderer = new Renderer(film, art);
-            Bitmap page = Bitmap.createBitmap(cols * cellW, rows * cellH, Bitmap.Config.ARGB_8888);
-            Canvas pageCanvas = new Canvas(page);
-            Paint bitmapPaint = new Paint(Paint.ANTI_ALIAS_FLAG | Paint.FILTER_BITMAP_FLAG);
-            Paint labelPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-            labelPaint.setColor(0xFFFFFFFF);
-            labelPaint.setTextSize(9f);
-            Paint shade = new Paint();
-            shade.setColor(0xAA000000);
+            BufferedImage page = new BufferedImage(cols * cellW, rows * cellH, BufferedImage.TYPE_INT_RGB);
+            Graphics2D pageCanvas = page.createGraphics();
+            pageCanvas.setColor(new Color(0xFF202020, true));
+            pageCanvas.fillRect(0, 0, page.getWidth(), page.getHeight());
+            pageCanvas.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 9));
             int pageIndex = 0, cell = 0;
             for (float time = 0f; time < film.duration; time += 0.5f) {
-                frame.eraseColor(0xFF202020);
+                clearFrame(frame, 0xFF202020);
                 renderer.render(gfx, time);
                 int col = cell % cols, row = cell / cols;
-                Rect dst = new Rect(col * cellW, row * cellH, (col + 1) * cellW, (row + 1) * cellH);
-                pageCanvas.drawBitmap(frame, null, dst, bitmapPaint);
-                pageCanvas.drawRect(col * cellW, row * cellH, (col + 1) * cellW, row * cellH + 13, shade);
-                pageCanvas.drawText(String.format(java.util.Locale.ROOT, "t=%.0fs", time),
-                        col * cellW + 4, row * cellH + 10, labelPaint);
+                int x0 = col * cellW, y0 = row * cellH;
+                pageCanvas.drawImage(frame, x0, y0, cellW, cellH, null);
+                pageCanvas.setColor(new Color(0xAA000000, true));
+                pageCanvas.fillRect(x0, y0, cellW, 13);
+                pageCanvas.setColor(Color.WHITE);
+                pageCanvas.drawString(String.format(java.util.Locale.ROOT, "t=%.1fs", time), x0 + 4, y0 + 10);
                 cell++;
                 total++;
                 if (cell == cols * rows) {
                     saveTimelinePage(page, out, filmIndex, pageIndex++);
-                    pageCanvas.drawColor(0xFF202020);
+                    pageCanvas.setColor(new Color(0xFF202020, true));
+                    pageCanvas.fillRect(0, 0, page.getWidth(), page.getHeight());
                     cell = 0;
                 }
             }
             if (cell > 0) saveTimelinePage(page, out, filmIndex, pageIndex);
-            page.recycle();
+            pageCanvas.dispose();
             System.out.println("FULL_FILM_AUDIT film=" + (filmIndex + 1) + "/" + corpus.length
                     + " durationSeconds=" + film.duration + " samples=" + (int)Math.ceil(film.duration / 2f));
         }
@@ -233,13 +211,18 @@ public class HundredPassSoakTest {
         return total;
     }
 
-    private void saveTimelinePage(Bitmap page, File out, int filmIndex, int pageIndex) throws Exception {
+    private static void clearFrame(BufferedImage frame, int argb) {
+        Graphics2D g = frame.createGraphics();
+        g.setColor(new Color(argb, true));
+        g.fillRect(0, 0, frame.getWidth(), frame.getHeight());
+        g.dispose();
+    }
+
+    private void saveTimelinePage(BufferedImage page, File out, int filmIndex, int pageIndex) throws Exception {
         File file = new File(out, String.format(java.util.Locale.ROOT,
                 "fullfilm_story%02d_page%02d.jpg", filmIndex + 1, pageIndex + 1));
-        try (FileOutputStream stream = new FileOutputStream(file)) {
-            assertTrue("encode full-film timeline page " + file.getName(),
-                    page.compress(Bitmap.CompressFormat.JPEG, 82, stream));
-        }
+        assertTrue("encode full-film timeline page " + file.getName(),
+                ImageIO.write(page, "jpg", file));
     }
 
 }
