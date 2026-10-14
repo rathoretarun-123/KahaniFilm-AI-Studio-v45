@@ -79,6 +79,29 @@ public final class Story {
         public String setting = "";      // text of (स्थान: ...)
         public String cues = "";         // nature cues of the whole scene read by the AI, not shown
         public final List<Beat> beats = new ArrayList<Beat>();
+        /** Validated conference directives consumed by Director; never just display-only report metadata. */
+        public final List<ShotDirective> approvedShotDirectives = new ArrayList<ShotDirective>();
+    }
+
+    /**
+     * Provider-neutral shot direction from the validated Reader/Editor/Director/Technical Director conference.
+     * beatIndex refers to the original zero-based screenplay beat; -1 means sequence order fallback.
+     */
+    public static final class ShotDirective {
+        public String id = "";
+        public int scene = -1;
+        public int beatIndex = -1;
+        public String framing = "";
+        public String angle = "";
+        public String cameraMovement = "";
+        public String visualAction = "";
+        public String performance = "";
+        public String propInteraction = "";
+        public String durationSeconds = "";
+        public String pauseBeforeDialogue = "";
+        public String soundCue = "";
+        public String continuity = "";
+        public String purpose = "";
     }
 
     public static final class Beat {
