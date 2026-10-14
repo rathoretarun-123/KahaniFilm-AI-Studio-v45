@@ -3007,6 +3007,11 @@ public class MainActivity extends Activity {
             List<Uri> uris = new ArrayList<Uri>();
             if (data.getClipData() != null) for (int i = 0; i < data.getClipData().getItemCount(); i++) uris.add(data.getClipData().getItemAt(i).getUri());
             else if (data.getData() != null) uris.add(data.getData());
+            // Match the per-character/place intake contract: one review batch is at most 18 originals.
+            if (uris.size() > MAX_ANGLE_PICTURES) {
+                toast("The first " + MAX_ANGLE_PICTURES + " pictures are used per upload batch");
+                uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES));
+            }
             bulkPictures(uris);
             return;
         }
