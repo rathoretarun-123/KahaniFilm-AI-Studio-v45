@@ -73,7 +73,7 @@ public final class Library {
         java.util.Set<String> known = new java.util.HashSet<String>();
         for (Item it : items) known.add(new File(it.path).getAbsolutePath());
         boolean changed = false;
-        for (String type : new String[]{PIC, VOICE, SOUND}) {
+        for (String type : new String[]{PIC, VOICE, SOUND, SCRIPT}) {
             File[] fs = new File(dir, type).listFiles();
             if (fs == null) continue;
             for (File f : fs) {
