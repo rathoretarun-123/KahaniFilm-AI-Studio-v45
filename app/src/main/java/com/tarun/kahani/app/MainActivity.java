@@ -83,7 +83,7 @@ import java.util.Set;
 public class MainActivity extends Activity {
 
     static final int REQ_LOGIN = 11, REQ_SCRIPT = 12, REQ_IMAGE = 13, REQ_CAMERA = 14, REQ_AUDIO = 15, REQ_BULK = 16,
-            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24;
+            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24, REQ_IMPORT_BUNDLE = 25;
     /** The thing whose angles are being uploaded: "angles:char:<key>:<name>", "angles:scene:<n>:<name>", "angles:obj:<keys>:<name>". */
     private String anglesTarget;
     private String anglesFrom;       // "make" when the angles were asked for from the make-film dialog (v25: the user comes back to it)
@@ -2980,6 +2980,28 @@ public class MainActivity extends Activity {
             pendingText = null;
             return;
         }
+        if (code == REQ_IMPORT_BUNDLE) {
+            if (result != RESULT_OK || data == null || data.getData() == null) return;
+            final Uri bundleUri = data.getData();
+            final String bundleName = displayName(bundleUri);
+            background("Importing reusable asset bundle…", new Work() {
+                public Object run() throws Exception {
+                    long size = Project.sizeOf(getContentResolver(), bundleUri);
+                    if (size > 100L * 1024L * 1024L) throw new IOException("ZIP exceeds the 100 MiB import limit");
+                    InputStream in = getContentResolver().openInputStream(bundleUri);
+                    if (in == null) throw new IOException("Could not open ZIP");
+                    try { return library.importZipArchive(in, bundleName, "user-imported; reusable-across-projects"); }
+                    finally { try { in.close(); } catch (Exception ignored) {} }
+                }
+            }, new Done() {
+                public void done(Object value, Exception error) {
+                    if (error != null) { toast("ZIP import failed: " + error.getMessage()); return; }
+                    toast("✅ Asset bundle imported; media indexed in your private library");
+                    showLibrary();
+                }
+            });
+            return;
+        }
         if (result != RESULT_OK || data == null) return;
         if (code == REQ_LIB_MANY) {
             List<Uri> uris = new ArrayList<Uri>();
@@ -4482,6 +4504,23 @@ public class MainActivity extends Activity {
             add.addView(r);
         }
         body.addView(add);
+        LinearLayout bundles = Ui.card(this);
+        bundles.addView(Ui.text(this, "📦 Import a reusable asset bundle (ZIP). Images, voices and sounds are added to your private library with source archive, path and metadata; scripts and other files remain preserved in the original archive.", 13, Ui.SUB, false));
+        bundles.addView(Ui.small(this, "📦 Import ZIP + metadata", Ui.BLUE, new View.OnClickListener() {
+            public void onClick(View v) {
+                try {
+                    Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
+                    i.setType("application/zip");
+                    i.addCategory(Intent.CATEGORY_OPENABLE);
+                    i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+                    startActivityForResult(i, REQ_IMPORT_BUNDLE);
+                } catch (Exception e) {
+                    try { pick("*/*", REQ_IMPORT_BUNDLE, false); }
+                    catch (Exception ignored) { toast("No file picker available"); }
+                }
+            }
+        }));
+        body.addView(bundles);
         LinearLayout many = Ui.card(this);
         many.addView(Ui.text(this, "Add many at once — photos from your whole gallery, sounds and voice samples together. "
                 + "The director looks through the library by itself before every film and uses what fits.", 13, Ui.SUB, false));
