@@ -471,6 +471,7 @@ public final class Library {
         if (input == null) throw new IOException("No archive selected");
         byte[] archive = Project.readAll(input);
         if (archive.length == 0 || archive.length > 100 * 1024 * 1024) throw new IOException("Archive must be between 1 byte and 100 MiB");
+        if (archive.length < 4 || archive[0] != 'P' || archive[1] != 'K') throw new IOException("Selected file is not a ZIP archive");
         final String digest;
         try {
             byte[] hash = MessageDigest.getInstance("SHA-256").digest(archive);
@@ -535,6 +536,7 @@ public final class Library {
                 entries.add(rec);
             }
         } finally { try { zip.close(); } catch (Exception ignored) {} }
+        if (entryCount == 0) throw new IOException("ZIP archive contains no readable files");
         Map<String,Object> manifest = new LinkedHashMap<String,Object>();
         manifest.put("schemaVersion", 1); manifest.put("bundleId", digest);
         manifest.put("archiveName", bundleName == null ? "user bundle" : bundleName);
