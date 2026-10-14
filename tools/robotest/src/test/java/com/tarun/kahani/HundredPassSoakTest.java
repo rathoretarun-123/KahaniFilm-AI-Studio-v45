@@ -110,6 +110,17 @@ public class HundredPassSoakTest {
                 System.out.println("DIRECT_GFX_TEST pixel=" + Integer.toHexString(directPixel)
                         + " bitmap=" + frame.getWidth() + "x" + frame.getHeight()
                         + " gfx=" + gfx.width() + "x" + gfx.height());
+                // Separate a Canvas/Robolectric runtime issue from an AndroidGfx adapter issue.
+                if (directPixel != 0xFFFF0000) {
+                    Canvas directCanvas = new Canvas(frame);
+                    Paint directPaint = new Paint();
+                    directPaint.setColor(0xFF00FF00);
+                    directCanvas.drawRect(40, 4, 64, 28, directPaint);
+                    int canvasPixel = frame.getPixel(46, 10);
+                    System.out.println("DIRECT_CANVAS_TEST pixel=" + Integer.toHexString(canvasPixel));
+                    assertEquals("Android Canvas must draw into the software bitmap", 0xFF00FF00, canvasPixel);
+                    fail("AndroidGfx primitive failed while raw Canvas works; investigate adapter");
+                }
                 frame.eraseColor(0xFF202020);
             }
             new Renderer(film, art).render(gfx, time);
