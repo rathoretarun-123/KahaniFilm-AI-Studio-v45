@@ -181,8 +181,6 @@ public final class Library {
                 it.tags = it.name;
                 items.add(it);
             }
-            addFilmBuiltIns("film_library/aakhiri_chai/stills", "आखिरी चाय");
-            addFilmBuiltIns("film_library/babu_ke_liye/stills", "बाबू के लिए");
             String json = Project.readAsset(ctx.getAssets(), "sounds/index.json");
             Object o = Json.parseLoose(json);
             if (o instanceof List) for (Object x : (List<?>) o) {
@@ -193,6 +191,58 @@ public final class Library {
             }
         } catch (IOException ignored) {
         }
+    }
+
+    /**
+     * Imports story-pack images once into the app-private library. Multi-image pose/expression/contact sheets
+     * are split using the same reader as phone uploads; each resulting pose/angle is stored in filesDir/library
+     * and survives app restarts without touching the camera roll. Packaged originals remain read-only in assets.
+     */
+    public void importBundledFilmReferences() throws IOException {
+        android.content.SharedPreferences prefs = ctx.getSharedPreferences("kahani", Context.MODE_PRIVATE);
+        if (prefs.getBoolean("bundledFilmReferencesV1", false)) return;
+        String[][] films = {
+                {"aakhiri_chai", "आखिरी चाय"},
+                {"babu_ke_liye", "बाबू के लिए"}
+        };
+        for (String[] film : films) {
+            String assetDir = "film_library/" + film[0] + "/stills";
+            String[] files = ctx.getAssets().list(assetDir);
+            if (files == null) continue;
+            java.util.Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+            int seq = 0;
+            for (String name : files) {
+                String lower = name.toLowerCase(java.util.Locale.ROOT);
+                if (!(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp"))) continue;
+                if (lower.contains("contact_sheet") || lower.contains("montage") || lower.contains("contact-sheet")) continue;
+                byte[] data;
+                java.io.InputStream in = ctx.getAssets().open(assetDir + "/" + name);
+                try { data = Project.readAll(in); } finally { try { in.close(); } catch (Exception ignored) {} }
+                if (data.length == 0) continue;
+                seq++;
+                String label = film[1] + " reference " + seq;
+                List<Item> split = new ArrayList<Item>();
+                try {
+                    if (SheetSaver.isSheet(data, false)) {
+                        split = SheetSaver.saveToLibrary(this, label, "", data, "bundled:" + film[0]);
+                    }
+                } catch (Throwable ignored) {
+                    split = new ArrayList<Item>();
+                }
+                if (split.isEmpty()) {
+                    String ext = lower.endsWith(".webp") ? ".webp" : lower.endsWith(".png") ? ".png" : ".jpg";
+                    Item it = addBytes(PIC, "", label, film[1] + " " + name.replace('_', ' '), data, ext, "bundled:" + film[0]);
+                    it.setMeta("bundledFilm", film[0]);
+                } else {
+                    for (Item it : split) {
+                        it.tags = (it.tags + " " + film[1] + " reference " + name.replace('_', ' ')).trim();
+                        it.setMeta("bundledFilm", film[0]);
+                    }
+                    save();
+                }
+            }
+        }
+        prefs.edit().putBoolean("bundledFilmReferencesV1", true).apply();
     }
 
     /** Story-specific reference images shipped in the APK and exposed as read-only library items. */
