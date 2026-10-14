@@ -16,9 +16,8 @@ dependencies {
     testImplementation('org.robolectric:robolectric:4.14.1') { exclude group: 'androidx.test'; exclude group: 'androidx.test.espresso' }
 }
 test {
-    // Use Robolectric's software/legacy Canvas backend for deterministic Bitmap pixels in CI.
-    // NATIVE silently left Bitmap pixels unchanged on this runner, invalidating every render assertion.
-    systemProperty 'robolectric.graphicsMode', 'LEGACY'
+    // Pixel-accurate graphics are enabled with @GraphicsMode(NATIVE) on the test classes.
+    // The LEGACY backend intentionally fakes/no-ops many raster operations and is unsuitable for render QA.
     systemProperty 'robolectric.offline', 'false'
     systemProperty 'kahani.assets', file('../../app/src/main/assets').absolutePath
     systemProperty 'kahani.soak', System.getProperty('kahani.soak', '0')
