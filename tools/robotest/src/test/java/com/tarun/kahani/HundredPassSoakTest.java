@@ -18,6 +18,7 @@ import com.tarun.kahani.core.Story;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.robolectric.RobolectricTestRunner;
+import org.robolectric.annotation.GraphicsMode;
 
 import java.io.File;
 import java.io.FileOutputStream;
@@ -26,6 +27,7 @@ import java.util.Set;
 
 /** 1,000 deterministic generated-script planning/render regression cases plus visual audit sheet. */
 @RunWith(RobolectricTestRunner.class)
+@GraphicsMode(GraphicsMode.Mode.NATIVE)
 public class HundredPassSoakTest {
     private static final String[] ACTIONS = {
         "A soft breeze stirs the leaves near the doorway",
