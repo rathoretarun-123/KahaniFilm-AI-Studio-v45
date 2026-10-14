@@ -24,7 +24,7 @@ import java.security.MessageDigest;
  * reusable in every film.
  */
 public final class Library {
-    public static final String PIC = "pic", VOICE = "voice", SOUND = "sound";
+    public static final String PIC = "pic", VOICE = "voice", SOUND = "sound", SCRIPT = "script";
 
     public static final class Item {
         public String id, type, kind = "", name = "", tags = "", path = "", source = "", meta = "";
@@ -518,6 +518,7 @@ public final class Library {
                 String type = null, kind = "";
                 if (".jpg".equals(ext) || ".jpeg".equals(ext) || ".png".equals(ext) || ".webp".equals(ext)) { type = PIC; kind = "reference"; }
                 else if (".wav".equals(ext) || ".mp3".equals(ext) || ".m4a".equals(ext) || ".ogg".equals(ext) || ".aac".equals(ext)) { type = SOUND; kind = "audio"; }
+                else if (".txt".equals(ext) || ".md".equals(ext) || ".srt".equals(ext)) { type = SCRIPT; kind = "screenplay-or-text"; }
                 Map<String,Object> rec = new LinkedHashMap<String,Object>();
                 rec.put("archivePath", raw); rec.put("bytes", data.length);
                 if (type != null) {
