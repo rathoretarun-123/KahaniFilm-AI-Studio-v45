@@ -64,57 +64,30 @@ jobs:
         shell: bash
         run: |
           set -euo pipefail
-          mkdir -p "$RUNNER_TEMP/film-assets"
-          for archive in Aakhiri_Chai_Assets_Part1.zip Aakhiri_Chai_Assets_Part2.zip Babu_Ke_Liye_Assets_Part1.zip Babu_Ke_Liye_Assets_Part2.zip; do
-            test -s "$archive" || { echo "::error::Missing committed archive: $archive"; exit 1; }
-            echo "Validating $archive"
-            unzip -t "$archive"
-            unzip -oq "$archive" -d "$RUNNER_TEMP/film-assets"
-          done
-          ROOT="$RUNNER_TEMP/film-assets"
-          echo "Archive extraction inventory:"
-          find "$ROOT" -type f -printf '%p %s bytes\n' | sort | head -250
-
-          # The Aakhiri Chai MP4 files are split into chunks to keep each upload packet manageable.
-          while IFS= read -r -d '' first; do
-            second="${first%.chunk1}.chunk2"
-            output="${first%.chunk1}"
-            test -s "$second" || { echo "::error::Missing paired video chunk: $second"; exit 1; }
-            cat "$first" "$second" > "$output"
-            test -s "$output" || { echo "::error::Reassembled video is empty: $output"; exit 1; }
-            magic="$(dd if="$output" bs=1 skip=4 count=4 2>/dev/null)"
-            test "$magic" = "ftyp" || { echo "::error::Invalid MP4 header for $output ($magic)"; exit 1; }
-            echo "Reassembled MP4: $output ($(wc -c < "$output") bytes)"
-          done < <(find "$ROOT" -type f -name '*.mp4.chunk1' -print0)
-
-          # Copy the source reference assets and fully reassembled videos into the CI test fixtures.
-          for film in aakhiri_chai babu_ke_liye; do
-            mkdir -p "tools/testdata/$film"
-            if [ -d "$ROOT/$film" ]; then
-              cp -a "$ROOT/$film/." "tools/testdata/$film/"
-            else
-              echo "::error::Expected film directory not found: $ROOT/$film"
-              exit 1
-            fi
-          done
-          echo "Reference asset inventory in testdata:"
-          find tools/testdata/aakhiri_chai tools/testdata/babu_ke_liye -type f -printf '%p %s bytes\n' | sort
-          test "$(find tools/testdata/aakhiri_chai -type f -name '*.mp4' | wc -l)" -ge 3
-          test "$(find tools/testdata/babu_ke_liye -type f -name '*.mp4' | wc -l)" -ge 2
+          bash tools/scripts/prepare_bundled_film_assets.sh
 
       - name: Build APK
         shell: bash
         env:
           ANDROID_JAR: ${{ env.ANDROID_HOME }}/platforms/android-23/android.jar
           ALL_JAR: ${{ env.ANDROID_HOME }}/platforms/android-34/android.jar
+          KAHANIFILM_ASSETS_PREPARED: "1"
         run: |
           bash ./build.sh
 
-      - name: Verify APK
+      - name: Verify APK and bundled story payload
         shell: bash
         run: |
+          set -euo pipefail
           test -s release/KahaniFilm.apk
           ls -lh release/KahaniFilm.apk
+          unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/aakhiri_chai/stills/'
+          unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/babu_ke_liye/stills/'
+          unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/aakhiri_chai/videos/user_uploaded_reference.mp4'
+          unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/babu_ke_liye/videos/user_uploaded_reference.mp4'
+          unzip -p release/KahaniFilm.apk assets/film_library/aakhiri_chai/videos/user_uploaded_reference.mp4 | dd bs=1 skip=4 count=4 2>/dev/null | grep -q 'ftyp'
+          unzip -p release/KahaniFilm.apk assets/film_library/babu_ke_liye/videos/user_uploaded_reference.mp4 | dd bs=1 skip=4 count=4 2>/dev/null | grep -q 'ftyp'
+          echo "APK contains both story still collections and valid reference MP4 assets."
 
 
       - name: Set up Java 21 for production-plan regression tests
@@ -143,6 +116,7 @@ jobs:
             --tests com.tarun.kahani.HundredPassSoakTest \
             --tests com.tarun.kahani.AakhiriChaiAcceptanceTest \
             --tests com.tarun.kahani.AakhiriChaiDesktopRenderTest
+            --tests com.tarun.kahani.BundledFilmAssetsTest
       - name: Upload generated visual audit contact sheet
         if: always()
         uses: actions/upload-artifact@v4
