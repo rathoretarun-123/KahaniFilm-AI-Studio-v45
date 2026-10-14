@@ -3,7 +3,7 @@ plugins { id 'java' }
 repositories { mavenCentral() }
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 sourceSets {
-    main { java { srcDirs = ['../../app/src/main/java'] } }
+    main { java { srcDirs = ['../../app/src/main/java', '../../tools/jvm'] } }
 }
 dependencies {
     compileOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
