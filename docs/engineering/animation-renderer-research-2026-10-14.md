@@ -117,3 +117,33 @@ The following primary-source pages were checked during this continuation:
 - FFmpeg motion interpolation: https://ffmpeg.org/ffmpeg-filters.html#minterpolate . The minterpolate filter offers duplicate, blend and motion-compensated modes. An output frame-rate increase alone does not guarantee meaningful smoothness; motion compensation can introduce artifacts and must be evaluated on the actual shot, particularly at cuts, occlusions and fast hand/face motion.
 
 Architecture implication: keep Android's current deterministic rendering path and private library stable. Treat Blender/Godot/FFmpeg as explicit renderer/post-production adapters with capability declarations and reproducible per-shot inputs. Select a backend only after both film acceptance scenes can be rendered and audited end-to-end; do not bundle an unverified engine into the APK merely to claim 3D capability.
+
+## Reusable filmmaker library — implementation update (14 October 2026)
+
+### Product requirement
+KahaniFilm is a script-to-film studio for arbitrary user-provided stories, not a two-title application. The two bundled films are acceptance fixtures and starter content only. Any filmmaker's screenplay, character sheets, location references, prop images, voices, sound effects and generated outputs must remain reusable across projects unless the user explicitly removes them.
+
+### Implemented in the development branch
+- `Library` persists user media under app-private `filesDir/library`, indexes metadata, and writes per-item JSON sidecars. Existing built-in story references remain read-only.
+- Added `Library.SCRIPT` for reusable screenplays and text assets.
+- Added a Scripts tab to the library UI and standalone screenplay import. The original library copy remains intact when a script is loaded into an active project.
+- Added ZIP bundle import. The original ZIP is retained under `filesDir/library/bundles` using its SHA-256 as a stable identity; a JSON manifest records bundle name, user metadata, archive size, entry count, paths, types and library item IDs.
+- ZIP image and audio entries are indexed as reusable private-library items with bundle ID, archive path and source metadata. `.txt`, `.md` and `.srt` entries are indexed as screenplay/text items. Other files remain preserved in the original ZIP, so importing a pack does not silently discard source files.
+- Import rejects empty/oversized ZIPs, caps expanded content at 300 MiB, rejects absolute/traversal paths, preserves pre-existing library items, and avoids re-importing an already indexed bundle by fingerprint.
+- Added a Robolectric regression test that creates a small ZIP, verifies media indexing, checks the metadata, and confirms the original ZIP and manifest remain in the library.
+
+### Important boundaries and remaining work
+- The APK private library is device-local. It persists across app launches but is not automatically synchronized to GitHub, another phone, or a cloud account. Use explicit backup/export for migration.
+- Bundled ZIP archives are limited to 100 MiB compressed and 300 MiB expanded by this implementation. Very large reference packs should be split or imported through a future streaming/chunked path.
+- The ZIP import manifest is an inventory, not semantic understanding. A future asset-ingestion stage should add validated labels such as character/place/prop, identity links, language, shot relevance, source/license, confidence and user-confirmed canon. Filenames alone are not proof of identity.
+- The current import indexes still images and common audio formats; video, 3D meshes, rigs, motion clips and arbitrary documents remain preserved in the source ZIP but are not yet all first-class library item types.
+- Do not bundle a user's entire private library into every APK build. App packages should contain deliberate, licensed starter assets and tests; user assets belong in app-private storage and explicit backups.
+
+### Platform and engine evidence
+- Android's Storage Access Framework (`ACTION_OPEN_DOCUMENT`) is the appropriate user-controlled import path for documents and archives; the system grants access to the selected URI rather than requiring broad filesystem access. Official documentation: https://developer.android.com/training/data-storage/shared/documents-files
+- Blender supports background rendering and scripted batch animation without a graphical display, making a remote/headless renderer adapter feasible; it is not a small Android library. Official manual: https://docs.blender.org/manual/en/dev/advanced/command_line/render.html
+- Blender's source license is GPL; review the precise distribution/linking model and all bundled dependencies before distributing a Blender-backed service. Official license reference: https://developer.blender.org/docs/license/
+- Google Sign in on Android is currently documented through Credential Manager and Google Auth Platform client configuration. A local account chooser is not proof of authenticated identity. Official documentation: https://developer.android.com/identity/sign-in/credential-manager-siwg
+
+### Verification state
+Code has been committed to `kahanifilm-development`; the APK workflow must still be inspected for the exact commit under test. The new ZIP-import regression test is not considered passing until the workflow reports its result. Do not claim the full test suite or APK is verified solely because the source change committed.
