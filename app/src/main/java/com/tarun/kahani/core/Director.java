@@ -165,11 +165,7 @@ public final class Director {
                     boolean echo = cave || Txt.has(b.manner, "गूँजती", "गूंजती", "echo");
                     beatLine[si][bi] = addLine(b.speaker, Txt.forSpeech(b.text), emo, whisper, echo, b.text);
                     film.lines.get(beatLine[si][bi]).manner = b.manner;
-                } else if (opt.narrator) {
-                    String t = b.text.replaceFirst("^(स्थान|Location|Place)\\s*[:：]\\s*", "");
-                    t = t.replaceFirst("^दृश्य बदलता है\\s*[:：]\\s*", "");
-                    beatLine[si][bi] = addLine(null, Txt.forSpeech(Txt.withoutParens(t)), Pose.NEUTRAL, false, false, t);
-                }
+                } // Stage directions are visual-only. Narration must be an authored DIALOGUE beat in the script.
             }
         }
         return film;
