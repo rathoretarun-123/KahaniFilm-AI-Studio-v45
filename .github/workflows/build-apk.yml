@@ -71,18 +71,36 @@ jobs:
             unzip -t "$archive"
             unzip -oq "$archive" -d "$RUNNER_TEMP/film-assets"
           done
-          echo "Archive extraction inventory:"
-          find "$RUNNER_TEMP/film-assets" -type f -printf '%p %s bytes\n' | sort | head -250
-          # Recognize either film-folder archives or already flattened folders.
           ROOT="$RUNNER_TEMP/film-assets"
+          echo "Archive extraction inventory:"
+          find "$ROOT" -type f -printf '%p %s bytes\n' | sort | head -250
+
+          # The Aakhiri Chai MP4 files are split into chunks to keep each upload packet manageable.
+          while IFS= read -r -d '' first; do
+            second="${first%.chunk1}.chunk2"
+            output="${first%.chunk1}"
+            test -s "$second" || { echo "::error::Missing paired video chunk: $second"; exit 1; }
+            cat "$first" "$second" > "$output"
+            test -s "$output" || { echo "::error::Reassembled video is empty: $output"; exit 1; }
+            magic="$(dd if="$output" bs=1 skip=4 count=4 2>/dev/null)"
+            test "$magic" = "ftyp" || { echo "::error::Invalid MP4 header for $output ($magic)"; exit 1; }
+            echo "Reassembled MP4: $output ($(wc -c < "$output") bytes)"
+          done < <(find "$ROOT" -type f -name '*.mp4.chunk1' -print0)
+
+          # Copy the source reference assets and fully reassembled videos into the CI test fixtures.
           for film in aakhiri_chai babu_ke_liye; do
             mkdir -p "tools/testdata/$film"
             if [ -d "$ROOT/$film" ]; then
               cp -a "$ROOT/$film/." "tools/testdata/$film/"
+            else
+              echo "::error::Expected film directory not found: $ROOT/$film"
+              exit 1
             fi
           done
-          echo "Reference asset inventory in repository testdata:"
-          find tools/testdata/aakhiri_chai tools/testdata/babu_ke_liye -type f -printf '%p %s bytes\n' 2>/dev/null | sort || true
+          echo "Reference asset inventory in testdata:"
+          find tools/testdata/aakhiri_chai tools/testdata/babu_ke_liye -type f -printf '%p %s bytes\n' | sort
+          test "$(find tools/testdata/aakhiri_chai -type f -name '*.mp4' | wc -l)" -ge 3
+          test "$(find tools/testdata/babu_ke_liye -type f -name '*.mp4' | wc -l)" -ge 2
 
       - name: Build APK
         shell: bash
