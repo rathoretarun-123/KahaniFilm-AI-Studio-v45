@@ -89,6 +89,14 @@ jobs:
           unzip -p release/KahaniFilm.apk assets/film_library/babu_ke_liye/videos/user_uploaded_reference.mp4 | dd bs=1 skip=4 count=4 2>/dev/null | grep -q 'ftyp'
           echo "APK contains both story still collections and valid reference MP4 assets."
 
+      - name: Upload APK
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: KahaniFilm-debug-apk
+          path: release/KahaniFilm.apk
+          if-no-files-found: error
+
 
       - name: Set up Java 21 for production-plan regression tests
         uses: actions/setup-java@v4
@@ -126,10 +134,3 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
-      - name: Upload APK
-        if: always()
-        uses: actions/upload-artifact@v4
-        with:
-          name: KahaniFilm-debug-apk
-          path: release/KahaniFilm.apk
-          if-no-files-found: error
