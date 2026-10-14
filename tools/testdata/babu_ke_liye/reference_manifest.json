@@ -36,8 +36,10 @@
     "Check audio, Hindi dialogue timing and lip-sync separately."
   ],
   "asset_import_status": {
-    "binary_stills": "The still references are visible in the conversation, but their original individual binary files have not yet been staged into the repository from this tool call.",
-    "reference_video": "The 10-second MP4 is present at /mnt/data/gemini_generated_video_7A313517(1).mp4 in the working container. GitHub connector currently exposes text file commits only; binary push needs a supported upload/git path.",
-    "note": "Do not claim these binaries are included in the APK or repository until verified."
+    "binary_stills": "Original files have been preserved byte-for-byte in the KahaniFilm-Reference-Assets-Import.zip handoff bundle. They are not yet committed to the repository; use tools/scripts/import_reference_assets.ps1 from a local authenticated clone to import them under tools/testdata/babu_ke_liye/assets/stills.",
+    "reference_video": "The 10-second MP4 and alternate are preserved in the KahaniFilm-Reference-Assets-Import.zip handoff bundle. They are not yet committed to the repository; use tools/scripts/import_reference_assets.ps1 from a local authenticated clone to import them under tools/testdata/babu_ke_liye/reference_video and reference_video_variants.",
+    "import_script": "tools/scripts/import_reference_assets.ps1",
+    "bundle": "KahaniFilm-Reference-Assets-Import.zip (local handoff artifact; not stored in GitHub)",
+    "note": "Do not claim these binaries are included in the repository or APK until a local authenticated Git push and subsequent repository tree verification succeed."
   }
 }
