@@ -181,6 +181,8 @@ public final class Library {
                 it.tags = it.name;
                 items.add(it);
             }
+            addFilmBuiltIns("film_library/aakhiri_chai/stills", "आखिरी चाय");
+            addFilmBuiltIns("film_library/babu_ke_liye/stills", "बाबू के लिए");
             String json = Project.readAsset(ctx.getAssets(), "sounds/index.json");
             Object o = Json.parseLoose(json);
             if (o instanceof List) for (Object x : (List<?>) o) {
@@ -190,6 +192,33 @@ public final class Library {
                 items.add(it);
             }
         } catch (IOException ignored) {
+        }
+    }
+
+    /** Story-specific reference images shipped in the APK and exposed as read-only library items. */
+    private void addFilmBuiltIns(String assetDir, String storyTitle) {
+        try {
+            String[] files = ctx.getAssets().list(assetDir);
+            if (files == null) return;
+            java.util.Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+            int sequence = 0;
+            for (String f : files) {
+                String lower = f.toLowerCase(java.util.Locale.ROOT);
+                if (!(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp"))) continue;
+                Item it = new Item();
+                it.id = "asset:" + assetDir + "/" + f;
+                it.type = PIC;
+                it.kind = "reference";
+                it.builtIn = true;
+                it.path = "asset:" + assetDir + "/" + f;
+                it.source = "app";
+                it.name = storyTitle + " reference " + (++sequence);
+                it.tags = storyTitle + " reference image " + f.replace('_', ' ').replace('-', ' ');
+                it.setMeta("storyReference", assetDir.substring("film_library/".length(), assetDir.indexOf("/stills")));
+                items.add(it);
+            }
+        } catch (IOException ignored) {
+            // Standard library stays usable if optional film asset packs are absent.
         }
     }
 
