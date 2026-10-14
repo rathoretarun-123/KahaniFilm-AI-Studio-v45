@@ -96,7 +96,8 @@ jobs:
           gradle -p tools/robotest test \
             --tests com.tarun.kahani.ProductionPlanTest \
             --tests com.tarun.kahani.AppTest \
-            --tests com.tarun.kahani.HundredPassSoakTest
+            --tests com.tarun.kahani.HundredPassSoakTest \
+            --tests com.tarun.kahani.AakhiriChaiAcceptanceTest
       - name: Upload generated visual audit contact sheet
         if: always()
         uses: actions/upload-artifact@v4
