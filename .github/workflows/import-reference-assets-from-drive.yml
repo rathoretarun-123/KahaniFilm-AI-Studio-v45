@@ -1,0 +1,122 @@
+name: Import Reference Assets From Google Drive
+
+on:
+  workflow_dispatch:
+    inputs:
+      drive_url:
+        description: "Public Google Drive share URL for KahaniFilm-Reference-Assets-Import.zip"
+        required: true
+        type: string
+      target_branch:
+        description: "Branch to import assets into"
+        required: true
+        default: "kahanifilm-development"
+        type: string
+
+permissions:
+  contents: write
+
+concurrency:
+  group: import-reference-assets-${{ inputs.target_branch }}
+  cancel-in-progress: false
+
+jobs:
+  import-reference-assets:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Validate input
+        env:
+          DRIVE_URL: ${{ inputs.drive_url }}
+          TARGET_BRANCH: ${{ inputs.target_branch }}
+        run: |
+          python - <<'PY'
+          import os, urllib.parse
+          u = urllib.parse.urlparse(os.environ["DRIVE_URL"].strip())
+          if u.scheme != "https" or u.hostname not in {"drive.google.com", "docs.google.com"}:
+              raise SystemExit("drive_url must be an HTTPS Google Drive/Docs share URL.")
+          if os.environ["TARGET_BRANCH"] != "kahanifilm-development":
+              raise SystemExit("This workflow is restricted to kahanifilm-development.")
+          PY
+
+      - name: Checkout development branch
+        uses: actions/checkout@v4
+        with:
+          ref: kahanifilm-development
+          token: ${{ github.token }}
+
+      - name: Download Google Drive bundle
+        env:
+          DRIVE_URL: ${{ inputs.drive_url }}
+        run: |
+          python -m pip install --disable-pip-version-check gdown
+          gdown --fuzzy "$DRIVE_URL" --output "$RUNNER_TEMP/KahaniFilm-Reference-Assets-Import.zip"
+          test -s "$RUNNER_TEMP/KahaniFilm-Reference-Assets-Import.zip"
+          unzip -t "$RUNNER_TEMP/KahaniFilm-Reference-Assets-Import.zip"
+          mkdir -p "$RUNNER_TEMP/refbundle"
+          unzip -q "$RUNNER_TEMP/KahaniFilm-Reference-Assets-Import.zip" -d "$RUNNER_TEMP/refbundle"
+          ROOT="$RUNNER_TEMP/refbundle/KahaniFilm-Reference-Assets-Import"
+          test -d "$ROOT/assets/babu_ke_liye/stills"
+          test -d "$ROOT/assets/babu_ke_liye/reference_video"
+          test -d "$ROOT/assets/aakhiri_chai/reference_pack"
+          test -f "$ROOT/asset_inventory.json"
+          echo "BUNDLE_ROOT=$ROOT" >> "$GITHUB_ENV"
+
+      - name: Import assets for both films
+        run: |
+          set -euo pipefail
+          ROOT="$BUNDLE_ROOT"
+          mkdir -p tools/testdata/babu_ke_liye/assets/stills
+          mkdir -p tools/testdata/babu_ke_liye/reference_video
+          mkdir -p tools/testdata/babu_ke_liye/reference_video_variants
+          mkdir -p tools/testdata/aakhiri_chai/reference_pack
+          mkdir -p tools/testdata/aakhiri_chai/reference_video
+          mkdir -p tools/testdata/aakhiri_chai/reference_video_variants
+          cp -a "$ROOT/assets/babu_ke_liye/stills/." tools/testdata/babu_ke_liye/assets/stills/
+          cp -a "$ROOT/assets/babu_ke_liye/reference_video/." tools/testdata/babu_ke_liye/reference_video/
+          cp -a "$ROOT/assets/babu_ke_liye/reference_video_variants/." tools/testdata/babu_ke_liye/reference_video_variants/
+          cp -a "$ROOT/assets/aakhiri_chai/reference_pack/." tools/testdata/aakhiri_chai/reference_pack/
+          cp -a "$ROOT/assets/aakhiri_chai/reference_video/." tools/testdata/aakhiri_chai/reference_video/
+          cp -a "$ROOT/assets/aakhiri_chai/reference_video_variants/." tools/testdata/aakhiri_chai/reference_video_variants/
+          cp "$ROOT/asset_inventory.json" tools/testdata/reference_asset_inventory.json
+          echo "Imported file counts:"
+          find tools/testdata/babu_ke_liye/assets/stills -type f | wc -l
+          find tools/testdata/babu_ke_liye/reference_video tools/testdata/babu_ke_liye/reference_video_variants tools/testdata/aakhiri_chai/reference_pack tools/testdata/aakhiri_chai/reference_video tools/testdata/aakhiri_chai/reference_video_variants -type f | wc -l
+          git status --short
+
+      - name: Verify GitHub file-size limits
+        run: |
+          python - <<'PY'
+          import os
+          limit = 100 * 1024 * 1024
+          roots = [
+            "tools/testdata/babu_ke_liye/assets/stills",
+            "tools/testdata/babu_ke_liye/reference_video",
+            "tools/testdata/babu_ke_liye/reference_video_variants",
+            "tools/testdata/aakhiri_chai/reference_pack",
+            "tools/testdata/aakhiri_chai/reference_video",
+            "tools/testdata/aakhiri_chai/reference_video_variants",
+          ]
+          bad=[]
+          for root in roots:
+            for base, _, files in os.walk(root):
+              for name in files:
+                p=os.path.join(base,name)
+                if os.path.getsize(p) >= limit:
+                  bad.append((p, os.path.getsize(p)))
+          if bad:
+            raise SystemExit("GitHub's 100 MiB per-file limit exceeded: "+repr(bad))
+          PY
+
+      - name: Commit and push assets
+        run: |
+          set -euo pipefail
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add tools/testdata/babu_ke_liye/assets tools/testdata/babu_ke_liye/reference_video tools/testdata/babu_ke_liye/reference_video_variants tools/testdata/aakhiri_chai/reference_pack tools/testdata/aakhiri_chai/reference_video tools/testdata/aakhiri_chai/reference_video_variants tools/testdata/reference_asset_inventory.json
+          if git diff --cached --quiet; then
+            echo "No asset changes to commit; assets already imported."
+            exit 0
+          fi
+          git diff --cached --stat
+          git commit -m "Add source assets and reference videos for both films"
+          git push origin HEAD:kahanifilm-development
