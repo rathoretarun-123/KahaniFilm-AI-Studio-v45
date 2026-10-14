@@ -1,0 +1,93 @@
+#!/usr/bin/env bash
+# Prepare both committed story asset packs for the APK and deterministic CI fixtures.
+set -euo pipefail
+cd "$(dirname "$0")/../.."
+
+archives=(
+  "Aakhiri_Chai_Assets_Part1.zip"
+  "Aakhiri_Chai_Assets_Part2.zip"
+  "Babu_Ke_Liye_Assets_Part1.zip"
+  "Babu_Ke_Liye_Assets_Part2.zip"
+)
+for archive in "${archives[@]}"; do
+  test -s "$archive" || { echo "::error::Missing committed asset archive: $archive"; exit 1; }
+done
+
+ROOT="$(mktemp -d "${TMPDIR:-/tmp}/kahani-film-assets.XXXXXX")"
+trap 'rm -rf "$ROOT"' EXIT
+for archive in "${archives[@]}"; do
+  echo "Validating archive: $archive"
+  unzip -tq "$archive"
+  unzip -oq "$archive" -d "$ROOT"
+done
+
+# Reassemble split MP4 payloads only after both ZIP parts are extracted.
+while IFS= read -r -d '' first; do
+  second="${first%.chunk1}.chunk2"
+  output="${first%.chunk1}"
+  test -s "$second" || { echo "::error::Missing paired video chunk: $second"; exit 1; }
+  cat "$first" "$second" > "$output"
+  magic="$(dd if="$output" bs=1 skip=4 count=4 2>/dev/null)"
+  test "$magic" = "ftyp" || { echo "::error::Invalid MP4 header for $output ($magic)"; exit 1; }
+  echo "Reassembled $(basename "$output"): $(wc -c < "$output") bytes"
+done < <(find "$ROOT" -type f -name '*.mp4.chunk1' -print0)
+
+for film in aakhiri_chai babu_ke_liye; do
+  src="$ROOT/$film"
+  test -d "$src" || { echo "::error::Missing story asset folder: $src"; exit 1; }
+  mkdir -p "tools/testdata/$film"
+  cp -a "$src/." "tools/testdata/$film/"
+
+  dest="app/src/main/assets/film_library/$film"
+  rm -rf "$dest"
+  mkdir -p "$dest/stills" "$dest/videos" "$dest/review"
+
+  # Preserve unique original stills as app-bundled, built-in library references.
+  count=0
+  while IFS= read -r -d '' img; do
+    rel="${img#"$src"/}"
+    low="/${rel,,}/"
+    [[ "$low" == *"/images/"* || "$low" == *"/stills/"* ]] || continue
+    base="$(basename "$img")"
+    case "$base" in *contact_sheet*|*contact-sheet*|*kahani_contact_sheet*|*montage*) continue ;; esac
+    safe="${rel//\//__}"
+    cp -p "$img" "$dest/stills/$safe"
+    count=$((count + 1))
+  done < <(find "$src" -type f \( -iname '*.webp' -o -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' \) -print0)
+  echo "$film bundled stills: $count"
+  if [ "$film" = "aakhiri_chai" ]; then
+    test "$count" -ge 60 || { echo "::error::Too few Aakhiri Chai stills imported ($count)"; exit 1; }
+  else
+    test "$count" -ge 40 || { echo "::error::Too few Babu Ke Liye stills imported ($count)"; exit 1; }
+  fi
+
+  # Keep visual contact sheets for review, but never present them as individual cast/set references.
+  while IFS= read -r -d '' sheet; do
+    cp -p "$sheet" "$dest/review/$(basename "$sheet")"
+  done < <(find "$src" -type f \( -iname '*contact*sheet*.jpg' -o -iname '*contact*sheet*.png' -o -iname '*montage*.jpg' \) -print0)
+
+  # Bundle all original/variant MP4s for review, plus the exact phone-uploaded reference at a stable path.
+  while IFS= read -r -d '' video; do
+    rel="${video#"$src"/}"
+    safe="${rel//\//__}"
+    cp -p "$video" "$dest/videos/$safe"
+  done < <(find "$src" -type f -iname '*.mp4' -print0)
+
+  if [ "$film" = "aakhiri_chai" ]; then
+    uploaded="tools/testdata/$film/reference_video/gemini_generated_video_2D53A537.mp4"
+  else
+    uploaded="tools/testdata/$film/reference_video/gemini_generated_video_7A313517.mp4"
+  fi
+  test -s "$uploaded" || { echo "::error::Missing complete uploaded reference video: $uploaded"; exit 1; }
+  magic="$(dd if="$uploaded" bs=1 skip=4 count=4 2>/dev/null)"
+  test "$magic" = "ftyp" || { echo "::error::Uploaded reference is not an MP4: $uploaded"; exit 1; }
+  cp -p "$uploaded" "$dest/videos/user_uploaded_reference.mp4"
+  cp "tools/testdata/$film/reference_manifest.json" "$dest/manifest.json"
+
+  video_count="$(find "$dest/videos" -maxdepth 1 -type f -iname '*.mp4' | wc -l)"
+  echo "$film bundled MP4s: $video_count"
+  test "$video_count" -ge 2 || { echo "::error::At least two MP4 references must be bundled for $film"; exit 1; }
+done
+
+echo "Bundled story asset inventory:"
+find app/src/main/assets/film_library -type f -printf '%p %s bytes\n' | sort
