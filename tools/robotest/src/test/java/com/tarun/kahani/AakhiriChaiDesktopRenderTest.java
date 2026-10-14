@@ -28,7 +28,8 @@ public class AakhiriChaiDesktopRenderTest {
         assertNotNull(story);
         assertFalse("screenplay has scenes", story.scenes.isEmpty());
         Director director = new Director(story, new Director.Options());
-        Film film = director.direct(new Art());
+        Art art = new Art();
+        Film film = director.direct(art);
         assertNotNull(film);
         assertFalse("director produced shots", film.shots.isEmpty());
 
@@ -43,7 +44,7 @@ public class AakhiriChaiDesktopRenderTest {
             clear.setColor(new Color(0xFF202020, true));
             clear.fillRect(0, 0, width, height);
             clear.dispose();
-            new Renderer(film, new Art()).render(gfx, time);
+            new Renderer(film, art).render(gfx, time);
             long varied = 0;
             for (int y = 0; y < height; y += 4) for (int x = 0; x < width; x += 4) {
                 int rgb = frame.getRGB(x, y) & 0x00FFFFFF;
