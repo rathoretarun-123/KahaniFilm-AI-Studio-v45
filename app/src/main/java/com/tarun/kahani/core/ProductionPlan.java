@@ -47,9 +47,60 @@ public final class ProductionPlan {
             out.warnings.add("Production plan lacks explicit final sign-off by the director.");
             return out;
         }
+        Object contract = root.get("conference_contract_valid");
+        Object contractVersion = root.get("conference_contract_version");
+        if (contractVersion instanceof Number && ((Number) contractVersion).intValue() >= 1) {
+            Object shots = root.get("final_shot_plan");
+            Object decisions = root.get("director_decisions");
+            Object finalDecision = root.get("director_final_decision");
+            if (!(contract instanceof Boolean) || !((Boolean) contract).booleanValue()
+                    || !(shots instanceof List) || ((List<?>) shots).isEmpty()
+                    || !(decisions instanceof List) || !(finalDecision instanceof String)
+                    || ((String) finalDecision).trim().isEmpty()) {
+                out.readyToRender = false;
+                out.warnings.add("Conference hand-off failed validation: director sign-off, decisions, and a non-empty final shot plan are required.");
+                return out;
+            }
+        }
         Object ready = root.get("ready_to_render");
         if (ready instanceof Boolean) out.readyToRender = ((Boolean) ready).booleanValue();
         else { out.readyToRender = false; out.warnings.add("Production chair omitted the required ready_to_render decision."); }
+        if (!out.readyToRender) return out;
+        // Apply safe scene-indexed director cues to the Story actually consumed by Director.
+        // Authored dialogue and scene order are never replaced by this overlay.
+        Object shotPlan = root.get("final_shot_plan");
+        if (shotPlan instanceof List) {
+            int[] perScene = new int[story.scenes.size()];
+            int applied = 0;
+            for (Object raw : (List<?>) shotPlan) {
+                if (applied >= 60 || !(raw instanceof Map)) continue;
+                Map<?, ?> shot = (Map<?, ?>) raw;
+                int sceneNo = (int) number(shot.get("scene"));
+                if (sceneNo < 1 || sceneNo > story.scenes.size() || perScene[sceneNo - 1] >= 4) continue;
+                String action = firstText(shot, "visual_action", "action", "description", "beat", "purpose");
+                String framing = firstText(shot, "framing", "shot_type", "camera");
+                String emotion = firstText(shot, "performance", "emotion", "reaction");
+                String continuity = firstText(shot, "continuity", "continuity_lock");
+                StringBuilder cue = new StringBuilder("Director-approved shot plan: ");
+                if (!framing.isEmpty()) cue.append("framing=").append(framing).append("; ");
+                if (!action.isEmpty()) cue.append("action=").append(action).append("; ");
+                if (!emotion.isEmpty()) cue.append("performance=").append(emotion).append("; ");
+                if (!continuity.isEmpty()) cue.append("continuity=").append(continuity).append("; ");
+                String direction = cue.toString().trim();
+                if (direction.endsWith(";")) direction = direction.substring(0, direction.length() - 1);
+                if (direction.equals("Director-approved shot plan:")) continue;
+                if (direction.length() > 700) direction = direction.substring(0, 700);
+                story.scenes.get(sceneNo - 1).beats.add(Story.Beat.direction(direction));
+                perScene[sceneNo - 1]++;
+                applied++;
+            }
+            if (applied > 0) out.warnings.add("Applied " + applied + " director shot-plan cues to the actual scene data consumed by Director.");
+            else if (contractVersion instanceof Number && ((Number) contractVersion).intValue() >= 1) {
+                out.readyToRender = false;
+                out.warnings.add("The director's shot plan contains no usable scene-indexed visual directions; render blocked rather than silently ignoring the final cut.");
+                return out;
+            }
+        }
         Object assetsObj = root.get("approved_assets");
         if (assetsObj instanceof List) for (Object raw : (List<?>) assetsObj) {
             if (!(raw instanceof Map)) continue;
@@ -140,6 +191,13 @@ public final class ProductionPlan {
     private static boolean knownPlace(Story s, String text) {
         for (Story.PlaceDef p : s.places) if (!p.name.isEmpty() && text.toLowerCase(java.util.Locale.ROOT).contains(p.name.toLowerCase(java.util.Locale.ROOT))) return true;
         return false;
+    }
+    private static String firstText(Map<?, ?> map, String... keys) {
+        for (String key : keys) {
+            String value = text(map.get(key));
+            if (!value.isEmpty()) return value;
+        }
+        return "";
     }
     private static boolean yes(Object o) { return o instanceof Boolean && ((Boolean) o).booleanValue(); }
     private static double number(Object o) { return o instanceof Number ? ((Number) o).doubleValue() : 0; }
