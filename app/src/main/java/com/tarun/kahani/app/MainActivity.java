@@ -4543,7 +4543,7 @@ public class MainActivity extends Activity {
         }
         body.addView(add);
         LinearLayout bundles = Ui.card(this);
-        bundles.addView(Ui.text(this, "📦 Import a reusable asset bundle (ZIP). Images, voices and sounds are added to your private library with source archive, path and metadata; scripts and other files remain preserved in the original archive.", 13, Ui.SUB, false));
+        bundles.addView(Ui.text(this, "📦 Import a reusable asset bundle (ZIP). Images, voices, sounds and supported screenplay files are indexed in your private library with source archive, path and metadata; all other files remain preserved in the original archive.", 13, Ui.SUB, false));
         bundles.addView(Ui.small(this, "📦 Import ZIP + metadata", Ui.BLUE, new View.OnClickListener() {
             public void onClick(View v) {
                 try {
