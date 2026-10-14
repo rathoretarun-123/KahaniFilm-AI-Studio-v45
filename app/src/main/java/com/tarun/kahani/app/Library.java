@@ -529,7 +529,7 @@ public final class Library {
                     it.setMeta("archiveName", bundleName == null ? "user bundle" : bundleName.replace(';', ' '));
                     it.setMeta("archivePath", raw.replace(';', ','));
                     it.setMeta("userMetadata", userMetadata == null ? "" : userMetadata.replace(';', ','));
-                    it.setMeta("assetRole", type.equals(PIC) ? "visual-reference" : "sound-or-voice");
+                    it.setMeta("assetRole", type.equals(SCRIPT) ? "reusable-screenplay" : type.equals(PIC) ? "visual-reference" : "sound-or-voice");
                     rec.put("libraryItemId", it.id); rec.put("type", type); rec.put("kind", kind);
                     imported++;
                 } else rec.put("type", "retained-in-original-archive");
