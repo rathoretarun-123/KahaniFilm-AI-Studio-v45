@@ -33,7 +33,7 @@ public class ProductionPlanTest {
     @Test public void sortsInsertionsByOriginalSceneAndPreservesAuthoredContent() {
         Story s = story();
         Story.Scene originalFirst = s.scenes.get(0), originalSecond = s.scenes.get(1);
-        String report = "{\"final_decision_by\":\"director\",\"ready_to_render\":true,\"scene_insertions\":["
+        String report = "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,\"conference_contract_valid\":true,\"director_final_decision\":\"Approved\",\"director_decisions\":[{\"issue\":\"coverage\",\"decision\":\"accept\"}],\"ready_to_render\":true,\"scene_insertions\":["
                 + insertion(2, "Second bridge", "Garden", "\"Maya\"", "She pauses by the gate.") + ","
                 + insertion(1, "First bridge", "Garden", "\"Maya\"", "She looks toward the gate.") + ","
                 + insertion(1, "First bridge", "Garden", "\"Maya\"", "She looks toward the gate.") + "]}";
@@ -50,7 +50,7 @@ public class ProductionPlanTest {
 
     @Test public void rejectsUnknownPlacesAndCharacters() {
         Story s = story();
-        String report = "{\"final_decision_by\":\"director\",\"ready_to_render\":true,\"scene_insertions\":["
+        String report = "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,\"conference_contract_valid\":true,\"director_final_decision\":\"Approved\",\"director_decisions\":[{\"issue\":\"coverage\",\"decision\":\"accept\"}],\"ready_to_render\":true,\"scene_insertions\":["
                 + insertion(1, "Unknown place", "Moon base", "\"Maya\"", "She looks around.") + ","
                 + insertion(1, "Unknown cast", "Garden", "\"Ghost\"", "She looks around.") + "]}";
         ProductionPlan.Result r = ProductionPlan.apply(s, report);
@@ -68,6 +68,16 @@ public class ProductionPlanTest {
         assertTrue(r.valid);
         assertFalse(r.readyToRender);
         assertTrue(r.warnings.toString().contains("director"));
+    }
+
+    @Test public void unversionedConferenceCannotApproveRendering() {
+        ProductionPlan.Result r = ProductionPlan.apply(story(),
+                "{\"final_decision_by\":\"director\",\"director_final_decision\":\"Approved\","
+                + "\"director_decisions\":[{\"issue\":\"test\",\"decision\":\"accept\"}],"
+                + "\"ready_to_render\":true,\"final_shot_plan\":[{\"scene\":1,\"framing\":\"wide\"}]}");
+        assertTrue(r.valid);
+        assertFalse(r.readyToRender);
+        assertTrue(r.warnings.toString().contains("contract version"));
     }
 
     @Test public void malformedReportIsInvalidAndDoesNotInsert() {
