@@ -99,7 +99,7 @@ public class AppTest {
         assertEquals("Image and screenplay are both indexed", 2, imported);
         boolean scriptIndexed = false;
         for (com.tarun.kahani.app.Library.Item it : lib.find(com.tarun.kahani.app.Library.SCRIPT, null, "screenplay")) {
-            if ("script".equals(it.meta("assetRole")) || "screenplay-or-text".equals(it.kind)) scriptIndexed = true;
+            if ("reusable-screenplay".equals(it.meta("assetRole")) && "screenplay-or-text".equals(it.kind)) scriptIndexed = true;
         }
         assertTrue("ZIP screenplay indexed in reusable library", scriptIndexed);
         com.tarun.kahani.app.Library.Item found = null;
