@@ -365,8 +365,22 @@ public final class ScriptAI {
         if (!(parsed instanceof Map)) return finalJson;
         @SuppressWarnings("unchecked")
         Map<String, Object> report = (Map<String, Object>) parsed;
-        report.put("final_decision_by", "director");
-        report.put("conference_rounds", 8);
+        // Never manufacture a director sign-off. Validate the final hand-off contract
+        // against the model's actual answer, including a concrete shot plan and decisions.
+        Object shotPlan = report.get("final_shot_plan");
+        Object decisions = report.get("director_decisions");
+        Object signoff = report.get("final_decision_by");
+        Object finalDecision = report.get("director_final_decision");
+        Object readiness = report.get("ready_to_render");
+        boolean contractValid = signoff instanceof String
+                && "director".equalsIgnoreCase(((String) signoff).trim())
+                && finalDecision instanceof String && !((String) finalDecision).trim().isEmpty()
+                && shotPlan instanceof java.util.List && !((java.util.List<?>) shotPlan).isEmpty()
+                && decisions instanceof java.util.List
+                && readiness instanceof Boolean;
+        report.put("conference_contract_valid", Boolean.valueOf(contractValid));
+        report.put("conference_contract_version", 1);
+        report.put("conference_rounds", 9);
         report.put("reader_original_review", reader);
         report.put("editor_original_cut", editor);
         report.put("director_first_cut", director);
