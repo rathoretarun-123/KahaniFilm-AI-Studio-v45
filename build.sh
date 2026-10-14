@@ -5,6 +5,11 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
+# Ensure the committed story packs are available to direct/local APK builds too.
+if [ "${KAHANIFILM_ASSETS_PREPARED:-0}" != "1" ] && [[ -s Aakhiri_Chai_Assets_Part1.zip && -s Aakhiri_Chai_Assets_Part2.zip && -s Babu_Ke_Liye_Assets_Part1.zip && -s Babu_Ke_Liye_Assets_Part2.zip ]]; then
+  bash tools/scripts/prepare_bundled_film_assets.sh
+fi
+
 ANDROID_JAR=${ANDROID_JAR:-/usr/lib/android-sdk/platforms/android-23/android.jar}
 # Full Android 14 API for compiling (Robolectric's android-all jar from Maven Central).
 ALL_JAR=${ALL_JAR:-$HOME/.cache/kahani/android-all-14.jar}
