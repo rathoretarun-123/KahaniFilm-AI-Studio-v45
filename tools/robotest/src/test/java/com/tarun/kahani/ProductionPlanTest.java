@@ -79,13 +79,13 @@ public class ProductionPlanTest {
     @Test public void directorFinalShotPlanChangesTheStoryConsumedByDirector() {
         Story s = story();
         int originalBeats = s.scenes.get(0).beats.size();
-        String report = "{\\"final_decision_by\\":\\"director\\","
-                + "\\"conference_contract_version\\":1,\\"conference_contract_valid\\":true,"
-                + "\\"director_final_decision\\":\\"Approve the restrained reveal.\\","
-                + "\\"director_decisions\\":[{\\"issue\\":\\"reveal\\",\\"decision\\":\\"accept\\"}],"
-                + "\\"ready_to_render\\":true,\\"final_shot_plan\\":[{\\"scene\\":1,"
-                + "\\"framing\\":\\"close-up\\",\\"visual_action\\":\\"Maya's hand pauses above the latch\\","
-                + "\\"performance\\":\\"hesitation\\",\\"continuity\\":\\"right hand stays on latch\\"}]}";
+        String report = "{\"final_decision_by\":\"director\","
+                + "\"conference_contract_version\":1,\"conference_contract_valid\":true,"
+                + "\"director_final_decision\":\"Approve the restrained reveal.\","
+                + "\"director_decisions\":[{\"issue\":\"reveal\",\"decision\":\"accept\"}],"
+                + "\"ready_to_render\":true,\"final_shot_plan\":[{\"scene\":1,"
+                + "\"framing\":\"close-up\",\"visual_action\":\"Maya's hand pauses above the latch\","
+                + "\"performance\":\"hesitation\",\"continuity\":\"right hand stays on latch\"}]}";
         ProductionPlan.Result r = ProductionPlan.apply(s, report);
         assertTrue(r.valid); assertTrue(r.readyToRender);
         assertEquals(originalBeats + 1, s.scenes.get(0).beats.size());
@@ -97,20 +97,20 @@ public class ProductionPlanTest {
 
     @Test public void conferenceVersionOneRejectsFalseContractEvenWithDirectorName() {
         ProductionPlan.Result r = ProductionPlan.apply(story(),
-                "{\\"final_decision_by\\":\\"director\\",\\"conference_contract_version\\":1,"
-                + "\\"conference_contract_valid\\":false,\\"director_final_decision\\":\\"Go\\","
-                + "\\"director_decisions\\":[],\\"final_shot_plan\\":[{\\"scene\\":1,"
-                + "\\"visual_action\\":\\"She turns\\"}],\\"ready_to_render\\":true}");
+                "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,"
+                + "\"conference_contract_valid\":false,\"director_final_decision\":\"Go\","
+                + "\"director_decisions\":[],\"final_shot_plan\":[{\"scene\":1,"
+                + "\"visual_action\":\"She turns\"}],\"ready_to_render\":true}");
         assertTrue(r.valid); assertFalse(r.readyToRender);
         assertTrue(r.warnings.toString().contains("hand-off"));
     }
 
     @Test public void conferenceVersionOneRejectsShotPlanWithoutUsableSceneCue() {
         ProductionPlan.Result r = ProductionPlan.apply(story(),
-                "{\\"final_decision_by\\":\\"director\\",\\"conference_contract_version\\":1,"
-                + "\\"conference_contract_valid\\":true,\\"director_final_decision\\":\\"Go\\","
-                + "\\"director_decisions\\":[],\\"final_shot_plan\\":[{\\"scene\\":99,"
-                + "\\"visual_action\\":\\"She turns\\"}],\\"ready_to_render\\":true}");
+                "{\"final_decision_by\":\"director\",\"conference_contract_version\":1,"
+                + "\"conference_contract_valid\":true,\"director_final_decision\":\"Go\","
+                + "\"director_decisions\":[],\"final_shot_plan\":[{\"scene\":99,"
+                + "\"visual_action\":\"She turns\"}],\"ready_to_render\":true}");
         assertTrue(r.valid); assertFalse(r.readyToRender);
         assertTrue(r.warnings.toString().contains("no usable scene-indexed"));
     }
