@@ -97,3 +97,10 @@ The failing workflow's logs show absent paths including `tools/testdata/sheets`,
 ### Scope and non-claims
 
 This web research establishes feasible integration options, not that these engines/models are already integrated, that production-grade motion is available, or that the current APK provides Pixar-level output. Before adopting a model, engine, voice or service, record the exact version, model/asset license, runtime requirements, costs and measured acceptance results. Official references above were inspected on 2026-10-14.
+
+
+### Additional upstream checks: rigid-body physics and Android identity
+
+- Jolt Physics upstream describes a multithread-friendly rigid-body/collision library and lists MIT licensing and language bindings: https://github.com/jrouwe/JoltPhysics . It is a viable candidate for a native worker or engine integration when rigid-body throughput matters, but it does not provide a full character animation, cloth/fluid, cinematography or rendering pipeline by itself. Benchmark integration cost against Blender's built-in simulation and Godot's engine-integrated physics before selecting it.
+- MediaPipe's upstream source uses Apache License 2.0: https://github.com/google-ai-edge/mediapipe/blob/master/LICENSE . Audit the selected task/model and bundled assets individually; code licensing alone does not automatically settle model/asset terms.
+- Google's Credential Manager sign-in release notes document the evolving Google ID library and 2026 updates: https://developers.google.com/identity/android-credential-manager/releases . The app must use a real credential/token flow and validate the ID token's issuer, audience, expiry and signature (normally at the trusted backend for server sessions). An account chooser or a locally stored email string is not authentication. No OAuth client configuration or credentials were created by this research.
