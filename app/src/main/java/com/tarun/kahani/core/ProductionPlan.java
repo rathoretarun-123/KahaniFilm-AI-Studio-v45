@@ -49,18 +49,24 @@ public final class ProductionPlan {
         }
         Object contract = root.get("conference_contract_valid");
         Object contractVersion = root.get("conference_contract_version");
-        if (contractVersion instanceof Number && ((Number) contractVersion).intValue() >= 1) {
-            Object shots = root.get("final_shot_plan");
-            Object decisions = root.get("director_decisions");
-            Object finalDecision = root.get("director_final_decision");
-            if (!(contract instanceof Boolean) || !((Boolean) contract).booleanValue()
-                    || !(shots instanceof List) || ((List<?>) shots).isEmpty()
-                    || !(decisions instanceof List) || !(finalDecision instanceof String)
-                    || ((String) finalDecision).trim().isEmpty()) {
-                out.readyToRender = false;
-                out.warnings.add("Conference hand-off failed validation: director sign-off, decisions, and a non-empty final shot plan are required.");
-                return out;
-            }
+        // Every cloud conference must carry a supported, validated contract. Older
+        // cached reports without this envelope are stale review data, not approval.
+        if (!(contractVersion instanceof Number) || ((Number) contractVersion).intValue() < 1) {
+            out.readyToRender = false;
+            out.warnings.add("Production conference is missing a supported contract version; rerun the Reader/Editor/Director/Technical Director hand-off.");
+            return out;
+        }
+        Object shots = root.get("final_shot_plan");
+        Object decisions = root.get("director_decisions");
+        Object finalDecision = root.get("director_final_decision");
+        if (!(contract instanceof Boolean) || !((Boolean) contract).booleanValue()
+                || !(shots instanceof List) || ((List<?>) shots).isEmpty()
+                || !(decisions instanceof List) || ((List<?>) decisions).isEmpty()
+                || !(finalDecision instanceof String)
+                || ((String) finalDecision).trim().isEmpty()) {
+            out.readyToRender = false;
+            out.warnings.add("Conference hand-off failed validation: a valid versioned contract, explicit director decision(s), and a non-empty final shot plan are required.");
+            return out;
         }
         Object ready = root.get("ready_to_render");
         if (ready instanceof Boolean) out.readyToRender = ((Boolean) ready).booleanValue();
