@@ -125,6 +125,7 @@ jobs:
             --tests com.tarun.kahani.AakhiriChaiAcceptanceTest \
             --tests com.tarun.kahani.AakhiriChaiDesktopRenderTest \
             --tests com.tarun.kahani.BabuKeLiyeDesktopRenderTest \
+            --tests com.tarun.kahani.NarratorContractTest \
             --tests com.tarun.kahani.BundledFilmAssetsTest
       - name: Upload generated visual audit contact sheet
         if: always()
