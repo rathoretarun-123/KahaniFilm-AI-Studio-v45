@@ -123,7 +123,7 @@ public class MainActivity extends Activity {
         // pictures placed in older stories join the library (once), so every new story can use them
         final Context app = getApplicationContext();
         new Thread(new Runnable() {
-            public void run() { try { AutoLibrary.adoptOldStories(app, library); } catch (Throwable ignored) {} }
+            public void run() { try { AutoLibrary.adoptOldStories(app, library); library.importBundledFilmReferences(); } catch (Throwable ignored) {} }
         }, "adopt-old-stories").start();
         // library copies saved by older versions as plain photos: made private once, out of the gallery
         if (!"1".equals(Prefs.get(this, "privateBackup", "0"))) { Backup.privatizeOld(this); Prefs.put(this, "privateBackup", "1"); }
