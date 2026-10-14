@@ -21,6 +21,25 @@ for archive in "${archives[@]}"; do
   unzip -oq "$archive" -d "$ROOT"
 done
 
+# Restore legacy test-only fixtures if a committed packet actually contains them.
+# Do not synthesize or substitute character art: absent real references must remain
+# a visible fixture gap, not be mistaken for user-approved film assets.
+for fixture in sheets upload sheets38 sheets40 sample voices; do
+  target="tools/testdata/$fixture"
+  candidate=""
+  while IFS= read -r -d '' found; do
+    candidate="$found"
+    break
+  done < <(find "$ROOT" -type d -name "$fixture" -print0)
+  if [ -n "$candidate" ]; then
+    mkdir -p "$target"
+    cp -an "$candidate/." "$target/"
+    echo "Restored fixture directory '$fixture' from committed asset packet: $candidate"
+  else
+    echo "Fixture directory '$fixture' not found inside the four story packets."
+  fi
+done
+
 # Reassemble split MP4 payloads only after both ZIP parts are extracted.
 while IFS= read -r -d '' first; do
   second="${first%.chunk1}.chunk2"
@@ -39,7 +58,9 @@ for film in aakhiri_chai babu_ke_liye; do
   cp -a "$src/." "tools/testdata/$film/"
 
   dest="app/src/main/assets/film_library/$film"
-  rm -rf "$dest"
+  # Merge generated assets without deleting pre-existing film-library additions.
+  # Stable packet filenames are updated only in their corresponding managed paths;
+  # unrelated/user-added files remain untouched.
   mkdir -p "$dest/stills" "$dest/videos" "$dest/review"
 
   # Preserve unique original stills as app-bundled, built-in library references.
