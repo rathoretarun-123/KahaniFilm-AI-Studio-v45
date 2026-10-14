@@ -148,6 +148,9 @@ public final class Director {
         film = new Film();
         film.story = story;
         film.subtitles = opt.subtitles;
+        // Independent reader pass: identify underspecified actions and continuity risks for the director.
+        // These remain review notes; the authored screenplay is still canon and stage directions are not spoken.
+        film.notes.addAll(StoryReasoner.notes(story));
         if (opt.narrateTitle && story.title.length() > 0) {
             titleLine = addLine(null, story.title, Pose.HAPPY, false, false, story.title);
         }
