@@ -215,6 +215,15 @@ final class AutoLibrary {
         List<Library.Item> pics = new ArrayList<Library.Item>();
         for (Library.Item it : lib.find(Library.PIC, null, null)) {
             if (it.builtIn || used.contains(it.id) || "view".equals(it.kind)) continue;     // a back or side view is never a front picture
+            // Bundled assets labelled for human review stay out of automatic assignment until the user confirms them.
+            // An explicit per-target "is:" choice always overrides this conservative default.
+            if ("0".equals(it.meta("autoAssign"))) {
+                boolean manuallyApproved = false;
+                for (String[] target : targets) {
+                    if ("1".equals(it.meta("is:" + labelKey(target[1])))) { manuallyApproved = true; break; }
+                }
+                if (!manuallyApproved) continue;
+            }
             String who = ScriptAI.matchName(it.name, allNames);
             if (who != null) {
                 boolean free = false;
