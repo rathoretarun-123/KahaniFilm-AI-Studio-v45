@@ -68,7 +68,6 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.InputStream;
-import java.io.IOException;
 import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.HashSet;
@@ -84,7 +83,7 @@ import java.util.Set;
 public class MainActivity extends Activity {
 
     static final int REQ_LOGIN = 11, REQ_SCRIPT = 12, REQ_IMAGE = 13, REQ_CAMERA = 14, REQ_AUDIO = 15, REQ_BULK = 16,
-            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24, REQ_IMPORT_BUNDLE = 25, REQ_IMPORT_SCRIPT = 26;
+            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24;
     /** The thing whose angles are being uploaded: "angles:char:<key>:<name>", "angles:scene:<n>:<name>", "angles:obj:<keys>:<name>". */
     private String anglesTarget;
     private String anglesFrom;       // "make" when the angles were asked for from the make-film dialog (v25: the user comes back to it)
@@ -124,7 +123,7 @@ public class MainActivity extends Activity {
         // pictures placed in older stories join the library (once), so every new story can use them
         final Context app = getApplicationContext();
         new Thread(new Runnable() {
-            public void run() { try { AutoLibrary.adoptOldStories(app, library); library.importBundledFilmReferences(); } catch (Throwable ignored) {} }
+            public void run() { try { AutoLibrary.adoptOldStories(app, library); } catch (Throwable ignored) {} }
         }, "adopt-old-stories").start();
         // library copies saved by older versions as plain photos: made private once, out of the gallery
         if (!"1".equals(Prefs.get(this, "privateBackup", "0"))) { Backup.privatizeOld(this); Prefs.put(this, "privateBackup", "1"); }
@@ -491,17 +490,16 @@ public class MainActivity extends Activity {
         Prefs.put(this, "angles.from", from == null ? "" : from);
         Prefs.put(this, "angles.project", project == null ? "" : project.dir.getAbsolutePath());
         final boolean more = tgt.startsWith("angles:char:") || tgt.startsWith("angles:scene:");
-        final String[] optsAll = {"🖼  Photos / gallery — up to 18 at once", "📁  Files (Downloads, WhatsApp…) — up to 18", "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
+        final String[] optsAll = {"🖼  Upload up to 18 images (front/back/sides/three-quarter + extra views)", "📁  Upload files — up to 18 pictures", "📷  Camera — one at a time", "📚  Use library instead", "🌐  Search the internet / ✨ make with AI"};
         final String[] opts = more ? optsAll : java.util.Arrays.copyOf(optsAll, optsAll.length - 1);
         // v38: the explanation and the choices as buttons in one view — a dialog with both a message and a list of
         // items shows only the message on a phone (the choices were never seen: "a pop-up with no option to upload")
         final AlertDialog[] dlg = new AlertDialog[1];
         LinearLayout box = Ui.column(this);
         box.setPadding(Ui.dp(this, 16), Ui.dp(this, 8), Ui.dp(this, 16), Ui.dp(this, 8));
-        box.addView(Ui.text(this, "Upload up to 18 reference images for this character or place: one full-front, one full-back, two side views, two three-quarter views, and up to ten additional images. "
-                + "For contact sheets, use a clear grid of up to 3 columns × 2 rows; the director splits panels into individual pictures when it can identify them. "
-                + "For individual uploads, use this order where practical: front, back, side 1, side 2, three-quarter 1, three-quarter 2, then extras. The director also analyses each image rather than relying only on position. "
-                + "References saved to the private library can be reused in future films. If an element cannot be identified confidently during production, pause and request a clearer reference instead of guessing. " + what + ".", 13, Ui.SUB, false));
+        box.addView(Ui.text(this, "For best identification, upload one full-size front view and one full-size back view of the character, place, background or prop when available. Also add up to 10 images per batch for side/three-quarter angles, poses and expressions; a 3×2 contact sheet may contain six views, but single images are welcome too. "
+                + "The front and back images are primary references, not a replacement for activity and expression views. The studio keeps originals and splits contact sheets into linked references for review. "
+                + "Imported originals are copied into the private tarunkahani library and stay available across stories until the app is uninstalled. Detected identity, activity, view and emotion remain reviewable suggestions.", 13, Ui.SUB, false));
         for (int i = 0; i < opts.length; i++) {
             final int w = i;
             box.addView(Ui.button(this, opts[i], i < 2 ? Ui.PRIMARY : Ui.BLUE, new View.OnClickListener() {
@@ -740,7 +738,7 @@ public class MainActivity extends Activity {
      * picture its reverse angle (drawn behind the reverse shots), a thing's first picture its insert; every
      * picture goes into the tarunkahani library as the same thing. Real camera photos of people become avatars.
      */
-    /** Reference upload contract: front + back + two sides + two three-quarter views + up to ten extras. */
+    /** Per-asset reference limit. A selected contact sheet may contain up to six views and is split separately. */
     static final int MAX_ANGLE_PICTURES = 18;
 
     /**
@@ -814,7 +812,7 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * The pictures the director has none for, with the ten-angle upload right here (the phone guide §1.1 and item
+     * The pictures the director has none for, with the 18-image upload right here (the phone guide §1.1 and item
      * 1: at the point of need, without going back). They are used from the next make.
      */
     private void missingCard(LinearLayout body) {
@@ -823,12 +821,9 @@ public class MainActivity extends Activity {
         if (st == null || st.scenes.isEmpty()) return;
         List<String[]> miss = AutoLibrary.missingForUser(project, st);
         LinearLayout m = Ui.card(this);
-        m.addView(Ui.text(this, "📷 The director's plan: every character, place and thing below gets its own reference. Upload up to 18 images per character or place (front, back, two sides, two three-quarter views and up to ten extras). "
-                + "Contact sheets are split into separate images when the panels can be identified; references are stored in the private library for future films. Each new place also gets an establishing moment of its own. "
-                + "If a required element cannot be identified confidently, the director should pause and ask you for a clearer reference instead of guessing. Pictures added while a film is being made are used from the next make.", 13, Ui.SUB, false));
-        m.addView(Ui.small(this, "📚 Search my library for this story", Ui.GREEN, new View.OnClickListener() {
-            public void onClick(View v) { libraryMatches(false); }
-        }));
+        m.addView(Ui.text(this, "📷 The director asks you for pictures first whenever a character, place, background, object or prop is missing. Upload up to 18 images per batch; each image may be a single view or a contact sheet with multiple views. "
+                + "Splitting and initial view, pose and expression analysis happen as the images are saved to the permanent studio library. Keep the canonical views together for each character or place: front, back, two side views, two three-quarter views, and up to ten additional references. "
+                + "If you skip uploading, the studio then searches your library for the best available match.", 13, Ui.SUB, false));
         int n = 0;
         for (final String[] t : miss) {
             if (t[0].equals("title") || t[0].equals("end")) continue;
@@ -850,12 +845,16 @@ public class MainActivity extends Activity {
                 public void onClick(View v) { anglesFor(ft, t[1]); }
             }));
         }
-        if (n == 0) m.addView(Ui.text(this, "Every required character, place and story prop has a picture. More references can be added from the Studio cards.", 13, Ui.GREEN, false));
+        if (n == 0) m.addView(Ui.text(this, "Every character and place has a picture. More angles can be added from the Studio cards.", 13, Ui.GREEN, false));
+        // Upload-first policy: offer the cross-story library fallback after direct upload actions.
+        m.addView(Ui.small(this, "📚 I will not upload now — find the best match in my library", Ui.GREEN, new View.OnClickListener() {
+            public void onClick(View v) { libraryMatches(false); }
+        }));
         // v26: the scenes the director adds (the journey into every new place) ask for their own pictures here
         for (final com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
             final boolean has = project.manifestLine("scene", x.key) != null;
             final String tgt = "angles:scene:" + x.key + ":" + x.label;
-            m.addView(Ui.small(this, (has ? "✅ " : "🎬 ") + x.label + (has ? " — more angles" : " — add its pictures (up to 18 references)"), has ? Ui.GREEN : Ui.PRIMARY_DARK, new View.OnClickListener() {
+            m.addView(Ui.small(this, (has ? "✅ " : "🎬 ") + x.label + (has ? " — more angles" : " — upload up to 18 images"), has ? Ui.GREEN : Ui.PRIMARY_DARK, new View.OnClickListener() {
                 public void onClick(View v) { anglesFor(tgt, x.label); }
             }));
         }
@@ -1173,17 +1172,26 @@ public class MainActivity extends Activity {
             if (library.byId(project.setting("vsample." + c.displayName, "")) == null) noVoice++;
         }
         for (Story.Scene sc : st.scenes) if (sceneFile(sc) == null) noBg++;
-        // Asset intake order: show upload controls on this filmmaking page first. Private-library matching
-        // remains available through the explicit buttons below, only after the filmmaker chooses it.
-        // This avoids silently reusing an old character/place/voice before the user has supplied current references.
-        project.setSetting("assetUploadFirst", "1");
+        // first visit: offer pictures already in the library (from earlier stories) that fit this story
+        boolean offered = false;
+        if (!"1".equals(project.setting("libChecked", "0")) && noPic == st.characters.size() && st.characters.size() > 0) {
+            project.setSetting("libChecked", "1");
+            for (Library.Item it : library.find(Library.PIC, null, null)) if (!it.builtIn) { offered = true; break; }
+            if (offered) libraryMatches(true);
+        }
+        if (!offered && !"1".equals(project.setting("voiceChecked", "0")) && noVoice == st.characters.size() && st.characters.size() > 0) {
+            // (after the pictures, or on the next visit) offer saved voices that fit the voices the script describes
+            project.setSetting("voiceChecked", "1");
+            boolean any = false;
+            for (Library.Item it : library.find(Library.VOICE, null, null)) if (!it.builtIn) { any = true; break; }
+            if (any) voiceMatches(true);
+        }
         LinearLayout sum = Ui.card(this);
         sum.addView(Ui.title(this, "📜 " + st.title));
         sum.addView(Ui.text(this, "Language: " + (st.hinglish ? "Hinglish (spoken in Hindi, ends with \"समाप्त\")" : st.hindi ? "Hindi (ends with \"समाप्त\")" : "English (ends with \"The End\")")
                 + "\nCharacters: " + st.characters.size() + "   •   Parts: " + st.scenes.size() + "   •   Lines: " + st.dialogueCount()
                 + (st.hasNarrator ? "\nNarrator voice: yes (the story has a narrator)" : ""), 15, Ui.TEXT, false));
         String miss = "Still missing:\n• " + noPic + " character pictures  • " + noVoice + " voice samples  • " + noBg + " backgrounds"
-                + "\nUpload this film's references first. If you want to reuse an earlier asset, choose the explicit library button below."
                 + "\nAnything you don't add, the studio creates with AI in 3D style when you make the film (internet), or draws itself offline.";
         sum.addView(Ui.text(this, miss, 14, noPic + noVoice + noBg == 0 ? Ui.GREEN : Ui.PRIMARY_DARK, false));
         if (noPic + noBg > 0) sum.addView(Ui.small(this, "🧊 Build all " + (noPic + noBg) + " missing pictures in 3D now (on the phone)", Ui.PRIMARY_DARK, new View.OnClickListener() {
@@ -2888,7 +2896,7 @@ public class MainActivity extends Activity {
             try {
                 Intent i = new Intent(act);
                 i.setType("image/*");
-                i.putExtra("android.provider.extra.PICK_IMAGES_MAX", Math.max(2, Math.min(max, 100)));
+                i.putExtra("android.provider.extra.PICK_IMAGES_MAX", Math.max(2, Math.min(max, 18)));
                 if (i.resolveActivity(getPackageManager()) != null) { startActivityForResult(i, code); return; }
             } catch (Exception ignored) { /* the next one */ }
         }
@@ -2981,60 +2989,6 @@ public class MainActivity extends Activity {
             pendingText = null;
             return;
         }
-        if (code == REQ_IMPORT_SCRIPT) {
-            if (result != RESULT_OK || data == null || data.getData() == null) return;
-            final Uri scriptUri = data.getData();
-            final String scriptName = displayName(scriptUri);
-            background("Saving screenplay in your private library…", new Work() {
-                public Object run() throws Exception {
-                    long size = Project.sizeOf(getContentResolver(), scriptUri);
-                    if (size <= 0 || size > 10L * 1024L * 1024L) throw new IOException("Text file must be between 1 byte and 10 MiB");
-                    InputStream in = getContentResolver().openInputStream(scriptUri);
-                    if (in == null) throw new IOException("Could not open text file");
-                    byte[] b;
-                    try { b = Project.readAll(in); } finally { try { in.close(); } catch (Exception ignored) {} }
-                    String ext = scriptName.contains(".") ? scriptName.substring(scriptName.lastIndexOf('.')).toLowerCase(Locale.US) : ".txt";
-                    if (!ext.matches("\\.(txt|md|srt|text)")) throw new IOException("Choose a .txt, .md, .srt or .text screenplay file");
-                    String content = new String(b, "UTF-8");
-                    if (content.trim().length() == 0) throw new IOException("Screenplay is empty");
-                    Library.Item item = library.addBytes(Library.SCRIPT, "screenplay-or-text", scriptName.replaceAll("\\.[^.]+$", ""),
-                            "user-imported reusable screenplay", content.getBytes("UTF-8"), ext, "user-import");
-                    item.setMeta("assetRole", "reusable-screenplay");
-                    library.save();
-                    return item;
-                }
-            }, new Done() {
-                public void done(Object value, Exception error) {
-                    if (error != null) { toast("Screenplay import failed: " + error.getMessage()); return; }
-                    libTab = Library.SCRIPT;
-                    toast("✅ Screenplay saved to your private library");
-                    showLibrary();
-                }
-            });
-            return;
-        }
-        if (code == REQ_IMPORT_BUNDLE) {
-            if (result != RESULT_OK || data == null || data.getData() == null) return;
-            final Uri bundleUri = data.getData();
-            final String bundleName = displayName(bundleUri);
-            background("Importing reusable asset bundle…", new Work() {
-                public Object run() throws Exception {
-                    long size = Project.sizeOf(getContentResolver(), bundleUri);
-                    if (size > 100L * 1024L * 1024L) throw new IOException("ZIP exceeds the 100 MiB import limit");
-                    InputStream in = getContentResolver().openInputStream(bundleUri);
-                    if (in == null) throw new IOException("Could not open ZIP");
-                    try { return library.importZipArchive(in, bundleName, "user-imported; reusable-across-projects"); }
-                    finally { try { in.close(); } catch (Exception ignored) {} }
-                }
-            }, new Done() {
-                public void done(Object value, Exception error) {
-                    if (error != null) { toast("ZIP import failed: " + error.getMessage()); return; }
-                    toast("✅ Asset bundle imported; media indexed in your private library");
-                    showLibrary();
-                }
-            });
-            return;
-        }
         if (result != RESULT_OK || data == null) return;
         if (code == REQ_LIB_MANY) {
             List<Uri> uris = new ArrayList<Uri>();
@@ -3047,8 +3001,7 @@ public class MainActivity extends Activity {
             List<Uri> uris = new ArrayList<Uri>();
             if (data.getClipData() != null) for (int i = 0; i < data.getClipData().getItemCount(); i++) uris.add(data.getClipData().getItemAt(i).getUri());
             else if (data.getData() != null) uris.add(data.getData());
-            // Reference upload contract: at most 18 images per character/place batch,
-            // each read only when the director comes to it — a hundred photos are never in memory together
+            // Enforce the user-facing maximum of ten selected images per asset upload batch.
             if (uris.size() > MAX_ANGLE_PICTURES) { toast("The first " + MAX_ANGLE_PICTURES + " pictures are used"); uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES)); }
             final String tgt = anglesTarget != null ? anglesTarget : Prefs.get(this, "angles.target", "").length() > 0 ? Prefs.get(this, "angles.target", "") : null;
             if (tgt == null) { toast("Please tap the angles button again and choose the pictures"); return; }
@@ -3062,11 +3015,6 @@ public class MainActivity extends Activity {
             List<Uri> uris = new ArrayList<Uri>();
             if (data.getClipData() != null) for (int i = 0; i < data.getClipData().getItemCount(); i++) uris.add(data.getClipData().getItemAt(i).getUri());
             else if (data.getData() != null) uris.add(data.getData());
-            // Match the per-character/place intake contract: one review batch is at most 18 originals.
-            if (uris.size() > MAX_ANGLE_PICTURES) {
-                toast("The first " + MAX_ANGLE_PICTURES + " pictures are used per upload batch");
-                uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES));
-            }
             bulkPictures(uris);
             return;
         }
@@ -4190,13 +4138,13 @@ public class MainActivity extends Activity {
         c.addView(pause);
         c.addView(stop);
         body.addView(c);
-        // v34: the film waits for the user's pictures before the 3D maker makes any: add them in the rows below, or choose
+        // v34+: pause production when any reference is missing; show upload rows for props, objects, backgrounds, places, poses and characters.
         final boolean shownWaiting = cur != null && cur.picturesWaiting;
         if (shownWaiting) {
             LinearLayout ask = Ui.card(this);
             ask.addView(Ui.text(this, "📷 The director needs your pictures of: " + cur.picturesNeeded, 16, Ui.PRIMARY_DARK, true));
-            ask.addView(Ui.text(this, "Add them with the buttons below (up to 100 each; a sheet of several angles is split). The film goes on by itself once every one has a picture. "
-                    + "Only if you have none, the studio can build the rest in 3D from the style of your other pictures — or draw them.", 14, Ui.SUB, false));
+            ask.addView(Ui.text(this, "Upload up to 10 images per batch below; each can be a single view or a 3×2 sheet of up to six views. The studio splits and analyses uploads, then rechecks what is still missing. "
+                    + "The film stays paused until the references are supplied or you explicitly choose a fallback. If you have no reference, the studio can build the rest in 3D from your approved style or draw them.", 14, Ui.SUB, false));
             ask.addView(Ui.button(this, "🧊 I have no pictures — build the rest in 3D", Ui.BLUE, new View.OnClickListener() {
                 public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(1); }
             }));
@@ -4506,7 +4454,7 @@ public class MainActivity extends Activity {
         LinearLayout body = page(S_LIBRARY, "📚 tarunkahani — the app's own library", true);
         LinearLayout tabs = Ui.row(this);
         tabs.setPadding(Ui.dp(this, 8), 0, Ui.dp(this, 8), 0);
-        final String[][] t = {{Library.PIC, "🖼 Pictures"}, {Library.VOICE, "🎙 Voices"}, {Library.SOUND, "🔊 Sounds"}, {Library.SCRIPT, "📜 Scripts"}};
+        final String[][] t = {{Library.PIC, "🖼 Pictures"}, {Library.VOICE, "🎙 Voices"}, {Library.SOUND, "🔊 Sounds"}};
         for (final String[] x : t) {
             tabs.addView(Ui.small(this, x[1], x[0].equals(libTab) ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
                 public void onClick(View v) { libTab = x[0]; showLibrary(); }
@@ -4527,11 +4475,6 @@ public class MainActivity extends Activity {
             r.addView(Ui.small(this, "🎙 Record", Ui.RED, new View.OnClickListener() { public void onClick(View v) { target = "lib:voice"; record(Library.VOICE, ""); } }));
             r.addView(Ui.small(this, "📂 From files", Ui.PRIMARY, new View.OnClickListener() { public void onClick(View v) { target = "lib:voice"; pickMany("voice", "audio/*"); } }));
             add.addView(r);
-        } else if (libTab.equals(Library.SCRIPT)) {
-            add.addView(Ui.text(this, "Reusable screenplays and text assets stay in your private library, separately from any one film. Select a saved script to use it in the currently open project.", 13, Ui.SUB, false));
-            add.addView(Ui.small(this, "📜 Import screenplay / text", Ui.PRIMARY, new View.OnClickListener() {
-                public void onClick(View v) { pick("*/*", REQ_IMPORT_SCRIPT, false); }
-            }));
         } else {
             add.addView(Ui.text(this, "Nature sounds (rain, river, birds), background voices (a market, a crowd), effects (a door, thunder, a horse) and music. "
                     + "Say what each one is — in English or Hindi — and the director uses it wherever a story describes it: backgrounds under the matching places, effects at the moment they happen.", 13, Ui.SUB, false));
@@ -4542,24 +4485,6 @@ public class MainActivity extends Activity {
             add.addView(r);
         }
         body.addView(add);
-        LinearLayout bundles = Ui.card(this);
-        bundles.addView(Ui.text(this, "📦 Import a reusable asset bundle (ZIP). Images, voices, sounds and supported screenplay files are indexed in your private library with source archive, path and metadata; all other files remain preserved in the original archive.", 13, Ui.SUB, false));
-        bundles.addView(Ui.small(this, "📦 Import ZIP + metadata", Ui.BLUE, new View.OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    i.setType("*/*");
-                    i.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/zip", "application/x-zip-compressed", "application/octet-stream"});
-                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivityForResult(i, REQ_IMPORT_BUNDLE);
-                } catch (Exception e) {
-                    try { pick("*/*", REQ_IMPORT_BUNDLE, false); }
-                    catch (Exception ignored) { toast("No file picker available"); }
-                }
-            }
-        }));
-        body.addView(bundles);
         LinearLayout many = Ui.card(this);
         many.addView(Ui.text(this, "Add many at once — photos from your whole gallery, sounds and voice samples together. "
                 + "The director looks through the library by itself before every film and uses what fits.", 13, Ui.SUB, false));
@@ -4606,23 +4531,6 @@ public class MainActivity extends Activity {
                 LinearLayout r = Ui.row(this);
                 r.setPadding(Ui.dp(this, 12), 0, Ui.dp(this, 8), 0);
                 r.setGravity(Gravity.CENTER_VERTICAL);
-                if (Library.SCRIPT.equals(it.type)) {
-                    r.addView(Ui.text(this, "📜 " + it.label() + "\n" + it.tags, 14, Ui.TEXT, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-                    r.addView(Ui.small(this, "Use", Ui.GREEN, new View.OnClickListener() {
-                        public void onClick(View v) {
-                            if (project == null) { toast("Open or create a film project first"); return; }
-                            try {
-                                project.write("script.txt", new String(AudioIO.readFile(new File(it.path)), "UTF-8"));
-                                project.setSetting("useAi", "0");
-                                showStory();
-                                toast("Screenplay loaded into the current project; library original retained");
-                            } catch (Exception e) { toast("Could not load screenplay: " + e.getMessage()); }
-                        }
-                    }));
-                    if (!it.builtIn) r.addView(Ui.small(this, "🗑", Ui.RED, new View.OnClickListener() { public void onClick(View v) { confirmRemove(it); } }));
-                    body.addView(r);
-                    continue;
-                }
                 String sub = "";
                 if (!it.builtIn && Library.SOUND.equals(it.type)) {
                     String ws = Library.meaningful(it.name + "," + it.tags);
@@ -4696,7 +4604,6 @@ public class MainActivity extends Activity {
         dir.addView(toggle("Free pictures of the story's objects for inserts (Fluent Emoji 3D on GitHub, MIT)", "freeObjects", true));
         dir.addView(toggle("Human QC: show me every shot's first frame before the film is made", "humanQc", true));
         dir.addView(toggle("Smooth motion: 30 frames per second instead of 24 (every move smoother; a quarter more drawing)", "fps30", true));
-        dir.addView(toggle("High frame rate: 60 fps final video (roughly twice the 30 fps frame work; slower, hotter, larger workload; device/encoder dependent)", "fps60", false));
         dir.addView(toggle("Faster drawing: a mesh cell of 2 pixels instead of 1 (about twice as fast, a little less smooth)", "fastMesh", false));
         dir.addView(toggle("Free 3D models from GitHub (CC0 / CC-BY, e.g. KayKit's knight, mage, rogue, barbarian; the Khronos fox) for a character without a picture, when its description fits one — always a proposal you accept or reject; the credit goes into the production file", "freeModels", true));
         dir.addView(toggle("Free image-to-3D demos (TripoSR, InstantMesh, Hunyuan3D-2 on Hugging Face Spaces, no key) for the views of a character's picture — slow, may be asleep or over quota; then the studio's own figure model does it", "freeSpaces", true));

@@ -5,6 +5,8 @@ on:
   push:
     branches:
       - kahanifilm-development
+      - kahani-fixture-repair
+      - mesh-rigging-v46
 
 concurrency:
   group: build-apk-${{ github.ref }}
@@ -44,7 +46,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl zip unzip
+          sudo apt-get install -y curl zip unzip python3-pil
           echo "$ANDROID_HOME/build-tools/34.0.0" >> "$GITHUB_PATH"
 
       - name: Prepare debug signing key
@@ -78,6 +80,14 @@ jobs:
           KAHANIFILM_ASSETS_PREPARED: "1"
         run: |
           bash ./build.sh
+
+      - name: Smoke-test procedural meshes and renders
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/test-classes
+          javac -source 8 -target 8 -encoding UTF-8 -cp build/classes -d build/test-classes tools/jvm/com/tarun/kahani/jvm/WorldAssetSmokeTest.java
+          java -cp build/classes:build/test-classes com.tarun.kahani.jvm.WorldAssetSmokeTest
 
       - name: Verify APK and bundled story payload
         shell: bash
@@ -122,14 +132,39 @@ jobs:
       - name: Prepare missing synthetic legacy test fixtures
         shell: bash
         run: python3 tools/scripts/prepare_legacy_test_fixtures.py
+      - name: Validate synthetic test fixture formats and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root = Path(".")
+          for name in ("char_vrinda.jpg", "char_vanusha.jpg", "char_kripa.jpg", "bg_garden.jpg"):
+              p = root / "app/src/main/assets/sample" / name
+              with Image.open(p) as im:
+                  assert im.format == "JPEG", f"{p}: expected real JPEG, got {im.format}"
+                  assert im.size == (480, 360), f"{p}: unexpected dimensions {im.size}"
+          camera = Image.open(root / "tools/testdata/upload/camera_photo.jpg")
+          assert camera.format == "JPEG"
+          exif = camera.getexif()
+          assert any(tag in exif for tag in (33434, 33437, 34855, 37386)), "camera fixture lacks capture metadata"
+          phone = Image.open(root / "tools/testdata/upload/drawn_character_phone_saved.jpg")
+          assert phone.format == "JPEG"
+          phone_exif = phone.getexif()
+          assert 271 in phone_exif and 272 in phone_exif, "phone-saved drawing fixture lacks phone make/model"
+          print("Synthetic JPEG dimensions, file signatures, EXIF and phone metadata verified.")
+          PY
       - name: Stage generated voice fixtures for Robolectric working directory
         shell: bash
         run: |
           set -euo pipefail
           mkdir -p tools/robotest/voices
-          cp voices/man.wav voices/deep_slow.wav tools/robotest/voices/
+          cp voices/*.wav tools/robotest/voices/
           test -s tools/robotest/voices/man.wav
           test -s tools/robotest/voices/deep_slow.wav
+          test -s tools/robotest/voices/woman.wav
+          test -s tools/robotest/voices/child.wav
       - name: Run production-plan, app regression, and 1,000-pass render soak tests
         shell: bash
         run: |

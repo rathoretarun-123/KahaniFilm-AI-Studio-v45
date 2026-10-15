@@ -95,6 +95,23 @@ public final class DirectorTraining {
                 .append("; mood ").append(DirectorsManual.moodName(sg.mood)).append('\n');
         b.append("  Camera: ").append(first != null ? ShotPlanner.SIZE_NAME[Math.max(0, Math.min(ShotPlanner.SIZE_NAME.length - 1, first.size))] + " first, " + ShotPlanner.MOVE_NAME[Math.max(0, Math.min(ShotPlanner.MOVE_NAME.length - 1, first.move))].toLowerCase(Locale.US) : "as planned").append("; locked tripod\n");
         b.append("  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept\n");
+        // Connect the independent Reader pass to the Director brief for each scene.
+        StringBuilder cues = new StringBuilder();
+        for (Story.Beat beat : sc.beats) {
+            if (beat == null || beat.text == null) continue;
+            for (StoryReasoner.ActivityPlan plan : StoryReasoner.activities(beat.text)) {
+                String cue = plan.toString();
+                if (cues.indexOf(cue) < 0) cues.append("  ").append(cue).append('\n');
+            }
+            for (StoryReasoner.PhenomenonPlan plan : StoryReasoner.phenomena(beat.text)) {
+                String cue = plan.toString();
+                if (cues.indexOf(cue) < 0) cues.append("  ").append(cue).append('\n');
+            }
+        }
+        if (cues.length() > 0) {
+            b.append("  READER-TO-DIRECTOR ACTION AND ENVIRONMENT CUES (honour only what the story states):\n");
+            b.append(cues);
+        }
         return b.toString();
     }
 

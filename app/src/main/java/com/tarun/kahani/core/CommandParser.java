@@ -34,6 +34,15 @@ public final class CommandParser {
     private static final String[] OFF = {"हटा", "बंद", "निकाल", "मत", "off", "remove", "no ", "without", "hata", "band", "disable", "mute", "म्यूट"};
     private static final String[] ON = {"लगा", "जोड़", "जोड", "चालू", "दिखा", "add", "show", "on", "enable", "laga", "jod"};
 
+    // Broader everyday Hindi, English and Hinglish vocabulary for post-production intent.
+    private static final String[] POST_ACTION = {"post production", "post-production", "edit", "editing", "change", "modify", "make", "create", "set", "adjust",
+            "करो", "करें", "कर दो", "बना दो", "बनाओ", "बदल", "सुधार", "ठीक", "रखो", "हटा दो", "जोड़ दो", "कर देना", "thoda", "thodi", "kar do", "karo", "badal do", "sudhar do"};
+    private static final String[] VISUAL_TERMS = {"camera", "shot", "scene", "frame", "angle", "zoom", "focus", "lighting", "light", "shadow", "background", "colour", "color",
+            "contrast", "saturation", "warmth", "brightness", "resolution", "quality", "cinematic", "slow motion", "aspect ratio",
+            "कैमरा", "शॉट", "दृश्य", "फ्रेम", "एंगल", "ज़ूम", "फोकस", "रोशनी", "प्रकाश", "छाया", "पृष्ठभूमि", "रंग", "गुणवत्ता", "धीमी गति"};
+    private static final String[] AUDIO_TERMS = {"music", "score", "soundtrack", "dialogue", "voice", "narrator", "ambience", "sound effect", "foley", "noise",
+            "संगीत", "धुन", "संवाद", "आवाज़", "आवाज", "कथावाचक", "पृष्ठभूमि ध्वनि", "ध्वनि प्रभाव"};
+
     public static Result parse(String text, List<String> characterNames) {
         Result r = new Result();
         if (text == null) return r;
@@ -373,6 +382,27 @@ public final class CommandParser {
             return c;
         }
         if (voiceWord) { Map<String, Object> c = cmd("voices"); c.put("factor", (double) amount(t, !down)); return c; }
+
         return null;
     }
+
+    /** Natural-language edit intent classifier; unsupported requests remain unknown for clarification/AI translation. */
+    public static String classifyPostProductionIntent(String text) {
+        if (text == null || text.trim().isEmpty()) return "EMPTY";
+        String t=Txt.norm(text);
+        boolean audio=false, visual=false;
+        for(String x:AUDIO_TERMS) if(t.contains(Txt.norm(x))) { audio=true; break; }
+        for(String x:VISUAL_TERMS) if(t.contains(Txt.norm(x))) { visual=true; break; }
+        if (has(t,"subtitle","subtitles","caption","captions","उपशीर्षक","सबटाइटल")) return "SUBTITLES";
+        if (has(t,"title page","title card","opening page","first page","शीर्षक पृष्ठ","पहला पेज")) return "TITLE_PAGE";
+        if (has(t,"ending page","end card","last page","final page","अंतिम पेज","आखिरी पेज")) return "END_PAGE";
+        if (has(t,"undo","revert","reset","पूर्ववत","वापस करो")) return "UNDO_OR_RESET";
+        if (audio && visual) return "MIXED_AUDIO_VISUAL";
+        if (audio) return "AUDIO";
+        if (visual) return "VISUAL";
+        if (has(t,"duration","longer","shorter","pace","speed","लंबा","छोटा","अवधि","रफ्तार","गति")) return "TIMING";
+        return "UNKNOWN";
+    }
+
+
 }

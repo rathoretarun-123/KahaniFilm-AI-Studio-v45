@@ -15,9 +15,9 @@ import java.util.Set;
 public final class Director {
 
     public static final class Options {
-        public boolean narrator = false;     // speak stage directions aloud
+        public boolean narrator = false;     // narrate only direction beats explicitly marked Speak:/Narrator:/Voice-over:
         public boolean narrateTitle = false; // speak the title on the title page
-        public boolean subtitles = false;    // can be switched on later from the command box
+        public boolean subtitles = false;    // off by default; add later only in post-production if requested
         public boolean sceneCards = false;   // "दृश्य N" cards between scenes (off: scenes flow like a film)
         public float pace = 1f;              // >1 = tighter pauses
         /**
@@ -148,9 +148,37 @@ public final class Director {
         film = new Film();
         film.story = story;
         film.subtitles = opt.subtitles;
-        // Independent reader pass: identify underspecified actions and continuity risks for the director.
-        // These remain review notes; the authored screenplay is still canon and stage directions are not spoken.
+        // Independent reader pass: identify gaps and give the director provisional, non-canonical choices.
+        // These are review notes, not spoken narration; the original script remains authoritative.
         film.notes.addAll(StoryReasoner.notes(story));
+        // Natural phenomena recognised by the reader become explicit director-facing cues.
+        for (Story.Scene scene : story.scenes) {
+            if (scene == null) continue;
+            for (Story.Beat beat : scene.beats) {
+                if (beat == null || beat.text == null || beat.text.trim().isEmpty()) continue;
+                for (StoryReasoner.PhenomenonPlan p : StoryReasoner.phenomena(beat.text)) {
+                    film.notes.add("[Director/PHENOMENON/" + p.kind + "] " + p.visualPhysics
+                            + " | sound: " + p.sound + " | lighting: " + p.lighting
+                            + " | verify actual renderer/audio support before claiming rendered.");
+                }
+            }
+        }
+        // Reader-recognised daily activities become explicit director-facing staging/physics cues.
+        // This does not invent a new story beat: only actions present in the parsed source are listed.
+        for (Story.Scene scene : story.scenes) {
+            if (scene == null) continue;
+            for (Story.Beat beat : scene.beats) {
+                if (beat == null || beat.text == null || beat.text.trim().isEmpty()) continue;
+                for (StoryReasoner.ActivityPlan plan : StoryReasoner.activities(beat.text)) {
+                    film.notes.add("[Director/ACTIVITY/" + plan.family + "] " + plan.staging
+                            + " | props: " + plan.propNeeds
+                            + " | physics: " + plan.physics
+                            + " | sound: " + plan.sound
+                            + " | continuity: " + plan.continuity
+                            + " | verify actual rig/prop support before claiming rendered.");
+                }
+            }
+        }
         if (opt.narrateTitle && story.title.length() > 0) {
             titleLine = addLine(null, story.title, Pose.HAPPY, false, false, story.title);
         }
@@ -168,10 +196,28 @@ public final class Director {
                     boolean echo = cave || Txt.has(b.manner, "गूँजती", "गूंजती", "echo");
                     beatLine[si][bi] = addLine(b.speaker, Txt.forSpeech(b.text), emo, whisper, echo, b.text);
                     film.lines.get(beatLine[si][bi]).manner = b.manner;
-                } // Stage directions are visual-only. Narration must be an authored DIALOGUE beat in the script.
+                } else if (opt.narrator && isExplicitSpeakBeat(b.text)) {
+                    String t = stripSpeakLabel(b.text);
+                    beatLine[si][bi] = addLine(null, Txt.forSpeech(Txt.withoutParens(t)), Pose.NEUTRAL, false, false, t);
+                }
             }
         }
         return film;
+    }
+
+    /** Only script text explicitly marked for spoken narration is read aloud. */
+    private static boolean isExplicitSpeakBeat(String text) {
+        if (text == null) return false;
+        String s = text.trim().toLowerCase(java.util.Locale.ROOT);
+        return s.matches("^(speak|speaker|narrator|voice[- ]?over|वाचक|सूत्रधार)\\s*[:：].+")
+                || s.matches("^\\[\\s*(speak|narrator|voice[- ]?over|वाचक|सूत्रधार)\\s*\\].+");
+    }
+
+    private static String stripSpeakLabel(String text) {
+        if (text == null) return "";
+        return text.trim()
+                .replaceFirst("(?i)^(speak|speaker|narrator|voice[- ]?over|वाचक|सूत्रधार)\\s*[:：]\\s*", "")
+                .replaceFirst("(?i)^\\[\\s*(speak|narrator|voice[- ]?over|वाचक|सूत्रधार)\\s*\\]\\s*", "");
     }
 
     private int addLine(Story.CharacterDef who, String text, int emo, boolean whisper, boolean echo, String shown) {
@@ -231,6 +277,7 @@ public final class Director {
         title.text1 = story.title;
         title.text2 = story.subtitle;
         title.backdrop = this.art.title;
+        if (this.art.title == null) film.notes.add("TITLE IMAGE REQUIRED: upload the user-approved title-page picture; a generated/location fallback is temporary only.");
         float tdur = 7.5f;
         if (titleLine >= 0) {
             Film.Line l = film.lines.get(titleLine);
@@ -338,21 +385,22 @@ public final class Director {
         end.t1 = t + 8f;
         end.text1 = story.hindi ? "समाप्त" : "The End";
         end.text2 = story.title;
-        end.backdrop = this.art.end;
+        // If no separate end card was uploaded, reuse the user-approved title-page picture for the final page.
+        end.backdrop = this.art.end != null ? this.art.end : this.art.title;
         // v40: with no picture made for the title or the end, they are drawn on the story's own place — the user's
         // picture of it, at its hour — never the studio's daylight palace garden after a night by a fire
         if (this.art.title == null || this.art.end == null) {
             Film.Seg first = null, last = null;
             for (Film.Seg sg : film.segs) if (sg.type == Film.S_SCENE && sg.backdrop != null && sg.backdrop.picture && !sg.backdrop.object) { if (first == null) first = sg; last = sg; }
-            if (this.art.title == null && first != null) { title.backdrop = first.backdrop; title.set = first.set; title.tod = first.tod; title.ground = first.ground; }
-            if (this.art.end == null && last != null) { end.backdrop = last.backdrop; end.set = last.set; end.tod = last.tod; end.ground = last.ground; }
+            // Do not silently replace a missing user title image with a random story location; keep the warning visible.
+            if (this.art.end == null && this.art.title == null && last != null) { end.backdrop = last.backdrop; end.set = last.set; end.tod = last.tod; end.ground = last.ground; }
         }
         end.fadeIn = 0.8f; end.fadeOut = 1.2f;
         film.segs.add(end);
         film.music.add(new Film.Music(Film.M_END, t, end.t1));
         film.sfx.add(new Film.Sfx(Film.SFX_END_CHORD, t + 0.4f, 5f, 0.9f));
         film.sfx.add(new Film.Sfx(Film.SFX_MAGIC, t + 0.6f, 2f, 0.5f));
-        film.notes.add("End page: \"" + end.text1 + "\"" + (this.art.end != null ? " (your picture)" : " (made by the studio)") + " + music");
+        film.notes.add("End page: \"" + end.text1 + "\"" + (this.art.end != null ? " (your ending picture)" : this.art.title != null ? " (reuses your uploaded title-page picture)" : " (temporary fallback; upload a title-page picture)") + " + music");
         film.duration = end.t1;
         mobility();
         umbrellaRain();

@@ -159,29 +159,6 @@ public final class FilmJob implements Runnable {
         return Runtime.getRuntime().maxMemory();
     }
 
-    /** Stable fingerprint of production-analysis inputs; excludes generated outputs and volatile timestamps. */
-    private String productionFingerprint(String script) {
-        StringBuilder b = new StringBuilder("conferenceProtocol=disney-pixar-inspired-editorial-director-final-v1\\n");
-        b.append("script=").append(script).append("\nmanifest=").append(project.read("cast.txt"))
-                .append("\nprojectSettings=").append(project.read("settings.txt"))
-                .append("\nonline=").append(Prefs.online(ctx))
-                .append("|autoArt=").append(Prefs.autoArt(ctx))
-                .append("|freeObjects=").append(Prefs.freeObjects(ctx))
-                .append("|studio3d=").append(Prefs.studio3d(ctx))
-                .append("|ask3d=").append(Prefs.ask3d(ctx))
-                .append("|askUploads=").append(Prefs.askUploads(ctx));
-        java.util.List<String> inventory = new java.util.ArrayList<String>();
-        for (Library.Item item : Library.get(ctx).items) {
-            File file = item.path == null ? null : new File(item.path);
-            inventory.add(item.type + "|" + item.kind + "|" + item.id + "|" + item.name + "|"
-                    + item.tags + "|" + item.meta + "|" + item.source + "|"
-                    + (file != null && file.isFile() ? file.length() + ":" + file.lastModified() : "missing"));
-        }
-        java.util.Collections.sort(inventory);
-        for (String item : inventory) b.append("\nasset=").append(item);
-        return b.toString();
-    }
-
     static String hash(String s) {
         try {
             java.security.MessageDigest md = java.security.MessageDigest.getInstance("SHA-1");
@@ -246,24 +223,6 @@ public final class FilmJob implements Runnable {
                 if (sc == null) for (java.util.Map.Entry<String, Float> e : ed.charScale.entrySet()) if (c.displayName.contains(e.getKey()) || c.aliases.contains(e.getKey())) sc = e.getValue();
                 if (sc != null && c.look != null) c.look.height *= sc;
             }
-            // Cache against every input that can change production analysis: screenplay, project cast/reference
-            // manifest, production settings and verified library inventory. A script-only key leaves stale
-            // blocker decisions and asset assumptions after references or settings change.
-            String productionKey = hash(productionFingerprint(script));
-            String productionFile = "production_review_" + productionKey + ".json";
-            // Independent reader pass: identify implied but necessary coverage and hand it to the directors.
-            // Proposals are cached as review notes, never silently inserted as canon or dialogue.
-            if (Prefs.online(ctx) && !project.has(productionFile)) {
-                step("Independent reader is checking missing beats, places and objects…", 0.018f);
-                try {
-                    String review = ScriptAI.productionConference(Prefs.cloud(ctx), story);
-                    Object parsedReview = com.tarun.kahani.core.Cloud.jsonIn(review);
-                    if (parsedReview != null) project.write(productionFile, review);
-                    else info = "Independent reader review returned invalid structured output; continuing with the original script.";
-                } catch (Exception reviewError) {
-                    info = "Independent reader review unavailable; continuing with the original script and existing director checks.";
-                }
-            }
             // the AI reads the story once more for nature and physics, also what is only implied (kept per script)
             String cueFile = "cues_" + hash(script) + ".json";
             if (project.has(cueFile)) ScriptAI.applyCues(story, project.read(cueFile));
@@ -278,19 +237,9 @@ public final class FilmJob implements Runnable {
                 }
             }
 
-            // Apply only reader/director/technical-director proposals explicitly marked auto_apply by the production chair.
-            // The report is script-hash scoped; original dialogue and original scene content are preserved.
-            if (project.has(productionFile)) {
-                com.tarun.kahani.core.ProductionPlan.Result plan = com.tarun.kahani.core.ProductionPlan.apply(story, project.read(productionFile));
-                if (!plan.valid) info = "Production conference report could not be validated; original story retained.";
-                else if (!plan.readyToRender) throw new IllegalStateException("Production review needs resolution before rendering:\\n" + com.tarun.kahani.core.ProductionPlan.blockingSummary(project.read(productionFile)));
-                else if (plan.scenesAdded > 0) info = "Production conference added " + plan.scenesAdded + " approved connective/reaction shot scene(s); authored dialogue and story events were preserved.";
-            }
-
-            // Respect upload-first intake: private-library reuse is explicit in Studio, never automatic during a render.
-            // Missing required references are requested below before the user chooses a substitute or generated asset.
-            step("Preparing the current film's references…", 0.025f);
-            String fromLib = "";
+            // the phone's library first: pictures and voices that clearly fit, no button needed
+            step("Director is looking through your library…", 0.025f);
+            String fromLib = remake ? "" : AutoLibrary.fill(ctx, project, story);
             // v39: earlier uploads read again (seated, half-length) and each front made a whole standing figure — the
             // rigged picture that plays the film, and the source of the angles Studio 3D makes
             try { Studio3DArt.reframe(project); } catch (Throwable ignored) { }
@@ -537,7 +486,7 @@ public final class FilmJob implements Runnable {
                     voicedLines++;
                     l.dur = v.length / (float) Synth.SR;
                     l.env = Mixer.envelope(v, Synth.SR);
-                    l.shape = Mixer.shape(v, Synth.SR);
+                    l.shape = Mixer.shape(v, Synth.SR, l.text);
                 } else {
                     failedLines++;
                     l.dur = Director.estimate(l.text);
@@ -578,7 +527,7 @@ public final class FilmJob implements Runnable {
             if (film.duration > 30 * 60 + 30) warning = "The film is longer than 30 minutes (" + fmt((long) film.duration) + ") — it will take longer to make.";
             film.subtitles = ed.subtitles;
             filmSeconds = film.duration;
-            { int[] psz = ed.size(); plannedFrames = (int) Math.ceil(film.duration * (Prefs.fps60(ctx) ? 60 : Prefs.fps30(ctx) ? 30 : 24)); plannedW = psz[0]; plannedH = psz[1]; }
+            { int[] psz = ed.size(); plannedFrames = (int) Math.ceil(film.duration * (Prefs.fps30(ctx) ? 30 : 24)); plannedW = psz[0]; plannedH = psz[1]; }
             updateEta();
             check();
             // pipeline steps 1-2: the Character Lock Sheet of every character and the Location Lock Plate of every
@@ -620,7 +569,7 @@ public final class FilmJob implements Runnable {
 
             // ---------------- video
             int[] want = ed.size();
-            int fps = Prefs.fps60(ctx) ? 60 : Prefs.fps30(ctx) ? 30 : 24; // 60 fps is opt-in; the device encoder and render time must sustain it
+            int fps = Prefs.fps30(ctx) ? 30 : 24;          // smooth motion (v23): 30 fps unless switched off in Settings
             File out = new File(project.dir, "film_new.mp4");
             Grade grade = new Grade(ed);
             // if this phone's encoder refuses a size, try smaller ones automatically
@@ -706,15 +655,12 @@ public final class FilmJob implements Runnable {
     public volatile int pictureChoice;
     public void choosePictures(int choice) { pictureChoice = choice; picturesWaiting = false; }
 
-    /** Missing visual references that must be offered to the user before the director invents a substitute. */
+    /** Every unresolved reference asset: people, places, backgrounds, props, objects, poses and costumes.
+     * Recomputed after each upload so the film remains paused until the user supplies references or chooses a fallback. */
     java.util.List<String> neededPictures(com.tarun.kahani.core.Story story) {
         java.util.List<String> out = new java.util.ArrayList<String>();
         try {
-            for (String[] t : AutoLibrary.missingTargets(project, story)) {
-                // Character, location and story-prop references all block this gate. Titles/end cards are not
-                // identity assets and are deliberately excluded. The progress screen exposes upload buttons.
-                if (t[0].startsWith("char:") || t[0].startsWith("place:") || t[0].startsWith("shot:")) out.add(t[1]);
-            }
+            for (String[] t : AutoLibrary.missingTargets(project, story)) out.add(t[1]);
         } catch (Throwable ignored) { }
         return out;
     }
