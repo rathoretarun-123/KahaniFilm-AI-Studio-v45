@@ -378,6 +378,8 @@ public final class FilmJob implements Runnable {
             Director.Options opt = new Director.Options();
             opt.aspect = ed.aspect;
             opt.subtitles = ed.subtitles;
+            opt.lookupUnknown = Prefs.looksUpUnknownWords(ctx);
+            opt.cloud = Prefs.cloud(ctx);
             opt.narrator = false;
             opt.narrateTitle = false;
             opt.pace = ed.speed;

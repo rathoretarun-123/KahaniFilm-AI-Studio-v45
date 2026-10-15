@@ -15,6 +15,10 @@ import java.util.Set;
 public final class Director {
 
     public static final class Options {
+        /** v47: when set, WordLookup uses this cloud as a fallback after Wikipedia; else only Wikipedia is tried. */
+        public Cloud cloud;
+        /** v47: when true, Director.direct looks up unknown content words via WordLookup. Off by default. */
+        public boolean lookupUnknown;
         public boolean narrator = false;     // speak stage directions aloud
         public boolean narrateTitle = false; // speak the title on the title page
         public boolean subtitles = false;    // can be switched on later from the command box
@@ -239,6 +243,30 @@ public final class Director {
                         film.notes.add("ASK: a picture of " + c.shown() + " in \"" + c.costumes.get(ci).label() + "\" (the script changes their dress and no uploaded picture matches)");
                     }
                 }
+            }
+        }
+        // v47: the Reader and the Director look up unknown words real-time (Wikipedia summary; the user's own cloud
+        // as a fallback) so they can understand a word they do not know. Capped at 20 lookups per film to keep the
+        // read fast; results are cached and written into film.notes as a glossary.
+        if (story != null && opt != null && opt.lookupUnknown) {
+            java.util.Set<String> seen = new java.util.HashSet<String>();
+            java.util.List<String> unknown = new java.util.ArrayList<String>();
+            for (Story.Scene sc : story.scenes) for (Story.Beat b : sc.beats) {
+                String txt = (b.text == null ? "" : b.text) + " " + (b.manner == null ? "" : b.manner);
+                for (String token : txt.split("[\\s\u0964\\p{Punct}]+")) {
+                    String w = token.trim();
+                    if (w.length() < 4) continue;
+                    String k = w.toLowerCase(java.util.Locale.ROOT);
+                    if (!seen.add(k)) continue;
+                    if (knownContentWord(w, story)) continue;
+                    unknown.add(w);
+                    if (unknown.size() >= 20) break;
+                }
+                if (unknown.size() >= 20) break;
+            }
+            for (String w : unknown) {
+                String m = WordLookup.lookup(w, (opt.cloud != null ? opt.cloud : null));
+                if (m != null && m.length() > 0) film.notes.add("GLOSSARY: " + w + " \u2014 " + (m.length() > 160 ? m.substring(0, 160) + "\u2026" : m));
             }
         }
         this.art = art == null ? new Art() : art;
@@ -1404,6 +1432,20 @@ public final class Director {
         return seg.set == pSet;
     }
 
+    /** v47: true when a word is already in the engine's known action/emotion vocabulary or a character name. */
+    static boolean knownContentWord(String word, Story story) {
+        String w = word.toLowerCase(java.util.Locale.ROOT);
+        if (story != null) for (Story.CharacterDef c : story.characters) {
+            if (c.displayName.toLowerCase(java.util.Locale.ROOT).contains(w) || w.contains(c.displayName.toLowerCase(java.util.Locale.ROOT))) return true;
+            for (String a : c.aliases) if (a.toLowerCase(java.util.Locale.ROOT).contains(w)) return true;
+        }
+        for (String v : StoryReasoner.ACTION_VOCAB) if (v.toLowerCase(java.util.Locale.ROOT).contains(w) || w.contains(v.toLowerCase(java.util.Locale.ROOT))) return true;
+        return STOP_WORDS.contains(w);
+    }
+    static final java.util.Set<String> STOP_WORDS = new java.util.HashSet<String>(java.util.Arrays.asList(
+        "and","the","with","from","into","that","this","then","than","their","there","over","under","back","here","them","they","have","will","like","just","what","when","while","after","before","once","some","something","anything","everything","nothing",
+        "\u0914\u0930","\u0932\u0947\u0915\u093F\u0928","\u092A\u0930","\u092C\u0938","\u092D\u0940","\u0924\u094B","\u0935\u0939","\u092F\u0939","\u0909\u0938","\u0909\u0928","\u0907\u0938","\u0907\u0928","\u0938\u093E\u0925","\u0906\u092A","\u092E\u0948\u0902","\u0924\u0941\u092E","\u0939\u092E","\u0915\u094D\u092F\u093E","\u0915\u094C\u0928","\u0915\u0939\u093E\u0901","\u0915\u092C","\u0915\u094D\u092F\u094B\u0902","\u0915\u0948\u0938\u0947","\u0932\u093F\u090F","\u0939\u0948","\u0939\u0948\u0902","\u0925\u093E","\u0925\u0940","\u0925\u0947","\u0917\u092F\u093E","\u0917\u0908","\u0917\u090F"
+    ));
     private String names(List<Story.CharacterDef> l) {
         StringBuilder sb = new StringBuilder();
         for (Story.CharacterDef c : l) { if (sb.length() > 0) sb.append(", "); sb.append(c.shown()); }

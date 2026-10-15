@@ -34,6 +34,8 @@ public final class Prefs {
     public static boolean fps30(Context c) { return !"0".equals(get(c, "fps30", "1")); }
     /** v47: 40 fps — smoother than 30, lighter than 60; off by default (the renderer uses it when the user turns it on). */
     public static boolean fps40(Context c) { return "1".equals(get(c, "fps40", "0")); }
+    /** v47: real-time dictionary lookup for words the Reader does not know (Wikipedia summary; off by default to stay offline-safe). */
+    public static boolean looksUpUnknownWords(Context c) { return c == null ? false : "1".equals(get(c, "lookUp", "0")); }
     /** Optional 60 fps output; substantially more drawing, memory traffic, battery use, and render time. */
     public static boolean fps60(Context c) { return "1".equals(get(c, "fps60", "0")); }
     /** The director asks before any picture the studio made in 3D is used (a proposal with Use / Reject). */

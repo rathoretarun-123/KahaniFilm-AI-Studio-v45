@@ -4697,6 +4697,7 @@ public class MainActivity extends Activity {
         dir.addView(toggle("Human QC: show me every shot's first frame before the film is made", "humanQc", true));
         dir.addView(toggle("Smooth motion: 30 frames per second instead of 24 (every move smoother; a quarter more drawing)", "fps30", true));
         dir.addView(toggle("Smoother motion: 40 frames per second (two-thirds more drawing than 24; a cinema-smooth look; device/encoder dependent)", "fps40", false));
+        dir.addView(toggle("Reader looks up unknown words online (free Wikipedia summary; your cloud as a fallback) — slower first run; results cached", "lookUp", false));
         dir.addView(toggle("High frame rate: 60 fps final video (roughly twice the 30 fps frame work; slower, hotter, larger workload; device/encoder dependent)", "fps60", false));
         dir.addView(toggle("Faster drawing: a mesh cell of 2 pixels instead of 1 (about twice as fast, a little less smooth)", "fastMesh", false));
         dir.addView(toggle("Free 3D models from GitHub (CC0 / CC-BY, e.g. KayKit's knight, mage, rogue, barbarian; the Khronos fox) for a character without a picture, when its description fits one — always a proposal you accept or reject; the credit goes into the production file", "freeModels", true));
