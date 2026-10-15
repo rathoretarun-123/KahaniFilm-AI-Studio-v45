@@ -82,11 +82,21 @@ final class SheetSaver {
         boolean panels = "place".equals(kind);
         List<com.tarun.kahani.core.Angles.Piece> parts;
         try {
-            parts = panels ? com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px.clone(), w, h, false), w, h)
-                    : com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px.clone(), w, h), w, h, "object".equals(kind));
-            if (!panels && kind.length() == 0 && parts.size() >= 2 && panelsLike(px, w, h, parts)) {
-                panels = true;
+            if (panels) {
                 parts = com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px.clone(), w, h, false), w, h);
+            } else if (kind.length() == 0) {
+                // Inspect whole-panel crops before cutting out figures. Passing silhouettes to panelsLike() loses
+                // the corner/background evidence needed to distinguish a location sheet from a character sheet.
+                List<com.tarun.kahani.core.Angles.Piece> panelCandidates =
+                        com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px.clone(), w, h, false), w, h);
+                if (panelCandidates.size() >= 2 && panelsLike(px, w, h, panelCandidates)) {
+                    panels = true;
+                    parts = panelCandidates;
+                } else {
+                    parts = com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px.clone(), w, h), w, h);
+                }
+            } else {
+                parts = com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px.clone(), w, h), w, h, "object".equals(kind));
             }
         } catch (Throwable e) { return out; }
         if (parts.size() < 2) return out;

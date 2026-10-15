@@ -494,6 +494,21 @@ public class AppTest {
         return t != null && (t.startsWith("✅") || t.startsWith("Could not") || t.startsWith("No picture") || t.startsWith("These pictures"));
     }
 
+    /**
+     * Legacy photo-specific acceptance tests require the original user-family reference images.
+     * The fixture generator intentionally does not invent these identity assets. Skip transparently
+     * when the source pack is absent, rather than treating synthetic art as an identity test.
+     */
+    static void requireOriginalFixtures(File dir, String... relativePaths) {
+        for (String relative : relativePaths) {
+            File f = new File(dir, relative);
+            org.junit.Assume.assumeTrue(
+                    "BLOCKED: original reference fixture is not present (" + f.getPath()
+                            + "); synthetic test art is not a substitute for identity validation.",
+                    f.isFile() && f.length() > 0);
+        }
+    }
+
     static int[] pixelsOf(File f, int[] wh) {
         Bitmap b = android.graphics.BitmapFactory.decodeFile(f.getAbsolutePath());
         assertNotNull(f.getName(), b);
@@ -4940,6 +4955,7 @@ public class AppTest {
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File dir = new File(ASSETS.getParentFile().getParentFile().getParentFile().getParentFile(), "tools/testdata/sheets38");
+        requireOriginalFixtures(dir, "08_papa_sheet_a.png");
         File[] sheets = dir.listFiles();
         java.util.Arrays.sort(sheets);
         assertEquals(36, sheets.length);
@@ -5100,6 +5116,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        requireOriginalFixtures(dir, "08_papa_sheet_a.png");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/chai_par_baat.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
         p.write("script.txt", script);
@@ -5466,6 +5483,8 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40"), fam = new File(root, "tools/testdata/sheets38");
+        requireOriginalFixtures(dir, "05_boy_turnaround_a.jpg");
+        requireOriginalFixtures(fam, "20_pari_toddler_a.png");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/jhoola_aur_fisalpatti.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
         p.write("script.txt", script);
@@ -5552,6 +5571,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40b");
+        requireOriginalFixtures(dir, "01_arjun_shirt_rod_6views.jpg");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/alav_ke_paas.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
         assertEquals("अलाव के पास", st.title);
@@ -5669,6 +5689,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40");
+        requireOriginalFixtures(dir, "05_boy_turnaround_a.jpg");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/rahul_ka_park.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
         assertEquals("राहुल का पार्क", st.title);
@@ -6023,6 +6044,7 @@ public class AppTest {
     public void v42AnglesAndMouthsOfTheUsersLabelledFigures() throws Exception {
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File td = new File(root, "tools/testdata");
+        requireOriginalFixtures(td, "sheets40/05_boy_turnaround_a.jpg", "sheets38/22_papa_beard_b.png", "sheets38/29_pari_toddler_b.png");
         java.util.Map<String, String[]> lab = new java.util.LinkedHashMap<String, String[]>();
         for (String l : Files.readAllLines(new File(td, "labels/figures.tsv").toPath(), java.nio.charset.StandardCharsets.UTF_8)) {
             if (l.startsWith("#") || l.trim().isEmpty()) continue;
