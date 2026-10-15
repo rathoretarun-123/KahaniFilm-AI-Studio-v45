@@ -216,6 +216,60 @@ public final class FilmJob implements Runnable {
         return st;
     }
 
+    /**
+     * v47.3: the user's reference frames and clips (the studio page, up to five frames and two clips): their mean light
+     * becomes the finish's auto-exposure target, and the film's notes say what the quality check compares against.
+     * Three frames are read from each clip (a quarter, a half and three quarters of the way through).
+     */
+    private void referenceLook(Film film) {
+        com.tarun.kahani.core.FilmLook.referenceLuma = -1;
+        com.tarun.kahani.core.FilmLook.referenceCount = 0;
+        java.util.List<File> frames = project.refFrames(), clips = project.refVideos();
+        if (frames.isEmpty() && clips.isEmpty()) return;
+        float sum = 0;
+        int cnt = 0;
+        for (File f : frames) {
+            try {
+                android.graphics.BitmapFactory.Options o = new android.graphics.BitmapFactory.Options();
+                o.inSampleSize = 4;
+                android.graphics.Bitmap b = android.graphics.BitmapFactory.decodeFile(f.getAbsolutePath(), o);
+                if (b == null) continue;
+                int[] px = new int[b.getWidth() * b.getHeight()];
+                b.getPixels(px, 0, b.getWidth(), 0, 0, b.getWidth(), b.getHeight());
+                b.recycle();
+                float m = com.tarun.kahani.core.FilmLook.meanLuma(px, px.length);
+                if (m >= 0) { sum += m; cnt++; }
+            } catch (Throwable ignored) { /* a frame that cannot be read is left out */ }
+        }
+        for (File v : clips) {
+            android.media.MediaMetadataRetriever mr = null;
+            try {
+                mr = new android.media.MediaMetadataRetriever();
+                mr.setDataSource(v.getAbsolutePath());
+                String d = mr.extractMetadata(android.media.MediaMetadataRetriever.METADATA_KEY_DURATION);
+                long us = d == null ? 0 : Long.parseLong(d.trim()) * 1000L;
+                for (int i = 1; i <= 3; i++) {
+                    android.graphics.Bitmap b = mr.getFrameAtTime(us * i / 4, android.media.MediaMetadataRetriever.OPTION_CLOSEST_SYNC);
+                    if (b == null) continue;
+                    android.graphics.Bitmap s = android.graphics.Bitmap.createScaledBitmap(b, Math.max(1, b.getWidth() / 4), Math.max(1, b.getHeight() / 4), true);
+                    int[] px = new int[s.getWidth() * s.getHeight()];
+                    s.getPixels(px, 0, s.getWidth(), 0, 0, s.getWidth(), s.getHeight());
+                    if (s != b) s.recycle();
+                    b.recycle();
+                    float m = com.tarun.kahani.core.FilmLook.meanLuma(px, px.length);
+                    if (m >= 0) { sum += m; cnt++; }
+                }
+            } catch (Throwable ignored) { /* a clip the phone cannot decode is left out */ }
+            finally { if (mr != null) try { mr.release(); } catch (Throwable ignored) { /* nothing to free */ } }
+        }
+        if (cnt == 0) { film.notes.add("Reference frames/clips given, but none could be read — the finish uses its own light (0.30)"); return; }
+        float mean = sum / cnt;
+        com.tarun.kahani.core.FilmLook.referenceLuma = mean;
+        com.tarun.kahani.core.FilmLook.referenceCount = cnt;
+        film.notes.add(String.format(java.util.Locale.US, "Reference: %d frame(s) + %d clip(s), mean light %.0f%% — the finish is lifted towards it (%.0f%%) and the quality check compares every frame with it",
+                frames.size(), clips.size(), mean * 100, Math.max(0.26f, Math.min(0.42f, mean)) * 100));
+    }
+
     public void run() {
         Voices voices = null;
         // every job has its own working folder; old leftovers (e.g. after the app was killed) are removed
@@ -558,6 +612,7 @@ public final class FilmJob implements Runnable {
             // ---------------- direction & sound
             step("Director is staging the scenes…", 0.29f);
             film = dir.direct(art);
+            referenceLook(film);
             // background sounds the user picked for parts of the story
             for (Film.Amb a : film.ambience) {
                 Film.Seg sg = film.segAt(a.t0 + 0.05f);

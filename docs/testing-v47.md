@@ -241,3 +241,47 @@ The keyed prop insert and the finer rain in आखिरी जोड़ी: ![i
   `addMany` reads images through `Project.readPicture` (a 100 MB photo is never read whole into memory);
   `readPicture` verifies the bytes decode before they are kept.
 * APK: `release/KahaniFilm-v47.apk`, CI artifact **KahaniFilm-v47-apk** (plus the old `KahaniFilm-debug-apk` name).
+
+
+## 6. v47.3 — the last night pass (16 October 2026, 03:30–05:30 IST): the acts the user asked for, frame by frame
+
+A test script (`acts.txt`: a chair sit, getting up, lying down on the bed and sleeping, waking and getting up, a fall while
+walking, blood from the head, a death, the girl kneeling by him) was rendered with the user's बाबू and बच्ची pictures and every
+staged key and every drawn pose was dumped (`KEYS=1`, `-Dkahani.poseDebug`, `-Dkahani.camDebug`) and compared with the frames.
+
+### 6.1 What the frames showed, and what was changed
+
+| Frame | Defect seen | Change |
+|---|---|---|
+| 34–41 s | After the fall बाबू stood up, bled standing, and only then knelt and died | **Director** `downAfter()`: a fall the script follows with blood or a death (before any getting-up word, in the next five beats — dialogue does not count) is not got up from; the wound and the death are staged on him lying there (`staysDown`) |
+| 42–46 s | The girl's kneel (key `b3` at 41.8 s) did not show: the picture's legs were scaled to 56 % and read as a shorter child standing | **Rig** `State.kneel` + `KNEEL_FOLD`: the thighs keep their length and stand on the knees, the shins fold under (88 %), the knees part; `feetRise` lowers the picture so the knees rest on the ground; **Renderer** `kneelAmount()` eases it in and out over 0.6 s (`Pose.kneel`) |
+| 42–46 s | Her photo's grin stayed through the death (the frown pulled the corners 0.4 of the mouth's half-width) | **Rig** `faceMesh`: corners 0.6 down and the lips pressed together (two bumps squeeze the mouth shut) — the sad face now reads on a picture that smiles with its teeth |
+| 42–46 s | The ground was under the letterbox: the dead man and the kneeling mourner were framed at standing height (shots `cy` 393–424 for a ground line at 670) | **Director** `groundInFrame()` after the technical director and the quality check: a shot up to zoom 1.9 with someone lying, kneeling, crouching or on the floor keeps the ground a tenth of the frame above its lower edge, and a shot about one lying is centred on them (`cy` now 456–492); `frame()` also uses `poseHeight()` |
+| 90 s (user's crop) | The seated profile's lap read as a flat band; the bench was a flat rectangle | **Rig** `SIDE_THIGH` 84° → 76° (the thigh slopes to the knee as a camera a little above eye level sees it); **Renderer** bench: contact shadow, shaded plank legs, a cross rail, a thick top with a lit face, a dark front edge and grain lines; the bed likewise (posts, lit rails, a quilt crease, a pillow with its fold) |
+
+Before (v47.2) and after (v47.3) at 45–46 s of the acts script: `docs/img/v47/acts_v472_before.jpg` → `docs/img/v47/acts_v473_death_kneel.jpg`;
+the girl's face, standing at 33.5 s and kneeling in grief at 45 s: `docs/img/v47/acts_v473_sad_face.jpg`; the bench at 90 s of बाबू के लिए: `docs/img/v47/babu_v473_bench.jpg`.
+
+### 6.2 Rigid and soft things (the user: "identify rigid and not rigid items … expand the library as far as possible")
+
+`core/Rigidity.java`: one list shared by the reader, the director and the technical director — about 200 rigid words (sticks,
+tools, weapons, instruments, vessels, furniture, vehicles, stone/wood/metal; Hindi, Hinglish and English) and about 120 soft ones
+(sarees, dupattas, sheets, ropes, flags, hair, leaves, water, smoke …). `Rigidity.kind(text)` says what a thing is; a rigid thing
+found in a character's picture is lifted out and drawn straight from the hand (`Art.findRod`, v47.2), never bent by the mesh or the
+wind; a soft one moves with the body and the wind through the mesh. The director writes the story's ledger into the film's notes
+("Rigid and soft things …") so every film shows what was rigged as what. The user's sample pictures of such events go in as
+reference frames (6.3).
+
+### 6.3 Reference frames and clips on the studio page
+
+Up to five full frames (characters, props and background together) and two clips per film, apart from the story's pictures
+(`Project.refFrames()/refVideos()`, saved under `refs/`). The film job measures their mean light (three frames from each clip through
+`MediaMetadataRetriever`) and sets the finish's auto-exposure target to it (`FilmLook.Params.target`, 0.26–0.42; a night still keeps its
+dark through `maxLift`), and the film's notes record the comparison for the quality check.
+
+### 6.4 Tests and CI
+
+Pure-JVM suite on the final classes: see `jvm_tests3.log` in the session record (38 tests). CI: the 45-minute job was being cancelled by
+its own timeout (the 100,000-pass dashboard soak and the 3 × 1,000-pass story soak); on CI the soaks now run 3,000 and 3 × 25 passes
+(`CI` set), the full counts stay the default locally and on demand (`-Dkahani.dashboard.passes`, `-Dkahani.story.passes`), and the job
+has 70 minutes. The 1,000-pass-per-story and 100,000-pass dashboard runs of v47.2 (§5.4) stand as the record.

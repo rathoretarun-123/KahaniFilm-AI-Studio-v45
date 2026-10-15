@@ -7,6 +7,8 @@ import java.util.List;
 
 /** Draws any moment of the film. Same code renders on the phone and in the desktop test harness. */
 public final class Renderer {
+    /** -Dkahani.poseDebug: every actor's pose as drawn, one line per frame (the desktop harness; never on the phone). */
+    static final boolean POSE_DEBUG = System.getProperty("kahani.poseDebug") != null;
     public static final float W = 1280, H = 720;
 
     private final Film film;
@@ -1488,6 +1490,7 @@ public final class Renderer {
         float quakeNow = film == null ? 0 : film.weather(Film.W_QUAKE, t);
         p.sit = sitAmount(a, t);
         p.lie = lieAmount(a, t);
+        p.kneel = kneelAmount(a, t);
         int seat = seatOf(a, t);
         p.seat = seat;
         // v35: lying back and sitting up move through it (the body turns by the lie amount); getting up: still rising
@@ -2889,6 +2892,27 @@ public final class Renderer {
         return wasSitting ? 1 - u : 0;
     }
 
+    /** v47.3: 0 upright .. 1 on the knees: going down and getting up each take about 0.6 s, eased. */
+    static float kneelAmount(Film.Actor a, float t) {
+        Film.Key cur = null;
+        float runStart = 0;
+        boolean kneeling = false;
+        for (Film.Key k : a.keys) {
+            if (k.t > t) break;
+            boolean k2 = k.body == Pose.KNEEL;
+            if (cur == null || k2 != kneeling) runStart = k.t;
+            cur = k;
+            kneeling = k2;
+        }
+        if (cur == null) return 0;
+        float u = Math.min(1, (t - runStart) / 0.6f);
+        u = u * u * (3 - 2 * u);
+        if (kneeling) return runStart <= a.keys.get(0).t ? 1 : u;
+        boolean was = false;
+        for (Film.Key k : a.keys) { if (k.t >= runStart) break; was = k.body == Pose.KNEEL; }
+        return was ? 1 - u : 0;
+    }
+
     /** v35: 0 upright .. 1 lying: lying back and sitting up each take about 0.9 s, eased (never a fall). */
     static float lieAmount(Film.Actor a, float t) {
         float runStart = 0;
@@ -3086,16 +3110,30 @@ public final class Renderer {
                 // v35: a bed — the frame on short legs, the mattress, a headboard and a pillow at the head end
                 float bl = h * 1.25f, bt = -h * BED_TOP, head = -facing;
                 if (!front) {
-                    g.color(0xFF5D4037);
-                    g.rect(-bl / 2, bt + h * 0.06f, h * 0.04f, -bt - h * 0.06f); g.rect(bl / 2 - h * 0.04f, bt + h * 0.06f, h * 0.04f, -bt - h * 0.06f);
+                    // v47.3: a wooden bed with some weight to it: a shadow under it, turned legs shaded round, a
+                    // headboard with a lit top rail, the side rail, a mattress with a lit top and a darker edge, and
+                    // a folded sheet and a pillow with their creases
+                    float lw = h * 0.045f;
+                    g.color(0x2E000000); g.oval(0, h * 0.006f, bl * 0.5f, h * 0.025f);
+                    g.linear(-bl / 2, 0, -bl / 2 + lw, 0, 0xFF3E2723, 0xFF795548);
+                    g.rect(-bl / 2, bt + h * 0.06f, lw, -bt - h * 0.06f);
+                    g.linear(bl / 2 - lw, 0, bl / 2, 0, 0xFF795548, 0xFF3E2723);
+                    g.rect(bl / 2 - lw, bt + h * 0.06f, lw, -bt - h * 0.06f);
                     float hx = head * bl / 2;
-                    g.linear(0, -h * 0.62f, 0, bt, 0xFF8D6E63, 0xFF5D4037);
-                    g.roundRect(hx - h * 0.04f, -h * 0.6f, h * 0.08f, h * 0.6f, h * 0.03f);
-                    g.color(0xFF6D4C41); g.rect(-bl / 2, bt + h * 0.04f, bl, h * 0.05f);
-                    g.linear(0, bt - h * 0.01f, 0, bt + h * 0.05f, 0xFFF5F0E6, 0xFFD9D0C0);
-                    g.roundRect(-bl / 2 + h * 0.02f, bt - h * 0.01f, bl - h * 0.04f, h * 0.06f, h * 0.025f);
-                    g.color(0xFFFFFFFF); g.roundRect(hx - head * h * 0.24f - h * 0.1f, bt - h * 0.06f, h * 0.2f, h * 0.07f, h * 0.035f);
-                    g.color(0x22000000); g.line(hx - head * h * 0.24f - h * 0.07f, bt - h * 0.02f, hx - head * h * 0.24f + h * 0.07f, bt - h * 0.02f, h * 0.006f);
+                    g.linear(hx - h * 0.045f, 0, hx + h * 0.045f, 0, head > 0 ? 0xFF8D6E63 : 0xFF4E342E, head > 0 ? 0xFF4E342E : 0xFF8D6E63);
+                    g.roundRect(hx - h * 0.045f, -h * 0.62f, h * 0.09f, h * 0.62f, h * 0.03f);
+                    g.color(0xFFA1887F); g.roundRect(hx - h * 0.06f, -h * 0.64f, h * 0.12f, h * 0.035f, h * 0.012f);
+                    g.linear(0, bt + h * 0.04f, 0, bt + h * 0.09f, 0xFF7B5A48, 0xFF4E342E);
+                    g.rect(-bl / 2, bt + h * 0.04f, bl, h * 0.05f);
+                    g.color(0x26000000); g.line(-bl / 2 + h * 0.03f, bt + h * 0.065f, bl / 2 - h * 0.03f, bt + h * 0.065f, h * 0.004f);
+                    g.linear(0, bt - h * 0.012f, 0, bt + h * 0.05f, 0xFFFAF6EE, 0xFFCFC4B2);
+                    g.roundRect(-bl / 2 + h * 0.02f, bt - h * 0.012f, bl - h * 0.04f, h * 0.062f, h * 0.025f);
+                    g.color(0x1A000000); g.line(-bl / 2 + h * 0.03f, bt + h * 0.025f, bl / 2 - h * 0.03f, bt + h * 0.025f, h * 0.005f);
+                    float px = hx - head * h * 0.24f;
+                    g.linear(0, bt - h * 0.07f, 0, bt + h * 0.01f, 0xFFFFFFFF, 0xFFE0D8CC);
+                    g.roundRect(px - h * 0.11f, bt - h * 0.065f, h * 0.22f, h * 0.075f, h * 0.035f);
+                    g.color(0x22000000); g.line(px - h * 0.07f, bt - h * 0.02f, px + h * 0.07f, bt - h * 0.02f, h * 0.006f);
+                    g.color(0x16000000); g.line(px - h * 0.09f, bt - h * 0.045f, px - h * 0.03f, bt - h * 0.03f, h * 0.004f);
                 }
                 break;
             }
@@ -3136,17 +3174,31 @@ public final class Renderer {
                 // sitter read as someone standing behind a bench (the user: "बाबू is not even sitting").
                 top = -h * 0.25f;
                 if (!front) {
-                    g.color(0xFF6D4C41);
-                    g.rect(-w * 0.36f, top, h * 0.035f, -top); g.rect(w * 0.36f - h * 0.035f, top, h * 0.035f, -top);
-                    g.linear(0, top, 0, top + h * 0.06f, 0xFFA1887F, 0xFF6D4C41);
-                    g.roundRect(-w * 0.42f, top, w * 0.84f, h * 0.055f, h * 0.02f);
+                    // v47.3: a wooden bench, not a flat slab: a contact shadow on the ground, two plank legs shaded
+                    // round, a cross rail between them, a thick top with a lit upper face and a darker front edge,
+                    // and grain lines along the plank
+                    float pl = -w * 0.42f, pw = w * 0.84f, th = h * 0.058f, lw = h * 0.042f;
+                    g.color(0x30000000); g.oval(0, h * 0.006f, pw * 0.5f, h * 0.022f);
+                    g.linear(-w * 0.36f, 0, -w * 0.36f + lw, 0, 0xFF4E342E, 0xFF8D6E63);
+                    g.rect(-w * 0.36f, top + th * 0.8f, lw, -top - th * 0.8f);
+                    g.linear(w * 0.36f - lw, 0, w * 0.36f, 0, 0xFF8D6E63, 0xFF4E342E);
+                    g.rect(w * 0.36f - lw, top + th * 0.8f, lw, -top - th * 0.8f);
+                    g.linear(0, top + h * 0.13f, 0, top + h * 0.155f, 0xFF7B5A48, 0xFF4E342E);
+                    g.rect(-w * 0.36f + lw, top + h * 0.13f, w * 0.72f - 2 * lw, h * 0.025f);
+                    g.linear(0, top, 0, top + th * 0.62f, 0xFFB9937A, 0xFF8D6E63);
+                    g.roundRect(pl, top, pw, th * 0.66f, h * 0.012f);
+                    g.linear(0, top + th * 0.55f, 0, top + th, 0xFF6D4C41, 0xFF3E2723);
+                    g.roundRect(pl, top + th * 0.55f, pw, th * 0.45f, h * 0.009f);
+                    g.color(0x263E2723);
+                    for (int i = 1; i <= 3; i++) g.line(pl + h * 0.025f, top + th * 0.15f * i, pl + pw - h * 0.025f, top + th * 0.15f * i + h * 0.0025f, h * 0.0035f);
+                    g.color(0x40FFFFFF); g.line(pl + h * 0.02f, top + h * 0.004f, pl + pw - h * 0.02f, top + h * 0.004f, h * 0.004f);
                 }
                 if (front && legsIn) {
                     // the plank's front edge shows only beside the hips: the seat is under the sitter, never across them
-                    g.linear(0, top + h * 0.012f, 0, top + h * 0.06f, 0xFFA1887F, 0xFF6D4C41);
-                    float gap = h * 0.16f;
-                    g.roundRect(-w * 0.42f, top + h * 0.012f, w * 0.42f - gap, h * 0.048f, h * 0.015f);
-                    g.roundRect(gap, top + h * 0.012f, w * 0.42f - gap, h * 0.048f, h * 0.015f);
+                    float th = h * 0.058f, gap = h * 0.16f;
+                    g.linear(0, top + h * 0.012f, 0, top + th, 0xFF8D6E63, 0xFF4E342E);
+                    g.roundRect(-w * 0.42f, top + h * 0.012f, w * 0.42f - gap, th - h * 0.012f, h * 0.012f);
+                    g.roundRect(gap, top + h * 0.012f, w * 0.42f - gap, th - h * 0.012f, h * 0.012f);
                 }
                 break;
             case Film.SEAT_LOG:
@@ -3446,9 +3498,12 @@ public final class Renderer {
         st.floor = p.seat == Film.SEAT_FLOOR;                // v35: cross-legged on the floor
         if (p.sit > 0) st.lean -= 2 * p.sit;
         if (p.sit > 0.02f && p.sit < 0.98f && p.lie < 0.01f) st.lean += 9 * (float) Math.sin(Math.PI * p.sit);     // v35: forward over the feet
+        // v47.3: a picture's rig kneels by folding the shins under (Rig.kneel, eased in and out over 0.6 s); the drawn
+        // rig still shortens its legs
+        if (sp != null && p.kneel > 0 && p.sit <= 0) st.kneel = p.kneel;
         switch (p.body) {
             case Pose.SIT: break;
-            case Pose.KNEEL: st.legScale = 0.56f; st.lean += 5; st.nod += 0.3f; break;      // v44: lower — down on the knees
+            case Pose.KNEEL: if (sp == null) st.legScale = 0.56f; st.lean += 5; st.nod += 0.3f; break;      // v44: lower — down on the knees
             case Pose.CROUCH: st.legScale = 0.75f; st.lean += 9; st.nod += 0.4f; break;
             default:
         }
@@ -4021,6 +4076,9 @@ public final class Renderer {
         float mirror = mirrorFor(sp, p);
         Rig.State st = rigged ? rigState(p, actor, sp, mirror) : null;
         if (rigged && beast) animalState(st, p);
+        if (POSE_DEBUG) System.err.printf(java.util.Locale.US, "POSE t=%.2f %s body=%d emo=%d sit=%.2f lie=%.2f kneel=%.2f rigged=%b face=%b still=%b legs=%b stKneel=%.2f frown=%.2f legScale=%.2f sp=%dx%d%n",
+                p.time, actor == null || actor.c == null ? "?" : actor.c.displayName, p.body, p.emotion, p.sit, p.lie, p.kneel, rigged, rig != null && rig.face, rig != null && rig.still, rig != null && rig.legs,
+                st == null ? -1 : st.kneel, st == null ? -1 : st.frown, st == null ? -1 : st.legScale, sp.w, sp.h);
         // v39: what the film's pictures really did (MakeFilm STATS=1, tests): drawn with a living face, and speaking
         // frames whose jaw moved
         if (actor != null) {
@@ -4091,6 +4149,11 @@ public final class Renderer {
             float rise = rig.feetRise(st, h);
             if (rise > 0) g.translate(0, rise);
             rig.bodyMesh(rf, st, left, top, w, h, h * pxPerUnit);
+            if (POSE_DEBUG) {
+                int stride = rf.cols + 1, mid = rf.cols / 2;
+                System.err.printf(java.util.Locale.US, "MESH %s rows=%d cols=%d top=%.1f bottom=%.1f (picture top %.1f bottom %.1f) rise=%.1f h=%.1f%n",
+                        actor == null || actor.c == null ? "?" : actor.c.displayName, rf.rows, rf.cols, rf.body[mid * 2 + 1], rf.body[(rf.rows * stride + mid) * 2 + 1], top, top + h, rise, h);
+            }
             // v35: the copy of the picture nearest its size on the screen (a large picture drawn small shimmers)
             float shrink = sp.h / Math.max(1f, h * pxPerUnit);
             Object bodyImg = bare ? sp.bareImg : Art.mip(sp.img, sp.imgHalf, sp.imgQuarter, shrink);

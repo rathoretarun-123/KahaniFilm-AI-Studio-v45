@@ -23,7 +23,26 @@ public final class FilmLook {
         public float green;           // -1 magenta .. +1 green tint (the colour script: a cave is green, a night is blue)
         /** v47.2: how far the auto-exposure may lift a dark frame's mid tones (0.25 by day; a night keeps its dark). */
         public float maxLift = 0.25f;
-        public Params set(Params o) { warmth = o.warmth; saturation = o.saturation; contrast = o.contrast; bloom = o.bloom; green = o.green; maxLift = o.maxLift; return this; }
+        /** v47.3: the mean light (0..1, before the finish) the auto-exposure lifts a frame towards — 0.30, or the user's reference frames'. */
+        public float target = 0.30f;
+        public Params set(Params o) { warmth = o.warmth; saturation = o.saturation; contrast = o.contrast; bloom = o.bloom; green = o.green; maxLift = o.maxLift; target = o.target; return this; }
+    }
+
+    /**
+     * v47.3: the user's reference frames and clips for this film (the studio page): their mean light, 0..1, sets the
+     * auto-exposure's target for every part of the film (-1: none given, the fixed 0.30). Set by the film job before
+     * it renders, read by {@link #forSeg}.
+     */
+    public static volatile float referenceLuma = -1;
+    public static volatile int referenceCount;
+
+    /** The mean light (0..1) of a picture's pixels, as the auto-exposure measures a frame. */
+    public static float meanLuma(int[] px, int n) {
+        if (px == null || n <= 0) return -1;
+        long sum = 0;
+        int step = Math.max(1, n / 20000), cnt = 0;
+        for (int i = 0; i < n; i += step) { int c = px[i]; sum += ((c >> 16 & 255) * 77 + (c >> 8 & 255) * 150 + (c & 255) * 29) >> 8; cnt++; }
+        return cnt == 0 ? -1 : sum / (255f * cnt);
     }
 
     private final int w, h, sw, sh;
@@ -82,6 +101,9 @@ public final class FilmLook {
         if (s.festive) { out.saturation += 0.04f; out.bloom += 0.05f; }
         out.warmth = Math.max(-0.5f, Math.min(0.45f, out.warmth));
         out.maxLift = s.tod == Sets.NIGHT ? 0.06f : s.tod == Sets.EVENING ? 0.14f : 0.25f;
+        // v47.3: the user's reference frames set the light the film is lifted towards (within reason: 0.26..0.42);
+        // a night still keeps its dark through maxLift
+        out.target = referenceLuma > 0 ? Math.max(0.26f, Math.min(0.42f, referenceLuma)) : 0.30f;
         return out;
     }
 
@@ -116,6 +138,7 @@ public final class FilmLook {
         out.bloom = a.bloom + (b.bloom - a.bloom) * k;
         out.green = a.green + (b.green - a.green) * k;
         out.maxLift = a.maxLift + (b.maxLift - a.maxLift) * k;
+        out.target = a.target + (b.target - a.target) * k;
     }
 
     private void build(Params p) {
@@ -238,7 +261,7 @@ public final class FilmLook {
         // wants its mid tones lifted, up to the moment's maxLift; eased in over about ten frames
         if (cntL > 0) {
             float mean = sumL / (255f * cntL);
-            float want = mean < 0.30f ? Math.min(p.maxLift, (0.30f - mean) * 2f) : 0;
+            float want = mean < p.target ? Math.min(p.maxLift, (p.target - mean) * 2f) : 0;
             lift += (want - lift) * 0.12f;
         }
     }

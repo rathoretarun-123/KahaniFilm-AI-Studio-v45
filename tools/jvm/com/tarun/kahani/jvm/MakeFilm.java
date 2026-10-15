@@ -127,9 +127,9 @@ public class MakeFilm {
         // KEYS=1: every character's keys (time, body, seat, eyes shut, visible) — to check staging against the frames
         if (System.getenv("KEYS") != null) for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) {
             StringBuilder kb = new StringBuilder();
-            for (Film.Key k : ac.keys) kb.append(String.format(java.util.Locale.US, " [%.2f b%d s%d%s%s]", k.t, k.body, k.seat, k.eyesShut ? " shut" : "", k.visible ? "" : " hidden"));
+            for (Film.Key k : ac.keys) kb.append(String.format(java.util.Locale.US, " [%.2f b%d s%d a%d%s%s]", k.t, k.body, k.seat, k.anchor, k.eyesShut ? " shut" : "", k.visible ? "" : " hidden"));
             for (Film.Act at : ac.acts) kb.append(String.format(java.util.Locale.US, " {act g%d %.2f-%.2f i%d}", at.type, at.t0, at.t1, at.item));
-            System.out.printf("  keys seg %.1f-%.1f %s:%s%n", sg.t0, sg.t1, ac.c.displayName, kb);
+            System.out.printf("  keys seg %.1f-%.1f ground=%.0f %s:%s%n", sg.t0, sg.t1, sg.ground, ac.c.displayName, kb);
         }
         if (System.getenv("LINES") != null) {
             for (Film.Weather w : film.weather) System.out.printf("  weather %d %.1f-%.1f x%.2f%n", w.type, w.t0, w.t1, w.strength);

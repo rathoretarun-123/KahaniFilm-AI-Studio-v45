@@ -72,6 +72,8 @@ public final class Rig {
          *  right, -1 its left); its thighs swing forward to the horizontal and the shins hang from the knees. 0: a
          *  front picture's sit (the thighs shorten towards the viewer). */
         public float sitSide;
+        /** v47.3: a picture's rig on its knees (0..1): the thighs stand on the knees, the shins fold back under. */
+        public float kneel;
         /** v44: pedalling a cycle: the crank's angle (radians, in the picture's frame) and how much the legs follow it. */
         public float pedal, pedalAmt;
         /** v35: seated on the floor, cross-legged: the shins fold under too and the knees spread. */
@@ -105,7 +107,7 @@ public final class Rig {
             headRot = nod = lean = armL = armR = legLAng = legRAng = legLLift = legRLift = breathe = wind = time = stride = 0;
             tail = jaw = ear = earBack = walkPhase = walkAmt = mountJaw = 0;
             lipWide = lipRound = 0;
-            legScale = 1; sit = 0; sitSide = 0; twirl = false; floor = false;
+            legScale = 1; sit = 0; sitSide = 0; kneel = 0; twirl = false; floor = false;
             smile = frown = innerUp = browUp = browUpR = anger = wide = squint = 0;
         }
         /** Moves the face part of this state towards target (k = 0..1 per frame). */
@@ -751,7 +753,9 @@ public final class Rig {
             // the shins are carried by the knee and hang straight down from it; across the knee the two are blended
             float knee = hipY + (bottom - hipY) * 0.5f, ky = f.T0 + knee * f.H0;
             // (v44: pedalling — the knee rises as the pedal comes up, falls as it goes down)
-            double th = Math.toRadians(84 * Math.min(1, s.sit) - (s.pedalAmt > 0 ? 16 * s.pedalAmt * Math.sin(s.pedal) : 0));
+            // (v47.3: to SIDE_THIGH degrees, not the full horizontal: seen a little from above the thigh slopes down to the
+            // knee, and the seated lap no longer reads as a flat shelf)
+            double th = Math.toRadians(SIDE_THIGH * Math.min(1, s.sit) - (s.pedalAmt > 0 ? 16 * s.pedalAmt * Math.sin(s.pedal) : 0));
             float c = (float) Math.cos(th), sn = -(float) Math.sin(th) * (s.sitSide > 0 ? 1 : -1);
             float jx = f.L0 + cx * f.W0, dx = x - jx, dy = y - hy;
             float tx = jx + c * dx - sn * dy, ty = hy + sn * dx + c * dy;                 // the point on the swung thigh
@@ -787,6 +791,14 @@ public final class Rig {
                 else sy2 = y - (knee - hipY) * f.H0 * 0.8f * s.sit;
                 sx2 = f.L0 + (cx + (u - cx) * (1 + 0.14f * s.sit * smooth(hipY, knee, v))) * f.W0 + yd;
             }
+        } else if (s.kneel > 0) {
+            // v47.3: on the knees: the thighs keep their length and stand on the knees; below the knee the shins fold
+            // back under (the feet are behind), so the picture ends at the knees and the whole of it comes down to
+            // put them on the ground (feetRise). The knees part a little. (Scaling the whole leg to half, as before,
+            // read as a shorter person standing.)
+            float knee = hipY + (bottom - hipY) * 0.5f, ky = f.T0 + knee * f.H0;
+            if (v > knee) sy2 = ky + (y - ky) * (1 - KNEEL_FOLD * s.kneel);
+            if (legs) sx2 = x + (u < gapX ? -1 : 1) * 0.04f * f.W0 * s.kneel * smooth(hipY, knee, v);
         }
         if (legs) {
             float side = smooth(gapX - 0.02f, gapX + 0.02f, u);     // 0 = left leg, 1 = right leg
@@ -873,8 +885,12 @@ public final class Rig {
             n = add(d, n, ex2, ey2 + 2.1f * er, 1.4f * er, 0, -0.35f * er * s.smile);
         }
         if (s.frown > 0) {           // corners down
-            n = add(d, n, mx - mh, my, 0.65f * mh, 0.05f * mh * s.frown, 0.4f * mh * s.frown);
-            n = add(d, n, mx + mh, my, 0.65f * mh, -0.05f * mh * s.frown, 0.4f * mh * s.frown);
+            // (v47.3: further down than before, and the lips pressed together — a picture that smiles with its teeth
+            // showing kept its grin through a death scene; the squeeze closes the grin to a line)
+            n = add(d, n, mx - mh, my, 0.65f * mh, 0.08f * mh * s.frown, 0.6f * mh * s.frown);
+            n = add(d, n, mx + mh, my, 0.65f * mh, -0.08f * mh * s.frown, 0.6f * mh * s.frown);
+            n = add(d, n, mx, my - 0.3f * mh, 0.75f * mh, 0, 0.2f * mh * s.frown);
+            n = add(d, n, mx, my + 0.3f * mh, 0.75f * mh, 0, -0.2f * mh * s.frown);
         }
         // eyelids: squint (laughing, pain, anger) or wide open (surprise, fear)
         float lid = 0.3f * s.squint + 0.3f * s.anger - 0.4f * s.wide;
@@ -1029,18 +1045,24 @@ public final class Rig {
         move(f, s, hx, hy, o);
     }
 
+    /** v47.3: a side picture's seated thigh swings up to this many degrees from the vertical (the lap slopes to the knee). */
+    static final float SIDE_THIGH = 76f;
+    /** v47.3: how much of the shin folds away under a kneeling picture. */
+    static final float KNEEL_FOLD = 0.88f;
+
     /** How far the feet come up (sitting, kneeling), so the picture can be lowered to keep them on the ground. */
     public float feetRise(State s, float h) {
         if (still) return 0;
         if (animal) return 0.8f * s.sit * (bottom - legTop) * h;
         float rise = (1 - s.legScale) * (bottom - hipY) * h;
+        if (s.kneel > 0 && s.sit <= 0) rise += KNEEL_FOLD * s.kneel * 0.5f * (bottom - hipY) * h;      // v47.3: the shins folded under
         if (legs && s.sit <= 0 && (s.legLAng != 0 || s.legRAng != 0)) {
             // v40: in a stride the legs are spread: the body comes down until the planted foot is on the floor
             float L = (bottom - hipY) * h * s.legScale;
             float fl = L * (float) Math.cos(Math.toRadians(s.legLAng)) * (1 - s.legLLift), fr = L * (float) Math.cos(Math.toRadians(s.legRAng)) * (1 - s.legRLift);
             rise += L - Math.max(fl, fr);
         }
-        if (s.sit > 0 && s.sitSide != 0) rise += (1 - (float) Math.cos(Math.toRadians(84 * Math.min(1, s.sit)))) * 0.5f * (bottom - hipY) * h;   // v43: the thighs swung up
+        if (s.sit > 0 && s.sitSide != 0) rise += (1 - (float) Math.cos(Math.toRadians(SIDE_THIGH * Math.min(1, s.sit)))) * 0.5f * (bottom - hipY) * h;   // v43: the thighs swung up
         else if (s.sit > 0) rise += 0.8f * 0.5f * s.sit * (bottom - hipY) * h;      // v35: a skirt folds at the knees like legs
         if (s.sit > 0 && s.floor) rise += 0.75f * 0.5f * s.sit * (bottom - hipY) * h;     // v35: and on the floor the shins fold under
         return rise;

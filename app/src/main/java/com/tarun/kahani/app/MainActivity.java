@@ -84,7 +84,8 @@ import java.util.Set;
 public class MainActivity extends Activity {
 
     static final int REQ_LOGIN = 11, REQ_SCRIPT = 12, REQ_IMAGE = 13, REQ_CAMERA = 14, REQ_AUDIO = 15, REQ_BULK = 16,
-            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24, REQ_IMPORT_BUNDLE = 25, REQ_IMPORT_SCRIPT = 26;
+            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24, REQ_IMPORT_BUNDLE = 25, REQ_IMPORT_SCRIPT = 26,
+            REQ_REF_FRAME = 27, REQ_REF_VIDEO = 28;
     /** The thing whose angles are being uploaded: "angles:char:<key>:<name>", "angles:scene:<n>:<name>", "angles:obj:<keys>:<name>". */
     private String anglesTarget;
     private String anglesFrom;       // "make" when the angles were asked for from the make-film dialog (v25: the user comes back to it)
@@ -966,6 +967,83 @@ public class MainActivity extends Activity {
         body.addView(card);
     }
 
+    /**
+     * v47.3: the film's reference frames and clips — up to five full frames (characters, props and background as the
+     * user wants them together) and two clips — apart from the story's pictures. The AI team (reader, director,
+     * technical director, editor) treats them as the look to reach: the finish is lifted towards their light and the
+     * quality check compares every frame with them.
+     */
+    private LinearLayout referenceCard() {
+        final LinearLayout card = Ui.card(this);
+        card.addView(Ui.title(this, "🎞 Reference frames and clips (for the AI team's quality check)"));
+        card.addView(Ui.text(this, "Up to " + Project.MAX_REF_FRAMES + " full frames (characters, props and background together, as you want them) and up to "
+                + Project.MAX_REF_VIDEOS + " short clips. They are not placed in the film: the director, the technical director and the editor use them as the look to reach, and every frame is checked against them.", 13, Ui.SUB, false));
+        final List<File> frames = project.refFrames(), clips = project.refVideos();
+        if (!frames.isEmpty()) {
+            LinearLayout row = Ui.row(this);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            for (final File f : frames) {
+                LinearLayout one = new LinearLayout(this);
+                one.setOrientation(LinearLayout.VERTICAL);
+                one.setGravity(Gravity.CENTER_HORIZONTAL);
+                ImageView iv = new ImageView(this);
+                iv.setScaleType(ImageView.ScaleType.CENTER_CROP);
+                try { iv.setImageBitmap(thumb(f, 160)); } catch (Throwable ignored) { /* a frame that cannot be read shows empty */ }
+                one.addView(iv, new LinearLayout.LayoutParams(Ui.dp(this, 64), Ui.dp(this, 40)));
+                one.addView(Ui.small(this, "✖", Ui.RED, new View.OnClickListener() {
+                    public void onClick(View v) { f.delete(); toast("Reference frame removed"); showStudio(); }
+                }));
+                row.addView(one, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            }
+            card.addView(row);
+        }
+        for (final File v : clips) {
+            LinearLayout r = Ui.row(this);
+            r.setGravity(Gravity.CENTER_VERTICAL);
+            r.addView(Ui.text(this, "🎬 " + v.getName() + "  (" + (v.length() >> 20) + " MB)", 13, Ui.TEXT, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            r.addView(Ui.small(this, "✖ Remove", Ui.RED, new View.OnClickListener() {
+                public void onClick(View v2) { v.delete(); toast("Reference clip removed"); showStudio(); }
+            }));
+            card.addView(r);
+        }
+        LinearLayout btns = Ui.row(this);
+        btns.addView(Ui.small(this, "🖼 Add reference frame (" + frames.size() + "/" + Project.MAX_REF_FRAMES + ")", frames.size() < Project.MAX_REF_FRAMES ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
+            public void onClick(View v) {
+                if (project.refFrames().size() >= Project.MAX_REF_FRAMES) { toast("Five reference frames are already here — remove one first"); return; }
+                pick("image/*", REQ_REF_FRAME, true);
+            }
+        }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        btns.addView(Ui.small(this, "🎥 Add reference clip (" + clips.size() + "/" + Project.MAX_REF_VIDEOS + ")", clips.size() < Project.MAX_REF_VIDEOS ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
+            public void onClick(View v) {
+                if (project.refVideos().size() >= Project.MAX_REF_VIDEOS) { toast("Two reference clips are already here — remove one first"); return; }
+                pick("video/*", REQ_REF_VIDEO, false);
+            }
+        }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        card.addView(btns);
+        return card;
+    }
+
+    /** v47.3: the picked reference frames (several at once, up to the five) or the one clip, saved into the project. */
+    private void addReferences(final List<Uri> uris, final boolean video) {
+        background(video ? "Copying the reference clip…" : "Saving the reference frames…", new Work() {
+            public Object run() throws Exception {
+                int n = 0, full = 0;
+                for (Uri u : uris) {
+                    File f = video ? project.saveRefVideo(MainActivity.this, u) : project.saveRefFrame(MainActivity.this, u);
+                    if (f == null) full++; else n++;
+                }
+                return new int[]{n, full};
+            }
+        }, new Done() {
+            public void done(Object r, Exception e) {
+                if (e != null) { toast("Could not add it: " + e.getMessage()); showStudio(); return; }
+                int[] c = (int[]) r;
+                toast((video ? "Reference clip" : "Reference frame") + (c[0] == 1 ? "" : "s") + " added: " + c[0] + (c[1] > 0 ? " (" + c[1] + " left out — the limit is " + (video ? Project.MAX_REF_VIDEOS + " clips" : Project.MAX_REF_FRAMES + " frames") + ")" : ""));
+                showStudio();
+            }
+        });
+    }
+
     private void pictureRow(LinearLayout card, final String label, String status, String file, final String tgt) {
         LinearLayout r = Ui.row(this);
         r.setGravity(Gravity.CENTER_VERTICAL);
@@ -1279,6 +1357,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) { showLines(); }
         }));
         body.addView(sum);
+        body.addView(referenceCard());
 
         // ---- title and end pages
         heading(body, "Start and end");
@@ -3128,6 +3207,14 @@ public class MainActivity extends Activity {
                 uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES));
             }
             bulkPictures(uris);
+            return;
+        }
+        if ((code == REQ_REF_FRAME || code == REQ_REF_VIDEO) && project != null) {
+            // v47.3: reference frames (several at once) or a reference clip for the film's look
+            List<Uri> uris = new ArrayList<Uri>();
+            if (data.getClipData() != null) for (int i = 0; i < data.getClipData().getItemCount(); i++) uris.add(data.getClipData().getItemAt(i).getUri());
+            else if (data.getData() != null) uris.add(data.getData());
+            if (!uris.isEmpty()) addReferences(uris, code == REQ_REF_VIDEO);
             return;
         }
         if (data.getData() == null) return;

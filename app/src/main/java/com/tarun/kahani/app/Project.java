@@ -92,6 +92,61 @@ public final class Project {
     }
 
     public File file(String name) { return new File(dir, name); }
+
+    // ---- v47.3: reference frames and clips for the film (the look the user wants), apart from the story's pictures
+    public static final int MAX_REF_FRAMES = 5, MAX_REF_VIDEOS = 2;
+    /** Up to five full frames (characters, props and background together) and two clips, kept under refs/. */
+    public File refsDir() { File d = new File(dir, "refs"); if (!d.exists()) d.mkdirs(); return d; }
+    private List<File> refs(String prefix) {
+        List<File> out = new ArrayList<File>();
+        File[] fs = refsDir().listFiles();
+        if (fs != null) for (File f : fs) if (f.isFile() && f.getName().startsWith(prefix)) out.add(f);
+        java.util.Collections.sort(out);
+        return out;
+    }
+    public List<File> refFrames() { return refs("frame_"); }
+    public List<File> refVideos() { return refs("video_"); }
+    private File freeRef(String prefix, String ext) {
+        for (int i = 1; i < 100; i++) { File f = new File(refsDir(), prefix + i + ext); if (!f.exists()) return f; }
+        return new File(refsDir(), prefix + System.nanoTime() % 100000 + ext);
+    }
+    /** Saves a reference frame (downscaled to 1600 px); null when the five are already there. */
+    public File saveRefFrame(Context c, android.net.Uri uri) throws IOException {
+        if (refFrames().size() >= MAX_REF_FRAMES) return null;
+        byte[] data = readPicture(c.getContentResolver(), uri);
+        if (data == null) throw new IOException("This picture could not be read");
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(data, 0, data.length, o);
+        int sample = 1;
+        while (Math.max(o.outWidth, o.outHeight) / sample > 1600) sample *= 2;
+        o = new BitmapFactory.Options();
+        o.inSampleSize = sample;
+        Bitmap b = BitmapFactory.decodeByteArray(data, 0, data.length, o);
+        if (b == null) throw new IOException("This picture could not be read");
+        b = upright(b, data);
+        File f = freeRef("frame_", ".jpg");
+        OutputStream out = new FileOutputStream(f);
+        b.compress(Bitmap.CompressFormat.JPEG, 90, out);
+        out.close();
+        b.recycle();
+        return f;
+    }
+    /** Copies a reference clip in as it is (up to MAX_UPLOAD); null when the two are already there. */
+    public File saveRefVideo(Context c, android.net.Uri uri) throws IOException {
+        if (refVideos().size() >= MAX_REF_VIDEOS) return null;
+        if (sizeOf(c.getContentResolver(), uri) > MAX_UPLOAD) throw new IOException("it is larger than 300 MB");
+        InputStream in = c.getContentResolver().openInputStream(uri);
+        if (in == null) throw new IOException("Could not open the clip");
+        File f = freeRef("video_", ".mp4");
+        OutputStream out = new FileOutputStream(f);
+        try {
+            byte[] buf = new byte[1 << 16];
+            int n;
+            while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
+        } finally { out.close(); in.close(); }
+        return f;
+    }
     public boolean has(String name) { return new File(dir, name).exists(); }
     public File film() { return new File(dir, "film.mp4"); }
 

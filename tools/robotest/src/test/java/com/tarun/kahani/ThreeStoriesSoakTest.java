@@ -26,7 +26,8 @@ import org.junit.Test;
  * inside the film, and the drawn frame must not be blank. -Dkahani.story.passes lowers the count for a quick run.
  */
 public class ThreeStoriesSoakTest {
-    static final int PASSES = Integer.getInteger("kahani.story.passes", 1000);
+    // (v47.3: 1,000 per story locally and on demand; 25 on CI so the build fits its time)
+    static final int PASSES = Integer.getInteger("kahani.story.passes", System.getenv("CI") != null ? 25 : 1000);
     static final String[] ASPECTS = {"16:9", "9:16", "1:1", "4:5", "2.39:1"};
 
     @Test public void babuKeLiyeDirectsAThousandTimes() throws Exception { soak("babu_ke_liye", "babu_ke_liye_screenplay.txt", true); }

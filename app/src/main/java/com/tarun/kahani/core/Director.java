@@ -434,6 +434,10 @@ public final class Director {
             limitShotLength(TechnicalDirector.CUT_SECONDS);
         }
         film.shotList = qualityCheck();
+        groundInFrame();
+        // v47.3: the reader's ledger of rigid and soft things — what the technical director rigs and renders by
+        String rl = Rigidity.ledger(story);
+        if (rl.length() > 0) film.notes.add(rl);     // (v47.3: after the technical director and the quality check have framed the shots at standing height)
         // the Braintrust (PixarLead): the four questions every five shots, suggestions only — appended to the shot list
         film.braintrust = PixarLead.braintrust(film, story);
         film.shotList += "\n" + film.braintrust.text;
@@ -3268,6 +3272,7 @@ public final class Director {
         float t0 = tc;
         dirScene = story.scenes.get(si);
         dirBeat = bi;
+        ahead = aheadOf(si, bi);
         int li = beatLine[si][bi];
         String text = b.text.replaceFirst("^(स्थान|Location|Place|Setting)\\s*[:：]\\s*", "");
         List<String> sents = sentences(text);
@@ -3848,9 +3853,20 @@ public final class Director {
                     // v44: down onto the ground (forwards: a trip; backwards: a slip), a moment there, up again in pain
                     boolean back = Txt.has(w, "फिसल", "slips", "slipped", "पीछे");
                     float f = now.facing >= 0 ? 1 : -1;
-                    Film.Act fa = new Film.Act(t0, t0 + 2.4f, Film.G_FALL); fa.item = (int) (back ? -f : f); a.acts.add(fa);
+                    // v47.3: a fall the script follows with blood or a death ("गिर जाता है। सिर से खून बहता है। … मर जाता
+                    // है") is not got up from: they stay down, and the wound and the death are staged on them lying there
+                    // (he used to stand up, bleed standing and only then kneel and die)
+                    boolean stayDown = downAfter(w);
+                    Film.Act fa = new Film.Act(t0, t0 + (stayDown ? 1.5f : 2.4f), Film.G_FALL); fa.item = (int) (back ? -f : f); a.acts.add(fa);
                     Film.Key down = keyAt(a, t0 + 0.4f); down.body = Pose.LIE; down.seat = -1; down.emotion = Pose.PAIN;
                     film.sfx.add(sfxAt(Film.SFX_THUD, t0 + 0.4f, 0.4f, 0.4f, a));
+                    if (stayDown) {
+                        Film.Key still = keyAt(a, t0 + 1.6f); still.body = Pose.LIE; still.seat = -1; still.emotion = Pose.PAIN;
+                        staysDown++;
+                        falls++;
+                        gesture = -1; d = 1.9f;
+                        break;
+                    }
                     Film.Key up = keyAt(a, t0 + 1.6f); up.body = Pose.STAND; up.seat = -1; up.emotion = Pose.PAIN;
                     Film.Key ok = keyAt(a, t0 + 2.6f); ok.emotion = Pose.NEUTRAL;
                     falls++;
@@ -3986,6 +4002,42 @@ public final class Director {
             everydayStaged++;
         }
         return used > 0 ? used + 0.3f : 0;
+    }
+
+    /** v47.3: what the script says next — the next few beats of the scene being staged (set by {@link #direction}). */
+    private String ahead = "";
+    public int staysDown;
+
+    private String aheadOf(int si, int bi) {
+        StringBuilder sb = new StringBuilder();
+        List<Story.Beat> bs = story.scenes.get(si).beats;
+        for (int i = bi + 1; i < bs.size() && i <= bi + 5; i++) {
+            Story.Beat nb = bs.get(i);
+            // (what is said is not what happens: "उठो!" shouted at one who fell does not stand them up)
+            sb.append(' ').append(nb.manner == null ? "" : nb.manner).append(' ').append(nb.type == Story.Beat.DIRECTION && nb.text != null ? nb.text : "");
+        }
+        return sb.toString();
+    }
+
+    /** The first place any of the words begins in the text, or -1. */
+    private static int firstAt(String s, String... words) {
+        int best = -1;
+        for (String w : words) { int i = s.indexOf(w); if (i >= 0 && (best < 0 || i < best)) best = i; }
+        return best;
+    }
+
+    /**
+     * v47.3: after this fall the script brings blood or a death before anyone gets up ("गिर जाता है। सिर से खून बहता
+     * है।", "falls … and dies"): the one who fell stays on the ground for it.
+     */
+    private boolean downAfter(String w) {
+        int i = firstAt(w, "गिर", "फिसल", "falls", "fell", "slips", "slipped", "tumbles");
+        String rest = (i >= 0 ? w.substring(i) : w) + " " + ahead;
+        int hurt = firstAt(rest, BLOOD_WORDS), die = firstAt(rest, DEATH_WORDS);
+        int bad = hurt < 0 ? die : die < 0 ? hurt : Math.min(hurt, die);
+        if (bad < 0) return false;
+        int up = firstAt(rest, "उठ", "खड़ा हो", "खड़ी हो", "खड़े हो", "सँभल", "संभल", "gets up", "get up", "stands up", "stand up", "rises", "picks himself", "picks herself", "back on his feet", "back on her feet");
+        return up < 0 || bad < up;
     }
 
     /** Stages one sentence of a stage direction; returns its duration. */
@@ -5831,14 +5883,58 @@ public final class Director {
             if (!o.stateAt(t).visible) continue;
             float ox = xAt(o, t);
             if (ox < -100 || ox > 1380) continue;
-            minX = Math.min(minX, ox); maxX = Math.max(maxX, ox); maxH = Math.max(maxH, heightOf(o));
+            // v47.3: as tall as they are in the pose the moment brings (one lying dead is a third of their height, one
+            // kneeling beside them three quarters): framed at standing height, the ground they lie on fell under the
+            // bottom of the frame and the kneeling mourner was cut off at the knees (she read as standing)
+            minX = Math.min(minX, ox); maxX = Math.max(maxX, ox); maxH = Math.max(maxH, heightOf(o) * poseHeight(o, t + 0.8f));
         }
         for (float x : xs) { float cx = Math.max(60, Math.min(1220, x)); minX = Math.min(minX, cx); maxX = Math.max(maxX, cx); }
         if (minX > maxX) return;
         float span = maxX - minX + 420;
         float zoom = Math.max(1.0f, Math.min(1.35f, 1280f / span));
-        cam(Math.max(seg.t0, t), (minX + maxX) / 2, ground - Math.max(maxH, 200) * 0.55f, zoom, ease);
+        // (and the ground itself stays inside the picture, above the letterbox: the frame's lower edge at least a
+        // tenth of its height below the ground line)
+        float cy = Math.max(ground - Math.max(maxH, 200) * 0.55f, ground - 288f / zoom);
+        cam(Math.max(seg.t0, t), (minX + maxX) / 2, cy, zoom, ease);
         travelFramed = true;
+    }
+
+    public int groundKept;
+
+    /**
+     * v47.3: a shot wide enough to show the floor (zoom up to 1.9) with someone lying, kneeling, crouching or sitting on
+     * it keeps the ground inside the picture, a tenth of the frame above its lower edge — and a shot about one lying
+     * down is centred on them, not on where their head would be standing (the dead and the mourner kneeling by them
+     * were framed at standing height: the ground fell under the letterbox and the kneel was cut off).
+     */
+    private void groundInFrame() {
+        if (System.getProperty("kahani.camDebug") != null) System.err.println("GROUND pass: segs=" + film.segs.size() + " technical=" + opt.technical);
+        for (Film.Seg sg : film.segs) for (Film.Cam c : sg.cams) {
+            if (System.getProperty("kahani.camDebug") != null) System.err.printf(java.util.Locale.US, "GROUND see %.2f cy=%.0f zoom=%.2f place=%b%n", c.t, c.cy, c.zoom, c.place);
+            if (c.zoom > 1.9f || c.place) continue;
+            boolean low = false;
+            for (Film.Actor a : sg.actors) {
+                Film.Key k = a.stateAt(c.t + 0.1f);
+                if (!k.visible || k.anchor != Film.A_GROUND) continue;
+                if (k.body == Pose.LIE || k.body == Pose.KNEEL || k.body == Pose.CROUCH || (k.body == Pose.SIT && k.seat == Film.SEAT_FLOOR)) low = true;
+            }
+            if (!low) continue;
+            float want = sg.ground - 288f / c.zoom;
+            if (c.subject != null && c.subject.stateAt(c.t + 0.1f).body == Pose.LIE) want = Math.max(want, sg.ground - 0.3f * heightOf(c.subject));
+            if (System.getProperty("kahani.camDebug") != null) System.err.printf(java.util.Locale.US, "GROUND cam %.2f cy=%.0f zoom=%.2f ground=%.0f want=%.0f%n", c.t, c.cy, c.zoom, sg.ground, want);
+            if (c.cy < want) { c.cy = want; groundKept++; }
+        }
+    }
+
+    /** v47.3: how much of their standing height someone takes up in the pose they are in at that moment. */
+    private static float poseHeight(Film.Actor o, float t) {
+        Film.Key k = o.stateAt(t);
+        switch (k.body) {
+            case Pose.LIE: return 0.35f;
+            case Pose.KNEEL: case Pose.CROUCH: return 0.75f;
+            case Pose.SIT: return 0.72f;
+            default: return 1;
+        }
     }
 
     /** v34 (realism): places with doors — a room, a hall, a basement (not a cave, not under the sky). */
