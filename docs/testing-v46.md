@@ -137,6 +137,12 @@ kulhads and the handkerchief are not seen in the sampled frames; the stall count
 background in some shots; the film is darker than the reference (lightning fades); the first render's
 cutout-on-backdrop look remains.
 
+## 3.1 Final verification
+The complete suite with every change (parser fix, real-reference render tests, `ReviewProtocolTest`,
+`ScreenplayNotesTest`): **BUILD SUCCESSFUL in 18 min 47 s — 93 passed, 0 failed, 23 skipped** (9 as before, 14
+BLOCKED on the missing original fixtures). CI run 240 on `ccr-d4cf81b4-42naj7` was triggered by hand and its
+result is recorded in the commit that follows this one.
+
 ## 4. What is still not right / not done
 * The 14 identity tests are BLOCKED, not passing: they need the user's original fixture archives.
 * Sitting, kneeling, prop handling (the letter, the kulhads, the umbrella) and close coverage are planned by the

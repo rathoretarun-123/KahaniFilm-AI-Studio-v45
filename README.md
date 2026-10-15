@@ -22,7 +22,7 @@ All screens and instructions in the app are in English; the story, dialogue and 
   (essential or not), generated, or waiting on you.
 * **Both films render from their real references** in CI, with a reviewed scene plan (one geography per film).
 * **The APK builds without the Android SDK** (`dalvik-exchange` fallback in `build.sh`).
-* **Tests, said plainly:** 90 pass, 0 fail, 23 skipped — 9 as before and 14 that read identity from the user's
+* **Tests, said plainly:** 93 pass, 0 fail, 23 skipped — 9 as before and 14 that read identity from the user's
   original sheets, sample pictures and voice recordings, which are not in the repository; those are reported as
   BLOCKED until the original fixture archives are restored, their assertions untouched. The full record, with
   frames of both films beside their reference clips: [`docs/testing-v46.md`](docs/testing-v46.md).
