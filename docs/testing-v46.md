@@ -112,7 +112,30 @@ and palette are warmer and darker than the golden-hour reference; the engine lab
 setting names the post office (the picture used is still the reviewed exterior).
 
 ### आखिरी चाय
-(filled in below when the final render finished)
+
+| property | final render | reference clip |
+|---|---|---|
+| duration / frames | 196.3 s / 4711 | 10.0 s / 240 |
+| black segments (scene fades and the lightning blackouts) | 7 | 0 |
+| frozen segments ≥ 0.5 s | 8 | 0 |
+| duplicate-frame share (mpdecimate) | 0.07 | 0.00 |
+| hard cuts detected | 2 (the rest are dissolves) | 4 |
+| mean luma | 76 | 88 |
+| colour-histogram similarity (best match, mean / min) | 0.77 / 0.40 | — |
+
+Final render: ![after](img/v46/aakhiri_chai_after.jpg)
+Reference clip: ![reference](img/v46/aakhiri_chai_reference.jpg)
+
+**Inspected, strengths:** the three characters are the user's designs and stay themselves; one tea-stall
+geography in every scene (the first plan alternated lanes); rain, lightning, the stall's lamp and the fire are
+staged; close-ups, an over-the-shoulder and a two-shot under the umbrella appear; lips move on 99 % of speaking
+frames; only 7 % duplicate frames — this film moves, unlike बाबू के लिए. The first parse had invented three
+speaking "characters" from the QC bullets; the final parse has the three real ones.
+**Inspected, deficiencies (honest):** मीरा's umbrella is the engine's drawn red umbrella, not her torn black one
+from the reference sheet (the prop insert was loaded, but the action umbrella is procedural); the notebook, the
+kulhads and the handkerchief are not seen in the sampled frames; the stall counter is drawn over the reference
+background in some shots; the film is darker than the reference (lightning fades); the first render's
+cutout-on-backdrop look remains.
 
 ## 4. What is still not right / not done
 * The 14 identity tests are BLOCKED, not passing: they need the user's original fixture archives.

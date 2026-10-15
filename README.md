@@ -7,6 +7,29 @@ All screens and instructions in the app are in English; the story, dialogue and 
 
 **APK:** [`release/KahaniFilm.apk`](release/KahaniFilm.apk) (Android 8.0 or newer)
 
+## New in v46 (15 October 2026)
+
+* **The Reader stops inventing.** A screenplay's closing notes ("निर्देशन और तकनीकी स्वीकृति:", "QC नियम:") are no
+  longer read as the last scene's action, and a cast-list entry labelled "मुख्य वस्तु:" or "स्थान:" is the story's
+  prop or place, never another character. Found by rendering बाबू के लिए from its real references: a third person
+  in a yellow shirt and a playground slide had appeared in the last scene.
+* **The four roles keep a ledger.** Reader, Director, Technical Director and Editor exchange issues with stable ids,
+  severities, owners, evidence, proposals, dependencies and resolutions; a technical blocker cannot be waived by
+  creative authority; rounds are bounded; the ledger is saved as `review_ledger.json` beside every film.
+* **References, counted and traced.** Up to 18 pictures per character and 10 per prop or place, contact sheets up to
+  3×2; the original sheet is kept, every panel records where it was cut from, and the studio says which views a
+  character still lacks. Every character, place and prop is classified as matched, unconfirmed candidate, missing
+  (essential or not), generated, or waiting on you.
+* **Both films render from their real references** in CI, with a reviewed scene plan (one geography per film).
+* **The APK builds without the Android SDK** (`dalvik-exchange` fallback in `build.sh`).
+* **Tests, said plainly:** 90 pass, 0 fail, 23 skipped — 9 as before and 14 that read identity from the user's
+  original sheets, sample pictures and voice recordings, which are not in the repository; those are reported as
+  BLOCKED until the original fixture archives are restored, their assertions untouched. The full record, with
+  frames of both films beside their reference clips: [`docs/testing-v46.md`](docs/testing-v46.md).
+* **Sorry — said plainly:** the films are still the user's flat pictures moved on a mesh: people stand through
+  scenes where the script seats them, props are not handed, and a 10-second Gemini reference clip moves in a way
+  this engine does not. The record says exactly where.
+
 ## New in v45
 
 You asked for injuries and blood flowing where needed, death scenes from various causes, and 100,000 absolutely new
