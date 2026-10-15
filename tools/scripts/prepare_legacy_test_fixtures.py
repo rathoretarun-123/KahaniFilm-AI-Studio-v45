@@ -3,8 +3,9 @@
 Never synthesize the user-family sheets38/sheets40/sheets40b: those encode real identity references.
 Any generated test images/audio are explicitly marked synthetic and are not film assets.
 """
-import json, math, struct, wave, zipfile, zlib
+import io, json, math, struct, wave, zipfile, zlib
 from pathlib import Path
+from PIL import Image, TiffImagePlugin
 R=Path(__file__).resolve().parents[2]
 ARCHIVES=[R/"KahaniFilm-v42-source-part3-test-sheets.zip",R/"KahaniFilm-v42-source-part4-test-stories-and-pictures.zip"]
 EXPECTED_SHA256={
@@ -40,6 +41,21 @@ def png(w,h,seed,cols=5,rows=2,scene=False):
  def chunk(t,d):return struct.pack(">I",len(d))+t+d+struct.pack(">I",zlib.crc32(t+d)&0xffffffff)
  raw=b"".join(b"\0"+p[y*w*3:(y+1)*w*3] for y in range(h))
  return b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",struct.pack(">IIBBBBB",w,h,8,2,0,0,0))+chunk(b"IDAT",zlib.compress(raw,6))+chunk(b"IEND",b"")
+def jpeg_fixture(seed, scene=False, phone=False, camera=False):
+ # A real JPEG is important here: ExifInterface correctly ignores EXIF in PNG files
+ # that merely have a .jpg suffix. These are synthetic test-only fixtures.
+ src=Image.open(io.BytesIO(png(480,360,seed,1,1,scene))).convert("RGB")
+ exif=Image.Exif()
+ if phone:
+  exif[271]="Apple"; exif[272]="iPhone 15"
+ if camera:
+  exif[33434]=TiffImagePlugin.IFDRational(1,120)  # exposure time
+  exif[33437]=TiffImagePlugin.IFDRational(18,10) # f-number
+  exif[34855]=100                               # ISO speed
+  exif[37386]=TiffImagePlugin.IFDRational(4,1)   # focal length
+ out=io.BytesIO()
+ src.save(out,format="JPEG",quality=90,exif=exif)
+ return out.getvalue()
 def put(rel,data,category):
  q=R/rel
  if q.exists() and q.stat().st_size:return
@@ -69,11 +85,16 @@ def main():
   put(f"tools/testdata/sheets/sheet{n:02d}.jpg",png(1000,400,n,5,2,scene=34<=n<=43),"synthetic")
  # Generic upload-path fixtures only. Do NOT synthesize sheets38/sheets40/sheets40b identity sources.
  for n,sc in [("camera_photo.jpg",False),("drawn_character_phone_saved.jpg",False),("drawn_character_plain.png",False),("drawn_place_phone_saved.jpg",True),("drawn_thing_phone_saved.jpg",True)]:
-  put("tools/testdata/upload/"+n,png(480,360,201+len(synthetic),3,2,sc),"synthetic")
+  seed=201+len(synthetic)
+  if n.endswith(".png"):
+   data=png(480,360,seed,1,1,sc)
+  else:
+   data=jpeg_fixture(seed,sc,phone=n!="camera_photo.jpg",camera=n=="camera_photo.jpg")
+  put("tools/testdata/upload/"+n,data,"synthetic")
  # Small synthetic sample/audio files only if missing; test-only placeholders.
  for n,sc in [("char_vrinda.jpg",False),("char_vanusha.jpg",False),("char_vanusha_back.jpg",False),("char_raju.jpg",False),("char_raju_back.jpg",False),("char_kripa.jpg",False),("char_kripa_back.jpg",False),("char_kripa_pouch.jpg",False),("bg_garden.jpg",True),("bg_forest.jpg",True)]:
-  put("app/src/main/assets/sample/"+n,png(480,360,301+len(synthetic),3,2,sc),"synthetic")
- for n,f in [("man.wav",170),("deep_slow.wav",125)]:
+  put("app/src/main/assets/sample/"+n,jpeg_fixture(301+len(synthetic),sc),"synthetic")
+ for n,f in [("man.wav",170),("deep_slow.wav",125),("woman.wav",260),("child.wav",400)]:
   q=R/"voices"/n
   if not q.exists() or not q.stat().st_size:
    q.parent.mkdir(parents=True,exist_ok=True)
