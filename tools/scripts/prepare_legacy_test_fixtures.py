@@ -155,8 +155,8 @@ def sheet_fixture(seed):
    d.line((cx-10,cy-4,cx-31,cy+45),fill=cloth,width=13)
    d.line((cx+12,cy-4,cx+42,cy+48),fill=cloth,width=13)
    d.ellipse((cx+26,cy+39,cx+64,cy+57),fill=(57,48,43))
-   d.line((cx-30,cy-18,cx+40,cy-150),fill=(83,60,37),width=7)
-   d.line((cx-35,cy-14,cx+45,cy-164),fill=(210,215,222),width=5)
+   d.line((cx-30,cy-18,cx+40,cy-228),fill=(83,60,37),width=7)
+   d.line((cx-35,cy-14,cx+45,cy-238),fill=(210,215,222),width=5)
    d.line((cx-36,cy-14,cx-47,cy-1),fill=(124,77,44),width=9)
    continue
   # standing, side, waving, or running: head/torso/arms/legs share connected joints
