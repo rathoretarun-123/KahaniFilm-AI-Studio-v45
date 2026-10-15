@@ -897,6 +897,7 @@ public final class FilmJob implements Runnable {
         int[] pixels = new int[w * h];
         Cloud cloud = Prefs.online(ctx) ? Prefs.cloud(ctx) : null;
         boolean visionEnabled = cloud != null;
+        if (cloud != null) cloud.timeoutMs = Math.min(cloud.timeoutMs, 20000);
         String visionFallback = "";
         int approved = 0, repaired = 0;
         try {
@@ -908,7 +909,8 @@ public final class FilmJob implements Runnable {
                 String continuity = "Previous shot: " + (i > 0 ? shotIntent(film.shots.get(i - 1)) : "(opening shot)")
                         + "\nCurrent shot: " + intent
                         + "\nNext shot: " + (i + 1 < count ? shotIntent(film.shots.get(i + 1)) : "(final shot)")
-                        + "\nAsset/continuity notes: " + film.shotList;
+                        + "\nCharacter/view reference: " + shot.view
+                        + "\nShot purpose: " + shot.purpose;
                 String id = shot.id == null || shot.id.trim().isEmpty()
                         ? String.format(java.util.Locale.US, "shot-%03d", i + 1) : shot.id;
                 boolean passed = false;

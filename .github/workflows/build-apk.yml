@@ -6,6 +6,7 @@ on:
     branches:
       - kahanifilm-development
       - kahani-fixture-repair
+      - shot-conference-integration
 
 concurrency:
   group: build-apk-${{ github.ref }}
