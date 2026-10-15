@@ -133,6 +133,10 @@ jobs:
           test -s tools/robotest/voices/deep_slow.wav
           test -s tools/robotest/voices/woman.wav
           test -s tools/robotest/voices/child.wav
+      - name: Convert bundled WebP references for desktop render tests
+        shell: bash
+        run: python3 tools/scripts/prepare_render_reference_images.py
+
       - name: Run production-plan, app regression, and 1,000-pass render soak tests
         shell: bash
         run: |
