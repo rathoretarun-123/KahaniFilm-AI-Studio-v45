@@ -210,6 +210,8 @@ public final class Art {
     public final Map<String, Backdrop> scenes = new HashMap<String, Backdrop>(); // "1", "10a", "10b"
     public final List<Shot> shots = new ArrayList<Shot>();
     public Backdrop title, end;
+    /** v47: a user-provided title or end picture is used as-is: the studio draws its own text and sparkles only when
+     *  no picture was given, or when the manifest line asks for the overlay with |1. */
     public boolean titleText = true, endText = true;
 
     public Backdrop sceneBackdrop(int number, int part) {
@@ -1050,7 +1052,9 @@ public final class Art {
                 } else if (f[0].equals("title") || f[0].equals("end")) {
                     Backdrop b = makeBackdrop(L, f[1], backdropSide);
                     if (b == null) continue;
-                    boolean txt = f.length < 3 || !f[2].equals("0");
+                    // v47: default to NO overlay when the user gives a picture. The old default (|<missing> means overlay)
+                    // put the studio's title text over the user's title artwork; now |1 is needed to ask for the overlay
+                    boolean txt = f.length >= 3 && f[2].equals("1");
                     if (f[0].equals("title")) { art.title = b; art.titleText = txt; }
                     else { art.end = b; art.endText = txt; }
                 }
