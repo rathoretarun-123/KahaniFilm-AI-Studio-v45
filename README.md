@@ -1,11 +1,37 @@
-# Kahani Film — v45
+# Kahani Film — v47
 
 An Android app that turns your story into an animated family film.
 Paste a story — in **Hindi, English or Hinglish** — optionally add pictures and voices, and tap **🎬 Make film**.
 The studio prepares the voices, music, natural sounds, scenes, camera and lip movement itself.
 All screens and instructions in the app are in English; the story, dialogue and voices can be Hindi, English or Hinglish.
 
-**APK:** [`release/KahaniFilm.apk`](release/KahaniFilm.apk) (Android 8.0 or newer)
+**APK:** `release/KahaniFilm-v47.apk` (Android 8.0 or newer) — built by the *Build KahaniFilm APK* workflow on every
+push; download the **KahaniFilm-v47-apk** artifact from the latest green run under *Actions*. The launcher shows
+**KahaniFilm v47** in a deep-plum theme; the home screen prints `v47.0` in its footer.
+
+## New in v47.2 (the night of 15–16 October 2026)
+
+* **Every frame scanned.** The three test films were rendered through the same Director / Renderer / FilmLook the
+  phone uses and every frame was measured against the user's reference clips. बाबू के लिए, the whole film: mean luma
+  104.6 vs the reference's 103.5 (+1 %), contrast −3 %, sharpness +7 % — before the night it read −8 % / −12 % /
+  −4 %. No frozen runs, no dull stretches, boiling and camera shake 0 shots.
+* **No more dips to black between parts.** Scene changes and the bridge plate before a new place are true
+  cross-dissolves now (the old picture under the new one coming up); a dip stays only where the script says time
+  passes or for magic and dreams.
+* **The camera has a height.** The first wide view of a part and a single on someone seated look slightly down,
+  and the renderer turns the angle into parallax; 98 % of shots had been at eye level.
+* **Rain you can see through.** Half the grey veil, fewer and fainter streaks; faces are no longer whitened.
+* **Prop photos are cut out.** A shoe photographed on black is keyed out before it is shown as an insert (it had
+  come up as a black rectangle). The over-the-shoulder back of the head reads as a back.
+* **Sharper, more contrast:** sharpen 0.70–1.40, contrast 1.28, saturation 1.20, bloom 0.08.
+* **The app:** a four-tile dashboard (New film · My films · Library · Settings), the films on their own screen,
+  one upload sheet for every character, object and place before and during a film, `KahaniFilm v47` label, plum
+  theme, library and projects under `library-v47-1` / `projects-v47-1` (deleted with the app on uninstall), the
+  public Downloads mirror off, every legacy folder wiped once on first launch, Settings → Fresh start.
+* **Tested:** the dashboard rebuilt 100,000 times (`DashboardSoakTest`), the three stories directed 1,000 times
+  each with the options varied (`ThreeStoriesSoakTest`), 1,000 generated scripts rendered (`HundredPassSoakTest`),
+  all in CI. Picture-upload fixes: library ids no longer collide, big photos are never read whole into memory.
+* The full record, frame by frame, with the numbers: [`docs/testing-v47.md`](docs/testing-v47.md) §5.
 
 ## New in v47 (15 October 2026, later the same day)
 

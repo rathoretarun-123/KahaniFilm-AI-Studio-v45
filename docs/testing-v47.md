@@ -147,3 +147,78 @@ through its mesh.
 * The camera-angle variety is in `ShotPlanner.plan` and `Director.camSingle` but has not yet been measured end to end.
 * No phone was attached to this session: both APK builds (brightness-only and the latest with 40 fps + camera variety)
   were built in CI, verified by apksigner, and uploaded as artifacts (links in the README).
+
+## 5. v47.2 — the night pass (15–16 October 2026): every frame scanned, five defects fixed
+
+The three films were rendered through the desktop harness (the same Director / Renderer / FilmLook the phone uses,
+640×360, 24 fps) and **every frame** was read back through ffmpeg and measured — luma, contrast, saturation, edge
+energy, frame-to-frame change — and compared with the user's reference clips (`scan_frames.py`, in the session
+scratchpad; the numbers below are its output). Contact sheets of every render were looked at by eye as well.
+
+### 5.1 What the scan found, and what was changed
+
+| defect (seen in the frames) | where | fix | commit |
+|---|---|---|---|
+| every scene change went through black (5–7 dips in a two-minute film); the bridge plate faded in from and out to black on top of that — the reference clips never go dark | Renderer.render | a true cross-dissolve: the old part stays whole underneath, the new part is drawn over it with its alpha rising (`Gfx.setAlpha` multiplies through save/restore on both surfaces); bridge plates dissolve the same way; a dip is kept only for "time passes" (black) and magic / dreams (white); FinalQc.steady follows the same rule | 9a3f4b1 |
+| 98 % of all shots at eye level (57/58, 117/118, 90/92) — the action coverage came from staging cameras with no angle | Director.shotsFromCuts | the first wide view of a part looks slightly down (scale); a medium or medium-close single on someone seated, kneeling or lying looks slightly down; the renderer turns the angle into depth parallax | 9a3f4b1 |
+| rainy parts went grey and washed out: a flat grey veil (0.22) under 900 bright streaks drawn over everything, faces included | Nature.rain | veil 0.10, distance veils 0.06, 620 streaks at 0.15–0.40 alpha, slightly thinner; near drops still larger | 0971c3e |
+| the user's prop photos (an old shoe, the new red shoes — JPGs on black) came up as opaque black rectangles in the middle of the frame | Art.keyObject | when an object picture has no clear pixels and its four corners agree on one colour, that colour is keyed out with a soft edge (border-strip average, 30..100 colour distance); a picture not on a plain background is left whole | 0971c3e |
+| the over-the-shoulder back of the head, cached at 0.60 resolution, blurred into something that read as a face | Renderer.overShoulder | 0.75 — still soft, recognisably a back (hair, ears) | 0971c3e |
+
+Earlier the same night (v47.1): sharpen 0.70–1.40 (was 0.45–1.00), unsharp threshold 384 / cap 28, contrast 1.28,
+saturation 1.20, bloom 0.08 — the user's "too blurry, more contrast and sharpness".
+
+### 5.2 Measured, every frame, against the reference clip
+
+बाबू के लिए, the whole film (2777 frames, 115.7 s), v47.2:
+
+| property | v47.0 render (before the night) | v47.2 render | reference clip |
+|---|---|---|---|
+| mean luma | 94.8 | **104.6** | 103.5 |
+| contrast (luma std) | 47.9 | **52.9** | 54.4 |
+| saturation | 123.3 | 124.2 | 115.6 |
+| edge energy (sharpness) | 9.13 | **10.20** | 9.53 |
+| film vs reference | luma −8 %, contrast −12 %, sharpness −4 % | **luma +1 %, contrast −3 %, saturation +8 %, sharpness +7 %** | — |
+| black frames | 6 in 40 s (every part change) | 6 in 115 s — all at the title fade, title→part 1, last part→end card, end fade | 0 |
+| flicker (luma jump > 25 not at a cut) | 0 | 1 (a cut into a vignetted close-up at 1:19.4) | 0 |
+| frozen runs ≥ 0.5 s | 0 | 0 | 0 |
+| dull 2 s windows | 0 | 0 | — |
+| FinalQc (step 8, every pair of frames) | — | boiling 0 shots, camera shake 0 shots; largest change 8.6 / cell (limit 14) | — |
+
+आखिरी चाय and आखिरी जोड़ी: the same scan on the v47.2 renders is in §5.3 below.
+
+![बाबू के लिए v47.2](img/v47/babu_v472.jpg)
+The cross-dissolve, frame by frame (26.0 s → 27.0 s into the bridge plate, 28.8 s → 29.3 s out of it): ![dissolve](img/v47/babu_v472_dissolve.jpg)
+The keyed prop insert and the finer rain in आखिरी जोड़ी: ![insert](img/v47/jodi_v472_insert.jpg) ![rain](img/v47/jodi_v472_ots_rain.jpg)
+
+### 5.3 आखिरी चाय and आखिरी जोड़ी
+
+(filled in from the scans of the v47.2 renders — see the rows added below)
+
+### 5.4 Tests added
+
+* `DashboardSoakTest` — the rebuilt four-tile dashboard and the films screen rebuilt **100,000 times** on the real
+  Android framework (Robolectric) while films are created and deleted and the account signs in and out; every pass
+  asserts the four tiles and the true film count. In CI.
+* `ThreeStoriesSoakTest` — the three stories directed **1,000 times each** with the options varied every pass (the
+  five delivery formats, pace, subtitles, scene cards, animation on twos, the narrator, three output heights); every
+  pass must direct without an exception, keep every camera finite, every key in time order, every shot inside the
+  film, and a production-renderer frame drawn every 25th pass must not be blank. Plain JUnit; locally 100 passes per
+  story ran in 15 / 26 / 18 s with no failures. In CI.
+* `AppTest` home assertions updated to the four-tile dashboard (the old assertion had been red since the library
+  upload button moved into the Library screen).
+
+### 5.5 The app (v47)
+
+* `versionName` 47.0, launcher label **KahaniFilm v47**, a deep-plum palette: an installed v47 is told from any older
+  install at a glance.
+* Library at `files/library-v47-1`, projects at `files/projects-v47-1` — both under the app's private storage, which
+  Android deletes on uninstall. The public `Downloads/tarunkahani` mirror is off by default. On the first launch of
+  this build every legacy path (the old `library`, `projects`, `library-v47`, `projects-v47` and the public mirror)
+  is wiped once. Settings → Fresh start wipes everything on demand.
+* One upload sheet for every character, object and place, before and during a film: gallery / files / camera /
+  library / internet-AI — no distinction by kind.
+* `Library.add` ids carry a sequence number (18 pictures saved in one millisecond no longer collide);
+  `addMany` reads images through `Project.readPicture` (a 100 MB photo is never read whole into memory);
+  `readPicture` verifies the bytes decode before they are kept.
+* APK: `release/KahaniFilm-v47.apk`, CI artifact **KahaniFilm-v47-apk** (plus the old `KahaniFilm-debug-apk` name).
