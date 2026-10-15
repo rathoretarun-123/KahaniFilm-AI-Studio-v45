@@ -40,7 +40,7 @@ public final class FilmLook {
         this.small = new int[sw * sh];
         this.lumRing = new int[w * 5];
         this.blurRing = new int[w * 5];
-        this.sharpen = Math.round(256 * Math.max(0.25f, Math.min(0.6f, 0.25f + h / 1080f * 0.35f)));
+        this.sharpen = Math.round(256 * Math.max(0.45f, Math.min(1.0f, 0.45f + h / 1080f * 0.55f)));      // v47: 0.45..1.00 (was 0.25..0.60): the whole film reads sharper
     }
 
     /** Row y of the frame as it is now (before it is finished): its light, and its light blurred across (1 4 6 4 1). */
@@ -153,7 +153,7 @@ public final class FilmLook {
             }
             Blur.gauss(small, sw, sh, Math.max(2, sw / 70));
         }
-        int bl = Math.round(p.bloom * 0.6f * 256);       // v35: a gentler glow (the same colour script, 60% of its strength)
+        int bl = Math.round(p.bloom * 0.35f * 256);       // v47: 35% (was 60%) — the bloom had hazed close-ups
         float vib = 0.16f * p.saturation, satK = p.saturation;
         // v35: the rows the unsharp mask needs, read before they are finished (row y + 2 is read when row y is done)
         readRow(px, 0);

@@ -704,7 +704,7 @@ public final class Renderer {
         // v35: the leaves in front of the lens move in the same wind as the place behind them
         float push = Nature.windPush(0.5f, 0.95f, t, film == null ? 0 : film.wind(t), 0.3f);
         g.translate(push * 7, Math.abs(push) * 1.5f);
-        g.layerLow("fg2:" + s.set + ":" + night + ":" + (int) W2, W2, H2, 0.12f, new Gfx.Painter() {
+        g.layerLow("fg2:" + s.set + ":" + night + ":" + (int) W2, W2, H2, 0.35f, new Gfx.Painter() {       // v47: 0.35 (was 0.12) — leaves had read as a dirty smudge
             public void paint(Gfx gg) {
                 int leaf = night ? 0xFF0E2416 : 0xFF2E6B2A, leaf2 = night ? 0xFF16301C : 0xFF4E8F34;
                 // a bush in the bottom-left corner and leaves in the bottom-right corner, never across the middle
@@ -3913,7 +3913,7 @@ public final class Renderer {
         final float cx = side > 0 ? Math.max(vw - inside, vw - edge + w / 2) : Math.min(inside, edge - w / 2), bottom = vh * 0.1f + h;
         final Object img = back.img;
         final float fw = w;
-        g.layerLow("ots:" + fg.c.id + ":" + (side > 0 ? "R" : "L"), vw, vh, 0.35f, new Gfx.Painter() {
+        g.layerLow("ots:" + fg.c.id + ":" + (side > 0 ? "R" : "L"), vw, vh, 0.6f, new Gfx.Painter() {       // v47: 0.60 (was 0.35) — the shoulder had read as a shapeless lump
             public void paint(Gfx gg) {
                 gg.image(img, cx - fw / 2, bottom - h, fw, h);
             }
