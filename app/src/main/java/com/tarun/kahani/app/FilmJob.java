@@ -588,6 +588,16 @@ public final class FilmJob implements Runnable {
             // every character, written with the film
             step("Writing the asset inventory and the facial identity specifications…", 0.294f);
             film.shotList += "\n" + com.tarun.kahani.core.DirectorsManual.inventory(Studio3DArt.inventory(project, story, lib)) + "\n" + Studio3DArt.facialSpecs(project, story, Prefs.humanQc(ctx));
+            // v46: the four roles' structured review (stable issue ids, severities, owners, bounded rounds) and the
+            // reference coverage of every character, kept beside the film as review_ledger.json and in qc.txt
+            try {
+                String castNow = project.read("cast.txt");
+                com.tarun.kahani.core.ReviewLedger ledger = com.tarun.kahani.core.ReviewConference.run(story, castNow, null, null, null, null);
+                String cloudReport = project.read("production_review_" + hash(productionFingerprint(script)) + ".json");
+                if (cloudReport != null && cloudReport.trim().length() > 0) com.tarun.kahani.core.ReviewConference.fromCloud(ledger, com.tarun.kahani.core.Json.parseLoose(cloudReport));
+                project.write("review_ledger.json", ledger.toJson());
+                film.shotList += "\n" + ledger.summary() + "\n" + com.tarun.kahani.core.ReferenceCoverage.report(com.tarun.kahani.core.ReferenceCoverage.characters(story, castNow));
+            } catch (Throwable e) { android.util.Log.w("Kahani", "review ledger: " + e); }
             // the mix comes before Human QC now: the animatic (the manual 3.7) plays the real voices, music and sounds
             step("Mixing music and sounds…", 0.295f);
             final File mix = new File(tmp, "mix.pcm");

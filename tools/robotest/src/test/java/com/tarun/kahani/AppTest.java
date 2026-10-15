@@ -355,6 +355,7 @@ public class AppTest {
     /** Saved voices (no names given) are matched to characters by the voice the script describes. */
     @Test
     public void directorFindsVoicesThatFitTheDescription() throws Exception {
+        requireOriginalFixtures(new File("voices"), "man.wav", "deep_slow.wav", "woman.wav", "child.wav");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         RuntimeEnvironment.getApplication().getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         ActivityController<MainActivity> ac = Robolectric.buildActivity(MainActivity.class).setup();
         MainActivity a = ac.get();
@@ -503,10 +504,42 @@ public class AppTest {
         for (String relative : relativePaths) {
             File f = new File(dir, relative);
             org.junit.Assume.assumeTrue(
-                    "BLOCKED: original reference fixture is not present (" + f.getPath()
-                            + "); synthetic test art is not a substitute for identity validation.",
-                    f.isFile() && f.length() > 0);
+                    "BLOCKED: original reference fixture is not present or is a synthetic stand-in (" + f.getPath()
+                            + "); synthetic test art is not a substitute for identity validation. Restore the original"
+                            + " fixture archives (tools/scripts/prepare_legacy_test_fixtures.py) to run this test.",
+                    originalFixture(f));
         }
+    }
+
+    /** The repository root (tools/, app/ and voices/ hang off it). */
+    static File repoRoot() { return ASSETS.getAbsoluteFile().getParentFile().getParentFile().getParentFile().getParentFile(); }
+
+    private static java.util.Set<String> syntheticFixtures;
+
+    /**
+     * v46: whether a fixture file is one of the user's originals. The fixture generator lists every file it
+     * synthesised in tools/testdata/fixture_inventory.json; a file on that list (or an absent one) is not an
+     * original, so a test that reads identity from it must be skipped as BLOCKED rather than passed or failed on
+     * drawn stand-ins. Voice fixtures staged under tools/robotest/voices are matched by their voices/ name.
+     */
+    static boolean originalFixture(File f) {
+        if (f == null || !f.isFile() || f.length() == 0) return false;
+        if (syntheticFixtures == null) {
+            java.util.Set<String> set = new java.util.HashSet<String>();
+            try {
+                File inv = new File(repoRoot(), "tools/testdata/fixture_inventory.json");
+                if (inv.isFile()) {
+                    Object o = com.tarun.kahani.core.Json.parseLoose(new String(Files.readAllBytes(inv.toPath()), "UTF-8"));
+                    for (Object x : com.tarun.kahani.core.Json.arr(o, "synthetic_test_only_files")) set.add(String.valueOf(x).replace('\\', '/'));
+                }
+            } catch (Exception e) { /* no inventory: every present file counts as original */ }
+            syntheticFixtures = set;
+        }
+        String rel;
+        try { rel = repoRoot().toPath().relativize(f.getAbsoluteFile().toPath().normalize()).toString().replace('\\', '/'); }
+        catch (IllegalArgumentException e) { rel = f.getName(); }
+        if (rel.startsWith("tools/robotest/voices/")) rel = "voices/" + f.getName();
+        return !syntheticFixtures.contains(rel);
     }
 
     static int[] pixelsOf(File f, int[] wh) {
@@ -525,6 +558,7 @@ public class AppTest {
      */
     @Test
     public void userSheetsSplitIntoTheirFigures() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet01.jpg", "tools/testdata/sheets/sheet12.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         File[] sheets = userSheets();
         assertTrue("no sheets at " + new File(ASSETS, "../../../../tools/testdata/sheets"), sheets.length >= 40);
         int total = 0, figures = 0;
@@ -581,6 +615,7 @@ public class AppTest {
      */
     @Test
     public void sheetsUploadedForCharacterThingAndPlaceAreSplitAndSaved() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet02.jpg", "tools/testdata/sheets/sheet39.jpg", "tools/testdata/sheets/sheet01.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File[] sheets = userSheets();
@@ -662,6 +697,7 @@ public class AppTest {
      */
     @Test
     public void poseSenseReadsTheUsersSheets() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet02.jpg", "tools/testdata/sheets/sheet04.jpg", "tools/testdata/sheets/sheet09.jpg", "tools/testdata/sheets/sheet01.jpg", "tools/testdata/sheets/sheet15.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         File[] sheets = userSheets();
         assertTrue(sheets.length >= 40);
         File dir = sheets[0].getParentFile();
@@ -846,6 +882,7 @@ public class AppTest {
      */
     @Test
     public void sheetChosenAnywhereIsSplit() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet02.jpg", "tools/testdata/sheets/sheet15.jpg", "app/src/main/assets/sample/char_vrinda.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File[] sheets = userSheets();
@@ -976,6 +1013,7 @@ public class AppTest {
      */
     @Test
     public void sheetAddedToTheLibraryIsSplitAndFollowsTheCharacter() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet02.jpg", "tools/testdata/sheets/sheet39.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File[] sheets = userSheets();
@@ -1962,6 +2000,7 @@ public class AppTest {
      */
     @Test
     public void viewsFromThePictureProposalsAlbumAndOverTheShoulder() throws Exception {
+        requireOriginalFixtures(ASSETS, "sample/char_vrinda.jpg", "sample/char_vrinda_back.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         Project p = sampleProject();
         Story story = ScriptParser.parse(p.read("script.txt"));
         android.content.Context ctx = RuntimeEnvironment.getApplication();
@@ -2278,6 +2317,7 @@ public class AppTest {
      */
     @Test
     public void phoneGuideAnglesSplitBridgeAndReverse() throws Exception {
+        requireOriginalFixtures(ASSETS, "sample/char_vrinda.jpg", "sample/char_vrinda_back.jpg", "sample/char_raju.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         String guide = new String(Files.readAllBytes(new File(ASSETS, "phone_local_film_creator_guide.md").toPath()), "UTF-8");
         assertTrue(guide.contains("Appendix C") && guide.contains("Pixar-level"));
         assertTrue(com.tarun.kahani.core.PhoneGuide.SUMMARY.contains("Offline core") && com.tarun.kahani.core.PhoneGuide.PRECEDENCE.length >= 6
@@ -2577,6 +2617,7 @@ public class AppTest {
      */
     @Test
     public void everyCharacterPlaceAndThingTakesPictures() throws Exception {
+        requireOriginalFixtures(ASSETS, "sample/char_vrinda.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         Project p = sampleProject();
@@ -2807,6 +2848,7 @@ public class AppTest {
      */
     @Test
     public void darkPicturesReadLikeBrightOnes() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet02.jpg", "tools/testdata/sheets/sheet15.jpg", "tools/testdata/sheets/sheet01.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         File[] sheets = userSheets();
         File dir = sheets[0].getParentFile();
         String[] names = {"sheet02.jpg", "sheet15.jpg", "sheet01.jpg"};
@@ -3274,6 +3316,7 @@ public class AppTest {
      */
     @Test
     public void aidsCostumesAndPicturesFirst() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet15.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         // 1. who needs what
@@ -3658,6 +3701,7 @@ public class AppTest {
 
     @Test
     public void madeCharactersFollowTheUploadedPictures() throws Exception {
+        requireOriginalFixtures(repoRoot(), "tools/testdata/sheets/sheet04.jpg", "tools/testdata/sheets/sheet15.jpg", "tools/testdata/sheets/sheet11.jpg", "tools/testdata/sheets/sheet01.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File dir = userSheets()[0].getParentFile();
@@ -4618,6 +4662,7 @@ public class AppTest {
      */
     @Test
     public void v38PicturesKeepTheirOwnMouthAndFace() throws Exception {
+        requireOriginalFixtures(ASSETS, "sample/char_vrinda.jpg", "sample/char_vanusha.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         Project p = sampleProject();
         Story story = ScriptParser.parse(p.read("script.txt"));
         Art art = Art.fromManifest(p.read("cast.txt"), story, p.loader());
@@ -5338,6 +5383,7 @@ public class AppTest {
      */
     @Test
     public void v40LipsTurnsStrideAndTheRigEverywhere() throws Exception {
+        requireOriginalFixtures(ASSETS, "sample/char_vrinda.jpg");   // v46: the user's originals only; a synthetic stand-in skips as BLOCKED
         Project p = sampleProject();
         Story story = ScriptParser.parse(p.read("script.txt"));
         Art art = Art.fromManifest(p.read("cast.txt"), story, p.loader());

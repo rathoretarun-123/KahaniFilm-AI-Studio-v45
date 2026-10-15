@@ -214,7 +214,7 @@ final class AutoLibrary {
         Set<String> used = new HashSet<String>(java.util.Arrays.asList(project.setting("auto.pics", "").split(",")));
         List<Library.Item> pics = new ArrayList<Library.Item>();
         for (Library.Item it : lib.find(Library.PIC, null, null)) {
-            if (it.builtIn || used.contains(it.id) || "view".equals(it.kind)) continue;     // a back or side view is never a front picture
+            if (it.builtIn || used.contains(it.id) || "view".equals(it.kind) || "sheet".equals(it.kind)) continue;     // a back or side view is never a front picture; nor a whole contact sheet (v46)
             String who = ScriptAI.matchName(it.name, allNames);
             if (who != null) {
                 boolean free = false;
@@ -253,7 +253,7 @@ final class AutoLibrary {
                     if (c != null && namedFor(it.name, c)) s = 1f;
                 }
                 if ((tg.equals("title") || tg.equals("end")) && byName == null) s = Math.min(s, 0.5f);   // only when named so
-                if (tg.startsWith("shot:") && ("person".equals(it.kind) || "place".equals(it.kind) || "view".equals(it.kind))) s = 0;   // a character, a place or a view is not an object (v33)
+                if (tg.startsWith("shot:") && ("person".equals(it.kind) || "place".equals(it.kind) || "view".equals(it.kind) || "sheet".equals(it.kind))) s = 0;   // a character, a place or a view is not an object (v33)
                 // v25: a picture with no name and no words fitting the target is placed by its look only when very sure
                 if (byName == null && byText < 0.5f && cameraName(it.name) && s < LOOKS_ONLY_SURE) s = 0;
                 // v25: what the user said about this picture in any story wins over every guess

@@ -382,9 +382,11 @@ final class SheetSaver {
         // 1. every picture; a sheet of several figures split into them
         List<Object[]> pics = new ArrayList<Object[]>();     // {px, w, h, cutOut, cameraPhoto}
         int split = 0;
-        int unreadable = 0, files = 0;
+        int unreadable = 0, files = 0, overLimit = 0;
+        // v46: a character takes up to 18 reference pictures, a prop or a place up to 10 (ReferenceCoverage)
+        final int limit = com.tarun.kahani.core.ReferenceCoverage.limitFor(kind);
         for (byte[] d : datas) {
-            if (++files > MainActivity.MAX_ANGLE_PICTURES) break;       // character/place reference batches are capped at 18 images
+            if (++files > limit) { overLimit = datas.size() - limit; break; }
             if (d == null || d.length < 16) { unreadable++; continue; }
             // v28: a sheet is read at up to 2600 px wide where the heap allows, so every figure cut from it
             // (a tenth of the sheet) is sharp enough for a close-up and its face large enough to read
@@ -422,11 +424,31 @@ final class SheetSaver {
                 } catch (Throwable e) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); }
             } catch (Throwable e) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); }
             if (parts.size() >= 2) camera = false;
-            if (parts.size() >= 2) { split += parts.size(); for (com.tarun.kahani.core.Angles.Piece pc : parts) pics.add(new Object[]{pc.px, pc.w, pc.h, Boolean.TRUE, camera}); }
+            if (parts.size() >= 2) {
+                split += parts.size();
+                // v46: the contact sheet itself is kept in the library (never shown as a figure), and every panel cut
+                // from it records where on the sheet it came from and how sure the split was
+                String sheetId = "";
+                try {
+                    long[] areas = new long[parts.size()];
+                    for (int k = 0; k < parts.size(); k++) areas[k] = (long) parts.get(k).w * parts.get(k).h;
+                    String conf = com.tarun.kahani.core.ReferenceCoverage.splitConfidence(areas);
+                    boolean png = (d[0] & 255) == 0x89;
+                    Library.Item sh = library.addBytes(Library.PIC, "sheet", shown + " (contact sheet " + files + ")", "contact sheet", d, png ? ".png" : ".jpg", "angles");
+                    sh.setMeta("ofName", shown);
+                    sh.setMeta("panels", String.valueOf(parts.size()));
+                    sh.setMeta("splitConfidence", conf);
+                    sh.setMeta("sheetSize", w + "x" + h);
+                    sheetId = sh.id;
+                } catch (Exception ignored) { /* the panels are kept either way */ }
+                int k = 0;
+                for (com.tarun.kahani.core.Angles.Piece pc : parts)
+                    pics.add(new Object[]{pc.px, pc.w, pc.h, Boolean.TRUE, camera, sheetId + "|" + (++k) + "/" + parts.size() + "|" + pc.x0 + "," + pc.y0 + "," + pc.w + "," + pc.h});
+            }
             else {
                 // v39: a single picture is kept at up to 1400 px (a hundred of them read at the sheet size would fill the phone's memory)
                 Object[] sm = shrinkPixels(px, w, h, 1400);
-                pics.add(new Object[]{sm[0], sm[1], sm[2], Boolean.FALSE, camera});
+                pics.add(new Object[]{sm[0], sm[1], sm[2], Boolean.FALSE, camera, null});
             }
             px = null;
             if (pics.size() >= 100) break;
@@ -606,6 +628,7 @@ final class SheetSaver {
                     made = it;
                     done.append(an).append(" ").append(i + 1).append(" (library); ");
                 }
+                provenance(made, pics.get(i));
                 // v27: every picture is a pose picture of the character — the director picks it for the shots
                 // that need its angle, pose and feeling (the library keeps the reading for the next story)
                 if (tags[i] != null) {
@@ -665,6 +688,7 @@ final class SheetSaver {
                     things++;
                     Library.Item it = library.addBytes(Library.PIC, "object", shown + " — thing " + things, shown, b, ".png", "angles");
                     it.setMeta("ofName", shown);
+                    provenance(it, o);
                     continue;
                 }
                 if ((Boolean) o[4]) { try { b = MainActivity.toonify(b, false); } catch (Exception ignored) { /* the photo itself then */ } }
@@ -672,7 +696,7 @@ final class SheetSaver {
                 if (!haveMain) {
                     project.setManifest("scene", key + "a", null); project.setManifest("scene", key + "b", null);
                     project.setManifest("scene", key, "scene|" + key + "|" + f);
-                    library.addBytes(Library.PIC, "place", shown, "wide view", b, ".jpg", "angles");
+                    provenance(library.addBytes(Library.PIC, "place", shown, "wide view", b, ".jpg", "angles"), o);
                     haveMain = true;
                     done.append("the place (wide); ");
                 } else if (!haveRev) {
@@ -680,6 +704,7 @@ final class SheetSaver {
                     Library.Item it = library.addBytes(Library.PIC, "place", shown + " (reverse angle)", "reverse angle", b, ".jpg", "angles");
                     it.setMeta("view", "reverse");
                     it.setMeta("ofName", shown);
+                    provenance(it, o);
                     haveRev = true;
                     done.append("the reverse angle (behind the reverse shots); ");
                 } else if (com.tarun.kahani.core.Nature.fromAbove(ppx, (Integer) o[1], (Integer) o[2])) {
@@ -687,11 +712,13 @@ final class SheetSaver {
                     // the library, never drawn behind a character
                     Library.Item it = library.addBytes(Library.PIC, "place", shown + " (from above)", "from above", b, ".jpg", "angles");
                     it.setMeta("ofName", shown);
+                    provenance(it, o);
                     done.append("a view from above (library only); ");
                 } else {
                     newViews.add(f);
                     Library.Item it = library.addBytes(Library.PIC, "place", shown + " (view " + (newViews.size() + 2) + ")", "", b, ".jpg", "angles");
                     it.setMeta("ofName", shown);
+                    provenance(it, o);
                 }
             }
             // the views: the new ones first, then the earlier pictures of the place (the newest kept when over 98)
@@ -745,12 +772,24 @@ final class SheetSaver {
                 }
                 Library.Item it = library.addBytes(Library.PIC, "object", shown + (i == 0 ? "" : " (angle " + (i + 1) + ")"), key.replace(',', ' '), b, cut ? ".png" : ".jpg", "angles");
                 it.setMeta("ofName", shown);
+                provenance(it, o);
             }
             if (angles > 0) done.append(angles).append(" more angles; ");
             done.append("— ").append(thingPictures(project, key)).append(" pictures of this thing in the film ");
         }
         library.save();
         return "✅ " + shown + ": " + done + (split > 0 ? "(" + split + " figures split from a sheet) " : "") + "— all in the library"
-                + (unreadable > 0 ? " (" + unreadable + " could not be read and were left out — a JPG or PNG under 300 MB works)" : "");     // v43: never silent
+                + (unreadable > 0 ? " (" + unreadable + " could not be read and were left out — a JPG or PNG under 300 MB works)" : "")     // v43: never silent
+                + (overLimit > 0 ? " (" + overLimit + " more left out: up to " + limit + " reference pictures for a " + (kind.equals("char") ? "character" : kind.equals("scene") ? "place" : "thing") + ")" : "");
+    }
+
+    /** v46: where a panel came from — the library id of its contact sheet, its number on it and its crop box — kept on the library item. */
+    static void provenance(Library.Item it, Object[] pic) {
+        if (it == null || pic == null || pic.length < 6 || pic[5] == null) return;
+        String[] f = String.valueOf(pic[5]).split("\\|");
+        if (f.length < 3) return;
+        if (f[0].length() > 0) it.setMeta("sheet", f[0]);
+        it.setMeta("panel", f[1]);
+        it.setMeta("crop", f[2]);
     }
 }
