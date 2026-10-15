@@ -5,6 +5,7 @@ import com.tarun.kahani.core.Studio3D;
 import com.tarun.kahani.core.Nature;
 import com.tarun.kahani.core.StoryReasoner;
 import com.tarun.kahani.core.EverydayPhysics;
+import com.tarun.kahani.core.WorldAssetRig;
 
 /** Lightweight deterministic smoke tests for generated animal, prop and environment meshes. */
 public final class WorldAssetSmokeTest {
@@ -90,7 +91,33 @@ public final class WorldAssetSmokeTest {
         check(EverydayPhysics.contact(0,1)==1f,"surface contact should be full at zero distance");
     }
 
+    private static void rigSkinningChecks() {
+        WorldAssetRig.Asset a=new WorldAssetRig.Asset("bind-pose","PROP");
+        int root=a.addBone("root",-1);
+        WorldAssetRig.Bone b=a.bones.get(root);
+        b.bind.position.x=1f;
+        b.pose.position.x=1f;
+        WorldAssetRig.Mesh m=new WorldAssetRig.Mesh("triangle");
+        m.vertex(new WorldAssetRig.Vertex(new WorldAssetRig.Vec3(2,0,0),null,0,0).weight(0,root,1));
+        m.vertex(new WorldAssetRig.Vertex(new WorldAssetRig.Vec3(2,1,0),null,1,0).weight(0,root,1));
+        m.vertex(new WorldAssetRig.Vertex(new WorldAssetRig.Vec3(2,0,1),null,0,1).weight(0,root,1));
+        m.triangle(0,1,2);
+        a.addMesh(m);
+        WorldAssetRig.Vec3[] rest=WorldAssetRig.skin(a,m);
+        check(Math.abs(rest[0].x-2)<0.001f && Math.abs(rest[0].y)<0.001f,
+                "bind pose must not double-transform vertices");
+        b.pose.rotation.z=90f;
+        a.world.position.x=10f;
+        WorldAssetRig.Vec3[] posed=WorldAssetRig.skin(a,m);
+        check(Math.abs(posed[0].x-11)<0.01f && Math.abs(posed[0].y-1)<0.01f,
+                "skinning must rotate around the bind pivot and apply the asset world transform");
+        WorldAssetRig.resetPose(a);
+        check(Math.abs(b.pose.rotation.z)<0.001f && Math.abs(b.pose.position.x-1)<0.001f,
+                "resetPose must restore the exact bind transform");
+    }
+
     public static void main(String[] args) {
+        rigSkinningChecks();
         physicsChecks();
         activityReaderChecks();
         natureChecks();
