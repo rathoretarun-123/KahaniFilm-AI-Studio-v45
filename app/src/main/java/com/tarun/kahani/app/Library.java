@@ -215,6 +215,7 @@ public final class Library {
             prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
             return;
         }
+        int importedFiles = 0;
         for (String[] film : films) {
             String filmId = film[0], storyTitle = film[1];
             String assetDir = "film_library/" + filmId + "/stills";
@@ -232,6 +233,7 @@ public final class Library {
                 try { data = Project.readAll(in); } finally { try { in.close(); } catch (Exception ignored) {} }
                 if (data.length == 0) continue;
                 seq++;
+                importedFiles++;
                 String originalName = originalBundledFilename(name);
                 Map<String, Object> record = semantic.get(originalName);
                 String label = semanticLabel(record, storyTitle + " reference " + seq);
@@ -261,7 +263,7 @@ public final class Library {
                 }
             }
         }
-        prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
+        if (importedFiles > 0) prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
     }
 
     /** Maps the manifest's original upload filename to its provisional, reviewed semantic record. */
