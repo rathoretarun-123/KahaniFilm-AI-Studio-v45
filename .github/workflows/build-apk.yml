@@ -170,15 +170,22 @@ jobs:
         run: |
           n=0
           for f in $(grep -l "<failure\|<error" tools/robotest/build/test-results/test/*.xml 2>/dev/null); do
-            sed 's/^ \{10\}//' <<'PY' | python3 - "$f"
+            echo "::warning title=failing-results::$(basename "$f")"
+            sed 's/^ \{10\}//' <<'PY' | python3 - "$f" || true
           import sys, xml.etree.ElementTree as ET
-          t = ET.parse(sys.argv[1]).getroot()
-          for tc in t.iter('testcase'):
-              for k in ('failure', 'error'):
-                  e = tc.find(k)
-                  if e is not None:
-                      msg = (e.get('message') or (e.text or '').strip().splitlines()[0] if (e.get('message') or e.text) else '')[:400]
-                      print('::error title=%s.%s::%s' % (tc.get('classname'), tc.get('name'), msg.replace('\n', ' ')))
+          try:
+              t = ET.parse(sys.argv[1]).getroot()
+              for tc in t.iter('testcase'):
+                  for k in ('failure', 'error'):
+                      e = tc.find(k)
+                      if e is None: continue
+                      msg = e.get('message') or ''
+                      if not msg:
+                          lines = (e.text or '').strip().splitlines()
+                          msg = lines[0] if lines else k
+                      print('::error title=%s.%s::%s' % (tc.get('classname'), tc.get('name'), msg.replace('\n', ' ')[:600]))
+          except Exception as ex:
+              print('::error title=parse::%s %s' % (sys.argv[1], ex))
           PY
             n=$((n+1)); [ $n -ge 12 ] && break
           done
