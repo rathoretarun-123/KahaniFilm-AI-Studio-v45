@@ -578,6 +578,12 @@ public final class Director {
                         if (i == 0 && sh.size <= ShotPlanner.WIDE) c.angle = -1;
                         else if (low && sh.size >= ShotPlanner.MEDIUM && sh.size <= ShotPlanner.MCU) c.angle = -1;
                     }
+                    // v47.2: the staging cameras aim at a standing face; a seated subject's face is lower (the fold
+                    // of the picture's thighs), so a medium or closer view of a sitter comes down with the face
+                    if (who != null && !c.place && c.zoom >= 1.2f) {
+                        float dropNow = sitDrop(who, c.t + 0.1f, heightOf(who));
+                        if (dropNow > 0) c.cy += dropNow * 0.6f;
+                    }
                     sh.height = c.angle;
                     sh.subject = who == null ? Sets.label(sg.set) : who.c.shown();
                     Film.Sub talk = null;
@@ -6518,11 +6524,31 @@ public final class Director {
      */
     private float seatedFace(Film.Actor a, float t) {
         int seat = Renderer.seatOf(a, t);
-        if (photo(a)) return seat == Film.SEAT_FLOOR ? 0.5f : 0.72f;      // v47: 0.5 on the floor (measured against the rig's fold: 0.55 aimed a little high)
+        if (photo(a)) {
+            // v47.2: from the picture's own rig, as the renderer folds it (the user: "check camera angle" — a seated
+            // close-up had its face in the lower half of the frame): the thighs fold by 0.8 of the hip-to-knee run,
+            // half the hip-to-feet run, so the face comes down by 0.4 of that run (0.45 in profile, where the thighs
+            // swing to the horizontal); on the floor the shins fold under as well
+            Art.Sprite s = art == null ? null : art.sprites.get(a.c.id);
+            if (s != null && s.rig != null && !s.rig.still && !s.rig.animal && s.rig.bottom > s.rig.hipY) {
+                float run = s.rig.bottom - s.rig.hipY;
+                boolean profile = seat > Film.SEAT_FLOOR && seat != Film.SEAT_WHEELCHAIR && seat != Film.SEAT_BED && s.view(1) != null && s.view(1).userSide;
+                float drop = seat == Film.SEAT_FLOOR ? 0.4f * run + 0.75f * 0.5f * run * 0.5f : (profile ? 0.45f : 0.4f) * run;
+                return Math.max(0.45f, 0.8f - drop);
+            }
+            return seat == Film.SEAT_FLOOR ? 0.5f : 0.72f;      // v47: 0.5 on the floor (measured against the rig's fold: 0.55 aimed a little high)
+        }
         if (a.look != null && a.look.aid == Look.AID_WHEELCHAIR) seat = Film.SEAT_WHEELCHAIR;
         float sh = Puppet.seatHeight(seat);
         if (sh < 0 || a.look == null) return 0.64f;
         return sh * Puppet.seatScale(a.look) + (a.look.isChild() ? 0.44f : 0.45f);
+    }
+
+    /** v47.2: how far (stage units, positive = down) a seated speaker's face is below a standing one's — 0 when standing. */
+    private float sitDrop(Film.Actor a, float t, float h) {
+        Film.Key st = a.stateAt(t);
+        if (st.body != Pose.SIT && st.body != Pose.KNEEL && st.body != Pose.CROUCH) return 0;
+        return Math.max(0, (0.8f - seatedFace(a, t)) * h);
     }
 
     /** v35: a character drawn from the user's standing photo with no picture of them sitting (it is lowered onto the seat). */
@@ -9602,11 +9628,11 @@ public final class Director {
             float tx = finalX(to, t);
             float span = Math.abs(sx - tx) + 460;
             zoom = Math.max(1.0f, Math.min(zoom, 1280f / span));
-            cx = (sx + tx) / 2; cy = ground - h * 0.55f;
+            cx = (sx + tx) / 2; cy = ground - h * 0.55f + sitDrop(sp, t, h) * 0.6f;
             comp = "Both characters in the frame" + (Math.abs(sx - tx) < 260 ? ", close together (connection)" : Math.abs(sx - tx) > 600 ? ", far apart (distance between them)" : "");
         } else if (type == ShotPlanner.OTS && to != null) {
             float tx = finalX(to, t);
-            cx = sx * 0.72f + tx * 0.28f; cy = ground - h * 0.62f;
+            cx = sx * 0.72f + tx * 0.28f; cy = ground - h * 0.62f + sitDrop(sp, t, h) * 0.7f;
             comp = "Over " + to.c.shown() + "'s shoulder onto " + sp.c.shown();
         } else if (isolated) {
             float away = 0;

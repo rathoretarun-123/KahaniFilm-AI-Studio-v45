@@ -1960,6 +1960,14 @@ public final class Renderer {
             float turn = k.costume == 0 && p.sit <= 0 && sideWalks(sp, k, spk != null, a, t) && p.walkAmt > 0.05f ? 0.45f + 0.55f * Math.min(1, Math.abs(p.walkAmt - 0.35f) / 0.33f) : 1;
             if (turn >= 0.999f && k.costume == 0 && astrideView(sp) != null) turn = astrideTurn(a, p, t);
             if (turn < 0.999f) { g.save(); g.scale(turn, 1); }
+            // v47.2: a front picture seated on a seat rests its hands in its lap (the passenger's idiom): with the
+            // thighs folded but the arms still hanging straight at the sides, the sitter read as a shorter person
+            // standing in front of the bench. Only when the arms are at rest — a gesture or a wave keeps its arms.
+            if (p.sit > 0.5f && p.body == Pose.SIT && a.look.isHumanoid() && sp.rig != null && !sp.rig.still && !sp.rig.animal
+                    && seat != Film.SEAT_WHEELCHAIR && seat != Film.SEAT_FLOOR && p.wave <= 0 && Math.abs(p.armL) < 12 && Math.abs(p.armR) < 12) {
+                float in = Math.min(1, (p.sit - 0.5f) * 2);
+                p.armL = 14 * in; p.armR = 14 * in; p.elbowL = Math.max(p.elbowL, 50 * in); p.elbowR = Math.max(p.elbowR, 50 * in);
+            }
             Art.Sprite drawn = k.costume > 0 ? sp : viewOf(sp, a, s, p, k, spk != null, t);
             // a side picture cannot turn its head to someone: while it walks it faces the way it goes
             if (drawn != sp && drawn == sp.view(1)) {
@@ -3122,6 +3130,11 @@ public final class Renderer {
                 break;
             }
             case Film.SEAT_STOOL:
+                // v47.2: a bench or a stool a quarter of the sitter's height — where a front picture's hips come to
+                // when its rig folds the thighs (0.8 of the hip-to-knee run) with the feet on the ground. At 0.30 the
+                // plank crossed the belly of a seated picture, and with its front edge drawn right across the lap the
+                // sitter read as someone standing behind a bench (the user: "बाबू is not even sitting").
+                top = -h * 0.25f;
                 if (!front) {
                     g.color(0xFF6D4C41);
                     g.rect(-w * 0.36f, top, h * 0.035f, -top); g.rect(w * 0.36f - h * 0.035f, top, h * 0.035f, -top);
@@ -3129,11 +3142,11 @@ public final class Renderer {
                     g.roundRect(-w * 0.42f, top, w * 0.84f, h * 0.055f, h * 0.02f);
                 }
                 if (front && legsIn) {
-                    // v47: the plank's front edge over the sitter's lap — a front picture folded onto a bench or a stool
-                    // read as one standing in front of it; with the seat's edge across the thighs it sits on it
+                    // the plank's front edge shows only beside the hips: the seat is under the sitter, never across them
                     g.linear(0, top + h * 0.012f, 0, top + h * 0.06f, 0xFFA1887F, 0xFF6D4C41);
-                    g.roundRect(-w * 0.42f, top + h * 0.012f, w * 0.84f, h * 0.048f, h * 0.015f);
-                    g.color(0x30000000); g.rect(-w * 0.4f, top + h * 0.06f, w * 0.8f, h * 0.012f);
+                    float gap = h * 0.16f;
+                    g.roundRect(-w * 0.42f, top + h * 0.012f, w * 0.42f - gap, h * 0.048f, h * 0.015f);
+                    g.roundRect(gap, top + h * 0.012f, w * 0.42f - gap, h * 0.048f, h * 0.015f);
                 }
                 break;
             case Film.SEAT_LOG:
@@ -3523,6 +3536,25 @@ public final class Renderer {
         if (sp.views != null && (!speaking || camZ <= 1.6f) && p.sit > 0.3f && astride(a, t)) {
             Art.Sprite prof = astrideView(sp);
             if (prof != null) return prof;
+        }
+        // v47.2: seated on a bench, a stool, a chair or a log with the user's own side picture: the character sits in
+        // profile — the thighs swing forward and the shins hang (Rig.sitSide), the one pose a front picture cannot
+        // show (its folded thighs read as a shorter person standing in front of the seat). A line in a close shot
+        // keeps the front picture (its lips are found surely); the change comes with the cut.
+        if (sp.views != null && sp.view(1) != null && sp.view(1).userSide && p.sit > 0.3f && k.body == Pose.SIT && p.seat > Film.SEAT_FLOOR
+                && p.seat != Film.SEAT_WHEELCHAIR && p.seat != Film.SEAT_BED && k.anchor == Film.A_GROUND && camZ <= 1.6f) {
+            // in profile the knees reach forward: someone standing that close on the facing side would be drawn
+            // through them, so the front picture (folded) keeps that moment
+            float hh = actorHeight(a.look, a.c, art, s), ax = Director.xAt(a, t);
+            boolean blocked = false;
+            for (Film.Actor o : s.actors) {
+                if (o == a) continue;
+                Film.Key ok = o.stateAt(t);
+                if (!ok.visible || ok.body == Pose.SIT || ok.body == Pose.LIE) continue;
+                float dx = Director.xAt(o, t) - ax;
+                if (Math.abs(dx) < 0.45f * hh && Math.signum(dx) == Math.signum(k.facing)) { blocked = true; break; }
+            }
+            if (!blocked) return sp.view(1);
         }
         if (sp.views == null || speaking || k.body != Pose.STAND || k.anchor != Film.A_GROUND || p.sit > 0) return sp;
         // v42: listening through a whole two-shot, still and turned to the speaker: the user's own three-quarter picture

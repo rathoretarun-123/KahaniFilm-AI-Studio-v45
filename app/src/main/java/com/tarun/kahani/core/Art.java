@@ -822,6 +822,26 @@ public final class Art {
         }
     }
 
+    /**
+     * v47.2: height for width of the figure in a decoded picture ({w, h, pixels…}): the box of the pixels that differ
+     * from the corners' colour (the background), or 0 when there is no plain background to tell it by.
+     */
+    static float figureAspect(int[] d) {
+        int w = d[0], h = d[1];
+        if (w < 8 || h < 8) return 0;
+        int[] corners = {d[2], d[2 + w - 1], d[2 + (h - 1) * w], d[2 + h * w - 1]};
+        int bg = corners[0];
+        for (int c : corners) if (Cutout.dist(c, bg) > 40) return 0;
+        int x0 = w, x1 = -1, y0 = h, y1 = -1;
+        for (int y = 0; y < h; y += 2) for (int x = 0; x < w; x += 2) {
+            int c = d[2 + y * w + x];
+            if ((c >>> 24) < 128 || Cutout.dist(c, bg) < 40) continue;
+            if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
+        }
+        if (x1 <= x0 + 4 || y1 <= y0 + 4) return 0;
+        return (y1 - y0) / (float) (x1 - x0);
+    }
+
     /** v40: the flames of a place picture cut out of it (Backdrop.fireImg). */
     static void fireCut(Loader L, String file, Backdrop b) {
         Nature.Scan s = b.scan;
@@ -1239,7 +1259,10 @@ public final class Art {
                     // three-quarter view turned प्रिया into a giant laughing bust)
                     boolean beastC = c.look != null && (c.look.kind == Look.ANIMAL || c.look.kind == Look.BIRD || c.look.kind == Look.MONSTER || c.look.kind == Look.MONKEY);
                     float mainAspect = main.w > 0 ? main.h / (float) main.w : 0;
-                    if (!beastC && mainAspect >= 1.3f && dd != null && dd[0] > 0 && dd[1] / (float) dd[0] < 0.7f * mainAspect) { art.notes.add("view of " + f[1] + " at " + f[2].trim() + "° left out: a close-up or a half figure"); continue; }
+                    // v47.2: the figure's own height for its width, not the picture's — a stooped old man in profile on a
+                    // 2:3 sheet is a whole standing figure (बाबू's side picture had been left out as "a half figure")
+                    float viewAspect = dd != null && dd[0] > 0 ? Math.max(dd[1] / (float) dd[0], figureAspect(dd)) : 0;
+                    if (!beastC && mainAspect >= 1.3f && dd != null && dd[0] > 0 && viewAspect < 0.7f * mainAspect) { art.notes.add("view of " + f[1] + " at " + f[2].trim() + "° left out: a close-up or a half figure"); continue; }
                 } catch (RuntimeException ignored) { }
                 Sprite v = makeSprite(L, f[3], spriteSide, false);
                 if (v == null) continue;
@@ -1268,7 +1291,9 @@ public final class Art {
                 try { v.rig = Rig.build(v.pixelsForSampling, v, c.look, L, main.rig); } catch (RuntimeException e) { v.rig = null; }
                 // v41: a side picture of the user's: which way it looks (the face's skin lies to the front of the head,
                 // the hair behind), so it is drawn facing the way of the walk — never walking backwards
-                if (idx == 1 && f.length == 5 && USER_SIDE.equals(f[4]) && v.pixelsForSampling != null) {
+                // v47.2: an explicit "view|name|90|file" line (the user's own side picture, as the phone and
+                // CastFromUploads write it) counts as the user's side as well as the tagged one from a pose sheet
+                if (idx == 1 && (f.length == 4 || (f.length == 5 && USER_SIDE.equals(f[4]))) && v.pixelsForSampling != null) {
                     v.faces = turnedFacing(v.pixelsForSampling, main.skin);
                     v.userSide = v.faces != 0;
                     if (!v.userSide) art.notes.add("side picture of " + f[1] + " not used: which way it looks could not be read");
