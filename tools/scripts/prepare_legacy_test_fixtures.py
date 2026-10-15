@@ -5,7 +5,7 @@ Any generated test images/audio are explicitly marked synthetic and are not film
 """
 import io, json, math, struct, wave, zipfile, zlib
 from pathlib import Path
-from PIL import Image, TiffImagePlugin
+from PIL import Image, ImageDraw, TiffImagePlugin
 R=Path(__file__).resolve().parents[2]
 ARCHIVES=[R/"KahaniFilm-v42-source-part3-test-sheets.zip",R/"KahaniFilm-v42-source-part4-test-stories-and-pictures.zip"]
 EXPECTED_SHA256={
