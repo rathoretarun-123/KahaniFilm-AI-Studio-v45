@@ -209,8 +209,9 @@ public final class Library {
                 {"babu_ke_liye", "बाबू के लिए"}
         };
         // Upgrade earlier generic imports in place. Never duplicate or delete a user's renamed/annotated references.
-        if (prefs.getBoolean("bundledFilmReferencesV1", false)
-                && migrateBundledReferenceLabels(films)) {
+        if (prefs.getBoolean("bundledFilmReferencesV1", false)) {
+            // Existing users keep their imported originals; update only generated labels, never duplicate the pack.
+            migrateBundledReferenceLabels(films);
             prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
             return;
         }
