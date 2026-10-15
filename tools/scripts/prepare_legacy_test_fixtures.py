@@ -148,6 +148,8 @@ def main():
   ("char_raju.jpg",False,False,False,False),("char_raju_back.jpg",False,True,False,False),
   ("char_kripa.jpg",False,False,False,False),("char_kripa_back.jpg",False,True,False,False),
   ("char_kripa_pouch.jpg",False,False,False,False),("char_ratanlal.jpg",False,False,False,True),
+  ("char_tarun.jpg",False,False,False,True),("char_priya.jpg",False,False,False,False),
+  ("char_arjun.jpg",False,False,False,False),("char_rahul.jpg",False,False,False,False),
   ("bg_garden.jpg",True,False,False,False),("bg_forest.jpg",True,False,False,False)]:
   put("app/src/main/assets/sample/"+n,jpeg_fixture(301+len(synthetic),sc,back=back,open_mouth=mouth,turban=hat),"synthetic")
  for n,f in [("man.wav",170),("deep_slow.wav",125),("woman.wav",260),("child.wav",400)]:
