@@ -952,6 +952,25 @@ public final class Art {
                     views.add(f);            // after the characters, below
                 } else if (f[0].equals("costume") && f.length >= 3) {
                     costumeLines.add(f);     // v34: after the characters, below
+                } else if (f[0].equals("dress") && f.length >= 4) {
+                    // v47: dress|<character>|<words>|<file> — the user hands a picture in the new dress along with
+                    // words that match the parsed costume ("लाल लहंगा", "red lehenga", "blue frock"). The engine
+                    // finds the costume whose text contains any of those words and ties the picture to it.
+                    Story.CharacterDef c = ScriptParser.resolve(story, f[1]);
+                    if (c == null) continue;
+                    String want = f[2].toLowerCase(java.util.Locale.ROOT);
+                    int matched = -1;
+                    for (int i = 0; i < c.costumes.size(); i++) {
+                        String ct = c.costumes.get(i).text.toLowerCase(java.util.Locale.ROOT);
+                        boolean fits = true;
+                        for (String word : want.split("\\s+")) {
+                            if (word.length() == 0) continue;
+                            if (!ct.contains(word)) { fits = false; break; }
+                        }
+                        if (fits) { matched = i; break; }
+                    }
+                    if (matched < 0) { art.notes.add("DRESS: no parsed costume matches \"" + f[2] + "\" for " + c.shown() + "; picture ignored"); continue; }
+                    costumeLines.add(new String[]{"costume", c.id + "#" + (matched + 1), f[3]});
                 } else if (f[0].equals("objview") && f.length >= 3) {
                     thingLines.add(new String[]{f[1], f[2]});      // v41: every angle of a thing (the playground's slide and swing)
                 } else if (f[0].equals("char") && f.length >= 3) {

@@ -230,6 +230,17 @@ public final class Director {
 
     /** Call after the voices are synthesised (line.dur and line.env filled). */
     public Film direct(Art art) {
+        // v47: the Reader asks for a dress picture when the script changes the character's clothes and no user
+        // picture ties to that costume. The warning goes into film.notes and the user sees it on the "ask" screen.
+        if (art != null && story != null) {
+            for (Story.CharacterDef c : story.characters) {
+                for (int ci = 0; ci < c.costumes.size(); ci++) {
+                    if (art.costumeSprite(c.id, ci + 1) == null) {
+                        film.notes.add("ASK: a picture of " + c.shown() + " in \"" + c.costumes.get(ci).label() + "\" (the script changes their dress and no uploaded picture matches)");
+                    }
+                }
+            }
+        }
         this.art = art == null ? new Art() : art;
         if (film.subtitles) { /* keep */ }
         float t = 0;
