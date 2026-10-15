@@ -236,6 +236,9 @@ public final class LookDesigner {
         if (Txt.has(t, "hearing aid", "कान की मशीन", "सुनने की मशीन", "हियरिंग एड")) c |= Look.C_HEARING_AID;
         if ((Txt.has(t, "गूंगा", "गूँगा", "गूंगी", "गूँगी", "बोल नहीं सकता", "बोल नहीं सकती", "बोल नहीं पाता", "बोल नहीं पाती", "cannot speak", "can't speak", "speechless from birth")
                 || wordIn(t, "मूक") || wordIn(t, "mute")) && !Txt.has(t, "मूकदर्शक")) c |= Look.C_MUTE;
+        if (Txt.has(t, "\u0915\u092C\u0902\u0927", "kabandh", "kabandha", "headless", "no head", "without a head", "\u0938\u093F\u0930 \u0915\u091F\u093E", "\u0938\u093F\u0930 \u0915\u091F \u0917\u092F\u093E", "\u0938\u093F\u0930 \u0928\u0939\u0940\u0902", "\u092C\u093F\u0928\u093E \u0938\u093F\u0930", "decapitated", "beheaded")) c |= Look.C_HEADLESS;
+        if (Txt.has(t, "\u0909\u095C\u0924\u093E \u0938\u093F\u0930", "\u0909\u0921\u0924\u093E \u0938\u093F\u0930", "floating head", "disembodied head", "head alone", "only head", "a flying head", "severed head", "\u0915\u091F\u093E \u0939\u0941\u0906 \u0938\u093F\u0930")) c |= Look.C_ONLY_HEAD;
+        if (Txt.has(t, "six fingers", "six-fingered", "\u091B\u0939 \u0909\u0902\u0917\u0932\u093F\u092F\u093E\u0901", "\u091B\u0939 \u0909\u0901\u0917\u0932\u093F\u092F\u093E\u0901", "extra finger", "polydactyl")) c |= Look.C_EXTRA_FINGER;
         if (Txt.has(t, "sign language", "signs to", "in signs", "सांकेतिक भाषा", "साइन लैंग्वेज", "इशारों में बात", "इशारों से बात", "इशारों की भाषा")) c |= Look.C_SIGNS;
         return c;
     }

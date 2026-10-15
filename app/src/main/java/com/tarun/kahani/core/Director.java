@@ -238,6 +238,9 @@ public final class Director {
         // picture ties to that costume. The warning goes into film.notes and the user sees it on the "ask" screen.
         if (art != null && story != null) {
             for (Story.CharacterDef c : story.characters) {
+                if (c.look != null && (c.look.headless() || c.look.onlyHead()) && art.sprites.get(c.id) == null) {
+                    film.notes.add("ASK: a picture of " + c.shown() + " " + (c.look.headless() ? "(headless)" : "(only the head)") + " — the engine cannot invent one");
+                }
                 for (int ci = 0; ci < c.costumes.size(); ci++) {
                     if (art.costumeSprite(c.id, ci + 1) == null) {
                         film.notes.add("ASK: a picture of " + c.shown() + " in \"" + c.costumes.get(ci).label() + "\" (the script changes their dress and no uploaded picture matches)");

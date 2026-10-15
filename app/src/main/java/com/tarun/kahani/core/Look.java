@@ -88,7 +88,11 @@ public final class Look {
      */
     public int condition;
     public static final int C_LIMP = 1, C_NO_ARM = 2, C_RIGHT_ARM = 4, C_NO_LEG = 8, C_RIGHT_LEG = 16, C_ARTIFICIAL_LEG = 32, C_FINGERS = 64,
-            C_ONE_EYE = 128, C_BLIND = 256, C_DEAF = 512, C_MUTE = 1024, C_HEARING_AID = 2048, C_SIGNS = 4096;
+            C_ONE_EYE = 128, C_BLIND = 256, C_DEAF = 512, C_MUTE = 1024, C_HEARING_AID = 2048, C_SIGNS = 4096,
+            // v47: a headless figure (a Kabandha demon, a decapitated spirit); a floating head only (no body); an extra finger
+            C_HEADLESS = 8192, C_ONLY_HEAD = 16384, C_EXTRA_FINGER = 32768;
+    public boolean headless() { return (condition & C_HEADLESS) != 0; }
+    public boolean onlyHead() { return (condition & C_ONLY_HEAD) != 0; }
     /** v35: blind or blindfolded: the character cannot see (no point-of-view shot, feels the way, listens). */
     public boolean cannotSee() { return glasses == 4 || (condition & C_BLIND) != 0; }
     /** v35: deaf: no startle at a sound, watches faces, does not turn to a call from behind. */
