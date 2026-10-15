@@ -169,7 +169,7 @@ jobs:
         run: |
           n=0
           for f in $(grep -l "<failure\|<error" tools/robotest/build/test-results/test/*.xml 2>/dev/null); do
-            python3 - "$f" <<'PY'
+            sed 's/^ \{10\}//' <<'PY' | python3 - "$f"
           import sys, xml.etree.ElementTree as ET
           t = ET.parse(sys.argv[1]).getroot()
           for tc in t.iter('testcase'):
