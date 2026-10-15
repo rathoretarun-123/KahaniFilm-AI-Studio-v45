@@ -63,8 +63,8 @@ public final class CastFromUploads {
                     cast.add("pose|" + f[1] + "|" + name + "|" + (int) t.angle + "|" + t.pose + "|" + t.emotion + "|1|0|0|0|0|0|0|0|0");
                 }
                 if (pieces.isEmpty()) review.add("no figure found in " + f[2]);
-            } else if (kind.equals("dress")) {
-                cast.add("dress|" + f[1] + "|" + f[2] + "|" + png(base, f[3], out));
+            } else if (kind.equals("dress") || kind.equals("look")) {
+                cast.add(kind + "|" + f[1] + "|" + f[2] + "|" + png(base, f[3], out));
             } else if (kind.equals("prop") || kind.equals("place")) {
                 int panel = f.length > 3 ? Integer.parseInt(f[3].trim()) : -1;
                 String file = panel >= 0 ? panel(base, f[2], panel, out, review) : png(base, f[2], out);

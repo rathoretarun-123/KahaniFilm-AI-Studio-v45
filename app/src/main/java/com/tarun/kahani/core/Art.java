@@ -952,7 +952,7 @@ public final class Art {
                     views.add(f);            // after the characters, below
                 } else if (f[0].equals("costume") && f.length >= 3) {
                     costumeLines.add(f);     // v34: after the characters, below
-                } else if (f[0].equals("dress") && f.length >= 4) {
+                } else if ((f[0].equals("dress") || f[0].equals("look")) && f.length >= 4) {
                     // v47: dress|<character>|<words>|<file> — the user hands a picture in the new dress along with
                     // words that match the parsed costume ("लाल लहंगा", "red lehenga", "blue frock"). The engine
                     // finds the costume whose text contains any of those words and ties the picture to it.
