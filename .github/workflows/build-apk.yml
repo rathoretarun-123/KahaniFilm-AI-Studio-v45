@@ -148,7 +148,8 @@ jobs:
       - name: Run production-plan, app regression, and 1,000-pass render soak tests
         shell: bash
         run: |
-          gradle -p tools/robotest test \
+          set -o pipefail
+          gradle -p tools/robotest test --continue \
             --tests com.tarun.kahani.ProductionPlanTest \
             --tests com.tarun.kahani.AppTest \
             --tests com.tarun.kahani.HundredPassSoakTest \
@@ -162,7 +163,7 @@ jobs:
             --tests com.tarun.kahani.SeatContinuityTest \
             --tests com.tarun.kahani.SheetPanelsTest \
             --tests com.tarun.kahani.DashboardSoakTest \
-            --tests com.tarun.kahani.ThreeStoriesSoakTest
+            --tests com.tarun.kahani.ThreeStoriesSoakTest 2>&1 | tee tools/robotest/build/test.log
       - name: Name the failing tests (annotations, readable through the API)
         if: failure()
         shell: bash
@@ -182,6 +183,12 @@ jobs:
             n=$((n+1)); [ $n -ge 12 ] && break
           done
           echo "failing result files: $n"
+          # the gradle output itself: the lines that say what went wrong (ten annotations at most)
+          if [ -s tools/robotest/build/test.log ]; then
+            grep -nE "FAILED|Caused by|OutOfMemoryError|What went wrong|Execution failed|non-zero exit|tests completed|Exception in|Could not|No tests found|Timeout|timed out" tools/robotest/build/test.log | grep -v "^.*warning" | tail -9 | cut -c1-900 | while IFS= read -r line; do echo "::error title=gradle::$line"; done
+            echo "::error title=gradle-tail::$(tail -c 900 tools/robotest/build/test.log | tr '\n' ' ')"
+          fi
+          ls tools/robotest/build/test-results/test/ 2>/dev/null | head -40
       - name: Upload generated visual audit contact sheet
         if: always()
         uses: actions/upload-artifact@v4
