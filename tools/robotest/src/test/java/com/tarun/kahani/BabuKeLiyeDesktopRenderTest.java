@@ -28,7 +28,15 @@ public class BabuKeLiyeDesktopRenderTest {
         assertNotNull(story);
         assertFalse("screenplay has scenes", story.scenes.isEmpty());
         Director director = new Director(story, new Director.Options());
-        Art art = new Art();
+        Art art = ReferenceArtLoader.load("babu_ke_liye", story, assets);
+        assertTrue("real character reference sprites loaded: " + art.sprites.size(), art.sprites.size() >= 2);
+        assertTrue("real location backgrounds loaded: " + art.scenes.size(), art.scenes.size() >= Math.min(3, story.scenes.size()));
+        assertTrue("missing isolated mailbox is surfaced for review",
+                art.notes.stream().anyMatch(n -> n.startsWith("MISSING_REFERENCE:") && n.contains("लाल डाक पेटी")));
+        File out = new File(System.getProperty("kahani.out", "build/frames"));
+        assertTrue(out.isDirectory() || out.mkdirs());
+        java.nio.file.Files.write(new File(out, "babu_ke_liye_reference_notes.txt").toPath(),
+                String.join("\n", art.notes).getBytes(java.nio.charset.StandardCharsets.UTF_8));
         Film prepared = director.prepare();
         assertNotNull("director prepared a film", prepared);
         Film film = director.direct(art);
@@ -39,8 +47,6 @@ public class BabuKeLiyeDesktopRenderTest {
         int width = 640, height = 360;
         BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         AwtGfx gfx = new AwtGfx(frame);
-        File out = new File(System.getProperty("kahani.out", "build/frames"));
-        assertTrue(out.isDirectory() || out.mkdirs());
         int samples = 0, nonBlank = 0;
         for (float time = 0.1f; time < film.duration; time += Math.max(0.5f, film.duration / 12f)) {
             Graphics2D clear = frame.createGraphics();
