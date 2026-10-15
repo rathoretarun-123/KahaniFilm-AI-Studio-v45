@@ -67,6 +67,7 @@ import com.tarun.kahani.core.Toon;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -83,7 +84,8 @@ import java.util.Set;
 public class MainActivity extends Activity {
 
     static final int REQ_LOGIN = 11, REQ_SCRIPT = 12, REQ_IMAGE = 13, REQ_CAMERA = 14, REQ_AUDIO = 15, REQ_BULK = 16,
-            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24;
+            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22,
+            REQ_LIB_MANY = 23, REQ_ANGLES = 24, REQ_IMPORT_BUNDLE = 25, REQ_IMPORT_SCRIPT = 26;
     /** The thing whose angles are being uploaded: "angles:char:<key>:<name>", "angles:scene:<n>:<name>", "angles:obj:<keys>:<name>". */
     private String anglesTarget;
     private String anglesFrom;       // "make" when the angles were asked for from the make-film dialog (v25: the user comes back to it)
