@@ -243,8 +243,11 @@ public final class Library {
                 List<Item> split = new ArrayList<Item>();
                 boolean maySplit = !role.startsWith("storyboard") && !"reference".equals(kind);
                 boolean sourceSheet = record != null && "true".equalsIgnoreCase(String.valueOf(record.get("source_sheet")));
+                boolean attemptedSplit = false;
                 try {
-                    if (maySplit && (sourceSheet || SheetSaver.isSheet(data, "place".equals(kind)))) {
+                    boolean detectedSheet = maySplit && SheetSaver.isSheet(data, "place".equals(kind));
+                    if (maySplit && (sourceSheet || detectedSheet)) {
+                        attemptedSplit = true;
                         split = SheetSaver.saveToLibrary(this, label, kind, data, source);
                     }
                 } catch (Throwable ignored) {
@@ -252,8 +255,12 @@ public final class Library {
                 }
                 if (split.isEmpty()) {
                     String ext = lower.endsWith(".webp") ? ".webp" : lower.endsWith(".png") ? ".png" : ".jpg";
-                    Item it = addBytes(PIC, kind, label, semanticTags(storyTitle, originalName, record), data, ext, source);
-                    applyBundledSemanticMetadata(it, filmId, originalName, record, autoAssign);
+                    // If a sheet was expected/detected but could not be split, never auto-assign the entire grid as a person/place/prop.
+                    String storedKind = attemptedSplit ? "reference" : kind;
+                    boolean storedAutoAssign = attemptedSplit ? false : autoAssign;
+                    Item it = addBytes(PIC, storedKind, label, semanticTags(storyTitle, originalName, record), data, ext, source);
+                    applyBundledSemanticMetadata(it, filmId, originalName, record, storedAutoAssign);
+                    if (attemptedSplit) it.setMeta("splitFailed", "1");
                 } else {
                     for (Item it : split) {
                         it.tags = (it.tags + " " + semanticTags(storyTitle, originalName, record)).trim();
