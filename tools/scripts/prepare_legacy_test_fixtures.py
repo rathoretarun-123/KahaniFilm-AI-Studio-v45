@@ -73,7 +73,7 @@ def main():
  # Small synthetic sample/audio files only if missing; test-only placeholders.
  for n,sc in [("char_vrinda.jpg",False),("char_vanusha.jpg",False),("char_vanusha_back.jpg",False),("char_raju.jpg",False),("char_raju_back.jpg",False),("char_kripa.jpg",False),("char_kripa_back.jpg",False),("char_kripa_pouch.jpg",False),("bg_garden.jpg",True),("bg_forest.jpg",True)]:
   put("app/src/main/assets/sample/"+n,png(480,360,301+len(synthetic),3,2,sc),"synthetic")
- for n,f in [("man.wav",170),("deep_slow.wav",125)]:
+ for n,f in [("man.wav",170),("deep_slow.wav",125),("woman.wav",230)]:
   q=R/"voices"/n
   if not q.exists() or not q.stat().st_size:
    q.parent.mkdir(parents=True,exist_ok=True)
