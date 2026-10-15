@@ -1,6 +1,8 @@
 package com.tarun.kahani;
 
 import com.tarun.kahani.core.Art;
+import com.tarun.kahani.core.Cutout;
+import com.tarun.kahani.core.PoseSense;
 import com.tarun.kahani.core.Json;
 import com.tarun.kahani.core.ScriptParser;
 import com.tarun.kahani.core.Story;
@@ -15,6 +17,7 @@ import java.nio.file.Files;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -45,7 +48,10 @@ final class ReferenceArtLoader {
         Set<String> characters = new HashSet<String>();
         Set<String> views = new HashSet<String>();
         Set<String> props = new HashSet<String>();
-        Map<String, Map<String, Object>> locations = new HashMap<String, Map<String, Object>>();
+        Map<String, Map<String, Object>> locations = new LinkedHashMap<String, Map<String, Object>>();
+        Map<String, Integer> poseSheetCounts = new HashMap<String, Integer>();
+        List<String> reviewNotes = new ArrayList<String>();
+        PngLoader loader = new PngLoader(referenceRoot);
 
         for (Map<String, Object> row : uploads) {
             if (!bool(row, "auto_assign")) continue;
@@ -75,6 +81,37 @@ final class ReferenceArtLoader {
                 String propImage = sheet ? cropPanel(image, referenceRoot, filmId, entityId, 0) : image;
                 text.append("objview|").append(label).append("|").append(propImage).append('\n');
             }
+
+            boolean poseSheet = "character_pose_sheet".equals(role);
+            boolean expressionSheet = "character_expression_sheet".equals(role);
+            if ((poseSheet || expressionSheet) && sheet && "person".equals(kind)
+                    && ScriptParser.resolve(story, label) != null) {
+                int cap = expressionSheet ? 1 : 2;
+                Integer seen = poseSheetCounts.get(entityId);
+                int used = seen == null ? 0 : seen;
+                if (used < cap) {
+                    poseSheetCounts.put(entityId, used + 1);
+                    for (int panel = 0; panel < 6; panel++) {
+                        String poseImage;
+                        try { poseImage = cropPanel(image, referenceRoot, filmId, entityId, panel); }
+                        catch (IOException e) { reviewNotes.add("Pose sheet could not be split: " + label + " / " + str(row, "original_filename")); continue; }
+                        int[] decoded = loader.decode(poseImage, 700);
+                        if (decoded == null || decoded.length < 3) { reviewNotes.add("Pose panel could not be decoded: " + poseImage); continue; }
+                        int w = decoded[0], h = decoded[1];
+                        int[] pixels = new int[w * h];
+                        System.arraycopy(decoded, 2, pixels, 0, pixels.length);
+                        Cutout.Result cutout = Cutout.process(pixels, w, h, false);
+                        PoseSense.Tag tag = PoseSense.tag(cutout, 0, false);
+                        if (tag == null || tag.unsure()) {
+                            reviewNotes.add("Pose panel needs human confirmation: " + label + " / " + str(row, "original_filename") + " panel " + panel);
+                            continue;
+                        }
+                        text.append("pose|").append(label).append("|").append(poseImage).append("|")
+                                .append(tag.angle).append("|").append(tag.pose).append("|").append(tag.emotion)
+                                .append("|1|0|0|0|0|0|0|0|0\n");
+                    }
+                }
+            }
         }
 
         String[] scenePlan = "aakhiri_chai".equals(filmId)
@@ -95,8 +132,16 @@ final class ReferenceArtLoader {
             text.append("scene|").append(i + 1).append("|").append(image).append('\n');
         }
 
-        Art art = Art.fromManifest(text.toString(), story, new PngLoader(referenceRoot));
+        Art art = Art.fromManifest(text.toString(), story, loader);
         if (art == null) throw new IOException("Art.fromManifest returned null for " + filmId);
+        art.notes.addAll(reviewNotes);
+        Object rawMissing = ((Map<?, ?>) parsed).get("missing_assets");
+        if (rawMissing instanceof List) for (Object row : (List<?>) rawMissing) if (row instanceof Map) {
+            @SuppressWarnings("unchecked") Map<String, Object> missing = (Map<String, Object>) row;
+            if (bool(missing, "review_required")) {
+                art.notes.add("MISSING_REFERENCE: " + str(missing, "entity_label") + " — " + str(missing, "reason"));
+            }
+        }
         return art;
     }
 
@@ -111,7 +156,8 @@ final class ReferenceArtLoader {
     private static String cropPanel(String source, File root, String filmId, String entityId, int panel) throws IOException {
         File dir = new File(root, "crops");
         if (!dir.isDirectory() && !dir.mkdirs()) throw new IOException("Cannot create crop directory: " + dir);
-        File out = new File(dir, filmId + "_" + entityId + "_" + panel + ".png");
+        String sourceToken = new File(source).getName().replaceAll("\\.png$", "");
+        File out = new File(dir, filmId + "_" + entityId + "_" + sourceToken + "_" + panel + ".png");
         if (out.isFile() && out.length() > 0) return out.getAbsolutePath();
         BufferedImage sheet = ImageIO.read(new File(source));
         if (sheet == null) throw new IOException("Cannot decode reference sheet: " + source);
