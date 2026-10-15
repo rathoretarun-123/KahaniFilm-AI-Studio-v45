@@ -221,7 +221,13 @@ public final class Director {
         if (Txt.has(m, "शक", "संदेह", "शंका", "suspicious", "suspicion", "doubtful", "warily", "wary")) return Pose.SUSPICIOUS;
         if (Txt.has(m, "राहत", "चैन की साँस", "चैन की सांस", "सुकून", "relieved", "relief", "sigh of relief")) return Pose.RELIEVED;
         if (Txt.has(m, "खाँस", "खांस", "चक्कर", "dizzy")) return Pose.DIZZY;
-        if (Txt.has(m, "फुसफुसा", "whisper")) return Pose.WHISPER;
+        if (Txt.has(m, "फुसफुसा", "धीरे से", "whisper")) return Pose.WHISPER;
+        // v47: more emotional tones that reach into every day Hindi
+        if (Txt.has(m, "सुबक", "आंसू", "आँसू", "आँखें नम", "आंखें नम", "टूटती", "भावुक", "गले लग", "tearful", "weeping", "choked", "trembling voice", "heartbroken", "broken voice", "moist eyes")) return Pose.SAD;
+        if (Txt.has(m, "अविश्वास", "आश्चर्य", "हैरान", "चौंक", "मुंह खुल", "मुँह खुल", "disbelief", "astonish", "startle", "amazed", "speechless", "jaw drop")) return Pose.SURPRISED;
+        if (Txt.has(m, "हिचकिचा", "हिचकिचाहट", "सकपका", "ठिठक", "hesitant", "flinch", "stammer")) return Pose.SUSPICIOUS;
+        if (Txt.has(m, "खुशी से", "चेहरा खिल", "खिलखिलाता", "beaming", "joyful", "glowing", "overjoyed")) return villain ? Pose.EVIL : Pose.LAUGH;
+        if (Txt.has(m, "प्यार से", "स्नेह से", "आत्मीयता", "affection", "tenderly", "fondly", "lovingly", "warmly")) return villain ? Pose.EVIL : Pose.HAPPY;
         if (Txt.has(m, "गर्व", "सीना", "proud")) return Pose.PROUD;
         if (Txt.has(m, "दृढ़", "गंभीर", "आत्मविश्वास", "विश्वास", "तेज़ आवाज़", "determined", "firm")) return Pose.DETERMINED;
         if (Txt.has(m, "मासूम", "उत्सुक", "आँखें बड़ी", "curious", "innocent")) return Pose.CURIOUS;
