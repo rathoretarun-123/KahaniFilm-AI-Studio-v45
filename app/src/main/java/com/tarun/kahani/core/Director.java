@@ -9505,6 +9505,13 @@ public final class Director {
     private void moveNear(Film.Actor a, Film.Actor to, float t, float dur, float gap0) {
         float ax = xAt(a, t), tx = xAt(to, t);
         float gap = gap0 + (a.look.kind == Look.MONSTER || to.look.kind == Look.MONSTER ? 80 : 0);
+        // v47.2: one seated in profile (the user's side picture on a bench or a stool) has knees that reach forward:
+        // whoever comes up to them stops beyond the knees, not through them
+        Film.Key tk = to.stateAt(t);
+        if (tk.body == Pose.SIT && tk.seat > Film.SEAT_FLOOR && tk.seat != Film.SEAT_WHEELCHAIR && art != null) {
+            Art.Sprite ts = art.sprites.get(to.c.id);
+            if (ts != null && ts.view(1) != null && ts.view(1).userSide) gap += 0.28f * heightOf(to);
+        }
         float dest = ax < tx ? tx - gap : tx + gap;
         // v41: to the side of the one approached that is free — not onto a third one standing there
         if (standsAt(dest, t + dur, a, to)) {
