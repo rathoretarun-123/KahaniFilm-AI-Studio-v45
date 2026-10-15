@@ -67,7 +67,6 @@ import com.tarun.kahani.core.Toon;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
@@ -84,8 +83,7 @@ import java.util.Set;
 public class MainActivity extends Activity {
 
     static final int REQ_LOGIN = 11, REQ_SCRIPT = 12, REQ_IMAGE = 13, REQ_CAMERA = 14, REQ_AUDIO = 15, REQ_BULK = 16,
-            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22,
-            REQ_LIB_MANY = 23, REQ_ANGLES = 24, REQ_IMPORT_BUNDLE = 25, REQ_IMPORT_SCRIPT = 26;
+            REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24;
     /** The thing whose angles are being uploaded: "angles:char:<key>:<name>", "angles:scene:<n>:<name>", "angles:obj:<keys>:<name>". */
     private String anglesTarget;
     private String anglesFrom;       // "make" when the angles were asked for from the make-film dialog (v25: the user comes back to it)
@@ -2991,60 +2989,6 @@ public class MainActivity extends Activity {
             pendingText = null;
             return;
         }
-        if (code == REQ_IMPORT_SCRIPT) {
-            if (result != RESULT_OK || data == null || data.getData() == null) return;
-            final Uri scriptUri = data.getData();
-            final String scriptName = displayName(scriptUri);
-            background("Saving screenplay in your private library…", new Work() {
-                public Object run() throws Exception {
-                    long size = Project.sizeOf(getContentResolver(), scriptUri);
-                    if (size <= 0 || size > 10L * 1024L * 1024L) throw new IOException("Text file must be between 1 byte and 10 MiB");
-                    InputStream in = getContentResolver().openInputStream(scriptUri);
-                    if (in == null) throw new IOException("Could not open text file");
-                    byte[] b;
-                    try { b = Project.readAll(in); } finally { try { in.close(); } catch (Exception ignored) {} }
-                    String ext = scriptName.contains(".") ? scriptName.substring(scriptName.lastIndexOf('.')).toLowerCase(Locale.US) : ".txt";
-                    if (!ext.matches("\\.(txt|md|srt|text)")) throw new IOException("Choose a .txt, .md, .srt or .text screenplay file");
-                    String content = new String(b, "UTF-8");
-                    if (content.trim().length() == 0) throw new IOException("Screenplay is empty");
-                    Library.Item item = library.addBytes(Library.SCRIPT, "screenplay-or-text", scriptName.replaceAll("\\.[^.]+$", ""),
-                            "user-imported reusable screenplay", content.getBytes("UTF-8"), ext, "user-import");
-                    item.setMeta("assetRole", "reusable-screenplay");
-                    library.save();
-                    return item;
-                }
-            }, new Done() {
-                public void done(Object value, Exception error) {
-                    if (error != null) { toast("Screenplay import failed: " + error.getMessage()); return; }
-                    libTab = Library.SCRIPT;
-                    toast("✅ Screenplay saved to your private library");
-                    showLibrary();
-                }
-            });
-            return;
-        }
-        if (code == REQ_IMPORT_BUNDLE) {
-            if (result != RESULT_OK || data == null || data.getData() == null) return;
-            final Uri bundleUri = data.getData();
-            final String bundleName = displayName(bundleUri);
-            background("Importing reusable asset bundle…", new Work() {
-                public Object run() throws Exception {
-                    long size = Project.sizeOf(getContentResolver(), bundleUri);
-                    if (size > 100L * 1024L * 1024L) throw new IOException("ZIP exceeds the 100 MiB import limit");
-                    InputStream in = getContentResolver().openInputStream(bundleUri);
-                    if (in == null) throw new IOException("Could not open ZIP");
-                    try { return library.importZipArchive(in, bundleName, "user-imported; reusable-across-projects"); }
-                    finally { try { in.close(); } catch (Exception ignored) {} }
-                }
-            }, new Done() {
-                public void done(Object value, Exception error) {
-                    if (error != null) { toast("ZIP import failed: " + error.getMessage()); return; }
-                    toast("✅ Asset bundle imported; media indexed in your private library");
-                    showLibrary();
-                }
-            });
-            return;
-        }
         if (result != RESULT_OK || data == null) return;
         if (code == REQ_LIB_MANY) {
             List<Uri> uris = new ArrayList<Uri>();
@@ -4510,7 +4454,7 @@ public class MainActivity extends Activity {
         LinearLayout body = page(S_LIBRARY, "📚 tarunkahani — the app's own library", true);
         LinearLayout tabs = Ui.row(this);
         tabs.setPadding(Ui.dp(this, 8), 0, Ui.dp(this, 8), 0);
-        final String[][] t = {{Library.PIC, "🖼 Pictures"}, {Library.VOICE, "🎙 Voices"}, {Library.SOUND, "🔊 Sounds"}, {Library.SCRIPT, "📜 Scripts"}};
+        final String[][] t = {{Library.PIC, "🖼 Pictures"}, {Library.VOICE, "🎙 Voices"}, {Library.SOUND, "🔊 Sounds"}};
         for (final String[] x : t) {
             tabs.addView(Ui.small(this, x[1], x[0].equals(libTab) ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
                 public void onClick(View v) { libTab = x[0]; showLibrary(); }
@@ -4531,11 +4475,6 @@ public class MainActivity extends Activity {
             r.addView(Ui.small(this, "🎙 Record", Ui.RED, new View.OnClickListener() { public void onClick(View v) { target = "lib:voice"; record(Library.VOICE, ""); } }));
             r.addView(Ui.small(this, "📂 From files", Ui.PRIMARY, new View.OnClickListener() { public void onClick(View v) { target = "lib:voice"; pickMany("voice", "audio/*"); } }));
             add.addView(r);
-        } else if (libTab.equals(Library.SCRIPT)) {
-            add.addView(Ui.text(this, "Reusable screenplays and text assets stay in your private library, separately from any one film. Select a saved script to use it in the currently open project.", 13, Ui.SUB, false));
-            add.addView(Ui.small(this, "📜 Import screenplay / text", Ui.PRIMARY, new View.OnClickListener() {
-                public void onClick(View v) { pick("*/*", REQ_IMPORT_SCRIPT, false); }
-            }));
         } else {
             add.addView(Ui.text(this, "Nature sounds (rain, river, birds), background voices (a market, a crowd), effects (a door, thunder, a horse) and music. "
                     + "Say what each one is — in English or Hindi — and the director uses it wherever a story describes it: backgrounds under the matching places, effects at the moment they happen.", 13, Ui.SUB, false));
@@ -4546,24 +4485,6 @@ public class MainActivity extends Activity {
             add.addView(r);
         }
         body.addView(add);
-        LinearLayout bundles = Ui.card(this);
-        bundles.addView(Ui.text(this, "📦 Import a reusable asset bundle (ZIP). Images, voices, sounds and supported screenplay files are indexed in your private library with source archive, path and metadata; all other files remain preserved in the original archive.", 13, Ui.SUB, false));
-        bundles.addView(Ui.small(this, "📦 Import ZIP + metadata", Ui.BLUE, new View.OnClickListener() {
-            public void onClick(View v) {
-                try {
-                    Intent i = new Intent(Intent.ACTION_OPEN_DOCUMENT);
-                    i.setType("*/*");
-                    i.putExtra(Intent.EXTRA_MIME_TYPES, new String[]{"application/zip", "application/x-zip-compressed", "application/octet-stream"});
-                    i.addCategory(Intent.CATEGORY_OPENABLE);
-                    i.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
-                    startActivityForResult(i, REQ_IMPORT_BUNDLE);
-                } catch (Exception e) {
-                    try { pick("*/*", REQ_IMPORT_BUNDLE, false); }
-                    catch (Exception ignored) { toast("No file picker available"); }
-                }
-            }
-        }));
-        body.addView(bundles);
         LinearLayout many = Ui.card(this);
         many.addView(Ui.text(this, "Add many at once — photos from your whole gallery, sounds and voice samples together. "
                 + "The director looks through the library by itself before every film and uses what fits.", 13, Ui.SUB, false));
@@ -4610,23 +4531,6 @@ public class MainActivity extends Activity {
                 LinearLayout r = Ui.row(this);
                 r.setPadding(Ui.dp(this, 12), 0, Ui.dp(this, 8), 0);
                 r.setGravity(Gravity.CENTER_VERTICAL);
-                if (Library.SCRIPT.equals(it.type)) {
-                    r.addView(Ui.text(this, "📜 " + it.label() + "\n" + it.tags, 14, Ui.TEXT, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-                    r.addView(Ui.small(this, "Use", Ui.GREEN, new View.OnClickListener() {
-                        public void onClick(View v) {
-                            if (project == null) { toast("Open or create a film project first"); return; }
-                            try {
-                                project.write("script.txt", new String(AudioIO.readFile(new File(it.path)), "UTF-8"));
-                                project.setSetting("useAi", "0");
-                                showStory();
-                                toast("Screenplay loaded into the current project; library original retained");
-                            } catch (Exception e) { toast("Could not load screenplay: " + e.getMessage()); }
-                        }
-                    }));
-                    if (!it.builtIn) r.addView(Ui.small(this, "🗑", Ui.RED, new View.OnClickListener() { public void onClick(View v) { confirmRemove(it); } }));
-                    body.addView(r);
-                    continue;
-                }
                 String sub = "";
                 if (!it.builtIn && Library.SOUND.equals(it.type)) {
                     String ws = Library.meaningful(it.name + "," + it.tags);

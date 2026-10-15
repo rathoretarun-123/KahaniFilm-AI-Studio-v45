@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.security.MessageDigest;
 
 /**
  * The studio library: everything the user ever uploaded, recorded, downloaded or generated (pictures, voice
@@ -24,7 +21,7 @@ import java.security.MessageDigest;
  * reusable in every film.
  */
 public final class Library {
-    public static final String PIC = "pic", VOICE = "voice", SOUND = "sound", SCRIPT = "script";
+    public static final String PIC = "pic", VOICE = "voice", SOUND = "sound";
 
     public static final class Item {
         public String id, type, kind = "", name = "", tags = "", path = "", source = "", meta = "";
@@ -382,88 +379,6 @@ public final class Library {
         it.path = dst.getAbsolutePath();
         items.add(0, it);
         return it;
-    }
-
-    public synchronized int importZipArchive(InputStream input, String bundleName, String userMetadata) throws IOException {
-        if (input == null) throw new IOException("No archive selected");
-        byte[] archive = Project.readAll(input);
-        if (archive.length == 0 || archive.length > 100 * 1024 * 1024) throw new IOException("Archive must be between 1 byte and 100 MiB");
-        if (archive.length < 4 || archive[0] != 'P' || archive[1] != 'K') throw new IOException("Selected file is not a ZIP archive");
-        final String digest;
-        try {
-            byte[] hash = MessageDigest.getInstance("SHA-256").digest(archive);
-            StringBuilder h = new StringBuilder();
-            for (byte b : hash) h.append(String.format(java.util.Locale.ROOT, "%02x", b & 255));
-            digest = h.toString();
-        } catch (Exception e) { throw new IOException("Could not fingerprint archive", e); }
-        int already = 0;
-        for (Item item : items) if (digest.equals(item.meta("bundleId"))) already++;
-        File bundles = new File(dir, "bundles");
-        if (!bundles.exists() && !bundles.mkdirs()) throw new IOException("Cannot create library bundle directory");
-        File saved = new File(bundles, digest + ".zip");
-        File manifestFile = new File(bundles, digest + ".json");
-        if (already > 0 && saved.exists() && manifestFile.exists()) return already;
-        if (!saved.exists()) {
-            FileOutputStream out = new FileOutputStream(saved);
-            try { out.write(archive); out.getFD().sync(); } finally { out.close(); }
-        }
-        List<Object> entries = new ArrayList<Object>();
-        int imported = 0, totalBytes = 0, entryCount = 0;
-        ZipInputStream zip = new ZipInputStream(new java.io.ByteArrayInputStream(archive));
-        try {
-            ZipEntry entry;
-            while ((entry = zip.getNextEntry()) != null) {
-                if (entry.isDirectory()) { zip.closeEntry(); continue; }
-                String raw = entry.getName().replace('\\', '/');
-                String[] segments = raw.split("/");
-                boolean unsafe = raw.startsWith("/") || raw.matches("^[A-Za-z]:.*");
-                for (String segment : segments) if ("..".equals(segment)) unsafe = true;
-                if (unsafe) { zip.closeEntry(); continue; }
-                java.io.ByteArrayOutputStream buf = new java.io.ByteArrayOutputStream();
-                byte[] block = new byte[8192]; int n;
-                while ((n = zip.read(block)) != -1) {
-                    totalBytes += n;
-                    if (totalBytes > 300 * 1024 * 1024) throw new IOException("Archive expands beyond the 300 MiB safety limit");
-                    buf.write(block, 0, n);
-                }
-                zip.closeEntry();
-                byte[] data = buf.toByteArray();
-                if (data.length == 0) continue;
-                entryCount++;
-                String leaf = segments[segments.length - 1];
-                String lower = leaf.toLowerCase(java.util.Locale.ROOT);
-                String ext = leaf.lastIndexOf('.') >= 0 ? leaf.substring(leaf.lastIndexOf('.')).toLowerCase(java.util.Locale.ROOT) : "";
-                String type = null, kind = "";
-                if (".jpg".equals(ext) || ".jpeg".equals(ext) || ".png".equals(ext) || ".webp".equals(ext)) { type = PIC; kind = "reference"; }
-                else if (".wav".equals(ext) || ".mp3".equals(ext) || ".m4a".equals(ext) || ".ogg".equals(ext) || ".aac".equals(ext)) { type = SOUND; kind = "audio"; }
-                else if (".txt".equals(ext) || ".md".equals(ext) || ".srt".equals(ext)) { type = SCRIPT; kind = "screenplay-or-text"; }
-                Map<String,Object> rec = new LinkedHashMap<String,Object>();
-                rec.put("archivePath", raw); rec.put("bytes", data.length);
-                if (type != null) {
-                    String label = leaf.replaceAll("\\.[^.]+$", "").replace('_', ' ');
-                    Item it = addBytes(type, kind, label, (bundleName == null ? "user bundle" : bundleName) + " " + raw, data, ext, "bundle:" + digest);
-                    it.setMeta("bundleId", digest);
-                    it.setMeta("archiveName", bundleName == null ? "user bundle" : bundleName.replace(';', ' '));
-                    it.setMeta("archivePath", raw.replace(';', ','));
-                    it.setMeta("userMetadata", userMetadata == null ? "" : userMetadata.replace(';', ','));
-                    it.setMeta("assetRole", type.equals(SCRIPT) ? "reusable-screenplay" : type.equals(PIC) ? "visual-reference" : "sound-or-voice");
-                    rec.put("libraryItemId", it.id); rec.put("type", type); rec.put("kind", kind);
-                    imported++;
-                } else rec.put("type", "retained-in-original-archive");
-                entries.add(rec);
-            }
-        } finally { try { zip.close(); } catch (Exception ignored) {} }
-        if (entryCount == 0) throw new IOException("ZIP archive contains no readable files");
-        Map<String,Object> manifest = new LinkedHashMap<String,Object>();
-        manifest.put("schemaVersion", 1); manifest.put("bundleId", digest);
-        manifest.put("archiveName", bundleName == null ? "user bundle" : bundleName);
-        manifest.put("userMetadata", userMetadata == null ? "" : userMetadata);
-        manifest.put("archivePath", saved.getAbsolutePath()); manifest.put("archiveBytes", archive.length);
-        manifest.put("entryCount", entryCount); manifest.put("indexedMediaCount", imported); manifest.put("entries", entries);
-        FileOutputStream out = new FileOutputStream(manifestFile);
-        try { out.write(Json.write(manifest).getBytes("UTF-8")); out.getFD().sync(); } finally { out.close(); }
-        save();
-        return imported;
     }
 
     public Item addBytes(String type, String kind, String name, String tags, byte[] data, String ext, String source) throws IOException {

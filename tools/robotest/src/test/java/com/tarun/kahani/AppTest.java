@@ -47,15 +47,11 @@ import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
 import org.robolectric.RuntimeEnvironment;
 import org.robolectric.annotation.Config;
-import org.robolectric.annotation.GraphicsMode;
 import org.robolectric.android.controller.ActivityController;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.ByteArrayOutputStream;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipOutputStream;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.nio.file.Files;
@@ -63,7 +59,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 @RunWith(RobolectricTestRunner.class)
-@GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = 34, manifest = Config.NONE)
 public class AppTest {
 
@@ -77,49 +72,6 @@ public class AppTest {
         java.lang.reflect.Field f = com.tarun.kahani.app.Library.class.getDeclaredField("shared");
         f.setAccessible(true);
         f.set(null, null);
-    }
-
-    @Test
-    public void reusableZipBundleImportRetainsArchiveAndIndexesMediaMetadata() throws Exception {
-        android.content.Context ctx = RuntimeEnvironment.getApplication();
-        com.tarun.kahani.app.Library lib = com.tarun.kahani.app.Library.get(ctx);
-        byte[] image = Files.readAllBytes(new File(ASSETS, "sample/char_vrinda.jpg").toPath());
-        ByteArrayOutputStream bytes = new ByteArrayOutputStream();
-        ZipOutputStream zip = new ZipOutputStream(bytes);
-        zip.putNextEntry(new ZipEntry("new_story/characters/vrinda.jpg"));
-        zip.write(image);
-        zip.closeEntry();
-        zip.putNextEntry(new ZipEntry("new_story/script.txt"));
-        zip.write("A reusable test screenplay".getBytes("UTF-8"));
-        zip.closeEntry();
-        zip.close();
-
-        int imported = lib.importZipArchive(new java.io.ByteArrayInputStream(bytes.toByteArray()),
-                "Reusable Story Test", "script=screenplay; role=character-reference");
-        assertEquals("Image and screenplay are both indexed", 2, imported);
-        boolean scriptIndexed = false;
-        for (com.tarun.kahani.app.Library.Item it : lib.find(com.tarun.kahani.app.Library.SCRIPT, null, "screenplay")) {
-            if ("reusable-screenplay".equals(it.meta("assetRole")) && "screenplay-or-text".equals(it.kind)) scriptIndexed = true;
-        }
-        assertTrue("ZIP screenplay indexed in reusable library", scriptIndexed);
-        com.tarun.kahani.app.Library.Item found = null;
-        for (com.tarun.kahani.app.Library.Item it : lib.find(com.tarun.kahani.app.Library.PIC, null, "vrinda")) {
-            if ("vrinda".equals(it.name)) { found = it; break; }
-        }
-        assertNotNull(found);
-        assertTrue(found.meta("bundleId") != null && found.meta("bundleId").length() == 64);
-        assertEquals("new_story/characters/vrinda.jpg", found.meta("archivePath"));
-        assertTrue(found.meta("userMetadata").contains("character-reference"));
-        File bundles = new File(lib.dir(), "bundles");
-        assertTrue(bundles.isDirectory());
-        File[] saved = bundles.listFiles();
-        boolean zipSaved = false, manifestSaved = false;
-        for (File f : saved) {
-            if (f.getName().endsWith(".zip") && f.length() == bytes.size()) zipSaved = true;
-            if (f.getName().endsWith(".json") && new String(Files.readAllBytes(f.toPath()), "UTF-8").contains("Reusable Story Test")) manifestSaved = true;
-        }
-        assertTrue("Original archive retained", zipSaved);
-        assertTrue("Metadata manifest retained", manifestSaved);
     }
 
     static Project sampleProject() throws Exception {
