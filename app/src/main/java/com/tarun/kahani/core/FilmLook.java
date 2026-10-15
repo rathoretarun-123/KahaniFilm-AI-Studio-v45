@@ -60,7 +60,9 @@ public final class FilmLook {
 
     /** The look for a moment of the film: the colour script, from the place, the time of day, the mood and the act of the part. */
     public static Params forSeg(Film.Seg s, Params out) {
-        out.warmth = 0.08f; out.saturation = 1.03f; out.contrast = 1f; out.bloom = 0.14f; out.green = 0;
+        // v47: base saturation 1.12 (was 1.03) and base contrast 1.18 (was 1.00): the user asked for the fine detail
+        // of their reference clips to show through — a flatter curve made it muddy
+        out.warmth = 0.08f; out.saturation = 1.12f; out.contrast = 1.18f; out.bloom = 0.14f; out.green = 0;
         if (s == null) return out;
         // the colour script (Deakins): the place and the time of day dictate the colour, one palette per act
         PixarLead.colorScript(s.set, s.tod, s.mood, s.act, out);
@@ -108,9 +110,11 @@ public final class FilmLook {
             float y = 0.012f + x * 0.988f;
             // v47 (the user: "make everything clearly visible — more contrast and brightness"): mid tones lifted
             // further (gamma 0.80) and a stronger S (0.42) so shadows do not crush and highlights do not clip
+            // v47 further: a firmer S (0.55) and a stronger contrast around the mid tones (0.9) — the user's reference
+            // clips show fine detail in the shadows and the highlights; keep gamma 0.80 so blacks do not crush
             y = (float) Math.pow(y, 0.80);
             float s = y * y * (3 - 2 * y);
-            y = y + (s - y) * 0.42f * p.contrast + (p.contrast - 1) * (y - 0.5f) * 0.6f;
+            y = y + (s - y) * 0.55f * p.contrast + (p.contrast - 1) * (y - 0.5f) * 0.9f;
             if (y > 0.82f) y = 0.82f + (1 - (float) Math.exp(-(y - 0.82f) / 0.18f)) * 0.17f;
             y = Math.max(0, Math.min(1, y));
             // split toning: highlights warmer, shadows a touch cooler (more so in a warm or cool moment)
