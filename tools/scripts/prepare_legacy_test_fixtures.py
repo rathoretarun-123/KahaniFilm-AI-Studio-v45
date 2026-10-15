@@ -41,7 +41,16 @@ def png(w,h,seed,cols=5,rows=2,scene=False,thing=False):
    circ(cx,cy-rr//3,rr+2,hair[(seed+n)%len(hair)]);circ(cx,cy,rr,(201,151,124))
    circ(cx-rr//3,cy,2,(30,30,30));circ(cx+rr//3,cy,2,(30,30,30))
    rect(cx-rr//4,cy+rr//2,cx+rr//4,cy+rr//2+2,(105,45,45))
-   rect(cx-cw//4,cy+rr+2,cx+cw//4,min(y1,cy+rr+ch//3),[(54,118,158),(177,86,72),(74,135,91),(132,96,155)][(seed+n)%4])
+   body_bottom=min(y1-12,cy+rr+ch//3)
+   shirt=[(54,118,158),(177,86,72),(74,135,91),(132,96,155)][(seed+n)%4]
+   rect(cx-cw//4,cy+rr+2,cx+cw//4,body_bottom,shirt)
+   # Explicit arms, legs and feet keep synthetic full-body fixtures from masquerading as head-and-torso crops.
+   rect(cx-cw//4-5,cy+rr+ch//10,cx-cw//4+3,body_bottom-10,(201,151,124))
+   rect(cx+cw//4-3,cy+rr+ch//10,cx+cw//4+5,body_bottom-10,(201,151,124))
+   rect(cx-cw//8,body_bottom,cx-2,y1-10,shirt)
+   rect(cx+2,body_bottom,cx+cw//8,y1-10,shirt)
+   rect(cx-cw//8,y1-10,cx-2,y1-5,(60,50,42))
+   rect(cx+2,y1-10,cx+cw//8,y1-5,(60,50,42))
  def chunk(t,d):return struct.pack(">I",len(d))+t+d+struct.pack(">I",zlib.crc32(t+d)&0xffffffff)
  raw=b"".join(b"\0"+p[y*w*3:(y+1)*w*3] for y in range(h))
  return b"\x89PNG\r\n\x1a\n"+chunk(b"IHDR",struct.pack(">IIBBBBB",w,h,8,2,0,0,0))+chunk(b"IDAT",zlib.compress(raw,6))+chunk(b"IEND",b"")
