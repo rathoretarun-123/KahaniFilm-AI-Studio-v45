@@ -193,7 +193,20 @@ The keyed prop insert and the finer rain in आखिरी जोड़ी: ![i
 
 ### 5.3 आखिरी चाय and आखिरी जोड़ी
 
-(filled in from the scans of the v47.2 renders — see the rows added below)
+आखिरी जोड़ी, the whole film (3351 frames, 139.6 s), the user's 43 uploads, no reference clip (stills only):
+
+| property | v47.0 render | v47.2 render | note |
+|---|---|---|---|
+| mean luma | 78.8 | 74.1 | the user's evening street and workshop pictures are dark; the grey rain veil had been lifting them falsely |
+| contrast (luma std) | 35.9 | 35.7 | — |
+| saturation | 89.8 | **103.6** (+15 %) | the rain veil had been washing the colour out |
+| edge energy | 8.84 | 8.14 | fewer bright streaks: a cleaner picture, not a softer one (the sharpen is unchanged) |
+| black frames | 11 | 11 — all at the title fade, title→part 1, part→end card, end fade | one scene, so no part changes |
+| flicker / frozen runs ≥ 0.5 s / dull windows | 0 / 1 / 0 | 0 / 1 / 0 | the one held still is the end card |
+| FinalQc step 8 | — | boiling 0 shots, camera shake 0 shots in 92 shots | — |
+| prop inserts | two opaque black rectangles (9–10.5 s, 55.5–57 s) | the old shoe and the red shoes cut out over the darkened scene | Art.keyObject |
+
+आखिरी चाय: (the scan of the v47.2 render follows below when it completes)
 
 ### 5.4 Tests added
 

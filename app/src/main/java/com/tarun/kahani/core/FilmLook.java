@@ -21,10 +21,21 @@ public final class FilmLook {
         public float contrast = 1;    // 1 = the base filmic curve
         public float bloom = 0.14f;   // strength of the glow
         public float green;           // -1 magenta .. +1 green tint (the colour script: a cave is green, a night is blue)
-        public Params set(Params o) { warmth = o.warmth; saturation = o.saturation; contrast = o.contrast; bloom = o.bloom; green = o.green; return this; }
+        /** v47.2: how far the auto-exposure may lift a dark frame's mid tones (0.25 by day; a night keeps its dark). */
+        public float maxLift = 0.25f;
+        public Params set(Params o) { warmth = o.warmth; saturation = o.saturation; contrast = o.contrast; bloom = o.bloom; green = o.green; maxLift = o.maxLift; return this; }
     }
 
     private final int w, h, sw, sh;
+    /**
+     * v47.2: auto-exposure, like a camera's. The user's own pictures of an evening street or a dim workshop read
+     * dark through the fixed curve (a whole film at mean luma 74 while the reference clips sit near 100). Each frame
+     * measures its own mean light before the finish; when it is dark the mid tones of the next frames are lifted
+     * (black and white stay where they are), eased in over about ten frames so nothing pumps, and never past the
+     * moment's maxLift (a night scene stays a night).
+     */
+    private float lift, builtLift;
+    private long sumL; private int cntL;
     private final int[] small;
     /** v35: the light of five rows of the frame, as it was, and the same rows blurred across (a ring, for the unsharp mask). */
     private final int[] lumRing, blurRing;
@@ -70,6 +81,7 @@ public final class FilmLook {
         PixarLead.colorScript(s.set, s.tod, s.mood, s.act, out);
         if (s.festive) { out.saturation += 0.04f; out.bloom += 0.05f; }
         out.warmth = Math.max(-0.5f, Math.min(0.45f, out.warmth));
+        out.maxLift = s.tod == Sets.NIGHT ? 0.06f : s.tod == Sets.EVENING ? 0.14f : 0.25f;
         return out;
     }
 
@@ -103,6 +115,7 @@ public final class FilmLook {
         out.contrast = a.contrast + (b.contrast - a.contrast) * k;
         out.bloom = a.bloom + (b.bloom - a.bloom) * k;
         out.green = a.green + (b.green - a.green) * k;
+        out.maxLift = a.maxLift + (b.maxLift - a.maxLift) * k;
     }
 
     private void build(Params p) {
@@ -117,6 +130,8 @@ public final class FilmLook {
             y = (float) Math.pow(y, 0.80);
             float s = y * y * (3 - 2 * y);
             y = y + (s - y) * 0.55f * p.contrast + (p.contrast - 1) * (y - 0.5f) * 0.9f;
+            // v47.2: the auto-exposure lift — the mid tones come up, black and white stay
+            y = y + builtLift * y * (1 - y) * 2f;
             if (y > 0.82f) y = 0.82f + (1 - (float) Math.exp(-(y - 0.82f) / 0.18f)) * 0.17f;
             y = Math.max(0, Math.min(1, y));
             // split toning: highlights warmer, shadows a touch cooler (more so in a warm or cool moment)
@@ -128,6 +143,7 @@ public final class FilmLook {
             lutB[i] = clamp((y - 0.022f * hi * (0.6f + wm) + 0.018f * lo * (0.6f - wm * 0.5f) - 0.025f * wm * y - 0.012f * gn * y) * 255);
         }
         last.set(p);
+        builtLift = lift;
         built = true;
     }
 
@@ -137,7 +153,10 @@ public final class FilmLook {
     public void apply(int[] px, Params p) {
         // v47: passthrough — a title or end segment with the user's own picture reaches the screen untouched
         if (p.contrast == 1f && p.warmth == 0f && p.saturation == 1f && p.bloom == 0f && p.green == 0f) return;
-        if (!built || Math.abs(p.warmth - last.warmth) > 0.01f || Math.abs(p.contrast - last.contrast) > 0.01f || Math.abs(p.green - last.green) > 0.01f) build(p);
+        if (lift > p.maxLift) lift = p.maxLift;
+        if (!built || Math.abs(p.warmth - last.warmth) > 0.01f || Math.abs(p.contrast - last.contrast) > 0.01f || Math.abs(p.green - last.green) > 0.01f
+                || Math.abs(lift - builtLift) > 0.01f) build(p);
+        sumL = 0; cntL = 0;
         // ---- bloom: the bright parts, at a quarter of the size, blurred softly
         boolean glow = p.bloom > 0.01f;
         if (glow) {
@@ -173,6 +192,7 @@ public final class FilmLook {
             float fy = (y + 0.5f) / 4 - 0.5f;
             int sy0 = Math.max(0, Math.min(sh - 1, (int) Math.floor(fy))), sy1 = Math.min(sh - 1, sy0 + 1);
             float wy = Math.max(0, Math.min(1, fy - sy0));
+            if ((y & 7) == 0) for (int x = 0; x < w; x += 8) { sumL += lumRing[r2 + x]; cntL++; }
             for (int x = 0; x < w; x++) {
                 int i = y * w + x, c = px[i];
                 int cr = (c >> 16) & 255, cg = (c >> 8) & 255, cb = c & 255;
@@ -213,6 +233,13 @@ public final class FilmLook {
                 }
                 px[i] = (c & 0xFF000000) | (R << 16) | (G << 8) | B;
             }
+        }
+        // the auto-exposure for the frames that follow: a frame whose mean light (before the finish) is under 0.30
+        // wants its mid tones lifted, up to the moment's maxLift; eased in over about ten frames
+        if (cntL > 0) {
+            float mean = sumL / (255f * cntL);
+            float want = mean < 0.30f ? Math.min(p.maxLift, (0.30f - mean) * 2f) : 0;
+            lift += (want - lift) * 0.12f;
         }
     }
 
