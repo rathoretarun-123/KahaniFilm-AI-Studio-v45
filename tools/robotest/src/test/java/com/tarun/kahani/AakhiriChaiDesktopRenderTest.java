@@ -28,7 +28,9 @@ public class AakhiriChaiDesktopRenderTest {
         assertNotNull(story);
         assertFalse("screenplay has scenes", story.scenes.isEmpty());
         Director director = new Director(story, new Director.Options());
-        Art art = new Art();
+        Art art = ReferenceArtLoader.load("aakhiri_chai", story, assets);
+        assertTrue("real character reference sprites loaded: " + art.sprites.size(), art.sprites.size() >= 3);
+        assertTrue("real location backgrounds loaded: " + art.scenes.size(), art.scenes.size() >= Math.min(3, story.scenes.size()));
         // Phase one constructs the Film and dialogue state; direct() stages phase two into it.
         Film prepared = director.prepare();
         assertNotNull("director prepared a film", prepared);
