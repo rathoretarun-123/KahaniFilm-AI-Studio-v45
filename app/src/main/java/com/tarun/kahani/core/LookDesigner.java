@@ -786,6 +786,48 @@ public final class LookDesigner {
         l.bangles = Txt.has(all, "चूड़ि", "कड़े", "bangle");
         l.earrings = Txt.has(all, "झुमके", "बूंदे", "बाली", "earring");
         l.anklets = Txt.has(all, "घंटियाँ", "पायल", "घुंघरू", "anklet");
+        // v47: canonical traits for well-known Hindu deities and demons when the user names them without describing
+        // their arms / heads / mount — the Reader fills what the name implies, never overwriting what the user wrote.
+        deityTraits(all, l);
         return l;
+    }
+
+    /** v47: canonical traits of well-known deities and demons (arms, heads, mount, hero flag). Only sets what the
+     *  user did not already describe explicitly, so a custom description always wins. Covers Durga (8 arms, lion),
+     *  Kali (10 arms, tiger, dark), Shiva (trident/damaru, bull mount, blue), Ganesha (elephant-head traits,
+     *  mouse mount, 4 arms), Hanuman (vanara/monkey, mace), Vishnu (4 arms, Garuda), Lakshmi (4 arms, lotus),
+     *  Saraswati (4 arms, swan/peacock), Ravana (10 heads), Mahishasura (demon, buffalo), general राक्षस / असुर /
+     *  demon / devil (horns, dark, villain). The engine already supports many arms, many heads and a mount —
+     *  this just fills the right numbers from the name. */
+    public static void deityTraits(String all, Look l) {
+        if (all == null) return;
+        String t = all.toLowerCase(java.util.Locale.ROOT);
+        boolean durga = Txt.has(t, "दुर्गा", "durga", "दुर्गे", "अम्बा", "amba");
+        boolean kali = Txt.has(t, "काली", "kali", "महाकाली");
+        boolean shiva = Txt.has(t, "शिव", "shiv", "shiva", "महादेव", "mahadev", "भोले", "bholenath", "neelkanth");
+        boolean ganesha = Txt.has(t, "गणेश", "ganesh", "गणपति", "ganpati", "विघ्नहर्ता", "vinayak");
+        boolean hanuman = Txt.has(t, "हनुमान", "hanuman", "बजरंगबली", "bajrang");
+        boolean vishnu = Txt.has(t, "विष्णु", "vishnu", "नारायण", "narayan");
+        boolean lakshmi = Txt.has(t, "लक्ष्मी", "lakshmi", "laxmi");
+        boolean saraswati = Txt.has(t, "सरस्वती", "saraswati", "sharda");
+        boolean ravana = Txt.has(t, "रावण", "ravan", "raavan", "dashanan");
+        boolean mahishasura = Txt.has(t, "महिषासुर", "mahishasur", "mahishasura");
+        boolean brahma = Txt.has(t, "ब्रह्मा", "brahma");
+        boolean kartikeya = Txt.has(t, "कार्तिकेय", "kartikeya", "मुरुगन", "murugan", "subrahmanya");
+        boolean krishna = Txt.has(t, "कृष्ण", "krishna", "गोविंद", "govind", "कन्हैया", "kanhaiya");
+        boolean rakshasa = Txt.has(t, "राक्षस", "rakshas", "दानव", "danav", "दैत्य", "daitya", "असुर", "asur", "demon", "devil", "ogre");
+        if (durga)    { if (l.arms  < 8)  l.arms  = 8;  if (l.mount < 0) l.mount = Look.SP_LION;     l.hero = true; }
+        if (kali)     { if (l.arms  < 10) l.arms  = 10; if (l.mount < 0) l.mount = Look.SP_TIGER;    l.hero = true; }
+        if (ravana)   { if (l.heads < 10) l.heads = 10; if (l.arms  < 20) l.arms  = 20;              l.hero = false; }
+        if (brahma)   { if (l.heads < 4)  l.heads = 4;  if (l.arms  < 4)  l.arms  = 4;               l.hero = true; }
+        if (ganesha)  { if (l.arms  < 4)  l.arms  = 4;  if (l.mount < 0) l.mount = Look.SP_MOUSE;    l.hero = true; }
+        if (shiva)    { if (l.arms  < 4)  l.arms  = 4;  if (l.mount < 0) l.mount = Look.SP_COW;      l.hero = true; }
+        if (vishnu)   { if (l.arms  < 4)  l.arms  = 4;  if (l.mount < 0) l.mount = Look.SP_EAGLE;    l.hero = true; }
+        if (lakshmi)  { if (l.arms  < 4)  l.arms  = 4;  if (l.mount < 0) l.mount = Look.SP_OWL;      l.hero = true; }
+        if (saraswati){ if (l.arms  < 4)  l.arms  = 4;  if (l.mount < 0) l.mount = Look.SP_PEACOCK;  l.hero = true; }
+        if (hanuman)  { l.kind = Look.MONKEY; if (l.height < 0.9f) l.height = 1.0f;                   l.hero = true; }
+        if (krishna)  { if (l.mount < 0) l.mount = Look.SP_COW;                                       l.hero = true; }
+        if (kartikeya){ if (l.arms  < 6)  l.arms  = 6;  if (l.mount < 0) l.mount = Look.SP_PEACOCK;  l.hero = true; }
+        if (mahishasura || rakshasa) { l.hero = false; if (l.headwear == Look.HW_NONE) l.headwear = Look.HW_HORNS; }
     }
 }
