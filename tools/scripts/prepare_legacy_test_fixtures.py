@@ -23,7 +23,8 @@ def png(w,h,seed,cols=5,rows=2,scene=False):
    for x in range(max(0,cx-r),min(w,cx+r+1)):
     if (x-cx)**2+(y-cy)**2<=r*r:
      i=(y*w+x)*3;p[i:i+3]=bytes(c)
- bg=[(223,235,243),(241,228,216),(225,239,222),(239,226,239),(246,239,211),(218,235,232)]
+ # Keep every cell background safely beyond the splitter's 40-point background-distance threshold.
+ bg=[(223,235,243),(241,228,216),(225,239,222),(220,200,230),(246,239,211),(218,235,232)]
  hair=[(56,42,35),(65,48,38),(42,39,36),(93,62,43),(51,45,61)]
  cw=w//cols; ch=h//rows
  for n in range(cols*rows):
