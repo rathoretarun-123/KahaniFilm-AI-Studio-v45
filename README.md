@@ -15,6 +15,11 @@ push; download the **KahaniFilm-v47-apk** artifact from the latest green run und
   phone uses and every frame was measured against the user's reference clips. बाबू के लिए, the whole film: mean luma
   104.6 vs the reference's 103.5 (+1 %), contrast −3 %, sharpness +7 % — before the night it read −8 % / −12 % /
   −4 %. No frozen runs, no dull stretches, boiling and camera shake 0 shots.
+* **A seated character really sits.** With the user's own side picture, a character seated on a bench, a stool, a
+  chair or a log sits in profile (thighs forward, shins down) in medium and wide shots; close shots keep the front
+  picture. The bench is a quarter of the sitter's height and its edge shows only beside the hips. The camera's face
+  height for a seated picture comes from the rig's fold, so a seated close-up is framed on the face. Whoever comes up
+  to a seated profile stops beyond the knees.
 * **No more dips to black between parts.** Scene changes and the bridge plate before a new place are true
   cross-dissolves now (the old picture under the new one coming up); a dip stays only where the script says time
   passes or for magic and dreams.
