@@ -19,7 +19,9 @@ public final class Pose {
             // v43: the kitchen's knife and rolling pin (belan)
             I_KNIFE = 33, I_ROLLER = 34,
             // v44: the bow (an arrow on it while drawn), a wine glass, a beer mug, a whisky glass, a snowball, a spear
-            I_BOW = 35, I_WINE = 36, I_BEER = 37, I_WHISKY = 38, I_SNOWBALL = 39, I_SPEAR = 40, I_SHIELD = 41;
+            I_BOW = 35, I_WINE = 36, I_BEER = 37, I_WHISKY = 38, I_SNOWBALL = 39, I_SPEAR = 40, I_SHIELD = 41,
+            // v47: a letter / envelope, a shoe, a cardboard box (held in both hands, like a child's gift)
+            I_LETTER = 42, I_SHOE = 43, I_BOX = 44;
 
     /** v37/v44: a make-up tool (it goes to its place on the face), not a drink or a weapon. */
     public static boolean makeup(int item) { return item >= I_KAJAL && item <= I_ROPE && item != I_MUG && item != I_ROPE; }

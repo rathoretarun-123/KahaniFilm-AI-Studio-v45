@@ -5900,6 +5900,10 @@ public final class Director {
         {new String[]{"अख़बार", "अखबार", "newspaper"}, Pose.I_PAPER},
         {new String[]{"झाड़ू", "broom"}, Pose.I_BROOM},
         {new String[]{"फूल", "गुलदस्ता", "flowers", "bouquet", "a flower"}, Pose.I_FLOWER},
+        // v47: a letter / an envelope / a torn old envelope ("पीला पत्र", "ख़त", "letter"); a shoe; a box / shoebox
+        {new String[]{"ख़त", "ख़त्त", "पत्र", "चिट्ठी", "लिफ़ाफ़", "लिफाफा", "envelope", "letter"}, Pose.I_LETTER},
+        {new String[]{"जूत", "सैंडल", "shoe", "sandals", "slipper"}, Pose.I_SHOE},
+        {new String[]{"डिब्ब", "बक्स", "box", "carton"}, Pose.I_BOX},
     };
 
     /**
@@ -5908,7 +5912,7 @@ public final class Director {
      */
     private float carryFrom(String s, float t, List<Film.Actor> who) {
         if (seg == null || negated(s)) return 0;
-        if (!Txt.has(s, "लेकर", "ले कर", "लिए", "लिये", "हाथ में", "थामे", "carries", "carrying", "holding", "holds a", "holds the", "brings", "bringing", "with a tray"))
+        if (!Txt.has(s, "लेकर", "ले कर", "लिए", "लिये", "हाथ में", "थामे", "पकड़े हुए", "पकड़े", "आगे बढ़ा", "सीने से लगा", "निकालती है", "निकालता है", "carries", "carrying", "holding", "holds a", "holds the", "brings", "bringing", "with a tray", "pulls out", "takes out", "clutches"))
             return 0;
         if (Txt.has(s, "छाता", "छतरी", "umbrella")) return 0;
         int item = Pose.I_NONE;

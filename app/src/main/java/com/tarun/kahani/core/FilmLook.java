@@ -106,11 +106,11 @@ public final class FilmLook {
             float x = i / 255f;
             // filmic curve: lifted toe, soft S around the middle, a shoulder that rolls the highlights off
             float y = 0.012f + x * 0.988f;
-            // v47 (the user: "the pictures look dull"): the mid tones lifted (gamma 0.88) and a firmer S (0.3): the
-            // films read 15-20 % darker than their reference clips, with their contrast flatter
-            y = (float) Math.pow(y, 0.88);
+            // v47 (the user: "make everything clearly visible — more contrast and brightness"): mid tones lifted
+            // further (gamma 0.80) and a stronger S (0.42) so shadows do not crush and highlights do not clip
+            y = (float) Math.pow(y, 0.80);
             float s = y * y * (3 - 2 * y);
-            y = y + (s - y) * 0.3f * p.contrast + (p.contrast - 1) * (y - 0.5f) * 0.5f;
+            y = y + (s - y) * 0.42f * p.contrast + (p.contrast - 1) * (y - 0.5f) * 0.6f;
             if (y > 0.82f) y = 0.82f + (1 - (float) Math.exp(-(y - 0.82f) / 0.18f)) * 0.17f;
             y = Math.max(0, Math.min(1, y));
             // split toning: highlights warmer, shadows a touch cooler (more so in a warm or cool moment)

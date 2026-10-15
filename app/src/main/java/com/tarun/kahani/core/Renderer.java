@@ -766,7 +766,7 @@ public final class Renderer {
         // v33: "scene 2 brighter" / "the cave is too dark": a veil of light or shade over the part alone
         if (s.bright > 0.01f) { g.color(Puppet.alpha(0xFFFFFFFF, Math.min(0.6f, s.bright * 0.6f))); g.rect(0, 0, vw, vh); }
         else if (s.bright < -0.01f) { g.color(Puppet.alpha(0xFF000000, Math.min(0.7f, -s.bright * 0.7f))); g.rect(0, 0, vw, vh); }
-        if (tint != 0) { g.color(own ? Puppet.alpha(tint, ((tint >>> 24) & 255) / 255f * 0.45f) : tint); g.rect(0, 0, vw, vh); }      // v47: a lighter veil over the user's picture
+        if (tint != 0) { g.color(own ? Puppet.alpha(tint, ((tint >>> 24) & 255) / 255f * 0.3f) : Puppet.alpha(tint, ((tint >>> 24) & 255) / 255f * 0.72f)); g.rect(0, 0, vw, vh); }      // v47: a lighter veil over the user's picture (0.30), and a slightly lighter one over the painted set (0.72) too
         // light follows the moment (§19): hard, directional light and deeper shadows for conflict and fear,
         // soft warm light for warmth and safety
         float hard = Math.max(0, Math.min(1, camLight));
@@ -781,8 +781,8 @@ public final class Renderer {
             g.rect(0, 0, vw, vh);
         }
         float r = Math.max(vw, vh) * (0.78f - 0.12f * Math.max(0, hard - 0.5f));
-        // v47: a lighter vignette (0.22 over the user's picture, 0.36 over a painted set): the corners had gone muddy
-        g.radial(vw / 2, vh / 2, r, 0x00000000, Puppet.alpha(0xFF000000, (own ? 0.22f : 0.36f) + (own ? 0.08f : 0.16f) * Math.max(0, hard - 0.5f)));
+        // v47: a much lighter vignette (0.15 over the user's picture, 0.28 over the painted set) so the corners stay readable
+        g.radial(vw / 2, vh / 2, r, 0x00000000, Puppet.alpha(0xFF000000, (own ? 0.15f : 0.28f) + (own ? 0.05f : 0.12f) * Math.max(0, hard - 0.5f)));
         g.rect(0, 0, vw, vh);
     }
 
@@ -979,7 +979,7 @@ public final class Renderer {
             // only once the shot is a real close-up
             // v24: the place behind a close-up is drawn as it is — no softening at all (every blur read as unreal)
             // v47: the user's own picture of a golden evening already carries its light: half the veil over it
-            float veil = b.picture ? 0.5f : 1f;
+            float veil = b.picture ? 0.35f : 0.75f;      // v47 (further): still clearer at night / evening (0.35 / 0.75)
             if (s.tod == Sets.EVENING) { g.color(Puppet.alpha(0xFFFF7043, 0x40 / 255f * veil)); g.rect(0, 0, W, H); g.color(Puppet.alpha(0xFF301060, 0x30 / 255f * veil)); g.rect(0, 0, W, H); }
             if (s.tod == Sets.NIGHT && s.set != Sets.FOREST) { g.color(Puppet.alpha(0xFF101C3A, 0x50 / 255f * veil)); g.rect(0, 0, W, H); }
             if (s.festive) Sets.celebrationLights(g, t);

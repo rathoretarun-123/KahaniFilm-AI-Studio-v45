@@ -1417,6 +1417,31 @@ public final class Puppet {
                 }
                 break;
             }
+            case Pose.I_LETTER: {
+                // v47: an old yellow envelope / folded letter in the hand
+                k *= 0.9f;
+                g.color(0xFFE8D28A); g.rect(x - 10 * k, y - 7 * k, 20 * k, 14 * k);
+                g.color(0xFFB8A162); g.line(x - 10 * k, y - 7 * k, x, y + 0.5f * k, 1 * k); g.line(x + 10 * k, y - 7 * k, x, y + 0.5f * k, 1 * k);
+                g.color(0x66000000); g.rect(x - 10 * k, y + 6 * k, 20 * k, 1 * k);
+                break;
+            }
+            case Pose.I_SHOE: {
+                // v47: a small child-size shoe (red tint by default; the actor's holdColor dyes it)
+                int base = 0xFFB13A2E;
+                g.color(base); g.roundRect(x - 11 * k, y - 2 * k, 22 * k, 8 * k, 3 * k);
+                g.color(0x44000000); g.roundRect(x - 11 * k, y + 4 * k, 22 * k, 3 * k, 1.2f * k);
+                g.color(0x55FFFFFF); g.roundRect(x - 7 * k, y - 1 * k, 7 * k, 3 * k, 1 * k);
+                break;
+            }
+            case Pose.I_BOX: {
+                // v47: a cardboard box held in both hands (lid lifted a little)
+                k *= 1.0f;
+                g.color(0xFFC89768); g.rect(x - 14 * k, y - 6 * k, 28 * k, 12 * k);
+                g.color(0xFFB07E54); g.rect(x - 14 * k, y + 2 * k, 28 * k, 4 * k);
+                g.color(0xFF8E5F3F); g.line(x - 14 * k, y - 6 * k, x + 14 * k, y - 6 * k, 1 * k);
+                g.color(0x44000000); g.line(x - 14 * k, y + 6 * k, x + 14 * k, y + 6 * k, 1 * k);
+                break;
+            }
             case Pose.I_PAPER: {
                 // a newspaper opened wide in both hands: grey columns, a headline, a photo block; it sways a little
                 k *= 1.35f;
