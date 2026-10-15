@@ -5199,6 +5199,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        requireOriginalFixtures(dir, "08_papa_sheet_a.png");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/chai_par_baat.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
         p.write("script.txt", script);
@@ -5817,6 +5818,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        requireOriginalFixtures(dir, "08_papa_sheet_a.png");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/barish_wala_ravivar.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
         assertEquals("बारिश वाला रविवार", st.title);
