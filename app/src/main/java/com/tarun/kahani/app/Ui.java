@@ -16,8 +16,10 @@ import android.widget.TextView;
 
 /** Small helpers for building the simple, large-button interface in code. */
 final class Ui {
-    static final int BG = 0xFFFFF8EC, PRIMARY = 0xFFE65100, PRIMARY_DARK = 0xFFBF360C, CARD = 0xFFFFFFFF,
-            TEXT = 0xFF2B1B10, SUB = 0xFF6D5A4A, GREEN = 0xFF2E7D32, RED = 0xFFC62828, BLUE = 0xFF1565C0;
+    // v47: a new palette — deep cinema plum on paper white — so the installed app looks visibly different from any
+    // older install at first glance (the user asked for a visual tell that this is the new build)
+    static final int BG = 0xFFF7F2FA, PRIMARY = 0xFF6A1B9A, PRIMARY_DARK = 0xFF4A148C, CARD = 0xFFFFFFFF,
+            TEXT = 0xFF1A0D2E, SUB = 0xFF5D4B7A, GREEN = 0xFF2E7D32, RED = 0xFFC62828, BLUE = 0xFF0D47A1;
 
     private Ui() {}
 
