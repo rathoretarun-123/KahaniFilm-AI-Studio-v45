@@ -106,6 +106,92 @@ def jpeg_fixture(seed, scene=False, phone=False, camera=False, back=False, open_
  out=io.BytesIO()
  im.save(out,format="JPEG",quality=92,exif=exif)
  return out.getvalue()
+def sheet_fixture(seed):
+ # Deterministic ten-panel contact sheet for crop/pose regression only.
+ # Never used as a film reference or as a substitute for missing identity packs.
+ im=Image.new("RGB",(1000,500),(250,250,248))
+ d=ImageDraw.Draw(im)
+ backgrounds=[(236,242,247),(243,237,228),(231,243,232),(243,232,241),(246,242,224),
+              (225,240,240),(241,235,225),(232,239,225),(238,232,246),(244,238,231)]
+ for i in range(10):
+  col=i%5; row=i//5; x=col*200; y=row*250
+  d.rectangle((x+2,y+2,x+197,y+247),fill=backgrounds[(seed+i)%len(backgrounds)])
+  # Different neutral clothing colours; no resemblance to any real person.
+  skin=(196,143,112); hair=(45+(seed+i)%4*7,37,32)
+  cloth=[(52,111,155),(173,79,68),(72,128,86),(123,88,151),(177,133,54)][(seed+i)%5]
+  pose="stand"; side=False; animal=(seed==1)
+  if seed==2 and i==1: pose="stand"; side=True
+  if seed==4 and i==8: pose="sit"
+  if seed==9 and i==2: pose="lie"
+  if seed==1 and i==5: pose="run"; side=True
+  if seed==15 and i==9: pose="sit"
+  if seed==15 and i==4: pose="wave"
+  if seed==12 and i==9: pose="jump"
+  cx=x+100; cy=y+125
+  if pose=="lie":
+   # horizontal sleeping animal/person, long connected silhouette
+   d.ellipse((cx-65,cy-19,cx-28,cy+18),fill=hair)
+   d.polygon([(cx-36,cy-15),(cx+34,cy-18),(cx+60,cy+8),(cx-25,cy+15)],fill=cloth)
+   d.line((cx+20,cy+4,cx+62,cy+28),fill=skin,width=11)
+   d.line((cx-8,cy+4,cx+28,cy+27),fill=skin,width=11)
+   continue
+  if pose=="sit":
+   d.ellipse((cx-19,cy-88,cx+19,cy-50),fill=hair)
+   d.ellipse((cx-16,cy-84,cx+16,cy-54),fill=skin)
+   d.line((cx,cy-52,cx,cy-5),fill=skin,width=12)
+   d.polygon([(cx-20,cy-52),(cx+20,cy-52),(cx+28,cy-5),(cx-28,cy-5)],fill=cloth)
+   d.line((cx-16,cy-6,cx-43,cy+21,cx-6,cy+21),fill=cloth,width=16)
+   d.line((cx+14,cy-6,cx+43,cy+20,cx+61,cy+20),fill=cloth,width=16)
+   d.line((cx-13,cy-42,cx-37,cy-17),fill=skin,width=9)
+   d.line((cx+13,cy-42,cx+35,cy-17),fill=skin,width=9)
+   continue
+  if pose=="jump":
+   # full-body leaping figure; sword and foot deliberately cross nominal panel boundaries.
+   d.ellipse((cx-18,cy-93,cx+18,cy-57),fill=hair)
+   d.ellipse((cx-15,cy-89,cx+15,cy-59),fill=skin)
+   d.polygon([(cx-18,cy-55),(cx+18,cy-55),(cx+29,cy-4),(cx-24,cy-4)],fill=cloth)
+   d.line((cx-12,cy-45,cx-35,cy-18),fill=skin,width=10)
+   d.line((cx+12,cy-45,cx+5,cy-5),fill=skin,width=10)
+   d.line((cx-10,cy-4,cx-31,cy+45),fill=cloth,width=13)
+   d.line((cx+12,cy-4,cx+42,cy+48),fill=cloth,width=13)
+   d.ellipse((cx+26,cy+39,cx+64,cy+57),fill=(57,48,43))
+   d.line((cx-30,cy-18,cx+40,cy-228),fill=(83,60,37),width=7)
+   d.line((cx-35,cy-14,cx+45,cy-238),fill=(210,215,222),width=5)
+   d.line((cx-36,cy-14,cx-47,cy-1),fill=(124,77,44),width=9)
+   continue
+  # standing, side, waving, or running: head/torso/arms/legs share connected joints
+  headx=cx+(-12 if side else 0)
+  d.ellipse((headx-20,cy-99,headx+20,cy-59),fill=hair)
+  d.ellipse((headx-16,cy-94,headx+16,cy-62),fill=skin)
+  if not side:
+   d.ellipse((headx-10,cy-82,headx-5,cy-77),fill=(35,28,24))
+   d.ellipse((headx+5,cy-82,headx+10,cy-77),fill=(35,28,24))
+   d.arc((headx-9,cy-77,headx+9,cy-67),5,170,fill=(120,42,42),width=2)
+  else:
+   d.ellipse((headx+7,cy-82,headx+12,cy-77),fill=(35,28,24))
+   d.polygon([(headx+13,cy-79),(headx+24,cy-74),(headx+13,cy-70)],fill=skin)
+  d.rectangle((cx-8,cy-60,cx+8,cy-45),fill=skin)
+  d.polygon([(cx-22,cy-48),(cx+22,cy-48),(cx+27,cy+10),(cx-27,cy+10)],fill=cloth)
+  if pose=="wave":
+   d.line((cx-15,cy-39,cx-35,cy-15),fill=skin,width=9)
+   d.line((cx+15,cy-39,cx+42,cy-72),fill=skin,width=9)
+   d.ellipse((cx+36,cy-79,cx+49,cy-65),fill=skin)
+  elif pose=="run":
+   d.line((cx-15,cy-37,cx-43,cy-55),fill=skin,width=9)
+   d.line((cx+15,cy-37,cx+40,cy-13),fill=skin,width=9)
+  else:
+   d.line((cx-15,cy-38,cx-34,cy-4),fill=skin,width=9)
+   d.line((cx+15,cy-38,cx+34,cy-4),fill=skin,width=9)
+  if pose=="run":
+   d.line((cx-10,cy+8,cx-37,cy+39),fill=cloth,width=12)
+   d.line((cx+10,cy+8,cx+42,cy+26),fill=cloth,width=12)
+  else:
+   d.line((cx-10,cy+8,cx-15,cy+68),fill=cloth,width=13)
+   d.line((cx+10,cy+8,cx+15,cy+68),fill=cloth,width=13)
+  d.ellipse((cx-30,cy+60,cx-5,cy+73),fill=(57,48,43))
+  d.ellipse((cx+5,cy+60,cx+30,cy+73),fill=(57,48,43))
+ out=io.BytesIO(); im.save(out,format="JPEG",quality=92)
+ return out.getvalue()
 def put(rel,data,category):
  q=R/rel
  if q.exists() and q.stat().st_size:return
@@ -132,7 +218,7 @@ def main():
     q.parent.mkdir(parents=True,exist_ok=True);q.write_bytes(z.read(n));restored.append(str(q.relative_to(R)))
  # Generic 60-sheet crop/decode tests can use synthetic ten-panel sheets.
  for n in range(1,61):
-  put(f"tools/testdata/sheets/sheet{n:02d}.jpg",png(1000,400,n,5,2,scene=34<=n<=43),"synthetic")
+  put(f"tools/testdata/sheets/sheet{n:02d}.jpg",sheet_fixture(n),"synthetic")
  # Generic upload-path fixtures only. Do NOT synthesize sheets38/sheets40/sheets40b identity sources.
  for n,sc in [("camera_photo.jpg",False),("drawn_character_phone_saved.jpg",False),("drawn_character_plain.png",False),("drawn_place_phone_saved.jpg",True),("drawn_thing_phone_saved.jpg",True)]:
   seed=201+len(synthetic)
