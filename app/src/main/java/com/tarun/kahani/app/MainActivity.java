@@ -116,13 +116,17 @@ public class MainActivity extends Activity {
     protected void onCreate(Bundle b) {
         super.onCreate(b);
         Thread.setDefaultUncaughtExceptionHandler(new CrashLog(this, Thread.getDefaultUncaughtExceptionHandler()));
-        // v47: on the very first launch of this version, wipe the previous version's library and projects folders —
-        // the user asked that every install start fresh, so a stale library from an older install never leaks in.
-        // The new library-v47 / projects-v47 folders are untouched; only the legacy "library" and "projects" go.
-        if (!"1".equals(Prefs.get(this, "wipedLegacyPaths-v47", "0"))) {
+        // v47.1: on the very first launch of this build, wipe every legacy path — the previous version's internal
+        // library and projects folders AND the public Downloads/tarunkahani mirror. The user asked that every
+        // install start clean; getFilesDir is deleted on uninstall by Android, but the public Downloads folder is
+        // not, so this is where that gets cleaned up.
+        if (!"1".equals(Prefs.get(this, "wipedLegacyPaths-v47-1", "0"))) {
             try { wipeDir(new File(getFilesDir(), "library")); } catch (Throwable ignored) {}
+            try { wipeDir(new File(getFilesDir(), "library-v47")); } catch (Throwable ignored) {}
             try { wipeDir(new File(getFilesDir(), "projects")); } catch (Throwable ignored) {}
-            Prefs.put(this, "wipedLegacyPaths-v47", "1");
+            try { wipeDir(new File(getFilesDir(), "projects-v47")); } catch (Throwable ignored) {}
+            try { wipeDir(new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "tarunkahani")); } catch (Throwable ignored) {}
+            Prefs.put(this, "wipedLegacyPaths-v47-1", "1");
         }
         root = new FrameLayout(this);
         root.setBackgroundColor(Ui.BG);

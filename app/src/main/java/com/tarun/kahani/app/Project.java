@@ -28,8 +28,9 @@ public final class Project {
 
     public Project(File dir) { this.dir = dir; }
 
-    // v47: a new folder so stale "projects/" from an older install is ignored. Old data is still on disk but invisible.
-    public static final String PROJECTS_DIR = "projects-v47";
+    // v47.1: projects folder renamed again so a stale "projects/" or "projects-v47" is ignored. Under getFilesDir(),
+    // which Android deletes on uninstall, so the user's films also go away cleanly when the APK is removed.
+    public static final String PROJECTS_DIR = "projects-v47-1";
 
     public static File root(Context c) {
         File r = new File(c.getFilesDir(), PROJECTS_DIR);

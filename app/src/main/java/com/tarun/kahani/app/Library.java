@@ -63,8 +63,9 @@ public final class Library {
         return shared;
     }
 
-    // v47: a new folder so a stale "library/" from an older install is ignored. Old files remain on disk but invisible.
-    public static final String LIBRARY_DIR = "library-v47";
+    // v47.1: library folder renamed again so a stale "library/" or "library-v47" from a previous install is ignored.
+    // All of this lives under getFilesDir(), which Android deletes on uninstall, so the library goes away cleanly.
+    public static final String LIBRARY_DIR = "library-v47-1";
 
     private Library(Context c) {
         ctx = c.getApplicationContext();

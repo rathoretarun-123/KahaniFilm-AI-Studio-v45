@@ -39,20 +39,22 @@ final class Backup {
     static final String PRIVATE = ".kfbak";
     private static final ExecutorService IO = Executors.newSingleThreadExecutor();
 
-    /** Copies the item's file and its description in the background (never slows the app down). */
+    /**
+     * v47.1: the public Downloads/tarunkahani mirror is OFF by default. The user asked that the library go away
+     * cleanly when the APK is uninstalled — files in getFilesDir() do, but files in public Downloads do not. The
+     * copy still happens if the user explicitly turns on "publicBackup" in Settings; the default is off.
+     */
     static void copy(final Context ctx, final Library.Item it) {
         if (it == null || it.builtIn) return;
+        if (!"1".equals(Prefs.get(ctx, "publicBackup", "0"))) return;
         final Context app = ctx.getApplicationContext();
         IO.execute(new Runnable() {
             public void run() {
                 try {
                     File f = new File(it.path);
-                    // kept private: saved as ".kfbak" (not a picture or song to the phone), so the photos and voices
-                    // of the library never show up in the gallery or the music player
                     write(app, f.getName() + PRIVATE, new FileInputStream(f), "application/octet-stream");
                     write(app, f.getName() + ".json", new java.io.ByteArrayInputStream(Library.describe(it).getBytes("UTF-8")), "application/json");
                 } catch (Throwable ignored) {
-                    // the library inside the app is still complete; the backup is an extra
                 }
             }
         });
