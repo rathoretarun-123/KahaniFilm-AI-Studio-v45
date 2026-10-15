@@ -44,7 +44,7 @@ jobs:
         shell: bash
         run: |
           sudo apt-get update
-          sudo apt-get install -y curl zip unzip
+          sudo apt-get install -y curl zip unzip python3-pil
           echo "$ANDROID_HOME/build-tools/34.0.0" >> "$GITHUB_PATH"
 
       - name: Prepare debug signing key
@@ -118,10 +118,6 @@ jobs:
           URL_PATH="org/robolectric/android-all/14-robolectric-10818077/android-all-14-robolectric-10818077.jar"
           curl -fL --retry 3 --retry-delay 2 -o "$HOME/.cache/kahani/android-all-14.jar" "https://repo.maven.apache.org/maven2/$URL_PATH" \
             || curl -fL --retry 3 --retry-delay 2 -o "$HOME/.cache/kahani/android-all-14.jar" "https://repo1.maven.org/maven2/$URL_PATH"
-
-      - name: Install image codec for synthetic test fixtures
-        shell: bash
-        run: python3 -m pip install --disable-pip-version-check --user Pillow
 
       - name: Prepare missing synthetic legacy test fixtures
         shell: bash
