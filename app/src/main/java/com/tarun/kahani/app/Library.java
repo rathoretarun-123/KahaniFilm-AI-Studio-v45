@@ -298,7 +298,9 @@ public final class Library {
     }
 
     private static String originalBundledFilename(String safeName) {
-        return safeName.startsWith("images__") ? safeName.substring("images__".length()) : safeName;
+        if (safeName.startsWith("images__")) return safeName.substring("images__".length());
+        if (safeName.startsWith("stills__")) return safeName.substring("stills__".length());
+        return safeName;
     }
 
     private static String semanticLabel(Map<String, Object> record, String fallback) {
