@@ -335,7 +335,8 @@ public final class Library {
                 if (!(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp"))) continue;
                 if (lower.contains("contact_sheet") || lower.contains("montage") || lower.contains("contact-sheet")) continue;
                 seq++;
-                Map<String, Object> record = semantic.get(originalBundledFilename(name));
+                String originalName = originalBundledFilename(name);
+                Map<String, Object> record = semantic.get(originalName);
                 if (record == null) continue;
                 String oldPrefix = storyTitle + " reference " + seq;
                 String newPrefix = semanticLabel(record, oldPrefix);
