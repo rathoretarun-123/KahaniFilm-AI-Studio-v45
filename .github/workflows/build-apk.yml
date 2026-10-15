@@ -163,6 +163,25 @@ jobs:
             --tests com.tarun.kahani.SheetPanelsTest \
             --tests com.tarun.kahani.DashboardSoakTest \
             --tests com.tarun.kahani.ThreeStoriesSoakTest
+      - name: Name the failing tests (annotations, readable through the API)
+        if: failure()
+        shell: bash
+        run: |
+          n=0
+          for f in $(grep -l "<failure\|<error" tools/robotest/build/test-results/test/*.xml 2>/dev/null); do
+            python3 - "$f" <<'PY'
+          import sys, xml.etree.ElementTree as ET
+          t = ET.parse(sys.argv[1]).getroot()
+          for tc in t.iter('testcase'):
+              for k in ('failure', 'error'):
+                  e = tc.find(k)
+                  if e is not None:
+                      msg = (e.get('message') or (e.text or '').strip().splitlines()[0] if (e.get('message') or e.text) else '')[:400]
+                      print('::error title=%s.%s::%s' % (tc.get('classname'), tc.get('name'), msg.replace('\n', ' ')))
+          PY
+            n=$((n+1)); [ $n -ge 12 ] && break
+          done
+          echo "failing result files: $n"
       - name: Upload generated visual audit contact sheet
         if: always()
         uses: actions/upload-artifact@v4
