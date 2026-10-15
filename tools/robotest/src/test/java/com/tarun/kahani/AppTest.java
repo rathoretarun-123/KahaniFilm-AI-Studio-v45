@@ -6739,4 +6739,14 @@ public class AppTest {
         if (f.isDirectory()) for (File c : f.listFiles()) deleteTree(c);
         f.delete();
     }
+
+    @Test
+    public void referenceUploadCapsMatchCharacterPlaceAndPropContracts() {
+        assertEquals(18, MainActivity.maxAnglePictures("angles:char:रघु काका"));
+        assertEquals(10, MainActivity.maxAnglePictures("angles:scene:1:बल्लीमारान"));
+        assertEquals(10, MainActivity.maxAnglePictures("angles:obj:केतली"));
+        assertEquals(10, MainActivity.maxAnglePictures("angles:costume:आरव#1"));
+        assertEquals(10, MainActivity.maxAnglePictures(null));
+    }
+
 }
