@@ -123,6 +123,29 @@ jobs:
       - name: Prepare missing synthetic legacy test fixtures
         shell: bash
         run: python3 tools/scripts/prepare_legacy_test_fixtures.py
+      - name: Validate synthetic test fixture formats and metadata
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+          from PIL import Image
+          root = Path(".")
+          for name in ("char_vrinda.jpg", "char_vanusha.jpg", "char_kripa.jpg", "bg_garden.jpg"):
+              p = root / "app/src/main/assets/sample" / name
+              with Image.open(p) as im:
+                  assert im.format == "JPEG", f"{p}: expected real JPEG, got {im.format}"
+                  assert im.size == (480, 360), f"{p}: unexpected dimensions {im.size}"
+          camera = Image.open(root / "tools/testdata/upload/camera_photo.jpg")
+          assert camera.format == "JPEG"
+          exif = camera.getexif()
+          assert any(tag in exif for tag in (33434, 33437, 34855, 37386)), "camera fixture lacks capture metadata"
+          phone = Image.open(root / "tools/testdata/upload/drawn_character_phone_saved.jpg")
+          assert phone.format == "JPEG"
+          phone_exif = phone.getexif()
+          assert 271 in phone_exif and 272 in phone_exif, "phone-saved drawing fixture lacks phone make/model"
+          print("Synthetic JPEG dimensions, file signatures, EXIF and phone metadata verified.")
+          PY
       - name: Stage generated voice fixtures for Robolectric working directory
         shell: bash
         run: |
