@@ -440,7 +440,10 @@ public final class Art {
         int w = d[0], h = d[1];
         int[] px = new int[w * h];
         System.arraycopy(d, 2, px, 0, w * h);
-        Cutout.Result r = Cutout.process(px, w, h, animal);
+        // v47: humans (not animals) get hole-filling — the background between the legs would otherwise bleed through as
+        // a bright strip (the user saw a white line between बाबू's legs). Animals keep hands-off because their silhouettes
+        // can have real interior holes
+        Cutout.Result r = Cutout.process(px, w, h, !animal);
         r.pxRead = null;                                         // v34: the readings are done; the film draws the picture as it is
         Sprite s = new Sprite();
         s.w = r.w; s.h = r.h;

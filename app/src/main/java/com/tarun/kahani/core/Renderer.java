@@ -169,7 +169,7 @@ public final class Renderer {
 
     private void drawTitle(Gfx g, Film.Seg s, float t) {
         float u = (t - s.t0) / Math.max(0.1f, s.t1 - s.t0);
-        boolean text = art.titleText || s.backdrop == null;
+        boolean text = s.backdrop == null || art.titleText;      // v47: when the user gives a title picture, the studio adds no text and no sparkles over it
         if (s.backdrop != null) {
             contain(g, s.backdrop, 1.0f + 0.05f * u);
         } else {
@@ -180,7 +180,7 @@ public final class Renderer {
             heroesLineup(g, t, vw < 900 ? 1 : 2, 640, Sets.GROUND + 20, 1.0f);
             g.restore();
         }
-        sparkles(g, t, 0, 0, vw, vh, 26, 0xFFFFE082);
+        if (text) sparkles(g, t, 0, 0, vw, vh, 26, 0xFFFFE082);
         if (text) {
             float a = Math.min(1, Math.max(0, (t - s.t0 - 0.6f) / 1.2f));
             g.save();
@@ -225,7 +225,7 @@ public final class Renderer {
 
     private void drawEnd(Gfx g, Film.Seg s, float t) {
         float u = (t - s.t0) / Math.max(0.1f, s.t1 - s.t0);
-        boolean text = art.endText || s.backdrop == null;
+        boolean text = s.backdrop == null || art.endText;        // v47: same for the end card
         if (s.backdrop != null) contain(g, s.backdrop, 1.0f + 0.06f * u);
         else {
             g.save();
