@@ -242,8 +242,9 @@ public final class Library {
                 String source = "bundled:" + filmId;
                 List<Item> split = new ArrayList<Item>();
                 boolean maySplit = !role.startsWith("storyboard") && !"reference".equals(kind);
+                boolean sourceSheet = record != null && "true".equalsIgnoreCase(String.valueOf(record.get("source_sheet")));
                 try {
-                    if (maySplit && SheetSaver.isSheet(data, "place".equals(kind))) {
+                    if (maySplit && (sourceSheet || SheetSaver.isSheet(data, "place".equals(kind)))) {
                         split = SheetSaver.saveToLibrary(this, label, kind, data, source);
                     }
                 } catch (Throwable ignored) {
