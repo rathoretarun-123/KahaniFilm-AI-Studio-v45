@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - kahanifilm-development
+      - kahanifilm-semantic-reference-intake
 
 concurrency:
   group: build-apk-${{ github.ref }}
