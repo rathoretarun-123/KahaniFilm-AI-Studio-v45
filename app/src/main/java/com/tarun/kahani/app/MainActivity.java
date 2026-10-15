@@ -2719,10 +2719,19 @@ public class MainActivity extends Activity {
                         String name = displayName(u);
                         String mime = getContentResolver().getType(u);
                         if (mime == null) mime = "";
-                        byte[] b = Project.readAll(getContentResolver().openInputStream(u));
                         String base = name.replaceAll("\\.[A-Za-z0-9]+$", "");
                         String ext = name.contains(".") ? name.substring(name.lastIndexOf('.')).toLowerCase(Locale.US) : "";
-                        boolean image = mime.startsWith("image/") || ext.matches("\\.(jpe?g|png|webp|gif|bmp|heic)") || (ext.length() == 0 && decodable(b));
+                        // v47: look up the type first — a 100 MB phone photo is never read whole into memory;
+                        // readPicture downsamples by file descriptor and returns ready-to-store bytes
+                        boolean imageByHeader = mime.startsWith("image/") || ext.matches("\\.(jpe?g|png|webp|gif|bmp|heic)");
+                        byte[] b;
+                        if (imageByHeader) {
+                            b = Project.readPicture(getContentResolver(), u);
+                            if (b == null) { bad++; continue; }
+                        } else {
+                            b = Project.readAll(getContentResolver().openInputStream(u));
+                        }
+                        boolean image = imageByHeader || (ext.length() == 0 && decodable(b));
                         if (image && !decodable(b)) { bad++; continue; }      // v39: a broken picture file is never put in the library
                         if (image) {
                             // v31: a sheet of several figures or place views is split at once: the library keeps the pictures themselves

@@ -46,6 +46,9 @@ public final class Library {
     private final File dir, index;
     public final List<Item> items = new java.util.concurrent.CopyOnWriteArrayList<Item>();
 
+    // v47: every add gets a unique id even when 18 pictures land in the same millisecond
+    private static final java.util.concurrent.atomic.AtomicLong SEQ = new java.util.concurrent.atomic.AtomicLong();
+
     private static Library shared;
 
     /**
@@ -277,7 +280,7 @@ public final class Library {
 
     public Item add(String type, String kind, String name, String tags, File src, String ext, String source) throws IOException {
         Item it = new Item();
-        it.id = type + "_" + System.currentTimeMillis() + "_" + (int) (Math.random() * 1000);
+        it.id = type + "_" + System.currentTimeMillis() + "_" + SEQ.incrementAndGet() + "_" + (int) (Math.random() * 1000);
         it.type = type; it.kind = kind == null ? "" : kind; it.name = name == null ? "" : name; it.tags = tags == null ? "" : tags;
         it.source = source == null ? "" : source;
         File sub = new File(dir, type);
