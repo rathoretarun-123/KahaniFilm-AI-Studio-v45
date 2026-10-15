@@ -87,10 +87,11 @@ final class ReferenceArtLoader {
             if ((poseSheet || expressionSheet) && sheet && "person".equals(kind)
                     && ScriptParser.resolve(story, label) != null) {
                 int cap = expressionSheet ? 1 : 2;
-                Integer seen = poseSheetCounts.get(entityId);
+                String poseKey = entityId + "|" + role;
+                Integer seen = poseSheetCounts.get(poseKey);
                 int used = seen == null ? 0 : seen;
                 if (used < cap) {
-                    poseSheetCounts.put(entityId, used + 1);
+                    poseSheetCounts.put(poseKey, used + 1);
                     for (int panel = 0; panel < 6; panel++) {
                         String poseImage;
                         try { poseImage = cropPanel(image, referenceRoot, filmId, entityId, panel); }
