@@ -127,9 +127,10 @@ jobs:
         run: |
           set -euo pipefail
           mkdir -p tools/robotest/voices
-          cp voices/man.wav voices/deep_slow.wav tools/robotest/voices/
+          cp voices/man.wav voices/deep_slow.wav voices/woman.wav tools/robotest/voices/
           test -s tools/robotest/voices/man.wav
           test -s tools/robotest/voices/deep_slow.wav
+          test -s tools/robotest/voices/woman.wav
       - name: Run production-plan, app regression, and 1,000-pass render soak tests
         shell: bash
         run: |
