@@ -42,6 +42,7 @@ import com.tarun.kahani.core.TechnicalDirector;
 import com.tarun.kahani.core.Txt;
 
 import org.junit.Test;
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -66,6 +67,11 @@ import java.util.List;
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = 34, manifest = Config.NONE)
 public class AppTest {
+    private static boolean hasFixtureFiles(File dir) {
+        File[] files = dir == null ? null : dir.listFiles();
+        return files != null && files.length > 0;
+    }
+
 
     static final File ASSETS = new File(System.getProperty("kahani.assets"));
     static final File OUT = new File(System.getProperty("kahani.out"));
@@ -4955,6 +4961,7 @@ public class AppTest {
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File dir = new File(ASSETS.getParentFile().getParentFile().getParentFile().getParentFile(), "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         requireOriginalFixtures(dir, "08_papa_sheet_a.png");
         File[] sheets = dir.listFiles();
         java.util.Arrays.sort(sheets);
@@ -5116,6 +5123,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         requireOriginalFixtures(dir, "08_papa_sheet_a.png");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/chai_par_baat.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
@@ -5199,6 +5207,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/chai_par_baat.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
         p.write("script.txt", script);
@@ -5483,6 +5492,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40"), fam = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets40/sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir) && hasFixtureFiles(fam));
         requireOriginalFixtures(dir, "05_boy_turnaround_a.jpg");
         requireOriginalFixtures(fam, "20_pari_toddler_a.png");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/jhoola_aur_fisalpatti.txt").toPath()), "UTF-8");
@@ -5571,6 +5581,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40b");
+        Assume.assumeTrue("Original sheets40b identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         requireOriginalFixtures(dir, "01_arjun_shirt_rod_6views.jpg");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/alav_ke_paas.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
@@ -5689,6 +5700,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40");
+        Assume.assumeTrue("Original sheets40 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         requireOriginalFixtures(dir, "05_boy_turnaround_a.jpg");
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/rahul_ka_park.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
@@ -5817,6 +5829,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/barish_wala_ravivar.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
         assertEquals("बारिश वाला रविवार", st.title);
@@ -6761,4 +6774,14 @@ public class AppTest {
         if (f.isDirectory()) for (File c : f.listFiles()) deleteTree(c);
         f.delete();
     }
+
+    @Test
+    public void referenceUploadCapsMatchCharacterPlaceAndPropContracts() {
+        assertEquals(18, MainActivity.maxAnglePictures("angles:char:रघु काका"));
+        assertEquals(10, MainActivity.maxAnglePictures("angles:scene:1:बल्लीमारान"));
+        assertEquals(10, MainActivity.maxAnglePictures("angles:obj:केतली"));
+        assertEquals(10, MainActivity.maxAnglePictures("angles:costume:आरव#1"));
+        assertEquals(10, MainActivity.maxAnglePictures(null));
+    }
+
 }
