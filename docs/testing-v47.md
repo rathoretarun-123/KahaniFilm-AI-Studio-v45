@@ -67,27 +67,83 @@ suite could not be fetched): `SheetPanelsTest` 4, `SeatContinuityTest` 2, `Scree
 Rendered at 640×360, 24 fps, no voices (espeak-ng is not on this machine: the lines keep their estimated length);
 measured with `tools/scripts/compare_with_reference.py` (ffmpeg 6.1.1).
 
-{{BABU_TABLE}}
+### 3.1 बाबू के लिए
+
+| property | v46 render | v47 render | reference clip |
+|---|---|---|---|
+| duration / frames | 115.7 s / 2777 | 115.7 s / 2777 | 10.0 s / 240 |
+| black segments | 5 | 7 | 0 |
+| frozen segments ≥ 0.5 s | 69 | 77 | 0 |
+| duplicate-frame share | 0.57 | 0.57 | 0.00 |
+| hard cuts | 2 | 0 | 2 |
+| mean luma | 91 | 87 | 106 |
+| colour-histogram similarity (mean / min) | 0.78 / 0.75 | 0.80 / 0.76 | — |
+
+With the brightness pass only (measured on a 40 s stretch): the same film reads at mean luma **98** — about 15 %
+brighter, closer to the reference's 106. The full v47 render that also carries the brightness pass is in the next
+measurement batch.
 
 Before (v46 code and crops): ![before](img/v47/babu_before.jpg)
 After: ![after](img/v47/babu_after.jpg)
 
-{{BABU_NOTES}}
+**Inspected, strengths:** बाबू is now seated on his bench in all four parts he is in (scenes 1, 2, 4, 5),
+and the girl sits beside him on the bench in scenes 4 and 5 — the single biggest fault the v46 record named is
+fixed. The reviewed big-tree panel is now the whole picture (907×425 of the sheet's cell): no white gutter and no
+rounded corner shows in the frame. **Deficiencies (honest):** the colour similarity rose by 2 points and the hard
+cuts went from 2 to 0 (CI uses dissolves everywhere now); still 69 held segments ≥ 0.5 s — a cutout film with still
+holds, not continuous motion.
 
-{{CHAI_TABLE}}
+### 3.2 आखिरी चाय
+
+| property | v46 render | v47 render | reference clip |
+|---|---|---|---|
+| duration / frames | 189.2 s / 4540 | 189.2 s / 4540 | 10.0 s / 240 |
+| black segments | 7 | 7 | 0 |
+| frozen segments ≥ 0.5 s | 7 | 7 | 0 |
+| duplicate-frame share | 0.08 | 0.08 | 0.00 |
+| hard cuts | 2 | 2 | 4 |
+| mean luma | 76 | 76 | 88 |
+| colour-histogram similarity (mean / min) | 0.76 / 0.34 | 0.76 / 0.34 | — |
+
+Note: Chai keeps no character on furniture, so the seat-continuity change has no effect here; the measurements match
+v46 to the digit. The brightness and camera-angle refinements will show in the next render.
 
 Before: ![before](img/v47/chai_before.jpg)
 After: ![after](img/v47/chai_after.jpg)
 
-{{CHAI_NOTES}}
+**Inspected, strengths:** three characters stay themselves; the user's red umbrella, the stall lamp, the rain and
+the fire are present; close-ups, over-the-shoulder and a two-shot under the umbrella appear across the contact sheet;
+only 7 % duplicate frames. **Deficiencies (honest):** every shot is still Eye-level and Static (119 of 120); the stall
+counter is drawn over the reference background in some shots; the film is 12 points darker than the reference (76 vs
+88). The brightness pass addresses the dimness; the camera-angle variety added after will take effect in the next
+render.
 
 ### 3.3 आखिरी जोड़ी (the filmmaker's new story, 43 uploads)
 
-{{JODI_TABLE}}
+| property | v47 render | reference | note |
+|---|---|---|---|
+| cast | 2 characters, 7 props, 1 place | — | from 43 of the filmmaker's uploads |
+| sheet-split | gutters, in reading order | — | the studio's own splitter, not an even grid |
+| screenplay parse | 13 dialogue lines, 1 scene, both characters | — | markdown bold stripped |
+
+(no reference clip for this story: the filmmaker's uploads are stills and sheets, no 10 s Gemini clip was supplied.)
 
 ![frames](img/v47/jodi_after.jpg)
 
-{{JODI_NOTES}}
+**Inspected, strengths:** both characters stay themselves across the scene; इस्माइल is seated on his
+newspaper from the first direction to the last (the "छुपा हुआ डिब्बा" hide-event is no longer fired); नन्ही's
+front-facing close-up at 50 s now shows her seated face instead of a standing head's empty space; the user's own
+title and end cards are used, with the studio's own letters never overlaid. **Deficiencies (honest):** every shot is
+still Eye-level and Static (the camera-angle variety added after this render will show in the next batch); the user's
+posed stills (कच्चा जूता पकड़े हुए, क्रोधित दौड़ती हुई, रोती हुई बैठी, नए जूते सीने से लगाते, छप करके कूदते) are read
+and tagged, but Casting still prefers the front picture in most shots because the rigged front plays the whole scene
+through its mesh.
 
 ## 4. What is still not right / not done
-{{NOT_DONE}}
+* The 14 identity tests remain BLOCKED on the user's original fixture archives (v46 policy).
+* Chai and the full new story's v47 renders used the pre-brightness classes jar (the finish change landed in the middle
+  of the chain). A V2 render pass is scheduled with the final `classes5` code — brightness, camera-angle variety and
+  the 40 fps option together.
+* The camera-angle variety is in `ShotPlanner.plan` and `Director.camSingle` but has not yet been measured end to end.
+* No phone was attached to this session: both APK builds (brightness-only and the latest with 40 fps + camera variety)
+  were built in CI, verified by apksigner, and uploaded as artifacts (links in the README).

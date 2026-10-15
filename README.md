@@ -22,10 +22,10 @@ All screens and instructions in the app are in English; the story, dialogue and 
 * **A third story, from the filmmaker's own uploads:** `tools/jvm CastFromUploads` turns a folder of uploads (fronts,
   angles, pose sheets, prop sheets, places, title and end cards) into the studio's manifest with the splitters the
   phone uses; **आखिरी जोड़ी** (इस्माइल चाचा, नन्ही, 43 pictures) is in `tools/testdata/aakhiri_jodi` and renders
-  end to end. {{JODI_SUMMARY}}
-* **Measured, said plainly:** {{MEASURED_SUMMARY}} The full record, with frames of all three films:
+  end to end. 70 manifest lines (2 characters, 4 views, 23 pose panels, 7 props, 1 place, title and end).
+* **Measured, said plainly:** बाबू के लिए is now seated on his bench in all four parts (was standing in three); colour similarity 0.80 vs the reference clip (was 0.78); a 40 s brightness-pass stretch reads at mean luma 98 vs the reference's 106 (was 91). आखिरी चाय unchanged by this release (no seated characters). आखिरी जोड़ी renders end to end from the filmmaker's 43 uploads with इस्माइल seated on his newspaper throughout. The full record, with frames of all three films:
   [`docs/testing-v47.md`](docs/testing-v47.md).
-* **Sorry — said plainly:** still flat pictures on a mesh. {{SORRY}}
+* **Sorry — said plainly:** still flat pictures on a mesh. still a flat-cutout engine: shots are still mostly held poses with lips and faces moving; the biggest ceiling named in v46 (characters standing where the script seats them) is fixed, but the ones below it (props handed from hand to hand, continuous motion, true cinematography) stay.
 
 ## New in v46 (15 October 2026)
 
