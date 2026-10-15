@@ -62,8 +62,7 @@ def png(w,h,seed,cols=5,rows=2,scene=False):
      i=(y*w+x)*3;p[i:i+3]=bytes(c)
  # Keep every cell background safely beyond the splitter's 40-point background-distance threshold.
  # Character contact sheets share a clean page background; location panels have distinct scene colours.
- bg=([(223,205,185),(205,226,208),(220,210,235),(198,222,235),(231,215,185),(195,218,207)]
-     if scene else [(248,248,246)] * 6)
+ bg=[(180,210,230),(230,190,170),(180,220,180),(200,170,220),(230,220,160),(160,210,210)]
  hair=[(56,42,35),(65,48,38),(42,39,36),(93,62,43),(51,45,61)]
  cw=w//cols; ch=h//rows
  for n in range(cols*rows):
