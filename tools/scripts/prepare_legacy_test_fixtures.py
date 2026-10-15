@@ -69,7 +69,9 @@ def main():
   put(f"tools/testdata/sheets/sheet{n:02d}.jpg",png(1000,400,n,5,2,scene=34<=n<=43),"synthetic")
  # Generic upload-path fixtures only. Do NOT synthesize sheets38/sheets40/sheets40b identity sources.
  for n,sc in [("camera_photo.jpg",False),("drawn_character_phone_saved.jpg",False),("drawn_character_plain.png",False),("drawn_place_phone_saved.jpg",True),("drawn_thing_phone_saved.jpg",True)]:
-  put("tools/testdata/upload/"+n,png(480,360,201+len(synthetic),3,2,sc),"synthetic")
+  # These named files model one ordinary phone/gallery upload, not a 3x2 contact sheet.
+  # Contact-sheet segmentation has its own multi-panel fixtures and tests.
+  put("tools/testdata/upload/"+n,png(480,360,201+len(synthetic),1,1,sc),"synthetic")
  # Small synthetic sample/audio files only if missing; test-only placeholders.
  for n,sc in [("char_vrinda.jpg",False),("char_vanusha.jpg",False),("char_vanusha_back.jpg",False),("char_raju.jpg",False),("char_raju_back.jpg",False),("char_kripa.jpg",False),("char_kripa_back.jpg",False),("char_kripa_pouch.jpg",False),("bg_garden.jpg",True),("bg_forest.jpg",True)]:
   put("app/src/main/assets/sample/"+n,png(480,360,301+len(synthetic),3,2,sc),"synthetic")
