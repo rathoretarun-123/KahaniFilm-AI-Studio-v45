@@ -28,7 +28,9 @@ public class BabuKeLiyeDesktopRenderTest {
         assertNotNull(story);
         assertFalse("screenplay has scenes", story.scenes.isEmpty());
         Director director = new Director(story, new Director.Options());
-        Art art = new Art();
+        Art art = ReferenceArtLoader.load("babu_ke_liye", story, assets);
+        assertTrue("real character reference sprites loaded: " + art.sprites.size(), art.sprites.size() >= 2);
+        assertTrue("real location backgrounds loaded: " + art.scenes.size(), art.scenes.size() >= Math.min(3, story.scenes.size()));
         Film prepared = director.prepare();
         assertNotNull("director prepared a film", prepared);
         Film film = director.direct(art);
