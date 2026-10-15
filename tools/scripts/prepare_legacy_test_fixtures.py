@@ -12,7 +12,7 @@ EXPECTED_SHA256={
  "KahaniFilm-v42-source-part4-test-stories-and-pictures.zip":"fe105a3263f0334fb48cb43a64819f40aaf23492c1ee671a27b926168a6f16f9",
 }
 restored=[]; synthetic=[]; missing=[]
-def png(w,h,seed,cols=5,rows=2,scene=False):
+def png(w,h,seed,cols=5,rows=2,scene=False,thing=False):
  p=bytearray([248,248,246]*(w*h))
  def rect(x0,y0,x1,y1,c):
   for y in range(max(0,y0),min(h,y1)):
@@ -30,9 +30,13 @@ def png(w,h,seed,cols=5,rows=2,scene=False):
  for n in range(cols*rows):
   x0=(n%cols)*cw+3;x1=min(w,(n%cols+1)*cw-3);y0=(n//cols)*ch+3;y1=min(h,(n//cols+1)*ch-3)
   rect(x0,y0,x1,y1,bg[(seed+n)%len(bg)])
-  cx=(x0+x1)//2;cy=(y0+y1)//2;rr=max(4,min(16,cw//5,ch//5))
+  cx=(x0+x1)//2;cy=y0+ch//4;rr=max(4,min(16,cw//5,ch//5))
   if scene:
    rect(x0,y0+ch*2//3,x1,y1,(119,163,113));circ(x0+cw*4//5,y0+ch//4,max(3,ch//10),(248,207,104))
+  elif thing:
+   rect(cx-cw//6,cy-ch//8,cx+cw//6,cy+ch//4,(70,82,92))
+   rect(cx-cw//8,cy-ch//5,cx+cw//8,cy-ch//8,(105,75,48))
+   rect(cx-cw//5,cy+ch//4,cx+cw//5,cy+ch//4+4,(45,48,52))
   else:
    circ(cx,cy-rr//3,rr+2,hair[(seed+n)%len(hair)]);circ(cx,cy,rr,(201,151,124))
    circ(cx-rr//3,cy,2,(30,30,30));circ(cx+rr//3,cy,2,(30,30,30))
@@ -73,9 +77,26 @@ def main():
   # These named files model one ordinary phone/gallery upload, not a 3x2 contact sheet.
   # Contact-sheet segmentation has its own multi-panel fixtures and tests.
   put("tools/testdata/upload/"+n,png(480,360,201+len(synthetic),1,1,sc),"synthetic")
- # Small synthetic sample/audio files only if missing; test-only placeholders.
- for n,sc in [("char_vrinda.jpg",False),("char_vanusha.jpg",False),("char_vanusha_back.jpg",False),("char_raju.jpg",False),("char_raju_back.jpg",False),("char_kripa.jpg",False),("char_kripa_back.jpg",False),("char_kripa_pouch.jpg",False),("bg_garden.jpg",True),("bg_forest.jpg",True)]:
-  put("app/src/main/assets/sample/"+n,png(480,360,301+len(synthetic),3,2,sc),"synthetic")
+ # Small synthetic sample assets only if missing; never use these as film references.
+ # Generate every filename named by sample/cast.txt so the sample project has a complete, coherent manifest.
+ sample_dir=R/"app/src/main/assets/sample"
+ sample_refs=[]
+ cast_file=sample_dir/"cast.txt"
+ if cast_file.is_file():
+  for raw in cast_file.read_text(encoding="utf-8").splitlines():
+   f=raw.strip().split("|")
+   if not f or len(f)<2: continue
+   if f[0]=="char" and len(f)>=3: sample_refs.append((f[2],False,False))
+   elif f[0]=="view" and len(f)>=4: sample_refs.append((f[3],False,False))
+   elif f[0]=="scene" and len(f)>=3: sample_refs.append((f[2],True,False))
+   elif f[0]=="shot" and len(f)>=4: sample_refs.append((f[3],True,False))
+   elif f[0] in ("title","end"): sample_refs.append((f[1],True,False))
+ sample_refs.extend([("char_kripa_pouch.jpg",False,True),("bg_garden.jpg",True,False),("bg_forest.jpg",True,False)])
+ seen_sample=set()
+ for n,sc,thing in sample_refs:
+  if not n or n in seen_sample: continue
+  seen_sample.add(n)
+  put("app/src/main/assets/sample/"+n,png(480,360,301+len(synthetic),1,1,sc,thing),"synthetic")
  # Frequencies are calibrated against the app analyser: 230 Hz is read as ~260 Hz and overlaps the child range.
  for n,f in [("man.wav",170),("deep_slow.wav",125),("woman.wav",180),("child.wav",310)]:
   q=R/"voices"/n
