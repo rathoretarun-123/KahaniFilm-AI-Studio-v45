@@ -47,4 +47,14 @@ public final class BundledFilmAssetsTest {
         required("film_library/aakhiri_chai/manifest.json");
         required("film_library/babu_ke_liye/manifest.json");
     }
+
+    @Test public void aakhiriChaiManifestHasConservativeSemanticReferenceTags() throws Exception {
+        String manifest = new String(Files.readAllBytes(required("film_library/aakhiri_chai/manifest.json").toPath()), StandardCharsets.UTF_8);
+        assertTrue("Raghu references must be labelled", manifest.contains("\"entity_id\": \"raghu_kaka\""));
+        assertTrue("Aarav references must be labelled", manifest.contains("\"entity_id\": \"aarav\""));
+        assertTrue("Meera references must be labelled", manifest.contains("\"entity_id\": \"meera\""));
+        assertTrue("Tea-stall references must be labelled", manifest.contains("\"entity_id\": \"tea_stall\""));
+        assertTrue("Ambiguous assets must remain review-required", manifest.contains("\"review_required\": true"));
+        assertTrue("Only high-confidence assets are auto-assigned", manifest.contains("\"auto_assign\": true"));
+    }
 }
