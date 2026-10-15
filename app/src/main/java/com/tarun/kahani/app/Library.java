@@ -203,16 +203,25 @@ public final class Library {
      */
     public void importBundledFilmReferences() throws IOException {
         android.content.SharedPreferences prefs = ctx.getSharedPreferences("kahani", Context.MODE_PRIVATE);
-        if (prefs.getBoolean("bundledFilmReferencesV1", false)) return;
+        if (prefs.getBoolean("bundledFilmReferencesV2", false)) return;
         String[][] films = {
                 {"aakhiri_chai", "आखिरी चाय"},
                 {"babu_ke_liye", "बाबू के लिए"}
         };
+        // Upgrade earlier generic imports in place. Never duplicate or delete a user's renamed/annotated references.
+        if (prefs.getBoolean("bundledFilmReferencesV1", false)) {
+            migrateBundledReferenceLabels(films);
+            prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
+            return;
+        }
+        int importedFiles = 0;
         for (String[] film : films) {
-            String assetDir = "film_library/" + film[0] + "/stills";
+            String filmId = film[0], storyTitle = film[1];
+            String assetDir = "film_library/" + filmId + "/stills";
             String[] files = ctx.getAssets().list(assetDir);
             if (files == null) continue;
             java.util.Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+            Map<String, Map<String, Object>> semantic = bundledSemantics(filmId);
             int seq = 0;
             for (String name : files) {
                 String lower = name.toLowerCase(java.util.Locale.ROOT);
@@ -223,29 +232,128 @@ public final class Library {
                 try { data = Project.readAll(in); } finally { try { in.close(); } catch (Exception ignored) {} }
                 if (data.length == 0) continue;
                 seq++;
-                String label = film[1] + " reference " + seq;
+                importedFiles++;
+                String originalName = originalBundledFilename(name);
+                Map<String, Object> record = semantic.get(originalName);
+                String label = semanticLabel(record, storyTitle + " reference " + seq);
+                String kind = Json.str(record, "library_kind", "");
+                String role = Json.str(record, "role", "");
+                boolean autoAssign = semanticAutoAssign(record);
+                String source = "bundled:" + filmId;
                 List<Item> split = new ArrayList<Item>();
+                boolean maySplit = !role.startsWith("storyboard") && !"reference".equals(kind);
                 try {
-                    if (SheetSaver.isSheet(data, false)) {
-                        split = SheetSaver.saveToLibrary(this, label, "", data, "bundled:" + film[0]);
+                    if (maySplit && SheetSaver.isSheet(data, "place".equals(kind))) {
+                        split = SheetSaver.saveToLibrary(this, label, kind, data, source);
                     }
                 } catch (Throwable ignored) {
                     split = new ArrayList<Item>();
                 }
                 if (split.isEmpty()) {
                     String ext = lower.endsWith(".webp") ? ".webp" : lower.endsWith(".png") ? ".png" : ".jpg";
-                    Item it = addBytes(PIC, "", label, film[1] + " " + name.replace('_', ' '), data, ext, "bundled:" + film[0]);
-                    it.setMeta("bundledFilm", film[0]);
+                    Item it = addBytes(PIC, kind, label, semanticTags(storyTitle, originalName, record), data, ext, source);
+                    applyBundledSemanticMetadata(it, filmId, originalName, record, autoAssign);
                 } else {
                     for (Item it : split) {
-                        it.tags = (it.tags + " " + film[1] + " reference " + name.replace('_', ' ')).trim();
-                        it.setMeta("bundledFilm", film[0]);
+                        it.tags = (it.tags + " " + semanticTags(storyTitle, originalName, record)).trim();
+                        applyBundledSemanticMetadata(it, filmId, originalName, record, autoAssign);
                     }
                     save();
                 }
             }
         }
-        prefs.edit().putBoolean("bundledFilmReferencesV1", true).apply();
+        if (importedFiles > 0) prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
+    }
+
+    /** Maps the manifest's original upload filename to its provisional, reviewed semantic record. */
+    private Map<String, Map<String, Object>> bundledSemantics(String filmId) {
+        Map<String, Map<String, Object>> out = new LinkedHashMap<String, Map<String, Object>>();
+        try {
+            Object root = Json.parseLoose(Project.readAsset(ctx.getAssets(), "film_library/" + filmId + "/manifest.json"));
+            if (!(root instanceof Map)) return out;
+            Object uploads = ((Map<?, ?>) root).get("uploads");
+            if (!(uploads instanceof List)) return out;
+            for (Object row : (List<?>) uploads) {
+                if (!(row instanceof Map)) continue;
+                @SuppressWarnings("unchecked")
+                Map<String, Object> record = (Map<String, Object>) row;
+                String filename = Json.str(record, "original_filename", "");
+                if (filename.length() > 0) out.put(filename, record);
+            }
+        } catch (Exception ignored) {
+            // A pack without semantic records remains available as a generic, review-required reference library.
+        }
+        return out;
+    }
+
+    private static String originalBundledFilename(String safeName) {
+        return safeName.startsWith("images__") ? safeName.substring("images__".length()) : safeName;
+    }
+
+    private static String semanticLabel(Map<String, Object> record, String fallback) {
+        String label = Json.str(record, "entity_label", "");
+        return label.trim().length() > 0 ? label.trim() : fallback;
+    }
+
+    private static boolean semanticAutoAssign(Map<String, Object> record) {
+        return record != null && "true".equalsIgnoreCase(String.valueOf(record.get("auto_assign")));
+    }
+
+    private static String semanticTags(String storyTitle, String filename, Map<String, Object> record) {
+        String label = Json.str(record, "entity_label", "");
+        String role = Json.str(record, "role", "");
+        String entity = Json.str(record, "entity_id", "");
+        return (storyTitle + " " + label + " " + entity + " " + role + " " + filename.replace('_', ' ')).trim();
+    }
+
+    private static void applyBundledSemanticMetadata(Item it, String filmId, String filename,
+            Map<String, Object> record, boolean autoAssign) {
+        it.setMeta("bundledFilm", filmId);
+        it.setMeta("sourceFilename", originalBundledFilename(filename));
+        it.setMeta("assetRole", Json.str(record, "role", "unclassified_reference"));
+        it.setMeta("entityId", Json.str(record, "entity_id", ""));
+        it.setMeta("semanticConfidence", record == null ? "0" : String.valueOf(record.get("confidence")));
+        it.setMeta("autoAssign", autoAssign ? "1" : "0");
+        it.setMeta("reviewRequired", autoAssign ? "0" : "1");
+        it.setMeta("view", Json.str(record, "view", ""));
+    }
+
+    /** Re-label only untouched auto-generated names; preserve user renames, notes and explicit corrections. */
+    private boolean migrateBundledReferenceLabels(String[][] films) {
+        boolean changed = false;
+        for (String[] film : films) {
+            String filmId = film[0], storyTitle = film[1];
+            String assetDir = "film_library/" + filmId + "/stills";
+            String[] files;
+            try { files = ctx.getAssets().list(assetDir); } catch (IOException e) { files = null; }
+            if (files == null) continue;
+            java.util.Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
+            Map<String, Map<String, Object>> semantic = bundledSemantics(filmId);
+            int seq = 0;
+            for (String name : files) {
+                String lower = name.toLowerCase(java.util.Locale.ROOT);
+                if (!(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp"))) continue;
+                if (lower.contains("contact_sheet") || lower.contains("montage") || lower.contains("contact-sheet")) continue;
+                seq++;
+                Map<String, Object> record = semantic.get(originalBundledFilename(name));
+                if (record == null) continue;
+                String oldPrefix = storyTitle + " reference " + seq;
+                String newPrefix = semanticLabel(record, oldPrefix);
+                if (newPrefix.equals(oldPrefix)) continue;
+                for (Item it : items) {
+                    if (!filmId.equals(it.meta("bundledFilm")) || !it.name.startsWith(oldPrefix)) continue;
+                    String suffix = it.name.substring(oldPrefix.length());
+                    if (suffix.length() > 0 && Character.isDigit(suffix.charAt(0))) continue; // reference 1 must not match reference 10
+                    it.name = newPrefix + suffix;
+                    if (suffix.length() == 0) it.kind = Json.str(record, "library_kind", it.kind);
+                    it.tags = (it.tags + " " + semanticTags(storyTitle, originalName, record)).trim();
+                    applyBundledSemanticMetadata(it, filmId, originalName, record, semanticAutoAssign(record));
+                    changed = true;
+                }
+            }
+        }
+        if (changed) save();
+        return changed;
     }
 
     /** Story-specific reference images shipped in the APK and exposed as read-only library items. */
