@@ -608,10 +608,9 @@ public final class FilmJob implements Runnable {
             check();
             // the director's manual (V): the mix checked for missing dialogue, gaps and clipping
             audioCheck(film, mix, lineFiles);
-            // Human QC (protocol pipeline step 4): the animatic and the first frame of every shot, checked by the user
-            // before the film is made; their fixes are applied, then the film is made
-            if (Prefs.humanQc(ctx) && !remake) humanQc(film, art, dir, ed, tmp, mix);
-            else if (remake) film.shotList += "\nHUMAN QC: a remake with your change — the first frames approved with the last film stand.\n";
+            // Automatic shot conference replaces the former user-by-user QC pause.
+            // Each rendered shot is reviewed by the Reader, Technical Director and Editor; the Director decides last.
+            automaticQc(film, art, dir, ed, tmp);
             // pipeline step 6: every shot played frame by frame at check size (the frames seen one by one at 0.25x
             // speed); a shot that boils or shakes has its motion cut by 80% and is played again from the same first frame
             finalCheck(film, art, ed);
@@ -878,6 +877,140 @@ public final class FilmJob implements Runnable {
             g.release();
             bmp.recycle();
         }
+    }
+
+    /**
+     * Every shot gets a rendered keyframe, three independent specialist calls and a final Director decision.
+     * Rejected shots receive bounded camera/motion repairs and are rendered/reviewed again. Offline mode uses a
+     * deterministic image-integrity gate and records that semantic/identity review was unavailable.
+     */
+    private void automaticQc(Film film, Art art, Director dir, Edits ed, File tmp) throws IOException {
+        File qd = new File(tmp, "automatic_qc");
+        if (!qd.exists() && !qd.mkdirs()) throw new IOException("Cannot create automatic QC directory.");
+        int[] size = ed.size();
+        int w = 320, h = Math.max(120, Math.round(320f * size[1] / size[0])) & ~1;
+        Bitmap bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
+        AndroidGfx g = new AndroidGfx(bmp, 4);
+        Renderer renderer = new Renderer(film, art);
+        com.tarun.kahani.core.FilmLook look = new com.tarun.kahani.core.FilmLook(w, h);
+        com.tarun.kahani.core.FilmLook.Params lookParams = new com.tarun.kahani.core.FilmLook.Params();
+        int[] pixels = new int[w * h];
+        Cloud cloud = Prefs.online(ctx) ? Prefs.cloud(ctx) : null;
+        boolean visionEnabled = cloud != null;
+        String visionFallback = "";
+        int approved = 0, repaired = 0;
+        try {
+            int count = film.shots.size();
+            for (int i = 0; i < count; i++) {
+                check();
+                Film.Shot shot = film.shots.get(i);
+                String intent = shotIntent(shot);
+                String continuity = "Previous shot: " + (i > 0 ? shotIntent(film.shots.get(i - 1)) : "(opening shot)")
+                        + "\nCurrent shot: " + intent
+                        + "\nNext shot: " + (i + 1 < count ? shotIntent(film.shots.get(i + 1)) : "(final shot)")
+                        + "\nAsset/continuity notes: " + film.shotList;
+                String id = shot.id == null || shot.id.trim().isEmpty()
+                        ? String.format(java.util.Locale.US, "shot-%03d", i + 1) : shot.id;
+                boolean passed = false;
+                String lastReason = "";
+                for (int attempt = 0; attempt <= 2 && !passed; attempt++) {
+                    check();
+                    float t = shot.t + Math.min(0.25f, Math.max(0.05f, shot.dur * 0.1f));
+                    step("Automatic visual conference: shot " + (i + 1) + "/" + count + ", review " + (attempt + 1) + "…",
+                            0.30f + 0.005f * i / Math.max(1, count));
+                    renderer.render(g, t);
+                    bmp.getPixels(pixels, 0, w, 0, 0, w, h);
+                    look.apply(pixels, com.tarun.kahani.core.FilmLook.at(film, t, lookParams));
+                    bmp.setPixels(pixels, 0, w, 0, 0, w, h);
+                    java.io.ByteArrayOutputStream bytes = new java.io.ByteArrayOutputStream();
+                    if (!bmp.compress(Bitmap.CompressFormat.JPEG, 86, bytes)) throw new IOException("Could not encode shot review image.");
+                    byte[] jpeg = bytes.toByteArray();
+                    com.tarun.kahani.core.ShotVisualConference.Review review;
+                    if (visionEnabled) {
+                        try {
+                            review = com.tarun.kahani.core.ShotVisualConference.inspect(cloud, i + 1, intent, continuity, jpeg);
+                        } catch (IOException e) {
+                            visionEnabled = false;
+                            visionFallback = e.getMessage() == null ? e.getClass().getSimpleName() : e.getMessage();
+                            review = com.tarun.kahani.core.ShotVisualConference.inspectLocal(i + 1, intent, w, h, pixels);
+                        }
+                    } else {
+                        review = com.tarun.kahani.core.ShotVisualConference.inspectLocal(i + 1, intent, w, h, pixels);
+                    }
+                    String reportName = String.format(java.util.Locale.US, "shot_review_%03d.json", i + 1);
+                    project.write(reportName, review.reportJson == null ? review.summary() : review.reportJson);
+                    if (review.readyForRender) {
+                        passed = true;
+                        approved++;
+                        if (attempt > 0) repaired++;
+                        film.shotList += "\nAUTOMATIC SHOT CONFERENCE: " + id + " — PASS (review " + (attempt + 1) + "/3). " + review.summary() + "\n";
+                        if (review.offlineFallback) film.shotList += "  OFFLINE LIMITATION: semantic, acting and identity review was not available; deterministic image-integrity checks only.\n";
+                        break;
+                    }
+                    lastReason = review.summary();
+                    if (attempt == 2) break;
+                    int[] candidates = automaticFixCandidates(review, attempt);
+                    String applied = "";
+                    for (int fix : candidates) {
+                        applied = dir.fixShot(i, fix);
+                        if (applied != null && !applied.isEmpty()) break;
+                    }
+                    if (applied == null || applied.isEmpty()) {
+                        lastReason += " No supported automatic camera/motion repair applies to this shot.";
+                        break;
+                    }
+                    film.shotList += "\nAUTOMATIC SHOT REPAIR: " + id + " — " + applied + " (after rejection: " + lastReason + ").\n";
+                }
+                if (!passed) {
+                    film.shotList += "\nAUTOMATIC SHOT CONFERENCE: " + id + " — BLOCKED after automatic repairs: " + lastReason + "\n";
+                    throw new IOException("Automatic visual conference could not approve " + id + " after repair attempts: " + lastReason);
+                }
+            }
+        } finally {
+            g.release();
+            bmp.recycle();
+        }
+        film.shotList += "\nAUTOMATIC SHOT CONFERENCE SUMMARY: " + approved + "/" + film.shots.size()
+                + " shots approved; " + repaired + " repaired and re-reviewed; no human shot approval was requested.\n";
+        if (visionFallback.length() > 0) film.shotList += "VISION SERVICE FALLBACK: " + visionFallback + "; deterministic checks used from that point onward.\n";
+        if (!visionEnabled) film.shotList += "QUALITY LIMITATION: online vision review unavailable; deterministic checks cannot verify identity, story meaning or acting quality.\n";
+    }
+
+    private static String shotIntent(Film.Shot s) {
+        if (s == null) return "";
+        StringBuilder b = new StringBuilder();
+        if (s.subject != null && !s.subject.isEmpty()) b.append("subject=").append(s.subject).append("; ");
+        if (s.action != null && !s.action.isEmpty()) b.append("action=").append(s.action).append("; ");
+        if (s.purpose != null && !s.purpose.isEmpty()) b.append("purpose=").append(s.purpose).append("; ");
+        if (s.emotionalPurpose != null && !s.emotionalPurpose.isEmpty()) b.append("emotion=").append(s.emotionalPurpose).append("; ");
+        if (s.spoken != null && !s.spoken.isEmpty()) b.append("dialogue=").append(s.spoken).append("; ");
+        if (s.sound != null && !s.sound.isEmpty()) b.append("sound=").append(s.sound).append("; ");
+        if (s.fixed != null && !s.fixed.isEmpty()) b.append("previous repair=").append(s.fixed);
+        return b.toString();
+    }
+
+    private static int[] automaticFixCandidates(com.tarun.kahani.core.ShotVisualConference.Review r, int attempt) {
+        String t = (r.summary() + " " + r.readerNotes + " " + r.editorNotes + " " + r.technicalNotes + " " + r.directorResolution)
+                .toLowerCase(java.util.Locale.ROOT);
+        int first = com.tarun.kahani.core.Director.FIX_CALM;
+        if (containsAny(t, "cropped", "cut off", "out of frame", "headroom", "feet", "framing", "edge of frame"))
+            first = com.tarun.kahani.core.Director.FIX_WIDER;
+        else if (containsAny(t, "too small", "face fill", "eyes", "mouth", "lip-sync", "expression", "close-up"))
+            first = com.tarun.kahani.core.Director.FIX_CLOSER;
+        else if (containsAny(t, "listener", "reaction", "other character"))
+            first = com.tarun.kahani.core.Director.FIX_LISTENER;
+        else if (containsAny(t, "motion", "shake", "boil", "flicker", "unstable", "morph", "floating"))
+            first = com.tarun.kahani.core.Director.FIX_CALM;
+        int[] base = {first, com.tarun.kahani.core.Director.FIX_CALM, com.tarun.kahani.core.Director.FIX_WIDER,
+                com.tarun.kahani.core.Director.FIX_CLOSER, com.tarun.kahani.core.Director.FIX_LISTENER};
+        int[] out = new int[base.length];
+        for (int i = 0; i < base.length; i++) out[i] = base[(i + attempt) % base.length];
+        return out;
+    }
+
+    private static boolean containsAny(String text, String... words) {
+        for (String word : words) if (text.contains(word)) return true;
+        return false;
     }
 
     private void humanQc(Film film, Art art, Director dir, Edits ed, File tmp, File mix) throws IOException {

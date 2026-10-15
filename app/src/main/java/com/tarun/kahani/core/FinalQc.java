@@ -80,7 +80,7 @@ public final class FinalQc {
             b.append(String.format(Locale.US, "• Floating: %d of %d feet positions drawn above the ground line (every standing character is drawn on "
                     + "the floor line with its contact shadow)%n", floating, feetChecked));
             b.append("• Finger count: drawn characters have fixed drawn hands; picture characters keep the hands of their own picture (AI pictures "
-                    + "are asked for five fingers or hidden hands, and every picture was shown in Human QC)\n");
+                    + "are asked for five fingers or hidden hands, and automatic visual conference or offline image-integrity review is recorded per shot)\n");
             b.append(String.format(Locale.US, "• Largest change between two frames in a row: %.1f per cell%s (limit %.0f); largest share of the frame "
                     + "changed: %.0f%% (limit %.0f%%)%n", worstBoil, worstAt.isEmpty() ? "" : " at " + worstAt, BOIL, worstMoved * 100, SHAKE * 100));
             for (String n : notes) b.append("  - ").append(n).append('\n');
