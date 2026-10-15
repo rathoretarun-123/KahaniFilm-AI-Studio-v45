@@ -3963,6 +3963,20 @@ public final class Renderer {
         });
     }
 
+    /** Where a point of the picture (u, v in 0..1) lands in this frame's body mesh (bilinear between the cell corners). */
+    private final float[] meshPt = new float[2];
+    private float[] meshPoint(Rig.Frame rf, float u, float v) {
+        float fc = Math.max(0, Math.min(rf.cols, u * rf.cols)), fr = Math.max(0, Math.min(rf.rows, v * rf.rows));
+        int c0 = Math.min(rf.cols - 1, (int) fc), r0 = Math.min(rf.rows - 1, (int) fr);
+        float tu = fc - c0, tv = fr - r0;
+        int stride = rf.cols + 1;
+        int i00 = (r0 * stride + c0) * 2, i01 = i00 + 2, i10 = ((r0 + 1) * stride + c0) * 2, i11 = i10 + 2;
+        float[] b = rf.body;
+        meshPt[0] = (b[i00] * (1 - tu) + b[i01] * tu) * (1 - tv) + (b[i10] * (1 - tu) + b[i11] * tu) * tv;
+        meshPt[1] = (b[i00 + 1] * (1 - tu) + b[i01 + 1] * tu) * (1 - tv) + (b[i10 + 1] * (1 - tu) + b[i11 + 1] * tu) * tv;
+        return meshPt;
+    }
+
     /** v39: picture drawings, with a living face, speaking frames, speaking with the jaw moving, blinks, feelings shown. */
     public static final java.util.concurrent.atomic.AtomicLong[] STAT = {new java.util.concurrent.atomic.AtomicLong(), new java.util.concurrent.atomic.AtomicLong(),
             new java.util.concurrent.atomic.AtomicLong(), new java.util.concurrent.atomic.AtomicLong(), new java.util.concurrent.atomic.AtomicLong(), new java.util.concurrent.atomic.AtomicLong(),
@@ -4097,6 +4111,13 @@ public final class Renderer {
             }
             g.imageMesh(bodyImg, rf.cols, rf.rows, rf.body);
             if (p.wet > 0.02f && sp.wetImg != null && !bare) { g.save(); g.setAlpha(Math.min(0.85f, p.wet)); g.imageMesh(sp.wetImg, rf.cols, rf.rows, rf.body); g.restore(); }
+            // v47.2: the rigid rod (a walking stick) hangs straight from where the hand holds it — the mesh carries
+            // the hand, the rod itself never bends or shortens
+            if (sp.rodImg != null && !bare) {
+                float[] hp = meshPoint(rf, sp.rodU, sp.rodV);
+                float rw = sp.rodW * w, rh = sp.rodH * h;
+                g.image(sp.rodImg, hp[0] - rw / 2, hp[1], rw, rh);
+            }
             if (st.sit > 0.3f && !beast && p.body != Pose.LIE && p.seat >= 0 && p.seat != Film.SEAT_FLOOR) {
                 // v35: seated, the lap shades the shins just under the knees — the fold that says "sitting" in a
                 // front view; soft, over the picture's own width at the knees

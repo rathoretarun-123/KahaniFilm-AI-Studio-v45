@@ -54,6 +54,10 @@ public final class Art {
         public Sprite top;
         /** v41: of a side picture, the legs alone (below the hips), a little in the shade: the far leg of the stride. */
         public Object legImg;
+        /** v47.2: a rigid rod held in the picture (a stick, a staff), lifted out below the hand and drawn straight. */
+        public Object rodImg;
+        /** The rod's top centre and size as fractions of the picture. */
+        public float rodU, rodV, rodW, rodH;
         public transient Cutout.Result pixelsForSampling;
         /** Bones and face for moving the picture (null = moved as one piece). */
         public Rig rig;
@@ -449,6 +453,23 @@ public final class Art {
         r.pxRead = null;                                         // v34: the readings are done; the film draws the picture as it is
         Sprite s = new Sprite();
         s.w = r.w; s.h = r.h;
+        // v47.2: a rigid thing held in the picture (a walking stick, a staff, an umbrella's shaft) is lifted out of the
+        // picture below the hand and drawn straight by the renderer: the rig's mesh had bent बाबू's stick with his legs
+        if (!animal) {
+            int[] rod = findRod(r.px, r.w, r.h);
+            if (rod != null) {
+                int rx0 = rod[0], ry0 = rod[1], rx1 = rod[2], ry1 = rod[3];
+                int rw = rx1 - rx0 + 1, rh = ry1 - ry0 + 1;
+                int[] rp = new int[rw * rh];
+                for (int y = ry0; y <= ry1; y++) for (int x = rx0; x <= rx1; x++) {
+                    int i = y * r.w + x;
+                    if (rodMask[i]) { rp[(y - ry0) * rw + (x - rx0)] = r.px[i]; r.px[i] = 0; }
+                }
+                s.rodImg = L.create(rp, rw, rh);
+                s.rodU = (rx0 + rw / 2f) / r.w; s.rodV = ry0 / (float) r.h; s.rodW = rw / (float) r.w; s.rodH = rh / (float) r.h;
+            }
+            rodMask = null;
+        }
         s.img = L.create(r.px, r.w, r.h);
         Object[] mm = mips(L, r.px, r.w, r.h);
         s.imgHalf = mm[0]; s.imgQuarter = mm[1];
@@ -459,6 +480,79 @@ public final class Art {
         s.lid = r.skin;
         s.pixelsForSampling = r;
         return s;
+    }
+
+    /** The pixels of the rod found by findRod (set for the caller, then dropped). */
+    private static boolean[] rodMask;
+
+    /**
+     * v47.2: a rigid rod held in a cut-out figure — a thin, near-vertical run of opaque pixels standing apart from
+     * the body (a gap of background between them) from somewhere below the shoulders down to the ground. Returns its
+     * box {x0, y0, x1, y1} and leaves its pixels in rodMask, or null when there is none. A braid, a scarf's end or a
+     * sleeve never reaches the ground, so they are not taken; the part of the rod inside the hand stays with the body.
+     */
+    static int[] findRod(int[] px, int w, int h) {
+        if (w < 40 || h < 80) return null;
+        int maxW = Math.max(3, Math.round(w * 0.07f)), bottomMost = -1;
+        for (int y = h - 1; y >= 0 && bottomMost < 0; y--) for (int x = 0; x < w; x++) if ((px[y * w + x] >>> 24) > 128) { bottomMost = y; break; }
+        if (bottomMost < h * 0.5f) return null;
+        // per row: the widest opaque run (the body) and the thin runs apart from it
+        int[] rodL = new int[h], rodR = new int[h];
+        java.util.Arrays.fill(rodL, -1);
+        // the rod is followed row by row; a break of more than three rows ends a stretch, and the longest stretch
+        // that reaches the ground is the rod (a sandal's strap or a cuff near the feet makes short stretches of its own)
+        int rows = 0, firstRow = -1, lastRow = -1, bestFirst = -1, bestLast = -1, bestRows = 0;
+        for (int y = Math.round(h * 0.3f); y <= bottomMost; y++) {
+            int row = y * w, bestL = -1, bestR = -1, bestW = 0;
+            int x = 0;
+            int[] runL = new int[16], runR = new int[16]; int nr = 0;
+            while (x < w) {
+                while (x < w && (px[row + x] >>> 24) <= 128) x++;
+                if (x >= w) break;
+                int x0 = x;
+                while (x < w && (px[row + x] >>> 24) > 128) x++;
+                if (nr < 16) { runL[nr] = x0; runR[nr] = x - 1; nr++; }
+                if (x - x0 > bestW) { bestW = x - x0; bestL = x0; bestR = x - 1; }
+            }
+            int pickL = -1, pickR = -1;
+            if (nr >= 2 && bestW > 0) {
+                float prevCx = lastRow >= 0 && y - lastRow <= 3 ? (rodL[lastRow] + rodR[lastRow]) / 2f : Float.NaN;
+                float pickD = 1e9f;
+                for (int i = 0; i < nr; i++) {
+                    int rw = runR[i] - runL[i] + 1;
+                    if (runL[i] == bestL || rw > maxW) continue;
+                    int gap = runL[i] > bestR ? runL[i] - bestR : bestL - runR[i];
+                    if (gap < 3) continue;
+                    float cx = (runL[i] + runR[i]) / 2f;
+                    // while a stretch is being followed, the run nearest its last centre (never a jump of more than the
+                    // rod's width); starting one, the narrowest
+                    float d = Float.isNaN(prevCx) ? rw : Math.abs(cx - prevCx);
+                    if (!Float.isNaN(prevCx) && d > maxW) continue;
+                    if (d < pickD) { pickD = d; pickL = runL[i]; pickR = runR[i]; }
+                }
+            }
+            if (pickL < 0) continue;
+            if (lastRow >= 0 && y - lastRow > 3) {
+                if (rows > bestRows && lastRow >= bottomMost - h * 0.12f) { bestRows = rows; bestFirst = firstRow; bestLast = lastRow; }
+                rows = 0; firstRow = -1;
+            }
+            if (firstRow < 0) firstRow = y;
+            rodL[y] = pickL; rodR[y] = pickR; lastRow = y; rows++;
+        }
+        if (rows > bestRows && lastRow >= bottomMost - h * 0.12f) { bestRows = rows; bestFirst = firstRow; bestLast = lastRow; }
+        if (System.getProperty("kahani.rodDebug") != null) System.out.println("rod: first=" + bestFirst + " last=" + bestLast + " rows=" + bestRows + " bottom=" + bottomMost + " h=" + h + " maxW=" + maxW);
+        if (bestFirst < 0 || bestRows < h * 0.22f || bestRows < 0.7f * (bestLast - bestFirst + 1)) return null;
+        // the rod's own line: rows at its bottom that wander off it (a sandal's strap beside its tip) are not the rod
+        float meanCx = 0; int n = 0;
+        for (int y = bestFirst; y <= bestLast; y++) if (rodL[y] >= 0) { meanCx += (rodL[y] + rodR[y]) / 2f; n++; }
+        meanCx /= Math.max(1, n);
+        while (bestLast > bestFirst && (rodL[bestLast] < 0 || Math.abs((rodL[bestLast] + rodR[bestLast]) / 2f - meanCx) > 0.75f * maxW)) { rodL[bestLast] = -1; bestLast--; }
+        int x0 = w, x1 = -1;
+        for (int y = bestFirst; y <= bestLast; y++) if (rodL[y] >= 0) { x0 = Math.min(x0, rodL[y]); x1 = Math.max(x1, rodR[y]); }
+        if (x1 - x0 + 1 > maxW * 3) return null;             // a rod leans a little; a sleeve or a sash wanders
+        rodMask = new boolean[w * h];
+        for (int y = bestFirst; y <= bestLast; y++) if (rodL[y] >= 0) for (int x = rodL[y]; x <= rodR[y]; x++) rodMask[y * w + x] = true;
+        return new int[]{x0, bestFirst, x1, bestLast};
     }
 
     /**

@@ -433,7 +433,7 @@ public class MainActivity extends Activity {
 
         String acc = Prefs.account(this);
         String ver;
-        try { ver = "v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Throwable ignored) { ver = "v47"; }
+        try { String vn = getPackageManager().getPackageInfo(getPackageName(), 0).versionName; ver = vn == null ? "v47" : "v" + vn; } catch (Throwable ignored) { ver = "v47"; }
         LinearLayout foot = Ui.row(this);
         foot.setPadding(Ui.dp(this, 18), Ui.dp(this, 10), Ui.dp(this, 12), 0);
         foot.addView(Ui.text(this, ver + "  ·  " + (acc.length() > 0 ? "👤 " + acc : "not signed in"), 12, Ui.SUB, false),
