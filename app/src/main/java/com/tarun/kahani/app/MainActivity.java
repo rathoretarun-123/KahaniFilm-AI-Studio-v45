@@ -490,17 +490,22 @@ public class MainActivity extends Activity {
         Prefs.put(this, "angles.target", tgt);
         Prefs.put(this, "angles.from", from == null ? "" : from);
         Prefs.put(this, "angles.project", project == null ? "" : project.dir.getAbsolutePath());
-        final boolean more = tgt.startsWith("angles:char:") || tgt.startsWith("angles:scene:");
-        final String[] optsAll = {"🖼  Photos / gallery — up to 18 at once", "📁  Files (Downloads, WhatsApp…) — up to 18", "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
+        final boolean characterTarget = tgt.startsWith("angles:char:");
+        final boolean more = characterTarget || tgt.startsWith("angles:scene:");
+        final int uploadLimit = maxAnglePictures(tgt);
+        final String[] optsAll = {"🖼  Photos / gallery — up to " + uploadLimit + " at once", "📁  Files (Downloads, WhatsApp…) — up to " + uploadLimit, "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
         final String[] opts = more ? optsAll : java.util.Arrays.copyOf(optsAll, optsAll.length - 1);
         // v38: the explanation and the choices as buttons in one view — a dialog with both a message and a list of
         // items shows only the message on a phone (the choices were never seen: "a pop-up with no option to upload")
         final AlertDialog[] dlg = new AlertDialog[1];
         LinearLayout box = Ui.column(this);
         box.setPadding(Ui.dp(this, 16), Ui.dp(this, 8), Ui.dp(this, 16), Ui.dp(this, 8));
-        box.addView(Ui.text(this, "Upload up to 18 reference images for this character or place: one full-front, one full-back, two side views, two three-quarter views, and up to ten additional images. "
+        String intakeGuidance = characterTarget
+                ? "Upload up to 18 images for this character. Recommended: one full-front, one full-back, two side views, two three-quarter views, plus up to ten 3×2 pose/expression/activity sheets. "
+                : "Upload up to 10 images for this place, background, prop, or object. Single views and clear 3×2 contact sheets are both supported. ";
+        box.addView(Ui.text(this, intakeGuidance
                 + "For contact sheets, use a clear grid of up to 3 columns × 2 rows; the director splits panels into individual pictures when it can identify them. "
-                + "For individual uploads, use this order where practical: front, back, side 1, side 2, three-quarter 1, three-quarter 2, then extras. The director also analyses each image rather than relying only on position. "
+                + "For individual character views, use this order where practical: front, back, side 1, side 2, three-quarter 1, three-quarter 2, then extras. The director analyses each image rather than relying only on position. "
                 + "References saved to the private library can be reused in future films. If an element cannot be identified confidently during production, pause and request a clearer reference instead of guessing. " + what + ".", 13, Ui.SUB, false));
         for (int i = 0; i < opts.length; i++) {
             final int w = i;
@@ -520,7 +525,7 @@ public class MainActivity extends Activity {
     /** v38: what each choice of the angles dialog does (0 gallery, 1 files, 2 the camera, 3 the library, 4 the internet / AI). */
     private void angleChoice(int w, final String tgt, final String what) {
         target = "angles";
-        if (w == 0) pickPhotos(REQ_ANGLES, MAX_ANGLE_PICTURES);
+        if (w == 0) pickPhotos(REQ_ANGLES, maxAnglePictures(tgt));
         else if (w == 1) pick("image/*", REQ_ANGLES, true);
         else if (w == 2) camera();
         else if (w == 4) {
@@ -742,6 +747,13 @@ public class MainActivity extends Activity {
      */
     /** Reference upload contract: front + back + two sides + two three-quarter views + up to ten extras. */
     static final int MAX_ANGLE_PICTURES = 18;
+    static final int MAX_OTHER_REFERENCE_PICTURES = 10;
+
+    /** Character intake has a larger allowance; places and props are limited to ten source images per batch. */
+    public static int maxAnglePictures(String target) {
+        return target != null && target.startsWith("angles:char:")
+                ? MAX_ANGLE_PICTURES : MAX_OTHER_REFERENCE_PICTURES;
+    }
 
     /**
      * v39: the chosen pictures, each read from the phone when it is used (once, in order) — the list holds the
@@ -3047,12 +3059,12 @@ public class MainActivity extends Activity {
             List<Uri> uris = new ArrayList<Uri>();
             if (data.getClipData() != null) for (int i = 0; i < data.getClipData().getItemCount(); i++) uris.add(data.getClipData().getItemAt(i).getUri());
             else if (data.getData() != null) uris.add(data.getData());
-            // Reference upload contract: at most 18 images per character/place batch,
-            // each read only when the director comes to it — a hundred photos are never in memory together
-            if (uris.size() > MAX_ANGLE_PICTURES) { toast("The first " + MAX_ANGLE_PICTURES + " pictures are used"); uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES)); }
             final String tgt = anglesTarget != null ? anglesTarget : Prefs.get(this, "angles.target", "").length() > 0 ? Prefs.get(this, "angles.target", "") : null;
             if (tgt == null) { toast("Please tap the angles button again and choose the pictures"); return; }
             if (uris.isEmpty()) { toast("No picture was chosen"); return; }
+            int limit = maxAnglePictures(tgt);
+            // Enforce the same per-target cap for the gallery and the document picker.
+            if (uris.size() > limit) { toast("The first " + limit + " pictures are used for this target"); uris = new ArrayList<Uri>(uris.subList(0, limit)); }
             UriPictures up = new UriPictures(getContentResolver(), uris);
             up.act = this;
             saveAngles(tgt, up);
