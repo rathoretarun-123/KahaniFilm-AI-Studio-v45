@@ -254,7 +254,6 @@ public final class Library {
                     String ext = lower.endsWith(".webp") ? ".webp" : lower.endsWith(".png") ? ".png" : ".jpg";
                     Item it = addBytes(PIC, kind, label, semanticTags(storyTitle, originalName, record), data, ext, source);
                     applyBundledSemanticMetadata(it, filmId, originalName, record, autoAssign);
-                    save();
                 } else {
                     for (Item it : split) {
                         it.tags = (it.tags + " " + semanticTags(storyTitle, originalName, record)).trim();
@@ -264,7 +263,10 @@ public final class Library {
                 }
             }
         }
-        if (importedFiles > 0) prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
+        if (importedFiles > 0) {
+            save();
+            prefs.edit().putBoolean("bundledFilmReferencesV2", true).apply();
+        }
     }
 
     /** Maps the manifest's original upload filename to its provisional, reviewed semantic record. */
