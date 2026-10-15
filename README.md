@@ -11,6 +11,15 @@ push; download the **KahaniFilm-v47-apk** artifact from the latest green run und
 
 ## New in v47.3 (16 October 2026, before dawn)
 
+**Where the APK is (16 Oct 2026, 05:15 IST):** Actions → "Build KahaniFilm APK" → the newest run on branch `ccr-a5fc4eef-d2p2nm`
+(https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/actions?query=branch%3Accr-a5fc4eef-d2p2nm) → artifact **KahaniFilm-v47-apk**
+(also `KahaniFilm-debug-apk`). The APK is built, verified and uploaded by every run before the tests run, so it is there whether the
+test job is green or red. **Honest state of CI:** the build and the APK verification pass; the test job is red on exactly one of its
+126 tests, `AppTest.godsDemonsAndVanarasAreStagedWell` (a staging check of a Durga/Ravana sample story — 125 pass on CI, and the
+38-test pure-JVM suite passes locally); its assertion message could not be read from this session (the job log is behind a storage
+host the session cannot reach), so it stays open for the morning. Nothing in it touches the three films' scripts or the studio.
+
+
 - **Falls, blood, death, kneeling — as the script says.** One who falls and then bleeds or dies stays down for it (he used to get up first). A picture's rig now really kneels (thighs on the knees, shins folded under, eased in and out), a smiling picture's mouth closes into grief, and a shot with someone lying, kneeling or on the floor keeps the ground in the frame.
 - **Rigid and soft things.** `core/Rigidity.java` — ~200 rigid things (sticks, tools, weapons, vessels, furniture, vehicles, wood/stone/metal) and ~120 soft ones (cloth, rope, hair, flags, water, smoke) in Hindi, Hinglish and English; rigid things are drawn straight and never bent, soft ones move through the mesh; the director writes the story's ledger into the film's notes.
 - **Reference frames and clips on the Studio page.** Up to 5 full frames and 2 clips per film, apart from the story's pictures: the finish is lifted towards their light and the quality check compares every frame with them.

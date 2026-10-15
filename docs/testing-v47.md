@@ -285,3 +285,12 @@ Pure-JVM suite on the final classes: see `jvm_tests3.log` in the session record 
 its own timeout (the 100,000-pass dashboard soak and the 3 × 1,000-pass story soak); on CI the soaks now run 3,000 and 3 × 25 passes
 (`CI` set), the full counts stay the default locally and on demand (`-Dkahani.dashboard.passes`, `-Dkahani.story.passes`), and the job
 has 70 minutes. The 1,000-pass-per-story and 100,000-pass dashboard runs of v47.2 (§5.4) stand as the record.
+
+### 6.5 CI at handoff (05:15 IST)
+
+Runs 38814920663, 38817231650, 38820393638, 38823354507 (f37f538 … 8de1d10): **Build APK, Verify APK, Upload APK — green** every time;
+the test job — `126 tests completed, 1 failed, 23 skipped`, the one being `AppTest > godsDemonsAndVanarasAreStagedWell` (Robolectric; it
+also failed on b3af94e before any v47.2/v47.3 staging change, so it comes from the v47 work earlier in the day). The assertion text is not
+readable from the session (job logs live on a storage host the container cannot reach); the workflow now names failing tests as
+annotations so the next run shows which assertion it is. The 45-minute timeout that cancelled the runs between 15:15 and 16:33 UTC is
+fixed (CI-sized soaks, 70 minutes).
