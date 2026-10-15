@@ -31,6 +31,10 @@ public class AakhiriChaiDesktopRenderTest {
         Art art = ReferenceArtLoader.load("aakhiri_chai", story, assets);
         assertTrue("real character reference sprites loaded: " + art.sprites.size(), art.sprites.size() >= 3);
         assertTrue("real location backgrounds loaded: " + art.scenes.size(), art.scenes.size() >= Math.min(3, story.scenes.size()));
+        File out = new File(System.getProperty("kahani.out", "build/frames"));
+        assertTrue(out.isDirectory() || out.mkdirs());
+        java.nio.file.Files.write(new File(out, "aakhiri_chai_reference_notes.txt").toPath(),
+                String.join("\n", art.notes).getBytes(java.nio.charset.StandardCharsets.UTF_8));
         // Phase one constructs the Film and dialogue state; direct() stages phase two into it.
         Film prepared = director.prepare();
         assertNotNull("director prepared a film", prepared);
@@ -42,8 +46,6 @@ public class AakhiriChaiDesktopRenderTest {
         int width = 640, height = 360;
         BufferedImage frame = new BufferedImage(width, height, BufferedImage.TYPE_INT_ARGB);
         AwtGfx gfx = new AwtGfx(frame);
-        File out = new File(System.getProperty("kahani.out", "build/frames"));
-        assertTrue(out.isDirectory() || out.mkdirs());
         int samples = 0, nonBlank = 0;
         for (float time = 0.1f; time < film.duration; time += 0.5f) {
             Graphics2D clear = frame.createGraphics();
