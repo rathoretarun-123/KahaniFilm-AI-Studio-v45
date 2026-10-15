@@ -55,6 +55,9 @@ public final class Library {
      * The one library of the app. Screens and the background film maker share it, so nothing added in one place
      * can ever be overwritten by another (everything is saved on the phone at once and stays after closing).
      */
+    /** v47: a fresh-start forgets the in-memory library so the next get() rescans the empty folder. */
+    public static synchronized void reset() { shared = null; }
+
     public static synchronized Library get(Context c) {
         if (shared == null) shared = new Library(c);
         return shared;

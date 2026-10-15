@@ -390,37 +390,37 @@ public class MainActivity extends Activity {
         project = null;
         LinearLayout body = page(S_HOME, "🎬 Kahani Film", false);
         String acc = Prefs.account(this);
+        // v47: a slim one-row header — version + user, no clutter. The version is the proof the user is on the newest build.
         LinearLayout top = Ui.row(this);
         top.setPadding(Ui.dp(this, 16), Ui.dp(this, 4), Ui.dp(this, 12), 0);
         top.setGravity(Gravity.CENTER_VERTICAL);
-        TextView who = Ui.text(this, acc.length() > 0 ? "👤 " + acc : "👤 Not signed in", 14, Ui.SUB, false);
-        top.addView(who, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        String ver = "";
+        try { ver = "v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Throwable ignored) { ver = "v47"; }
+        top.addView(Ui.text(this, ver + "   " + (acc.length() > 0 ? "👤 " + acc : "not signed in"), 13, Ui.SUB, false),
+                new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         top.addView(Ui.small(this, acc.length() > 0 ? "Log out" : "Sign in", Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) { if (Prefs.account(MainActivity.this).length() > 0) logout(); else login(); }
         }));
         body.addView(top);
 
+        // v47: one hero card, one primary action. Everything else is a small row below.
         LinearLayout hero = Ui.card(this);
-        hero.addView(Ui.text(this, "Make a cartoon film from your story", 18, Ui.TEXT, true));
-        hero.addView(Ui.text(this, "1. Paste your story   2. (Optional) add pictures and voices   3. Tap ‘Make film’", 15, Ui.SUB, false));
+        hero.addView(Ui.text(this, "Make an animated film from your story", 18, Ui.TEXT, true));
+        hero.addView(Ui.text(this, "Paste the story, add any references, tap Make film.", 14, Ui.SUB, false));
         hero.addView(Ui.button(this, "➕  New film", Ui.PRIMARY, new View.OnClickListener() {
             public void onClick(View v) { project = Project.create(MainActivity.this); showStory(); }
         }));
-        hero.addView(Ui.button(this, "📖  Example: The Two Princesses of Ratnagarh", Ui.BLUE, new View.OnClickListener() {
+        LinearLayout r = Ui.row(this);
+        r.addView(Ui.small(this, "📖 Example", Ui.BLUE, new View.OnClickListener() {
             public void onClick(View v) { openSample(); }
         }));
-        LinearLayout r = Ui.row(this);
-        r.addView(Ui.small(this, "📚 tarunkahani Library", Ui.GREEN, new View.OnClickListener() {
+        r.addView(Ui.small(this, "📚 Library", Ui.GREEN, new View.OnClickListener() {
             public void onClick(View v) { showLibrary(); }
         }));
         r.addView(Ui.small(this, "⚙ Settings", Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) { showSettings(); }
         }));
         hero.addView(r);
-        // the library grows any time, film or no film (pictures, voices and sounds the director uses in every story)
-        hero.addView(Ui.button(this, "➕  Add pictures, voices or sounds to the library", Ui.PRIMARY_DARK, new View.OnClickListener() {
-            public void onClick(View v) { addToLibrary(); }
-        }));
         body.addView(hero);
 
         FilmJob job = FilmJob.current;
@@ -490,9 +490,8 @@ public class MainActivity extends Activity {
         Prefs.put(this, "angles.target", tgt);
         Prefs.put(this, "angles.from", from == null ? "" : from);
         Prefs.put(this, "angles.project", project == null ? "" : project.dir.getAbsolutePath());
-        final boolean more = tgt.startsWith("angles:char:") || tgt.startsWith("angles:scene:");
-        final String[] optsAll = {"🖼  Photos / gallery — up to 18 at once", "📁  Files (Downloads, WhatsApp…) — up to 18", "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
-        final String[] opts = more ? optsAll : java.util.Arrays.copyOf(optsAll, optsAll.length - 1);
+        // v47: every character, object and place gets the exact same five-option uploader — no distinction by kind
+        final String[] opts = {"🖼  Photos / gallery — up to 18 at once", "📁  Files (Downloads, WhatsApp…) — up to 18", "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
         // v38: the explanation and the choices as buttons in one view — a dialog with both a message and a list of
         // items shows only the message on a phone (the choices were never seen: "a pop-up with no option to upload")
         final AlertDialog[] dlg = new AlertDialog[1];
@@ -524,9 +523,11 @@ public class MainActivity extends Activity {
         else if (w == 1) pick("image/*", REQ_ANGLES, true);
         else if (w == 2) camera();
         else if (w == 4) {
-            // v33: the old chooser (a free picture from the internet, one made with AI) for a character or a place
+            // v33: the old chooser (a free picture from the internet, one made with AI) — v47 now for every kind
             String[] q = tgt.split(":", 4);
-            choosePicture((q[1].equals("char") ? "char:" : "scene:") + q[2], q.length > 3 ? q[3] : q[2]);
+            String kind = q.length > 1 ? q[1] : "char";
+            String prefix = kind.equals("char") ? "char:" : kind.equals("obj") || kind.equals("costume") ? "object:" : "scene:";
+            choosePicture(prefix + q[2], q.length > 3 ? q[3] : q[2]);
         }
         else {
             Picker pk = new Picker(MainActivity.this, library);
@@ -4742,7 +4743,46 @@ public class MainActivity extends Activity {
             }
         }));
         acc.addView(pr);
+        // v47: a clearly labelled fresh-start, so users who installed over an older version can wipe stale projects/library
+        acc.addView(Ui.small(this, "🧹 Fresh start — delete all films, library and settings", Ui.RED, new View.OnClickListener() {
+            public void onClick(View v) {
+                new AlertDialog.Builder(MainActivity.this).setTitle("Fresh start?")
+                        .setMessage("This deletes every film, every picture, voice and sound in your private library, and every setting. The app returns to its first-run state. Your phone's camera roll is not touched.")
+                        .setPositiveButton("🧹 Yes, fresh start", new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface d, int w) { freshStart(); }
+                        }).setNegativeButton("Cancel", null).show();
+            }
+        }));
         body.addView(acc);
+    }
+
+    /** v47: wipes projects, library and prefs — a clean slate so stale data from an older install cannot linger. */
+    private void freshStart() {
+        background("Wiping everything…", new Work() {
+            public Object run() throws Exception {
+                for (Project p : Project.all(MainActivity.this)) wipeDir(p.dir);
+                File libDir = new File(getFilesDir(), "library");
+                wipeDir(libDir);
+                File backup = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "tarunkahani");
+                wipeDir(backup);
+                getSharedPreferences("kahani", MODE_PRIVATE).edit().clear().commit();
+                return null;
+            }
+        }, new Done() {
+            public void done(Object r, Exception e) {
+                if (e != null) { toast("Could not finish: " + e.getMessage()); return; }
+                toast("✅ Everything wiped — a clean start");
+                Library.reset();
+                library = Library.get(MainActivity.this);
+                showHome();
+            }
+        });
+    }
+
+    private static void wipeDir(File f) {
+        if (f == null || !f.exists()) return;
+        if (f.isDirectory()) { File[] kids = f.listFiles(); if (kids != null) for (File k : kids) wipeDir(k); }
+        f.delete();
     }
 
     /** A one-line switch bound to a preference. */
