@@ -42,8 +42,10 @@ public final class BundledFilmAssetsTest {
         File a=new File(assets,"film_library/aakhiri_chai/stills");
         File b=new File(assets,"film_library/babu_ke_liye/stills");
         assertTrue(a.isDirectory()); assertTrue(b.isDirectory());
-        assertTrue("Aakhiri still count: "+images(a),images(a)>=60);
-        assertTrue("Babu still count: "+images(b),images(b)>=40);
+        assertEquals("Aakhiri original still count",77,images(a));
+        assertEquals("Babu original still count",53,images(b));
+        required("film_library/aakhiri_chai/stills/images__844207102_1792823265172287_6742015623914737483_n(1).webp");
+        required("film_library/babu_ke_liye/stills/stills__844475310_2261987061313010_6512905159236779041_n.webp");
         required("film_library/aakhiri_chai/manifest.json");
         required("film_library/babu_ke_liye/manifest.json");
     }
@@ -56,5 +58,14 @@ public final class BundledFilmAssetsTest {
         assertTrue("Tea-stall references must be labelled", manifest.contains("\"entity_id\": \"tea_stall\""));
         assertTrue("Ambiguous assets must remain review-required", manifest.contains("\"review_required\": true"));
         assertTrue("Only high-confidence assets are auto-assigned", manifest.contains("\"auto_assign\": true"));
+    }
+
+    @Test public void babuManifestRecordsOriginalReferencesAndMissingIsolatedProps() throws Exception {
+        String manifest = new String(Files.readAllBytes(required("film_library/babu_ke_liye/manifest.json").toPath()), StandardCharsets.UTF_8);
+        assertTrue("Babu character references must be labelled", manifest.contains("\"entity_id\": \"babu\""));
+        assertTrue("Girl character references must be labelled", manifest.contains("\"entity_id\": \"girl\""));
+        assertTrue("Old letter references must be labelled", manifest.contains("\"entity_id\": \"old_yellow_letter\""));
+        assertTrue("Mailbox must remain an explicit missing-asset dependency", manifest.contains("\"entity_id\": \"red_mailbox\""));
+        assertTrue("Uncertain props must remain review-required", manifest.contains("\"review_required\": true"));
     }
 }
