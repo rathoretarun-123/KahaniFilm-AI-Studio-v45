@@ -106,14 +106,30 @@ def main():
   if not n or n in seen_sample: continue
   seen_sample.add(n)
   put("app/src/main/assets/sample/"+n,png(480,360,301+len(synthetic),1,1,sc,thing),"synthetic")
- # Frequencies are calibrated against the app analyser: 230 Hz is read as ~260 Hz and overlaps the child range.
- for n,f in [("man.wav",170),("deep_slow.wav",125),("woman.wav",180),("child.wav",310)]:
+ # Deterministic, explicitly synthetic voice fixtures with distinct pitch, syllable rate and timbre.
+ # Harmonics plus mild pitch modulation avoid the subharmonic ambiguity of a pure sine in autocorrelation.
+ profiles=[
+  ("man.wav",170,2.0,2.0,0.42,[1.0,0.42,0.18,0.08]),
+  ("deep_slow.wav",125,1.0,0.5,0.015,[1.0,0.28,0.10,0.03]),
+  ("woman.wav",220,3.0,4.0,0.025,[1.0,0.58,0.34,0.18,0.08]),
+  ("child.wav",300,5.0,22.0,0.06,[1.0,0.66,0.42,0.25,0.12]),
+ ]
+ sr=16000;duration=3
+ for n,f0,syllables,vibrato,noise,harmonics in profiles:
   q=R/"voices"/n
   if not q.exists() or not q.stat().st_size:
    q.parent.mkdir(parents=True,exist_ok=True)
+   frames=[]
+   for k in range(sr*duration):
+    t=k/sr
+    phase=2*math.pi*(f0*t + vibrato/(2*math.pi*5)*(1-math.cos(2*math.pi*5*t)))
+    envelope=0.22+0.78*(0.5+0.5*math.sin(2*math.pi*syllables*t))**2
+    value=sum(a*math.sin((h+1)*phase) for h,a in enumerate(harmonics))*envelope
+    value+=noise*(0.6*math.sin(2*math.pi*1237*t)+0.4*math.sin(2*math.pi*1871*t))
+    frames.append(struct.pack("<h",int(max(-0.95,min(0.95,value*0.42))*32767)))
    with wave.open(str(q),"wb") as a:
-    a.setnchannels(1);a.setsampwidth(2);a.setframerate(16000)
-    a.writeframes(b"".join(struct.pack("<h",int(700*math.sin(2*math.pi*f*k/16000))) for k in range(16000)))
+    a.setnchannels(1);a.setsampwidth(2);a.setframerate(sr)
+    a.writeframes(b"".join(frames))
    synthetic.append("voices/"+n)
  absent=[p for p in ["tools/testdata/sheets38","tools/testdata/sheets40","tools/testdata/sheets40b"] if not (R/p).is_dir() or not any((R/p).iterdir())]
  manifest={"classification":"TEST FIXTURE INVENTORY — synthetic files are not film references",
