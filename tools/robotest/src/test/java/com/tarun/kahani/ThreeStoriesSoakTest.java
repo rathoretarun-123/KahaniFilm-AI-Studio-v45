@@ -31,11 +31,13 @@ public class ThreeStoriesSoakTest {
 
     @Test public void babuKeLiyeDirectsAThousandTimes() throws Exception { soak("babu_ke_liye", "babu_ke_liye_screenplay.txt", true); }
     @Test public void aakhiriChaiDirectsAThousandTimes() throws Exception { soak("aakhiri_chai", "aakhiri_chai_screenplay.txt", true); }
-    @Test public void aakhiriJodiDirectsAThousandTimes() throws Exception { soak("aakhiri_jodi", "../../../tools/testdata/aakhiri_jodi/aakhiri_jodi_screenplay.txt", false); }
+    @Test public void aakhiriJodiDirectsAThousandTimes() throws Exception { soak("aakhiri_jodi", "tools/testdata/aakhiri_jodi/aakhiri_jodi_screenplay.txt", false); }
 
     static void soak(String id, String screenplay, boolean pictures) throws Exception {
-        File assets = new File(System.getProperty("kahani.assets", "../../app/src/main/assets"));
-        File file = new File(assets, screenplay);
+        File assets = new File(System.getProperty("kahani.assets", "../../app/src/main/assets")).getAbsoluteFile();
+        // the repository root is four levels above app/src/main/assets; the third story lives in tools/testdata
+        File repo = assets.getParentFile().getParentFile().getParentFile().getParentFile();
+        File file = screenplay.startsWith("tools/") ? new File(repo, screenplay) : new File(assets, screenplay);
         assertTrue("screenplay exists: " + file, file.isFile());
         Story story = ScriptParser.parse(new String(Files.readAllBytes(file.toPath()), StandardCharsets.UTF_8));
         assertFalse(id + " has scenes", story.scenes.isEmpty());
