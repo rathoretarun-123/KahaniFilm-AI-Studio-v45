@@ -213,7 +213,17 @@ public class AppTest {
         System.out.println("HOME: " + home);
         assertTrue(home.toString().contains("New film"));
         assertTrue(home.toString().contains("Library"));
-        assertTrue("the home screen's library upload button (v21)", home.toString().contains("Add pictures, voices or sounds to the library"));
+        // v47.2: the dashboard is four tiles — new film, my films, library, settings — and the film list is its own screen
+        assertTrue("the films tile", home.toString().contains("My films"));
+        assertTrue("the settings tile", home.toString().contains("Settings"));
+        assertFalse("the old library upload button is gone from the dashboard (it lives in the library)", home.toString().contains("Add pictures, voices or sounds to the library"));
+        find(root, "My films").performClick();
+        idle();
+        List<String> films = texts(root, new ArrayList<String>());
+        assertTrue("the films screen shows the example", films.toString().contains("Example"));
+        a.onBackPressed();
+        idle();
+        assertTrue(texts(root, new ArrayList<String>()).toString().contains("New film"));
 
         for (String t : home) assertTrue("Hindi left in the home screen: " + t, !hasDevanagari(t) || t.contains("Ratnagarh") || t.contains("रत्नगढ़"));
         // new empty film -> story screen (clear button, platforms) -> back
@@ -3776,7 +3786,7 @@ public class AppTest {
         Project p = sampleProject();
         ActivityController<MainActivity> ac = Robolectric.buildActivity(MainActivity.class).setup();
         MainActivity a = ac.get();
-        String[] screens = {"showHome", "showStory", "showStudio", "showLines", "showLibrary", "showSettings"};
+        String[] screens = {"showHome", "showFilms", "showStory", "showStudio", "showLines", "showLibrary", "showSettings"};
         String[] deny = {"Make the film", "🎬 Make", "Make film", "Delete", "Clear", "✖", "Log out", "Logout", "Sign out", "Exit", "🧊", "Build all", "Record", "🎙  Record",
                 "Remove", "Reset", "Forget", "Uninstall", "Make the views", "📐 Make", "Restore", "Approve", "■", "Stop"};
         StringBuilder rep = new StringBuilder();

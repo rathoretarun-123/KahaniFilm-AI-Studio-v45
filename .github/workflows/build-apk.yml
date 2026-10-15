@@ -160,7 +160,8 @@ jobs:
             --tests com.tarun.kahani.ReviewProtocolTest \
             --tests com.tarun.kahani.ScreenplayNotesTest \
             --tests com.tarun.kahani.SeatContinuityTest \
-            --tests com.tarun.kahani.SheetPanelsTest
+            --tests com.tarun.kahani.SheetPanelsTest \
+            --tests com.tarun.kahani.DashboardSoakTest
       - name: Upload generated visual audit contact sheet
         if: always()
         uses: actions/upload-artifact@v4

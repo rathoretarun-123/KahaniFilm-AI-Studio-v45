@@ -89,7 +89,7 @@ public class MainActivity extends Activity {
     private String anglesTarget;
     private String anglesFrom;       // "make" when the angles were asked for from the make-film dialog (v25: the user comes back to it)
     static final int S_HOME = 0, S_STORY = 1, S_STUDIO = 2, S_FACE = 3, S_PROGRESS = 4, S_PLAYER = 5, S_LIBRARY = 6,
-            S_SETTINGS = 7, S_LINES = 8, S_LOGIN = 9, S_QC = 10;
+            S_SETTINGS = 7, S_LINES = 8, S_LOGIN = 9, S_QC = 10, S_FILMS = 11;
 
     private final Handler ui = new Handler(Looper.getMainLooper());
     private FrameLayout root;
@@ -215,6 +215,7 @@ public class MainActivity extends Activity {
             case S_STUDIO: case S_PLAYER: case S_QC: showStory(); break;
             case S_FACE: case S_LINES: showStudio(); break;
             case S_LIBRARY: case S_SETTINGS: if (project != null) showStory(); else showHome(); break;
+            case S_FILMS: showHome(); break;
             default: super.onBackPressed();
         }
     }
@@ -398,57 +399,94 @@ public class MainActivity extends Activity {
 
     // ================================================================== home (dashboard)
 
+    /**
+     * v47.2: the dashboard, rebuilt from scratch as four big tiles and nothing else. The old home was a card with a
+     * button row plus the whole film list inline; the user asked for something simpler and visibly different. The
+     * film list is now its own screen (showFilms). Every tile is one tap; the version and account sit in one quiet
+     * line at the bottom.
+     */
     private void showHome() {
         project = null;
-        LinearLayout body = page(S_HOME, "🎬 Kahani Film", false);
-        String acc = Prefs.account(this);
-        // v47: a slim one-row header — version + user, no clutter. The version is the proof the user is on the newest build.
-        LinearLayout top = Ui.row(this);
-        top.setPadding(Ui.dp(this, 16), Ui.dp(this, 4), Ui.dp(this, 12), 0);
-        top.setGravity(Gravity.CENTER_VERTICAL);
-        String ver = "";
-        try { ver = "v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Throwable ignored) { ver = "v47"; }
-        top.addView(Ui.text(this, ver + "   " + (acc.length() > 0 ? "👤 " + acc : "not signed in"), 13, Ui.SUB, false),
-                new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        top.addView(Ui.small(this, acc.length() > 0 ? "Log out" : "Sign in", Ui.SUB, new View.OnClickListener() {
-            public void onClick(View v) { if (Prefs.account(MainActivity.this).length() > 0) logout(); else login(); }
-        }));
-        body.addView(top);
-
-        // v47: one hero card, one primary action. Everything else is a small row below.
-        LinearLayout hero = Ui.card(this);
-        hero.addView(Ui.text(this, "Make an animated film from your story", 18, Ui.TEXT, true));
-        hero.addView(Ui.text(this, "Paste the story, add any references, tap Make film.", 14, Ui.SUB, false));
-        hero.addView(Ui.button(this, "➕  New film", Ui.PRIMARY, new View.OnClickListener() {
-            public void onClick(View v) { project = Project.create(MainActivity.this); showStory(); }
-        }));
-        LinearLayout r = Ui.row(this);
-        r.addView(Ui.small(this, "📖 Example", Ui.BLUE, new View.OnClickListener() {
-            public void onClick(View v) { openSample(); }
-        }));
-        r.addView(Ui.small(this, "📚 Library", Ui.GREEN, new View.OnClickListener() {
-            public void onClick(View v) { showLibrary(); }
-        }));
-        r.addView(Ui.small(this, "⚙ Settings", Ui.SUB, new View.OnClickListener() {
-            public void onClick(View v) { showSettings(); }
-        }));
-        hero.addView(r);
-        body.addView(hero);
+        LinearLayout body = page(S_HOME, "🎬 KahaniFilm", false);
 
         FilmJob job = FilmJob.current;
         if (job != null && !job.done && !job.failed && !job.cancelled) {
-            LinearLayout c = Ui.card(this);
-            c.addView(Ui.text(this, "⏳ A film is being made: " + job.project.name() + (job.paused ? " (paused)" : ""), 16, Ui.TEXT, true));
-            c.addView(Ui.text(this, job.stage + (job.eta().length() > 0 ? " · " + job.eta() : ""), 13, Ui.SUB, false));
             final Project jp = job.project;
-            c.addView(Ui.button(this, "🎬  Film being made — open", Ui.GREEN, new View.OnClickListener() {
+            tile(body, "⏳", "Film being made" + (job.paused ? " (paused)" : ""), jp.name() + " · " + job.stage, Ui.GREEN, new View.OnClickListener() {
                 public void onClick(View v) { project = jp; showProgress(); }
-            }));
-            body.addView(c);
+            });
         }
 
+        tile(body, "🎬", "New film", "Paste a story → animated film", Ui.PRIMARY, new View.OnClickListener() {
+            public void onClick(View v) { project = Project.create(MainActivity.this); showStory(); }
+        });
+        int n = Project.all(this).size();
+        tile(body, "🎞", "My films", n == 0 ? "None yet — the example is in here too" : n == 1 ? "1 film" : n + " films", Ui.PRIMARY_DARK, new View.OnClickListener() {
+            public void onClick(View v) { showFilms(); }
+        });
+        tile(body, "📚", "Library", "Pictures, voices and sounds, reused in every film", Ui.BLUE, new View.OnClickListener() {
+            public void onClick(View v) { showLibrary(); }
+        });
+        tile(body, "⚙", "Settings", "Keys, director switches, fresh start", Ui.SUB, new View.OnClickListener() {
+            public void onClick(View v) { showSettings(); }
+        });
+
+        String acc = Prefs.account(this);
+        String ver;
+        try { ver = "v" + getPackageManager().getPackageInfo(getPackageName(), 0).versionName; } catch (Throwable ignored) { ver = "v47"; }
+        LinearLayout foot = Ui.row(this);
+        foot.setPadding(Ui.dp(this, 18), Ui.dp(this, 10), Ui.dp(this, 12), 0);
+        foot.addView(Ui.text(this, ver + "  ·  " + (acc.length() > 0 ? "👤 " + acc : "not signed in"), 12, Ui.SUB, false),
+                new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        foot.addView(Ui.small(this, acc.length() > 0 ? "Log out" : "Sign in", Ui.SUB, new View.OnClickListener() {
+            public void onClick(View v) { if (Prefs.account(MainActivity.this).length() > 0) logout(); else login(); }
+        }));
+        body.addView(foot);
+    }
+
+    /** One dashboard tile: a coloured block with an icon, a title and one line under it. The whole tile is the button. */
+    private void tile(LinearLayout body, String icon, String title, String sub, int color, View.OnClickListener l) {
+        LinearLayout t = Ui.row(this);
+        t.setBackground(new android.graphics.drawable.RippleDrawable(android.content.res.ColorStateList.valueOf(0x33FFFFFF), Ui.round(color, Ui.dp(this, 18), 0, 0), null));
+        int p = Ui.dp(this, 18);
+        t.setPadding(p, p, p, p);
+        t.setClickable(true);
+        t.setOnClickListener(l);
+        TextView ic = Ui.text(this, icon, 30, 0xFFFFFFFF, false);
+        ic.setPadding(0, 0, Ui.dp(this, 16), 0);
+        t.addView(ic);
+        LinearLayout words = Ui.column(this);
+        TextView ti = Ui.text(this, title, 19, 0xFFFFFFFF, true);
+        words.addView(ti);
+        TextView s = Ui.text(this, sub, 13, 0xDDFFFFFF, false);
+        s.setMaxLines(2);
+        words.addView(s);
+        // the texts answer the tap too: a tap anywhere on the tile is the tile (and a test that finds the title works)
+        ic.setOnClickListener(l); ti.setOnClickListener(l); s.setOnClickListener(l);
+        t.addView(words, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(Ui.dp(this, 14), Ui.dp(this, 7), Ui.dp(this, 14), Ui.dp(this, 7));
+        body.addView(t, lp);
+    }
+
+    /** v47.2: the films, on their own screen — open, watch, delete — plus the bundled example. */
+    private void showFilms() {
+        project = null;
+        LinearLayout body = page(S_FILMS, "🎞 My films", true);
+        LinearLayout ex = Ui.card(this);
+        ex.addView(Ui.text(this, "📖 Example: The Two Princesses of Ratnagarh", 15, Ui.TEXT, true));
+        ex.addView(Ui.text(this, "A ready story with its pictures, to see the whole flow once.", 13, Ui.SUB, false));
+        ex.addView(Ui.small(this, "Open the example", Ui.BLUE, new View.OnClickListener() {
+            public void onClick(View v) { openSample(); }
+        }));
+        body.addView(ex);
         List<Project> ps = Project.all(this);
-        if (!ps.isEmpty()) heading(body, "My films");
+        if (ps.isEmpty()) {
+            LinearLayout none = Ui.card(this);
+            none.addView(Ui.text(this, "No films yet. Tap New film on the home screen to start one.", 14, Ui.SUB, false));
+            body.addView(none);
+            return;
+        }
         for (final Project p : ps) {
             LinearLayout c = Ui.card(this);
             final boolean made = p.film().exists();
@@ -463,7 +501,7 @@ public class MainActivity extends Activity {
             if (made) rr.addView(Ui.small(this, "▶ Watch", Ui.GREEN, new View.OnClickListener() {
                 public void onClick(View v) { project = p; showPlayer(); }
             }));
-            rr.addView(Ui.small(this, "🗑", Ui.RED, new View.OnClickListener() {
+            rr.addView(Ui.small(this, "🗑 Delete", Ui.RED, new View.OnClickListener() {
                 public void onClick(View v) { confirmDelete(p); }
             }));
             c.addView(rr);
@@ -1007,7 +1045,7 @@ public class MainActivity extends Activity {
     private void confirmDelete(final Project p) {
         new AlertDialog.Builder(this).setTitle("Delete?").setMessage("\"" + p.name() + "\" and its film will be deleted for good.")
                 .setPositiveButton("Yes, delete", new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface d, int w) { deleteDir(p.dir); showHome(); }
+                    public void onClick(DialogInterface d, int w) { deleteDir(p.dir); showFilms(); }
                 }).setNegativeButton("No", null).show();
     }
 
