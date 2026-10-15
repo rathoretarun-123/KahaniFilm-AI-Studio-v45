@@ -140,8 +140,9 @@ cutout-on-backdrop look remains.
 ## 3.1 Final verification
 The complete suite with every change (parser fix, real-reference render tests, `ReviewProtocolTest`,
 `ScreenplayNotesTest`): **BUILD SUCCESSFUL in 18 min 47 s — 93 passed, 0 failed, 23 skipped** (9 as before, 14
-BLOCKED on the missing original fixtures). CI run 240 on `ccr-d4cf81b4-42naj7` was triggered by hand and its
-result is recorded in the commit that follows this one.
+BLOCKED on the missing original fixtures). CI run 240 on `ccr-d4cf81b4-42naj7` (commit `5e13d5a`, triggered by hand):
+**success** — APK built, verified and uploaded (artifact `KahaniFilm-debug-apk`), the full regression step green,
+visual audit artifact 11966800091 uploaded. https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/actions/runs/38718703246
 
 ## 4. What is still not right / not done
 * The 14 identity tests are BLOCKED, not passing: they need the user's original fixture archives.
