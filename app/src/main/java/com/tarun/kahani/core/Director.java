@@ -566,8 +566,19 @@ public final class Director {
                     sh = new Film.Shot();
                     sh.t = c.t;
                     sh.size = ShotPlanner.sizeOf(c.zoom);
-                    sh.height = c.angle;
                     Film.Actor who = nearestTo(sg, c.cx, c.t + 0.1f);
+                    // v47.2: the action coverage had every camera at eye level (98% of all shots in the three test
+                    // films); the directing guide §5 wants the height to carry meaning. The first wide view of a
+                    // part looks slightly down on the place (scale, geography); a single on someone seated, kneeling
+                    // or lying looks slightly down on them (the audience stands over the seated). The renderer turns
+                    // the angle into depth parallax, so the tilt is seen, not only written in the shot list.
+                    if (c.angle == 0 && !c.place) {
+                        Film.Key ks = who == null ? null : who.stateAt(c.t + 0.1f);
+                        boolean low = ks != null && (ks.body == Pose.SIT || ks.body == Pose.KNEEL || ks.body == Pose.CROUCH || ks.body == Pose.LIE);
+                        if (i == 0 && sh.size <= ShotPlanner.WIDE) c.angle = -1;
+                        else if (low && sh.size >= ShotPlanner.MEDIUM && sh.size <= ShotPlanner.MCU) c.angle = -1;
+                    }
+                    sh.height = c.angle;
                     sh.subject = who == null ? Sets.label(sg.set) : who.c.shown();
                     Film.Sub talk = null;
                     for (Film.Sub sb : sg.subs) if (c.t + 0.1f >= sb.t0 && c.t + 0.1f < sb.t1) talk = sb;

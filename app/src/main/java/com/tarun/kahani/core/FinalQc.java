@@ -189,8 +189,10 @@ public final class FinalQc {
     static float[] steady(Film film, Film.Seg sg) {
         int si = film.segs.indexOf(sg);
         Film.Seg prev = si > 0 ? film.segs.get(si - 1) : null, next = si + 1 < film.segs.size() ? film.segs.get(si + 1) : null;
-        boolean dIn = prev != null && prev.type == Film.S_SCENE && sg.type == Film.S_SCENE;
-        boolean dOut = next != null && next.type == Film.S_SCENE && sg.type == Film.S_SCENE;
+        // v47.2: parts and bridge plates cross-dissolve into one another (Renderer.soft), so the steady part of any of
+        // them starts after the dissolve and runs to its end
+        boolean dIn = Renderer.soft(prev) && Renderer.soft(sg);
+        boolean dOut = Renderer.soft(next) && Renderer.soft(sg);
         return new float[]{sg.t0 + (dIn ? Renderer.DISSOLVE : Math.max(0, sg.fadeIn)) + 0.05f, sg.t1 - (dOut ? 0 : Math.max(0, sg.fadeOut)) - 0.05f};
     }
 

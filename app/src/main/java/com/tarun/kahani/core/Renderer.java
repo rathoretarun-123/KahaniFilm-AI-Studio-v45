@@ -54,34 +54,32 @@ public final class Renderer {
         if (s != null) {
             int si = film.segs.indexOf(s);
             Film.Seg prev = si > 0 ? film.segs.get(si - 1) : null, next = si + 1 < film.segs.size() ? film.segs.get(si + 1) : null;
-            // one scene melts into the next (a dissolve), like a film, instead of going through black
-            boolean dissolveIn = prev != null && prev.type == Film.S_SCENE && s.type == Film.S_SCENE && t - s.t0 < DISSOLVE;
-            boolean dissolveOut = next != null && next.type == Film.S_SCENE && s.type == Film.S_SCENE;
-            if (dissolveIn && s.transition != 0) {
-                // a dip: the last scene goes to black (time passes) or to white (magic, a dream, a memory) and the
-                // new one comes up out of it
+            // v47.2: one part melts into the next — a real cross-dissolve (the old picture under the new one coming
+            // up), the way the user's reference clips and every feature film change scene. The screen never goes
+            // through black between parts, nor around the bridge plate that establishes a new place; a dip to black
+            // is kept only where the script says time passes, a dip to white for magic, a dream or a memory. The
+            // title and the end card still fade from and to black.
+            boolean dissolveIn = soft(prev) && soft(s) && t - s.t0 < DISSOLVE;
+            boolean dissolveOut = soft(next) && soft(s);
+            if (dissolveIn && s.type == Film.S_SCENE && s.transition != 0) {
                 float u = (t - s.t0) / DISSOLVE;
                 int col = s.transition == 1 ? 0xFF000000 : 0xFFFFF8F0;
-                if (u < 0.5f) { drawScene(g, prev, t); g.color(Puppet.alpha(col, ease01(Math.min(1, u * 2)))); }
-                else { drawScene(g, s, t); g.color(Puppet.alpha(col, ease01(Math.min(1, (1 - u) * 2)))); }
+                if (u < 0.5f) { float keepFollow = followX; drawAny(g, prev, t); followX = keepFollow; g.color(Puppet.alpha(col, ease01(Math.min(1, u * 2)))); }
+                else { drawAny(g, s, t); g.color(Puppet.alpha(col, ease01(Math.min(1, (1 - u) * 2)))); }
                 g.rect(0, 0, vw, vh);
             } else if (dissolveIn) {
-                // a plain scene change: a quick dip through black (the last scene goes down, the new one comes up) —
-                // never two scenes drawn over each other
-                float u = (t - s.t0) / DISSOLVE;
-                if (u < 0.5f) { float keepFollow = followX; drawScene(g, prev, t); followX = keepFollow; g.color(Puppet.alpha(0xFF000000, ease01(Math.min(1, u * 2)))); }
-                else { drawScene(g, s, t); g.color(Puppet.alpha(0xFF000000, ease01(Math.min(1, (1 - u) * 2)))); }
-                g.rect(0, 0, vw, vh);
+                // the last part stays whole underneath; the new part is drawn over it with its alpha rising (every
+                // stroke of it multiplied, so nothing inside the new part pops in early)
+                float u = ease01((t - s.t0) / DISSOLVE);
+                float keepFollow = followX;
+                drawAny(g, prev, t);
+                followX = keepFollow;
+                if (u > 0.001f) { g.save(); g.setAlpha(u); drawAny(g, s, t); g.restore(); }
             } else {
-                switch (s.type) {
-                    case Film.S_TITLE: curSeg = null; drawTitle(g, s, t); break;
-                    case Film.S_CARD: curSeg = s; drawCard(g, s, t); break;
-                    case Film.S_END: curSeg = null; drawEnd(g, s, t); break;
-                    default: drawScene(g, s, t);
-                }
+                drawAny(g, s, t);
             }
             float a = 1f;
-            if (s.fadeIn > 0 && !dissolveIn && !(prev != null && prev.type == Film.S_SCENE && s.type == Film.S_SCENE)) a = Math.min(a, (t - s.t0) / s.fadeIn);
+            if (s.fadeIn > 0 && !dissolveIn && !(soft(prev) && soft(s))) a = Math.min(a, (t - s.t0) / s.fadeIn);
             if (s.fadeOut > 0 && !dissolveOut) a = Math.min(a, (s.t1 - t) / s.fadeOut);
             if (a < 1f) { g.color(Puppet.alpha(0xFF000000, 1f - Math.max(0, a))); g.rect(0, 0, vw, vh); }
         }
@@ -89,6 +87,19 @@ public final class Renderer {
     }
 
     static final float DISSOLVE = 1.0f;     // v33: a full second, eased (0.6 s read as a blink)
+
+    /** A part of the story or a bridge plate: the segments that dissolve into one another (not the title or the end). */
+    static boolean soft(Film.Seg x) { return x != null && (x.type == Film.S_SCENE || x.type == Film.S_CARD); }
+
+    /** Draws a segment of any type at time t (the title, a card or bridge plate, the end card, a part of the story). */
+    private void drawAny(Gfx g, Film.Seg s, float t) {
+        switch (s.type) {
+            case Film.S_TITLE: curSeg = null; drawTitle(g, s, t); break;
+            case Film.S_CARD: curSeg = s; drawCard(g, s, t); break;
+            case Film.S_END: curSeg = null; drawEnd(g, s, t); break;
+            default: drawScene(g, s, t);
+        }
+    }
 
     /** Renders one part on its own, outside the film's timeline (the thumbnail and the poster pages). */
     public void renderSeg(Gfx g, Film.Seg s, float t) {
