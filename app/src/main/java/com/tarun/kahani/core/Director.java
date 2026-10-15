@@ -9545,8 +9545,21 @@ public final class Director {
             comp = sp.c.shown() + " on the " + (st.facing > 0 ? "left" : "right") + " third, looking " + (st.facing > 0 ? "right" : "left") + " with room in front";
         }
         // camera height: a low camera makes them strong, a high one makes them small (§5)
-        if (height > 0) cy += h * 0.1f;
-        else if (height < 0) cy -= h * 0.12f;
+        // v47: in a conversation of unequal heights (a child and a grown-up, or a seated speaker to a standing listener)
+        // the eyeline is between them — a child or a seated speaker gets a slight low angle (they look up); a grown-up
+        // speaker to a child or to one who sits gets a slight high angle. The two reverse-angles then feel like a
+        // conversation and not two mug-shots at the same height
+        if (type != ShotPlanner.TWO_SHOT && height == 0 && to != null) {
+            Film.Key stTo = to.stateAt(t);
+            boolean spSeated = st.body == Pose.SIT || st.body == Pose.KNEEL || st.body == Pose.CROUCH;
+            boolean toSeated = stTo.body == Pose.SIT || stTo.body == Pose.KNEEL || stTo.body == Pose.CROUCH;
+            boolean spSmall = sp.look.isChild() || (spSeated && !toSeated);
+            boolean toSmall = to.look.isChild() || (toSeated && !spSeated);
+            if (spSmall && !toSmall) height = -1;
+            else if (toSmall && !spSmall) height = 1;
+        }
+        if (height > 0) cy += h * 0.08f;
+        else if (height < 0) cy -= h * 0.1f;
         if (emo == Pose.SCARED && sp.look.isChild() && height == 0) { height = -1; cy -= h * 0.1f; roll = -1.5f; }
         Film.Cam c = new Film.Cam(t, cx, cy, zoom, 0);
         c.roll = roll; c.angle = height; c.light = plan.light; c.still = move == ShotPlanner.STATIC;

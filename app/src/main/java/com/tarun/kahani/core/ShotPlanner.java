@@ -143,13 +143,20 @@ public final class ShotPlanner {
             // light: soft and warm for warmth, harder for conflict and fear
             q.light = emo == Pose.ANGRY || emo == Pose.EVIL || emo == Pose.SCARED || emo == Pose.PAIN ? 0.8f
                     : emo == Pose.HAPPY || emo == Pose.LAUGH || q.relation ? 0.15f : emo == Pose.SAD ? 0.55f : 0.4f;
-            // camera height
-            q.height = (emo == Pose.SCARED || emo == Pose.SAD) && raw[i] >= 0.55f ? -1
-                    : q.stage == PEAK && (emo == Pose.DETERMINED || emo == Pose.PROUD) ? 1 : 0;
-            // movement: the more important the performance, the simpler the camera
+            // v47: camera height carries emotion and the eyeline between characters of different heights (Pixar's own
+            // rule: a child looking up at a grown-up gets a low angle; the grown-up looking back at them gets a slight
+            // high angle). The caller (Director.camSingle) also lifts or lowers the camera when a seated character
+            // speaks to a standing one — this is the base.
+            q.height = (emo == Pose.SCARED || emo == Pose.SAD) && raw[i] >= 0.5f ? -1
+                    : q.stage == PEAK && (emo == Pose.DETERMINED || emo == Pose.PROUD || emo == Pose.ANGRY) ? 1
+                    : (emo == Pose.HAPPY || emo == Pose.LAUGH) && q.stage == PEAK && raw[i] >= 0.45f ? 1
+                    : (emo == Pose.CURIOUS || emo == Pose.SURPRISED || emo == Pose.SUSPICIOUS) && q.size >= CU ? -1
+                    : 0;
+            // movement: push in on realisation and key close-ups; pull back on release; drift on calm; still on peak
             if (q.stage == RELEASE) q.move = PULL_BACK;
             else if (q.realise && q.stage != PEAK) q.move = PUSH_IN;
-            else if (raw[i] >= 0.55f || q.stage == PEAK) q.move = STATIC;
+            else if (q.stage == PEAK && q.size >= CU && raw[i] >= 0.5f) q.move = PUSH_IN;    // v47: a slow push on the peak face
+            else if (raw[i] >= 0.6f || q.stage == PEAK) q.move = STATIC;
             else q.move = DRIFT;
             // the reaction is often more important than the line itself
             // more coverage (v22): a reaction shot from a moderate feeling on, not only from strong ones
