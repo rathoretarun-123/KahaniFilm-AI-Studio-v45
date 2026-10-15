@@ -228,11 +228,20 @@ public final class ScriptParser {
             buildAliases(story);      // the scenes are read knowing the names ("तारा अपनी LED क्लिप ठीक करते हुए: …")
             Story.Scene cur = null;
             int start = -1;
-            for (int i = firstScene; i <= lines.length; i++) {
-                Matcher m = i < lines.length ? SCENE.matcher(Txt.clean(lines[i])) : null;
-                if (i == lines.length || m.matches()) {
+            // v46: notes after the last scene ("निर्देशन और तकनीकी स्वीकृति:", "QC rules:") are the writer's
+            // instructions to the studio, never the last scene's action — "स्टिल्स का स्लाइडशो नहीं" built a
+            // playground slide, and "- Continuity निर्णय: …" became a speaking character
+            int end = lines.length;
+            for (int i = lines.length - 1; i > firstScene; i--) {
+                if (SCENE.matcher(Txt.clean(lines[i])).matches()) break;
+                if (productionNotesHeading(lines[i])) end = i;
+            }
+            for (int i = end; i < lines.length; i++) if (lines[i].trim().length() > 0) story.productionNotes.add(lines[i].trim());
+            for (int i = firstScene; i <= end; i++) {
+                Matcher m = i < end ? SCENE.matcher(Txt.clean(lines[i])) : null;
+                if (i == end || m.matches()) {
                     if (cur != null) parseSceneLines(story, cur, lines, start, i);
-                    if (i == lines.length) break;
+                    if (i == end) break;
                     cur = new Story.Scene();
                     cur.number = Integer.parseInt(m.group(2));
                     cur.heading = m.group(1).trim() + " " + cur.number;
@@ -480,6 +489,21 @@ public final class ScriptParser {
         }
     }
 
+    /**
+     * v46: a short heading line that opens the writer's notes to the studio after the story ("निर्देशन और तकनीकी
+     * स्वीकृति:", "निर्देशन और QC नियम:", "Director's notes:", "Technical acceptance:"): short, ends with a colon,
+     * no quotes, and names direction, technical, acceptance, QC, rules, notes or continuity.
+     */
+    public static boolean productionNotesHeading(String l) {
+        String h = l.trim();
+        if (h.length() < 4 || h.length() > 70 || !(h.endsWith(":") || h.endsWith("：")) || h.startsWith("(") || h.startsWith("-") || h.startsWith("*") || h.startsWith("•")) return false;
+        if (h.contains("\"") || h.contains("“") || h.contains("।")) return false;
+        String bare = h.substring(0, h.length() - 1).trim();
+        if (bare.split("\\s+").length > 7 || SCENE.matcher(Txt.clean(h)).matches()) return false;
+        return Txt.has(bare, "निर्देशन", "तकनीकी", "स्वीकृति", "QC", "नियम", "नोट्स", "टिप्पणी", "निर्देश", "निरंतरता", "चेकलिस्ट")
+                || Txt.hasWord(bare, "direction", "directions", "director's notes", "technical", "acceptance", "notes", "rules", "guidelines", "production", "checklist", "continuity", "approval", "qc");
+    }
+
     private static boolean isCharHeader(String l) {
         if (NUMBERED.matcher(l).matches()) return false;
         if (Txt.has(l, "पात्र", "किरदार", "character", "cast") && l.length() < 120) return true;
@@ -725,14 +749,42 @@ public final class ScriptParser {
         return -1;
     }
 
+    /** v46: a cast-list entry whose name is a prop label ("मुख्य वस्तु", "Main prop"): a thing, never a character. */
+    public static boolean propLabel(String name) {
+        String n = Txt.norm(Txt.withoutParens(name)).replaceAll("[:：\\s]+$", "");
+        for (String w : new String[]{"मुख्य वस्तु", "वस्तु", "वस्तुएँ", "वस्तुएं", "प्रॉप", "मुख्य प्रॉप", "सामान", "चीज़", "चीज", "main prop", "main object", "key prop", "key object", "prop", "object", "props", "objects", "the prop", "the object"})
+            if (n.equals(Txt.norm(w))) return true;
+        return false;
+    }
+
+    /** v46: a cast-list entry whose name is a place label ("स्थान", "Location"): a place, never a character. */
+    public static boolean placeLabel(String name) {
+        String n = Txt.norm(Txt.withoutParens(name)).replaceAll("[:：\\s]+$", "");
+        for (String w : new String[]{"स्थान", "मुख्य स्थान", "जगह", "मुख्य जगह", "लोकेशन", "सेटिंग", "location", "main location", "place", "main place", "setting", "the location", "the place"})
+            if (n.equals(Txt.norm(w))) return true;
+        return false;
+    }
+
     private static void flushEntry(Story story, int mode, String header, StringBuilder desc) {
         if (header == null) { desc.setLength(0); return; }
         String d = desc.toString().trim();
         desc.setLength(0);
+        // v46: "3. मुख्य वस्तु: पुराना, किनारों से फटा पीला पत्र" and "4. स्थान: बड़ा पेड़, पुरानी बेंच…" inside the cast
+        // list are the story's prop and its place, never two more characters (the Reader drew a yellow-shirted
+        // "मुख्य वस्तु" into the last scene of बाबू के लिए)
+        if (mode != 3 && propLabel(header)) mode = 3;
+        else if (mode != 2 && placeLabel(header)) mode = 2;
         if (mode == 3) {
             // v40: a thing of the script's list (its name and look) — never a character or a place
             Story.PlaceDef t = new Story.PlaceDef();
             t.name = header;
+            // v46: a labelled entry ("मुख्य वस्तु: पुराना पीला पत्र") is named by its first clause
+            if (propLabel(header)) {
+                String first = d.split("\n")[0].trim();
+                String sentence = first.split("[।.!?]")[0].replaceAll("[,\\s]+$", "").trim();     // "पुराना, किनारों से फटा पीला पत्र"
+                if (sentence.length() > 60) sentence = Bible.firstClauseOf(first).replaceAll("[।.,\\s]+$", "").trim();
+                if (sentence.length() > 0 && sentence.length() <= 60) t.name = sentence;
+            }
             t.description = d;
             story.things.add(t);
             return;

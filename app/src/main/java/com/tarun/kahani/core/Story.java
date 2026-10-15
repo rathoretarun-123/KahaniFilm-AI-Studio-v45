@@ -17,6 +17,8 @@ public final class Story {
     public String time = "";
     public final List<Scene> scenes = new ArrayList<Scene>();
     public final List<String> warnings = new ArrayList<String>();
+    /** v46: the writer's notes to the studio after the last scene ("निर्देशन और तकनीकी स्वीकृति:"), kept apart from the action. */
+    public final List<String> productionNotes = new ArrayList<String>();
     public boolean hasNarrator;
     /** Written in Hinglish (Hindi in English letters): the text was turned into Devanagari for voices and staging. */
     public boolean hinglish;
