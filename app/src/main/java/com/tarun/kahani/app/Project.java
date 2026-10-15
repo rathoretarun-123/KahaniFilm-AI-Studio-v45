@@ -307,7 +307,14 @@ public final class Project {
             if (size >= 0 && size <= 24L * 1024 * 1024) {
                 InputStream in = cr.openInputStream(u);
                 if (in == null) return null;
-                try { return readAll(in); } finally { try { in.close(); } catch (Exception ignored) { } }
+                byte[] raw;
+                try { raw = readAll(in); } finally { try { in.close(); } catch (Exception ignored) { } }
+                // v47: verify Android can decode the raw bytes (HEIC on old phones, broken files, non-pictures); if not,
+                // fall through to the resample path, which uses BitmapFactory and only succeeds for a supported format
+                BitmapFactory.Options vo = new BitmapFactory.Options();
+                vo.inJustDecodeBounds = true;
+                BitmapFactory.decodeByteArray(raw, 0, raw.length, vo);
+                if (vo.outWidth > 0 && vo.outHeight > 0) return raw;
             }
             BitmapFactory.Options o = new BitmapFactory.Options();
             o.inJustDecodeBounds = true;
