@@ -42,6 +42,7 @@ import com.tarun.kahani.core.TechnicalDirector;
 import com.tarun.kahani.core.Txt;
 
 import org.junit.Test;
+import org.junit.Assume;
 import org.junit.runner.RunWith;
 import org.robolectric.Robolectric;
 import org.robolectric.RobolectricTestRunner;
@@ -66,6 +67,11 @@ import java.util.List;
 @GraphicsMode(GraphicsMode.Mode.NATIVE)
 @Config(sdk = 34, manifest = Config.NONE)
 public class AppTest {
+    private static boolean hasFixtureFiles(File dir) {
+        File[] files = dir == null ? null : dir.listFiles();
+        return files != null && files.length > 0;
+    }
+
 
     static final File ASSETS = new File(System.getProperty("kahani.assets"));
     static final File OUT = new File(System.getProperty("kahani.out"));
@@ -4940,6 +4946,7 @@ public class AppTest {
         android.content.Context ctx = RuntimeEnvironment.getApplication();
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File dir = new File(ASSETS.getParentFile().getParentFile().getParentFile().getParentFile(), "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         File[] sheets = dir.listFiles();
         java.util.Arrays.sort(sheets);
         assertEquals(36, sheets.length);
@@ -5100,6 +5107,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/chai_par_baat.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
         p.write("script.txt", script);
@@ -5182,6 +5190,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/chai_par_baat.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
         p.write("script.txt", script);
@@ -5466,6 +5475,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40"), fam = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets40/sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir) && hasFixtureFiles(fam));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/jhoola_aur_fisalpatti.txt").toPath()), "UTF-8");
         Project p = Project.create(ctx);
         p.write("script.txt", script);
@@ -5552,6 +5562,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40b");
+        Assume.assumeTrue("Original sheets40b identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/alav_ke_paas.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
         assertEquals("अलाव के पास", st.title);
@@ -5669,6 +5680,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets40");
+        Assume.assumeTrue("Original sheets40 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/rahul_ka_park.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
         assertEquals("राहुल का पार्क", st.title);
@@ -5796,6 +5808,7 @@ public class AppTest {
         ctx.getSharedPreferences("kahani", 0).edit().putString("online", "0").putString("skipLogin", "1").commit();
         File root = ASSETS.getParentFile().getParentFile().getParentFile().getParentFile();
         File dir = new File(root, "tools/testdata/sheets38");
+        Assume.assumeTrue("Original sheets38 identity fixtures are absent; do not fabricate family likenesses", hasFixtureFiles(dir));
         String script = new String(Files.readAllBytes(new File(root, "tools/testdata/v40stories/barish_wala_ravivar.txt").toPath()), "UTF-8");
         Story st = ScriptParser.parse(script);
         assertEquals("बारिश वाला रविवार", st.title);
