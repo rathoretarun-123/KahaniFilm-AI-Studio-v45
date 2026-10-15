@@ -40,7 +40,7 @@ public final class FilmLook {
         this.small = new int[sw * sh];
         this.lumRing = new int[w * 5];
         this.blurRing = new int[w * 5];
-        this.sharpen = Math.round(256 * Math.max(0.45f, Math.min(1.0f, 0.45f + h / 1080f * 0.55f)));      // v47: 0.45..1.00 (was 0.25..0.60): the whole film reads sharper
+        this.sharpen = Math.round(256 * Math.max(0.70f, Math.min(1.40f, 0.70f + h / 1080f * 0.70f)));      // v47.1: 0.70..1.40 (was 0.45..1.00): the user said blur is still too much, push sharpening further
     }
 
     /** Row y of the frame as it is now (before it is finished): its light, and its light blurred across (1 4 6 4 1). */
@@ -62,7 +62,9 @@ public final class FilmLook {
     public static Params forSeg(Film.Seg s, Params out) {
         // v47: base saturation 1.12 (was 1.03) and base contrast 1.18 (was 1.00): the user asked for the fine detail
         // of their reference clips to show through — a flatter curve made it muddy
-        out.warmth = 0.08f; out.saturation = 1.12f; out.contrast = 1.18f; out.bloom = 0.14f; out.green = 0;
+        // v47.1: contrast 1.28 (was 1.18), saturation 1.20 (was 1.12), bloom 0.08 (was 0.14 — less soft glow = less blur).
+        // The user's complaint: too much blur, not enough contrast or sharpness. These three move together.
+        out.warmth = 0.08f; out.saturation = 1.20f; out.contrast = 1.28f; out.bloom = 0.08f; out.green = 0;
         if (s == null) return out;
         // the colour script (Deakins): the place and the time of day dictate the colour, one palette per act
         PixarLead.colorScript(s.set, s.tod, s.mood, s.act, out);
@@ -177,9 +179,10 @@ public final class FilmLook {
                 // the unsharp mask: the light minus its 5x5 blur is the fine detail; above two levels (grain, noise and
                 // smooth skin stay as they are) it is lifted, never by more than 20 levels (no halo at a hard edge)
                 int blur = blurRing[r0 + x] + 4 * blurRing[r1 + x] + 6 * blurRing[r2 + x] + 4 * blurRing[r3 + x] + blurRing[r4 + x];   // x256
-                int detail = (lumRing[r2 + x] << 8) - blur, mag = Math.abs(detail) - 512;
+                // v47.1: threshold 384 (was 512) picks up finer detail; cap 28 (was 20) lifts strong edges harder
+                int detail = (lumRing[r2 + x] << 8) - blur, mag = Math.abs(detail) - 384;
                 if (mag > 0) {
-                    int lift = (Math.min(mag, 20 << 8) * sharpen) >> 16;
+                    int lift = (Math.min(mag, 28 << 8) * sharpen) >> 16;
                     if (detail < 0) lift = -lift;
                     cr = cr + lift < 0 ? 0 : cr + lift > 255 ? 255 : cr + lift;
                     cg = cg + lift < 0 ? 0 : cg + lift > 255 ? 255 : cg + lift;
