@@ -20,6 +20,48 @@ PLANS = {
     "babu_ke_liye": ["old_post_office", "old_post_office_lane", "tree_shade", "village_lane", "old_post_office"],
 }
 
+def sheet_panels(im):
+    """The panels of a contact sheet, as boxes in reading order, found by the gutters of the sheet's own colour
+    (the same rule as the studio's Angles.sheetPanels): a row or column is a gutter when nine tenths of it is the
+    border's colour; the stretches between gutters, each at least a tenth of the sheet, are the panels. None when
+    the sheet has no inner gutter."""
+    small = im.convert("RGB")
+    w, h = small.size
+    px = small.load()
+    border = [px[x, y] for x in range(0, w, max(1, w // 64)) for y in (0, 1, h - 2, h - 1)] + \
+             [px[x, y] for y in range(0, h, max(1, h // 64)) for x in (0, 1, w - 2, w - 1)]
+    bg = tuple(sum(c[i] for c in border) // len(border) for i in range(3))
+    def gutter(c):
+        return (min(c) >= 215 and max(c) - min(c) <= 30) or (abs(c[0] - bg[0]) + abs(c[1] - bg[1]) + abs(c[2] - bg[2])) < 40
+    gc = [sum(1 for y in range(h) if gutter(px[x, y])) >= h * 0.9 for x in range(w)]
+    gr = [sum(1 for x in range(w) if gutter(px[x, y])) >= w * 0.9 for y in range(h)]
+    def spans(g, n):
+        out, inner, i, max_gut = [], 0, 0, max(3, round(n * 0.06))
+        while i < n:
+            if g[i]:
+                j = i
+                while j < n and g[j]:
+                    j += 1
+                if j - i > max_gut and i > 0 and j < n:
+                    return None
+                if i > 0 and j < n:
+                    inner += 1
+                i = j
+                continue
+            j = i
+            while j < n and not g[j]:
+                j += 1
+            if j - i >= n * 0.1:
+                out.append((i, j))
+            i = j
+        if inner == 0:
+            return out if len(out) == 1 else None
+        return out
+    cs, rs = spans(gc, w), spans(gr, h)
+    if cs is None or rs is None or len(cs) * len(rs) < 2:
+        return None
+    return [(c[0], r[0], c[1], r[1]) for r in rs for c in cs]
+
 def main(film, out):
     out = Path(out); out.mkdir(parents=True, exist_ok=True)
     manifest = json.load(open(ROOT / "tools" / "testdata" / film / "reference_manifest.json", encoding="utf-8"))
@@ -44,11 +86,15 @@ def main(film, out):
         dst = out / (tag + "_" + src.stem.split("__")[-1][:40] + "_p%d.png" % panel)
         if not dst.exists():
             im = Image.open(src).convert("RGBA")
-            cols, rows = 3, 2
-            c, r = panel % cols, panel // cols
-            box = (c * im.width // cols, r * im.height // rows, (c + 1) * im.width // cols, (r + 1) * im.height // rows)
+            panels = sheet_panels(im)
+            if panels is not None and panel < len(panels):
+                box, grid = panels[panel], "gutters"
+            else:
+                cols, rows = 3, 2
+                c, r = panel % cols, panel // cols
+                box, grid = (c * im.width // cols, r * im.height // rows, (c + 1) * im.width // cols, (r + 1) * im.height // rows), "3x2"
             im.crop(box).save(dst)
-            crops.append({"file": dst.name, "sheet": src.name, "panel": panel + 1, "grid": "3x2", "box": list(box)})
+            crops.append({"file": dst.name, "sheet": src.name, "panel": panel + 1, "grid": grid, "box": list(box)})
         return dst.name
 
     for row in manifest["uploads"]:

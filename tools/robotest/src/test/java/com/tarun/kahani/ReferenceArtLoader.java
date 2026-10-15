@@ -194,9 +194,20 @@ final class ReferenceArtLoader {
         if (out.isFile() && out.length() > 0) return out.getAbsolutePath();
         BufferedImage sheet = ImageIO.read(new File(source));
         if (sheet == null) throw new IOException("Cannot decode reference sheet: " + source);
-        int cols = 3, rows = 2, col = panel % cols, row = panel / cols;
-        int x = col * sheet.getWidth() / cols, y = row * sheet.getHeight() / rows;
-        int right = (col + 1) * sheet.getWidth() / cols, bottom = (row + 1) * sheet.getHeight() / rows;
+        // v47: the sheet's real panels, found by its gutters (the studio's own splitter, Angles.sheetPanels), in
+        // reading order; an even 3x2 grid only when the sheet has no gutters to read
+        int sw = sheet.getWidth(), sh = sheet.getHeight();
+        int[] px = sheet.getRGB(0, 0, sw, sh, null, 0, sw);
+        java.util.List<int[]> panels = com.tarun.kahani.core.Angles.sheetPanels(px, sw, sh);
+        int x, y, right, bottom;
+        if (panels != null && panel < panels.size()) {
+            int[] b = panels.get(panel);
+            x = b[0]; y = b[1]; right = b[2]; bottom = b[3];
+        } else {
+            int cols = 3, rows = 2, col = panel % cols, row = panel / cols;
+            x = col * sw / cols; y = row * sh / rows;
+            right = (col + 1) * sw / cols; bottom = (row + 1) * sh / rows;
+        }
         BufferedImage crop = sheet.getSubimage(x, y, Math.max(1, right - x), Math.max(1, bottom - y));
         ImageIO.write(crop, "png", out);
         return out.getAbsolutePath();

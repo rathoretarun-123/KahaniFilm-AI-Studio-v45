@@ -3011,6 +3011,12 @@ public final class Renderer {
                     g.linear(0, top, 0, top + h * 0.05f, 0xFFD7B98E, 0xFFA1887F);
                     g.roundRect(-w * 0.44f, top, w * 0.88f, h * 0.05f, h * 0.015f);
                 }
+                if (front && legsIn) {
+                    // v47: the cane seat's front edge over a front picture's lap (see the stool)
+                    g.linear(0, top + h * 0.012f, 0, top + h * 0.05f, 0xFFD7B98E, 0xFFA1887F);
+                    g.roundRect(-w * 0.44f, top + h * 0.012f, w * 0.88f, h * 0.038f, h * 0.012f);
+                    g.color(0x30000000); g.rect(-w * 0.42f, top + h * 0.05f, w * 0.84f, h * 0.01f);
+                }
                 break;
             }
             case Film.SEAT_SOFA: {
@@ -3107,6 +3113,13 @@ public final class Renderer {
                     g.rect(-w * 0.36f, top, h * 0.035f, -top); g.rect(w * 0.36f - h * 0.035f, top, h * 0.035f, -top);
                     g.linear(0, top, 0, top + h * 0.06f, 0xFFA1887F, 0xFF6D4C41);
                     g.roundRect(-w * 0.42f, top, w * 0.84f, h * 0.055f, h * 0.02f);
+                }
+                if (front && legsIn) {
+                    // v47: the plank's front edge over the sitter's lap — a front picture folded onto a bench or a stool
+                    // read as one standing in front of it; with the seat's edge across the thighs it sits on it
+                    g.linear(0, top + h * 0.012f, 0, top + h * 0.06f, 0xFFA1887F, 0xFF6D4C41);
+                    g.roundRect(-w * 0.42f, top + h * 0.012f, w * 0.84f, h * 0.048f, h * 0.015f);
+                    g.color(0x30000000); g.rect(-w * 0.4f, top + h * 0.06f, w * 0.8f, h * 0.012f);
                 }
                 break;
             case Film.SEAT_LOG:

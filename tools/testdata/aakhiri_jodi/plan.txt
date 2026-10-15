@@ -1,0 +1,31 @@
+# आखिरी जोड़ी — the filmmaker's uploads, by role (paths under uploads/)
+char|इस्माइल चाचा|uploads/ismail_front.jpg
+view|इस्माइल चाचा|90|uploads/ismail_side_right.jpg
+view|इस्माइल चाचा|180|uploads/ismail_back.jpg
+view|इस्माइल चाचा|-45|uploads/ismail_quarter.jpg
+figure|इस्माइल चाचा|uploads/ismail_side_left.jpg
+figure|इस्माइल चाचा|uploads/ismail_quarter_glasses.jpg
+figsheet|इस्माइल चाचा|uploads/ismail_poses_1.jpg
+figsheet|इस्माइल चाचा|uploads/ismail_poses_2.jpg
+figsheet|इस्माइल चाचा|uploads/ismail_angles_1.jpg
+figsheet|इस्माइल चाचा|uploads/ismail_angles_2.jpg
+char|नन्ही|uploads/nanhi_front.jpg
+view|नन्ही|90|uploads/nanhi_side_right.jpg
+view|नन्ही|180|uploads/nanhi_back.jpg
+view|नन्ही|-45|uploads/nanhi_quarter.jpg
+figure|नन्ही|uploads/nanhi_side_left.jpg
+figure|नन्ही|uploads/nanhi_quarter_2.jpg
+figsheet|नन्ही|uploads/nanhi_poses_1.jpg
+figsheet|नन्ही|uploads/nanhi_poses_2.jpg
+figsheet|नन्ही|uploads/nanhi_poses_3.jpg
+figsheet|नन्ही|uploads/nanhi_angles_1.jpg
+prop|टूटा हुआ काला जूता|uploads/prop_broken_shoe_sheet.jpg|0
+prop|लाल जूतों की जोड़ी|uploads/prop_red_shoes_glass_sheet.jpg|0
+prop|स्टील का गिलास|uploads/prop_red_shoes_glass_sheet.jpg|1
+prop|लाल जूतों का डिब्बा|uploads/prop_shoes_box_sheet.jpg|1
+prop|पुराना अखबार|uploads/prop_newspaper_sheet.jpg|0
+prop|औजारों वाला बक्सा|uploads/prop_toolbox_khokha_sheet.jpg|1
+prop|लकड़ी का खोखा|uploads/prop_khokha_sheet.jpg|0
+place|1|uploads/place_khokha_lane_rain.jpg
+title|uploads/title_poster.jpg
+end|uploads/end_card.jpg

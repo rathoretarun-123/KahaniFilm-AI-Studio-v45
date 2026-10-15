@@ -195,9 +195,29 @@ public final class ScriptParser {
         return s;
     }
 
+    /** v47: markdown emphasis and heading marks taken out of a script, line by line. */
+    static String stripMarkdown(String text) {
+        StringBuilder out = new StringBuilder(text.length());
+        for (String line : text.split("\n", -1)) {
+            String l = line;
+            String t = l.trim();
+            if (t.equals("---") || t.equals("***") || t.equals("___")) { out.append('\n'); continue; }
+            if (t.startsWith("#")) { int i = 0; while (i < t.length() && t.charAt(i) == '#') i++; l = t.substring(i).trim(); }
+            l = l.replace("**", "").replace("__", "");
+            // a line that is one *emphasised* phrase
+            String tt = l.trim();
+            if (tt.length() > 2 && tt.startsWith("*") && tt.endsWith("*")) l = tt.substring(1, tt.length() - 1);
+            out.append(l).append('\n');
+        }
+        return out.substring(0, Math.max(0, out.length() - 1));
+    }
+
     static Story parseText(String raw) {
         Story story = new Story();
         String text = Txt.digitsToAscii(raw.replace("\r\n", "\n").replace('\r', '\n'));
+        // v47: a script pasted from a markdown editor — **bold** round names and headings, "### " before a heading,
+        // "---" rules — is the same script without them (the asterisks had become part of the characters' names)
+        text = stripMarkdown(text);
         // v41: dialogue is written in double inverted commas — every kind of them reads the same ("…", “…”, „…“, «…»,
         // ''…'', ″…″), a line split over several lines is joined, and every way of heading a scene is one heading
         text = normalizeQuotes(text);
@@ -316,6 +336,10 @@ public final class ScriptParser {
                 if (Txt.has(sent, "लिपस्टिक", "lipstick", "काजल", "kajal", "बिंदी", "bindi", "मेकअप", "मेक-अप", "makeup", "make-up", "पाउडर", "powder",
                         "नेल पॉलिश", "nail polish", "मेहंदी", "मेंहदी", "mehndi", "eyeliner", "blush", "सिंदूर", "sindoor", "लाली", "lip gloss")
                         && !Txt.has(sent, "साड़ी", "कपड़े", "कुर्ता", "लहंगा", "ड्रेस", "फ्रॉक", "शर्ट", "dress", "shirt", "kurta", "lehenga", "saree", "sari", "frock", "uniform", "यूनिफ़ॉर्म"))
+                    continue;
+                // v47: shoes, sandals and socks are not clothes ("नए लाल जूते पहनती है" had turned her frock red)
+                if (Txt.has(sent, "जूत", "चप्पल", "सैंडल", "सेंडल", "मोज़", "मोजे", "shoe", "sandal", "slipper", "boot", "sock")
+                        && !Txt.has(sent, "साड़ी", "कपड़े", "कुर्ता", "लहंगा", "ड्रेस", "फ्रॉक", "शर्ट", "पैंट", "सूट", "dress", "shirt", "kurta", "lehenga", "saree", "sari", "frock", "uniform", "यूनिफ़ॉर्म", "यूनिफॉर्म"))
                     continue;
                 List<Story.CharacterDef> who = mentions(story, sent);
                 // v34: "डॉक्टर रोहन के पैर पर पट्टी बाँधते हैं", "the nurse puts Asha's arm in a sling": the hurt one is the

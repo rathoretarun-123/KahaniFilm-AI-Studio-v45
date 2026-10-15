@@ -102,6 +102,34 @@ public final class Angles {
         return out;
     }
 
+    /**
+     * v47: the panels of a contact sheet of pictures (places, props: whole pictures parted by gutters of the sheet's
+     * own colour), as boxes {x0, y0, x1, y1} in reading order (row by row, left to right) — the same cut the phone's
+     * sheet splitter makes, for the desktop tools and the tests, so a "panel 0" means the same picture everywhere.
+     * Null when the sheet has no inner gutter (the caller may then fall back to an even grid). The sheet's colour is
+     * read from its border; a row or column is a gutter when nine tenths of it is that colour (or plain near white).
+     */
+    public static List<int[]> sheetPanels(int[] src, int w, int h) {
+        if (w < 8 || h < 8) return null;
+        int bg = borderColour(src, w, h);
+        boolean[] gc = new boolean[w], gr = new boolean[h];
+        for (int x = 0; x < w; x++) {
+            int n = 0;
+            for (int y = 0; y < h; y++) { int c = src[y * w + x]; if (light(c) || Cutout.dist(c, bg) < 40) n++; }
+            gc[x] = n >= h * 0.9f;
+        }
+        for (int y = 0; y < h; y++) {
+            int n = 0;
+            for (int x = 0; x < w; x++) { int c = src[y * w + x]; if (light(c) || Cutout.dist(c, bg) < 40) n++; }
+            gr[y] = n >= w * 0.9f;
+        }
+        List<int[]> cs = spans(gc, w), rs = spans(gr, h);
+        if (cs == null || rs == null || cs.size() * rs.size() < 2) return null;
+        List<int[]> out = new ArrayList<int[]>();
+        for (int[] r : rs) for (int[] c : cs) out.add(new int[]{c[0], r[0], c[1], r[1]});
+        return out;
+    }
+
     /** v40: near white (a gutter's paper). */
     private static boolean light(int c) {
         int r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255;
@@ -109,12 +137,12 @@ public final class Angles {
     }
 
     /**
-     * v40: the stretches between gutters (each at least a tenth of the length; the gutters thin, under 4% of it, and
+     * v40: the stretches between gutters (each at least a tenth of the length; the gutters thin, under 6% of it, and
      * at least one inside the sheet); null when the line has no inner gutter.
      */
     private static List<int[]> spans(boolean[] gut, int n) {
         List<int[]> out = new ArrayList<int[]>();
-        int inner = 0, i = 0, maxGut = Math.max(3, Math.round(n * 0.04f));
+        int inner = 0, i = 0, maxGut = Math.max(3, Math.round(n * 0.06f));     // v47: 6% (a 2-row sheet's gutter is near 5% of its height)
         while (i < n) {
             if (gut[i]) {
                 int j = i;
@@ -766,7 +794,7 @@ public final class Angles {
     }
 
     /** Reading order: row by row (pieces whose tops lie within a quarter of the height of each other), left to right. */
-    static List<Piece> order(List<Piece> in, final int h) {
+    public static List<Piece> order(List<Piece> in, final int h) {
         List<Piece> out = new ArrayList<Piece>(in);
         final int band = Math.max(1, h / 4);
         java.util.Collections.sort(out, new java.util.Comparator<Piece>() {

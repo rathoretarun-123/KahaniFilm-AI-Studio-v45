@@ -134,6 +134,16 @@ public final class Director {
     }
     private final Map<Story.CharacterDef, Boolean> pTurban = new HashMap<Story.CharacterDef, Boolean>();
     private final Map<Story.CharacterDef, Boolean> pDisguise = new HashMap<Story.CharacterDef, Boolean>();
+    /**
+     * v47: who was seated on furniture (a bench, a chair, a stool, a sofa, a log) when the last part ended — {seat, x,
+     * facing} — and the place that part was in: when the next part opens in the same place they are still seated there
+     * (बाबू on his bench through all five scenes of "बाबू के लिए"); the script stands them up, the film never does
+     * on its own. A character left out of a part keeps their seat for the part after it.
+     */
+    private final Map<Story.CharacterDef, float[]> pSeated = new HashMap<Story.CharacterDef, float[]>();
+    private Art.Backdrop pBackdrop;
+    private int pSet = -1;
+    private boolean pAnyPart;
     private final Map<Story.CharacterDef, Integer> pTurbanColor = new HashMap<Story.CharacterDef, Integer>();
 
     public Director(Story story, Options opt) {
@@ -1185,8 +1195,17 @@ public final class Director {
             boolean asleepNow = c.look != null && c.look.isHumanoid() && k.body == Pose.STAND
                     && (wakesIn(sc, b0, b1, c) || (bool(pAsleep.get(c)) && !Sets.outdoorSet(seg.set) && !speaksFirst(sc, b0, b1, c)));
             if (asleepNow) { k.body = Pose.LIE; k.seat = Film.SEAT_BED; k.eyesShut = true; k.visible = true; }
+            // v47: still seated where the last part left them, when this part opens in the same place
+            float[] ps = pSeated.get(c);
+            boolean carried = ps != null && samePlaceAsLastPart() && ent == null && k.body == Pose.STAND && c.look != null && c.look.isHumanoid()
+                    && c.look.aid != Look.AID_WHEELCHAIR;
+            if (carried) {
+                k.body = Pose.SIT; k.seat = (int) ps[0]; k.x = ps[1]; k.facing = ps[2] >= 0 ? 1 : -1;
+                film.notes.add("  ↳ " + c.shown() + " is still seated where the last part left them");
+            }
             a.keys.add(k);
             if (asleepNow) { Film.Fx bf = fx(Film.FX_SEAT, seg.t0, 1e6f, k.x, 0, a, null); bf.kind = Film.SEAT_BED; }
+            if (carried) { Film.Fx sf = fx(Film.FX_SEAT, seg.t0, 1e6f, k.x, 0, a, null); sf.kind = k.seat; }
             // Spider-Verse: the frame rate this character's poses step on (only when the user asks for it)
             a.stepFps = opt.onTwos ? PixarLead.stepFps(c) : 0;
             seg.actors.add(a);
@@ -1333,11 +1352,46 @@ public final class Director {
             pTurban.put(a.c, k.wearsTurban);
             pDisguise.put(a.c, k.disguised);
             pAsleep.put(a.c, k.body == Pose.LIE && k.eyesShut);          // v35: still asleep for the next part
+            // v47: seated on furniture as the part ends: still there when the next part opens in the same place
+            boolean seatedOn = k.body == Pose.SIT && k.seat >= Film.SEAT_STOOL && k.seat != Film.SEAT_WHEELCHAIR && k.anchor == Film.A_GROUND
+                    && k.visible && !k.dead && a.look != null && a.look.isHumanoid();
+            if (seatedOn) pSeated.put(a.c, new float[]{k.seat, xAt(a, seg.t1 - 0.01f), k.facing});
+            else pSeated.remove(a.c);
         }
+        pBackdrop = seg.backdrop;
+        pSet = seg.set;
+        pAnyPart = true;
         return seg.t1;
     }
 
     private static boolean bool(Boolean b) { return b != null && b; }
+
+    /** v47: the furniture seat (bench, chair, sofa, log) of the nearest other character seated on one at t, or -1. */
+    private int seatedNeighbour(Film.Actor a, float t) {
+        int best = -1; float bd = 1e9f;
+        for (Film.Actor o : seg.actors) {
+            if (o == a) continue;
+            Film.Key k = o.stateAt(t);
+            if (!k.visible || k.body != Pose.SIT || k.seat < Film.SEAT_STOOL || k.seat == Film.SEAT_WHEELCHAIR || k.anchor != Film.A_GROUND) continue;
+            float d = Math.abs(xAt(o, t) - xAt(a, t));
+            if (d < bd) { bd = d; best = k.seat; }
+        }
+        return best;
+    }
+
+    /**
+     * v47: this part plays in the place the last part ended in: the same picture of the place (the user's), or, without
+     * pictures, the same kind of place. A seat carried over needs the same bench to be there.
+     */
+    private boolean samePlaceAsLastPart() {
+        if (!pAnyPart) return false;
+        if (seg.backdrop != null || pBackdrop != null) {
+            if (seg.backdrop == null || pBackdrop == null) return false;
+            if (seg.backdrop == pBackdrop) return true;
+            return seg.backdrop.file != null && seg.backdrop.file.equals(pBackdrop.file);
+        }
+        return seg.set == pSet;
+    }
 
     private String names(List<Story.CharacterDef> l) {
         StringBuilder sb = new StringBuilder();
@@ -2257,8 +2311,13 @@ public final class Director {
     private float[] faceBox(Film.Actor a, float t) {
         float h = heightOf(a), x = finalX(a, t);
         Film.Key k = a.stateAt(t);
+        // v47: the posture a moment into the shot — one who sits down (kneels, lies down) as the line begins ("जमीन पर
+        // बैठ जाती है" in the line's own manner) is framed seated, not where a standing head would have been
+        Film.Key soon = a.stateAt(t + 0.6f);
+        if (soon.body != k.body && (soon.body == Pose.SIT || soon.body == Pose.KNEEL || soon.body == Pose.CROUCH || soon.body == Pose.LIE || k.body == Pose.SIT || k.body == Pose.KNEEL)
+                && soon.anchor == k.anchor && soon.visible) k = soon;
         float top = ground - h;
-        if (k.body == Pose.SIT) top = ground - h * Math.min(1f, seatedFace(a, t) + 0.115f);     // v35: by the seat's height
+        if (k.body == Pose.SIT) top = ground - h * Math.min(1f, seatedFace(a, t + 0.6f) + 0.115f);
         float[] pl = playAt(a, t);
         if (pl != null) top -= pl[0];                                                             // v41: up on the slide
         else if (k.body == Pose.LIE && k.anchor == Film.A_GROUND && a.look != null && a.look.isHumanoid()) {
@@ -2612,9 +2671,21 @@ public final class Director {
             // v41: one lying down, or up on the slide or the swing, is not checked against a standing head and feet
             boolean offFeet = mk != null && (mk.body == Pose.LIE || playAt(main, sh.t + 0.05f) != null);
             seg = keepS; ground = keepG;
-            if (main != null && mk.anchor == Film.A_GROUND && sh.size < ShotPlanner.XCU && !offFeet) {
+            // v47: the head of one seated (kneeling, crouching) is where the seat puts it, not a standing head's height:
+            // a seated close-up was called "head cut" against a standing head and reframed up over the real face
+            float headY = sg.ground - (main == null ? 0 : heightOf(main));
+            if (main != null) {
+                Film.Key soon = main.stateAt(sh.t + 0.65f);
+                int body = soon.body == Pose.SIT || soon.body == Pose.KNEEL || soon.body == Pose.CROUCH ? soon.body : mk.body;
                 float h = heightOf(main);
-                v.headTop = (sg.ground - h - topEdge) / fh;
+                Film.Seg keepS2 = seg; float keepG2 = ground;
+                seg = sg; ground = sg.ground;
+                if (body == Pose.SIT) headY = sg.ground - h * Math.min(1f, seatedFace(main, sh.t + 0.65f) + 0.115f);
+                else if (body == Pose.KNEEL || body == Pose.CROUCH) headY = sg.ground - h * 0.75f;
+                seg = keepS2; ground = keepG2;
+            }
+            if (main != null && mk.anchor == Film.A_GROUND && sh.size < ShotPlanner.XCU && !offFeet) {
+                v.headTop = (headY - topEdge) / fh;
                 v.feet = (sg.ground - topEdge) / fh;
                 v.fullBody = v.feet < 1.02f && sh.size <= ShotPlanner.WIDE;
                 if (sh.size <= ShotPlanner.WIDE && v.feet >= 1.02f) v.fullBody = true;      // a full shot whose feet fell out of the frame
@@ -2641,7 +2712,7 @@ public final class Director {
             if (!v.speech && sh.speech) sh.speech = false;
             for (String f : v.fixes) {
                 // the frame moves so the head (or the feet) comes back inside it; a full shot goes a little wider
-                if (f.startsWith("framed wider: headroom") && main != null) { float h = heightOf(main); cam.cy = sg.ground - h - 0.08f * fh + fh / 2; framedHead++; }
+                if (f.startsWith("framed wider: headroom") && main != null) { cam.cy = headY - 0.08f * fh + fh / 2; framedHead++; }
                 else if (f.startsWith("framed wider: feet") && main != null) {
                     float h = heightOf(main), need = h / 0.84f;
                     if (need > fh && 720f / need >= 1f) { cam.zoom = 720f / need; fh = 720f / cam.zoom; }
@@ -3338,7 +3409,9 @@ public final class Director {
         {new String[]{"हाथ जोड़", "नमस्कार", "प्रणाम", "folds his hands", "folds her hands", "joins his hands", "joins her hands"}, Pose.HAPPY, Film.G_BOW, 1.8f, EV_NONE},
         {new String[]{"पूजा", "प्रार्थना", "आरती", "दुआ", "prays", "praying", "worship"}, Pose.RELIEVED, Film.G_BOW, 2.6f, EV_EYES},
         {new String[]{"छाता", "छतरी", "umbrella"}, -1, Film.G_REACH, 1.2f, EV_UMBRELLA},
-        {new String[]{"छिप", "छुप", "hides", "hiding", "ducks down", "ducks behind"}, Pose.SCARED, -1, 2.2f, EV_HIDE},
+        // v47: the verb of hiding oneself — "छुपा हुआ डिब्बा" (a hidden box) and "छुपाकर रखा" (hid a thing) hide nobody
+        {new String[]{"छिप जा", "छुप जा", "छिप गय", "छुप गय", "छिपता", "छिपती", "छिपते", "छुपता", "छुपती", "छुपते", "छिपकर", "छुपकर", "छिप कर", "छुप कर",
+                "छिपी है", "छुपी है", "छिपा है", "छुपा है", "hides", "hiding", "ducks down", "ducks behind"}, Pose.SCARED, -1, 2.2f, EV_HIDE},
         // v43: peeping out from behind something (a crouch), or a curious look out
         {new String[]{"की ओट से", "के पीछे से झाँक", "के पीछे से झांक", "from behind"}, Pose.CURIOUS, -1, 2.0f, EV_HIDE},
         {new String[]{"झाँक", "झांक", "peeks", "peeps", "peeking", "peers"}, Pose.CURIOUS, Film.G_TURN, 1.6f, EV_NONE},
@@ -5292,6 +5365,8 @@ public final class Director {
             "is sitting", "are sitting", "was sitting", "were sitting", "seated", "took a seat", "baith gaya", "baith gayi",
             // v39: the present of the user's directions — "उसके पास आकर बैठती है"
             "बैठती है", "बैठता है", "बैठती हैं", "बैठते है", "sits next", "sits beside",
+            // v47: "(उनके पास बैठते हुए)" — a line spoken while sitting down beside someone
+            "बैठते हुए", "बैठती हुई", "बैठता हुआ", "sitting down", "settling beside", "settling next",
             // v43: dropped onto a seat
             "धम्म से बैठ", "धप से बैठ", "flops down", "plops down", "slumps down", "sinks into"};
     /** v34: the scene and beat being directed — to look ahead (does a character who walks off speak again in this scene?). */
@@ -6247,6 +6322,11 @@ public final class Director {
                     st = royal && (seg.set == Sets.HALL || seg.set == Sets.COURTYARD) ? Film.SEAT_THRONE : Sets.outdoorSet(seg.set) ? Film.SEAT_FLOOR
                             : seg.set == Sets.ROOM ? Film.SEAT_CHAIR : Film.SEAT_STOOL;          // v35: a room of today has chairs
                 }
+                // v47: "उनके पास बैठती है", "sits beside him": on the same bench (sofa, log) as the one already seated there
+                if (seat == -2 && Txt.has(s, "पास", "बगल", "साथ", "beside", "next to", "by his side", "by her side")) {
+                    int ns = seatedNeighbour(a, ta);
+                    if (ns >= Film.SEAT_STOOL) st = ns;
+                }
                 k.seat = st;
                 // v35: the furniture is heard as they sit (a chair's creak, a sofa's soft thump, a bed's frame)
                 if (st == Film.SEAT_CHAIR || st == Film.SEAT_SOFA || st == Film.SEAT_BED || st == Film.SEAT_STOOL)
@@ -6361,7 +6441,7 @@ public final class Director {
      */
     private float seatedFace(Film.Actor a, float t) {
         int seat = Renderer.seatOf(a, t);
-        if (photo(a)) return seat == Film.SEAT_FLOOR ? 0.55f : 0.72f;
+        if (photo(a)) return seat == Film.SEAT_FLOOR ? 0.5f : 0.72f;      // v47: 0.5 on the floor (measured against the rig's fold: 0.55 aimed a little high)
         if (a.look != null && a.look.aid == Look.AID_WHEELCHAIR) seat = Film.SEAT_WHEELCHAIR;
         float sh = Puppet.seatHeight(seat);
         if (sh < 0 || a.look == null) return 0.64f;

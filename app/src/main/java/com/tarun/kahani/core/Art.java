@@ -157,6 +157,8 @@ public final class Art {
         public Object img;
         public int w, h;
         public float x0 = 0, y0 = 0, x1 = 1, y1 = 1;  // crop window (fractions)
+        /** v47: the file the picture was read from (two parts in the same place share it). */
+        public String file;
         public float ground = 0.9f;                    // where feet stand (fraction of frame height)
         /** A picture of one object on a transparent background (an insert), not a place. */
         public boolean object;
@@ -757,6 +759,7 @@ public final class Art {
         b.picture = true;
         b.w = L.width(img);
         b.h = L.height(img);
+        b.file = file;
         fitCrop(b);
         // where the sky, water and plants are, so the water can flow and the plants sway
         try {
@@ -764,6 +767,10 @@ public final class Art {
             if (d != null) {
                 int[] px = new int[d[0] * d[1]];
                 System.arraycopy(d, 2, px, 0, px.length);
+                // v47: a panel cut from a contact sheet keeps the sheet's gutter and its rounded corners: the crop
+                // window moves inside them, so no white edge or rounded corner is ever in the frame
+                float[] in = panelInset(px, d[0], d[1]);
+                if (in != null) fitCrop(b, in[0], in[1], in[2], in[3]);
                 b.scan = Nature.scan(px, d[0], d[1]);
                 b.ground = findGround(px, d[0], d[1], b);
                 b.avgLow = averageLow(px, d[0], d[1]);
@@ -1469,6 +1476,79 @@ public final class Art {
     }
 
     static int clamp255(float v) { return v < 0 ? 0 : v > 255 ? 255 : (int) v; }
+
+    /**
+     * v47: the frame of a contact-sheet panel — the sheet's gutter round the picture and the panel's rounded corners —
+     * measured so the crop can leave it out: {left, top, right, bottom} as fractions of the picture, or null when the
+     * picture has no such frame. A gutter is a band of the border's own colour along two facing edges at least (a
+     * clear sky along the top alone is sky, not a gutter); a rounded corner is the run of that colour inward along the
+     * corner's diagonal. Nothing is cut from a picture whose frame would take more than two fifths of it.
+     */
+    public static float[] panelInset(int[] px, int w, int h) {
+        if (w < 16 || h < 16) return null;
+        int bg = Angles.borderColour(px, w, h);
+        int lim = 40, maxStrip = Math.max(2, Math.min(w, h) / 6);
+        int l = gutterStrip(px, w, h, bg, lim, maxStrip, 0), r = gutterStrip(px, w, h, bg, lim, maxStrip, 1);
+        int t = gutterStrip(px, w, h, bg, lim, maxStrip, 2), bt = gutterStrip(px, w, h, bg, lim, maxStrip, 3);
+        boolean lr = l > 0 && r > 0, tb = t > 0 && bt > 0;
+        if (!lr) l = r = 0;
+        if (!tb) t = bt = 0;
+        // the rounded corners: from each corner of what is left, inward along the diagonal while the corner's own
+        // flat colour (the gutter's, or plain paper) goes on
+        int corner = 0, flatCorners = 0;
+        int[][] cs = {{l, t, 1, 1}, {w - 1 - r, t, -1, 1}, {l, h - 1 - bt, 1, -1}, {w - 1 - r, h - 1 - bt, -1, -1}};
+        for (int[] c : cs) {
+            int ref = px[c[1] * w + c[0]];
+            int cr = (ref >> 16) & 255, cg = (ref >> 8) & 255, cb = ref & 255;
+            boolean flat = Cutout.dist(ref, bg) < lim || Math.max(cr, Math.max(cg, cb)) - Math.min(cr, Math.min(cg, cb)) < 24;
+            if (!flat) continue;
+            int i = 0;
+            while (i < maxStrip && Cutout.dist(px[(c[1] + c[3] * i) * w + c[0] + c[2] * i], ref) < lim) i++;
+            if (i >= maxStrip) continue;        // a flat picture, not a corner
+            if (i > 1) flatCorners++;
+            corner = Math.max(corner, i);
+        }
+        // a rounded corner on its own (the gutter already trimmed off) needs all four corners to show it
+        if (!lr && !tb && flatCorners < 4) return null;
+        if (flatCorners < 2) corner = 0;
+        l += corner; r += corner; t += corner; bt += corner;
+        if (l + r <= 0 && t + bt <= 0) return null;
+        if (l + r > w * 0.4f || t + bt > h * 0.4f) return null;
+        return new float[]{l / (float) w, t / (float) h, r / (float) w, bt / (float) h};
+    }
+
+    /** The width of the band of the border's colour along one edge (side 0 left, 1 right, 2 top, 3 bottom), 0 when there is none. */
+    static int gutterStrip(int[] px, int w, int h, int bg, int lim, int max, int side) {
+        int n = 0;
+        for (int k = 0; k < max; k++) {
+            int same = 0, cnt = 0;
+            if (side < 2) {
+                int x = side == 0 ? k : w - 1 - k;
+                for (int y = 0; y < h; y += 2) { cnt++; if (Cutout.dist(px[y * w + x], bg) < lim) same++; }
+            } else {
+                int y = side == 2 ? k : h - 1 - k;
+                for (int x = 0; x < w; x += 2) { cnt++; if (Cutout.dist(px[y * w + x], bg) < lim) same++; }
+            }
+            if (same < cnt * 0.96f) break;
+            n = k + 1;
+        }
+        return n >= max ? 0 : n;
+    }
+
+    /** v47: a centred 16:9 crop window inside the part of the picture that is left after its frame is taken off. */
+    public static void fitCrop(Backdrop b, float l, float t, float r, float bt) {
+        float iw = Math.max(0.1f, 1 - l - r), ih = Math.max(0.1f, 1 - t - bt);
+        float ar = iw * b.w / Math.max(1f, ih * b.h);
+        float target = 16f / 9f;
+        if (ar > target) {
+            float wFrac = iw * target / ar;
+            b.x0 = l + (iw - wFrac) / 2; b.x1 = b.x0 + wFrac; b.y0 = t; b.y1 = t + ih;
+        } else {
+            float hFrac = ih * ar / target;
+            b.y0 = t + (ih - hFrac) / 2; b.y1 = b.y0 + hFrac; b.x0 = l; b.x1 = l + iw;
+        }
+        b.ground = 0.9f;
+    }
 
     /** Sets a centred 16:9 crop window for a picture of any shape. */
     public static void fitCrop(Backdrop b) {
