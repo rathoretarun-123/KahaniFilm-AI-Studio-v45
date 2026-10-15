@@ -342,6 +342,7 @@ public final class Library {
                 for (Item it : items) {
                     if (!filmId.equals(it.meta("bundledFilm")) || !it.name.startsWith(oldPrefix)) continue;
                     String suffix = it.name.substring(oldPrefix.length());
+                    if (suffix.length() > 0 && Character.isDigit(suffix.charAt(0))) continue; // reference 1 must not match reference 10
                     // User-edited names no longer start with the generated prefix and are left untouched.
                     it.name = newPrefix + suffix;
                     if (suffix.length() == 0) it.kind = Json.str(record, "library_kind", it.kind);
