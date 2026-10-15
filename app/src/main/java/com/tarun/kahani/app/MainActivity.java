@@ -4761,8 +4761,10 @@ public class MainActivity extends Activity {
         background("Wiping everything…", new Work() {
             public Object run() throws Exception {
                 for (Project p : Project.all(MainActivity.this)) wipeDir(p.dir);
-                File libDir = new File(getFilesDir(), "library");
-                wipeDir(libDir);
+                // v47: wipe both the current library folder and any leftover from older installs
+                wipeDir(new File(getFilesDir(), Library.LIBRARY_DIR));
+                wipeDir(new File(getFilesDir(), "library"));
+                wipeDir(new File(getFilesDir(), "projects"));
                 File backup = new File(android.os.Environment.getExternalStoragePublicDirectory(android.os.Environment.DIRECTORY_DOWNLOADS), "tarunkahani");
                 wipeDir(backup);
                 getSharedPreferences("kahani", MODE_PRIVATE).edit().clear().commit();

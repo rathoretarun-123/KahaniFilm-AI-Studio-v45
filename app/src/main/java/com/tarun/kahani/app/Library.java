@@ -63,9 +63,12 @@ public final class Library {
         return shared;
     }
 
+    // v47: a new folder so a stale "library/" from an older install is ignored. Old files remain on disk but invisible.
+    public static final String LIBRARY_DIR = "library-v47";
+
     private Library(Context c) {
         ctx = c.getApplicationContext();
-        dir = new File(ctx.getFilesDir(), "library");
+        dir = new File(ctx.getFilesDir(), LIBRARY_DIR);
         dir.mkdirs();
         index = new File(dir, "index.json");
         load();
