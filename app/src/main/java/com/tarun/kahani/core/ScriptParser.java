@@ -287,6 +287,7 @@ public final class ScriptParser {
         LookDesigner.designAll(story);
         linkMounts(story);
         aidsFromActions(story);
+        lookChangesFromActions(story);
         costumesFromActions(story);
         return story;
     }
@@ -353,38 +354,6 @@ public final class ScriptParser {
                 if (nl.outfit == cur.outfit && nl.primary == cur.primary && nl.secondary == cur.secondary && nl.glasses == cur.glasses && nl.injury == cur.injury) continue;
                 Story.Costume k = new Story.Costume();
                 k.scene = sc.number; k.beat = bi; k.text = sent.trim(); k.look = nl;
-                c.costumes.add(k);
-            }
-        }
-        // v47: a second pass for look changes that are not clothes — make-up (bindi, lipstick, kajal, sindoor,
-        // mehndi, powder), a cap or a hat, a hairstyle (hair tied, combed, let down). Each is kept as its own
-        // Costume entry (with the current look, flags lifted) so a user picture can be tied to it via a
-        // dress|<character>|<words>|<file> or look|<character>|<words>|<file> manifest line.
-        for (Story.Scene sc : story.scenes) for (int bi = 0; bi < sc.beats.size(); bi++) {
-            Story.Beat b = sc.beats.get(bi);
-            if (b.type != Story.Beat.DIRECTION) continue;
-            for (String sent : b.text.split("[\u0964.!?]")) {
-                boolean makeup = Txt.has(sent, "\u092C\u093F\u0902\u0926\u0940", "bindi", "\u0932\u093F\u092A\u0938\u094D\u091F\u093F\u0915", "lipstick",
-                        "\u0915\u093E\u091C\u0932", "kajal", "\u0938\u093F\u0902\u0926\u0942\u0930", "sindoor",
-                        "\u092E\u0947\u0939\u0902\u0926\u0940", "\u092E\u0947\u0939\u0928\u094D\u0926\u0940", "mehndi", "\u092E\u0947\u0915\u0905\u092A", "makeup", "make-up",
-                        "\u092A\u093E\u0909\u0921\u0930", "powder", "eyeliner", "blush");
-                boolean headwear = Txt.has(sent, "\u091F\u094B\u092A\u0940", "\u092A\u0917\u0921\u093C\u0940", "cap", "hat", "turban", "\u0939\u0947\u0932\u094D\u092E\u0947\u091F", "helmet",
-                        "\u0938\u094D\u0915\u093E\u0930\u094D\u092B", "scarf", "\u0926\u0941\u092A\u091F\u094D\u091F\u093E", "dupatta", "\u092E\u0941\u0915\u0941\u091F", "crown");
-                boolean hair = Txt.has(sent, "\u092C\u093E\u0932 \u092C\u093E\u0902\u0927", "\u091A\u094B\u091F\u0940 \u092C\u093E\u0902\u0927", "\u091C\u0942\u0921\u093C\u093E \u092C\u0928\u093E",
-                        "\u0915\u0902\u0918\u0940", "\u092C\u093E\u0932 \u0916\u094B\u0932", "hair up", "ponytail", "comb", "combed", "braid", "braids", "pulled her hair back");
-                if (!makeup && !headwear && !hair) continue;
-                if (negated(sent)) continue;
-                List<Story.CharacterDef> who = mentions(story, sent);
-                if (who.size() != 1) continue;
-                Story.CharacterDef c = who.get(0);
-                if (c.look == null || !c.look.isHumanoid()) continue;
-                // dedupe: skip if an identical look-change text is already there
-                boolean dup = false;
-                for (Story.Costume k : c.costumes) if (k.text.equalsIgnoreCase(sent.trim())) { dup = true; break; }
-                if (dup) continue;
-                Look cur = c.costumes.isEmpty() ? c.look : c.costumes.get(c.costumes.size() - 1).look;
-                Story.Costume k = new Story.Costume();
-                k.scene = sc.number; k.beat = bi; k.text = sent.trim(); k.look = cur;
                 c.costumes.add(k);
             }
         }
@@ -1610,5 +1579,40 @@ public final class ScriptParser {
         if (Character.isLetterOrDigit(c) && !Txt.isDevanagari(c)) return true;
         // Devanagari letters (not punctuation like danda)
         return c >= 'ऀ' && c <= 'ॣ' && c != '।' && c != '॥';
+    }
+
+    static void lookChangesFromActions(Story story) {
+        // v47: a second pass for look changes that are not clothes — make-up (bindi, lipstick, kajal, sindoor,
+        // mehndi, powder), a cap or a hat, a hairstyle (hair tied, combed, let down). Each is kept as its own
+        // Costume entry (with the current look, flags lifted) so a user picture can be tied to it via a
+        // dress|<character>|<words>|<file> or look|<character>|<words>|<file> manifest line.
+        for (Story.Scene sc : story.scenes) for (int bi = 0; bi < sc.beats.size(); bi++) {
+            Story.Beat b = sc.beats.get(bi);
+            if (b.type != Story.Beat.DIRECTION) continue;
+            for (String sent : b.text.split("[\u0964.!?]")) {
+                boolean makeup = Txt.has(sent, "\u092C\u093F\u0902\u0926\u0940", "bindi", "\u0932\u093F\u092A\u0938\u094D\u091F\u093F\u0915", "lipstick",
+                        "\u0915\u093E\u091C\u0932", "kajal", "\u0938\u093F\u0902\u0926\u0942\u0930", "sindoor",
+                        "\u092E\u0947\u0939\u0902\u0926\u0940", "\u092E\u0947\u0939\u0928\u094D\u0926\u0940", "mehndi", "\u092E\u0947\u0915\u0905\u092A", "makeup", "make-up",
+                        "\u092A\u093E\u0909\u0921\u0930", "powder", "eyeliner", "blush");
+                boolean headwear = Txt.has(sent, "\u091F\u094B\u092A\u0940", "\u092A\u0917\u0921\u093C\u0940", "cap", "hat", "turban", "\u0939\u0947\u0932\u094D\u092E\u0947\u091F", "helmet",
+                        "\u0938\u094D\u0915\u093E\u0930\u094D\u092B", "scarf", "\u0926\u0941\u092A\u091F\u094D\u091F\u093E", "dupatta", "\u092E\u0941\u0915\u0941\u091F", "crown");
+                boolean hair = Txt.has(sent, "\u092C\u093E\u0932 \u092C\u093E\u0902\u0927", "\u091A\u094B\u091F\u0940 \u092C\u093E\u0902\u0927", "\u091C\u0942\u0921\u093C\u093E \u092C\u0928\u093E",
+                        "\u0915\u0902\u0918\u0940", "\u092C\u093E\u0932 \u0916\u094B\u0932", "hair up", "ponytail", "comb", "combed", "braid", "braids", "pulled her hair back");
+                if (!makeup && !headwear && !hair) continue;
+                if (negated(sent)) continue;
+                List<Story.CharacterDef> who = mentions(story, sent);
+                if (who.size() != 1) continue;
+                Story.CharacterDef c = who.get(0);
+                if (c.look == null || !c.look.isHumanoid()) continue;
+                // dedupe: skip if an identical look-change text is already there
+                boolean dup = false;
+                for (Story.Costume k : c.costumes) if (k.text.equalsIgnoreCase(sent.trim())) { dup = true; break; }
+                if (dup) continue;
+                Look cur = c.costumes.isEmpty() ? c.look : c.costumes.get(c.costumes.size() - 1).look;
+                Story.Costume k = new Story.Costume();
+                k.scene = sc.number; k.beat = bi; k.text = sent.trim(); k.look = cur;
+                c.costumes.add(k);
+            }
+        }
     }
 }

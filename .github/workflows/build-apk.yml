@@ -5,6 +5,7 @@ on:
   push:
     branches:
       - kahanifilm-development
+      - ccr-a5fc4eef-d2p2nm
 
 concurrency:
   group: build-apk-${{ github.ref }}

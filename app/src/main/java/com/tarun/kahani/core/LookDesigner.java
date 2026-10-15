@@ -821,7 +821,7 @@ public final class LookDesigner {
         boolean rakshasa = Txt.has(t, "राक्षस", "rakshas", "दानव", "danav", "दैत्य", "daitya", "असुर", "asur", "demon", "devil", "ogre");
         if (durga)    { if (l.arms  < 8)  l.arms  = 8;  if (l.mount < 0) l.mount = Look.SP_LION;     l.hero = true; }
         if (kali)     { if (l.arms  < 10) l.arms  = 10; if (l.mount < 0) l.mount = Look.SP_TIGER;    l.hero = true; }
-        if (ravana)   { if (l.heads < 10) l.heads = 10; if (l.arms  < 20) l.arms  = 20;              l.hero = false; }
+        if (ravana)   { if (l.heads < 10) l.heads = 10;                                              l.hero = false; }
         if (brahma)   { if (l.heads < 4)  l.heads = 4;  if (l.arms  < 4)  l.arms  = 4;               l.hero = true; }
         if (ganesha)  { if (l.arms  < 4)  l.arms  = 4;  if (l.mount < 0) l.mount = Look.SP_MOUSE;    l.hero = true; }
         if (shiva)    { if (l.arms  < 4)  l.arms  = 4;  if (l.mount < 0) l.mount = Look.SP_COW;      l.hero = true; }
