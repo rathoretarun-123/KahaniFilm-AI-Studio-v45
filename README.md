@@ -7,6 +7,26 @@ All screens and instructions in the app are in English; the story, dialogue and 
 
 **APK:** [`release/KahaniFilm.apk`](release/KahaniFilm.apk) (Android 8.0 or newer)
 
+## New in v47 (15 October 2026, later the same day)
+
+* **Seats stay.** One seated on a bench, a chair, a stool, a sofa or a log when a part ends is still seated when
+  the next part opens in the same place; the script stands them up, the film never does on its own. बाबू now sits
+  on his bench through all five scenes, and the girl "(उनके पास बैठते हुए)" sits beside him on it. A seated
+  speaker's close-up is framed on the seated face (it had been aimed at a standing head's height, with the face at
+  the bottom edge of the frame).
+* **Sheets are cut at their gutters.** A contact sheet's panels are found from the sheet's own paper between them,
+  in reading order, on the desktop as on the phone; an even 3×2 grid had put a third of the next panel, the paper and
+  a rounded corner into every place picture. A panel's remaining gutter and rounded corners stay out of the frame.
+* **The Reader:** a script pasted from a markdown editor (`**bold**`, `###`, `---`) reads as a plain one; shoes
+  are not a change of clothes; "छुपा हुआ डिब्बा" hides nobody.
+* **A third story, from the filmmaker's own uploads:** `tools/jvm CastFromUploads` turns a folder of uploads (fronts,
+  angles, pose sheets, prop sheets, places, title and end cards) into the studio's manifest with the splitters the
+  phone uses; **आखिरी जोड़ी** (इस्माइल चाचा, नन्ही, 43 pictures) is in `tools/testdata/aakhiri_jodi` and renders
+  end to end. {{JODI_SUMMARY}}
+* **Measured, said plainly:** {{MEASURED_SUMMARY}} The full record, with frames of all three films:
+  [`docs/testing-v47.md`](docs/testing-v47.md).
+* **Sorry — said plainly:** still flat pictures on a mesh. {{SORRY}}
+
 ## New in v46 (15 October 2026)
 
 * **The Reader stops inventing.** A screenplay's closing notes ("निर्देशन और तकनीकी स्वीकृति:", "QC नियम:") are no
