@@ -326,6 +326,10 @@ public final class Library {
         it.setMeta("semanticConfidence", record == null ? "0" : String.valueOf(record.get("confidence")));
         it.setMeta("autoAssign", autoAssign ? "1" : "0");
         it.setMeta("reviewRequired", autoAssign ? "0" : "1");
+        if ("view".equals(it.kind)) {
+            String entityLabel = Json.str(record, "entity_label", "");
+            if (entityLabel.length() > 0) it.setMeta("ofName", entityLabel);
+        }
         String declaredView = Json.str(record, "view", "");
         // Do not overwrite the per-panel view that SheetSaver inferred from a contact sheet.
         if (declaredView.length() > 0 && !"contact_sheet".equals(declaredView)) it.setMeta("view", declaredView);
