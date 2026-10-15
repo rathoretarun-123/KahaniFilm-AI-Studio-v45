@@ -254,6 +254,7 @@ public final class Library {
                     String ext = lower.endsWith(".webp") ? ".webp" : lower.endsWith(".png") ? ".png" : ".jpg";
                     Item it = addBytes(PIC, kind, label, semanticTags(storyTitle, originalName, record), data, ext, source);
                     applyBundledSemanticMetadata(it, filmId, originalName, record, autoAssign);
+                    save();
                 } else {
                     for (Item it : split) {
                         it.tags = (it.tags + " " + semanticTags(storyTitle, originalName, record)).trim();
