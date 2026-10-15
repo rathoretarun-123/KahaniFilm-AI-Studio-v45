@@ -133,6 +133,8 @@ public final class FilmLook {
 
     /** Applies the finish to a frame (ARGB, w x h). */
     public void apply(int[] px, Params p) {
+        // v47: passthrough — a title or end segment with the user's own picture reaches the screen untouched
+        if (p.contrast == 1f && p.warmth == 0f && p.saturation == 1f && p.bloom == 0f && p.green == 0f) return;
         if (!built || Math.abs(p.warmth - last.warmth) > 0.01f || Math.abs(p.contrast - last.contrast) > 0.01f || Math.abs(p.green - last.green) > 0.01f) build(p);
         // ---- bloom: the bright parts, at a quarter of the size, blurred softly
         boolean glow = p.bloom > 0.01f;
