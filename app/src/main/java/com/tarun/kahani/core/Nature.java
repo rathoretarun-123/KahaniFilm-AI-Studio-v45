@@ -439,15 +439,17 @@ public final class Nature {
 
     /** Rain streaks falling with the wind; far drops are thinner and fainter. */
     public static void rain(Gfx g, float w, float h, float t, float amount, float wind) {
-        int n = (int) (900 * Math.min(1.6f, amount));     // dense, fine rain
+        // v47.2: the rain of the reference clips is fine and mostly seen against the dark; the old rain was a flat
+        // grey veil (0.22) under 900 bright streaks that whitened faces and washed the colour out of every rainy
+        // part. Half the veil, fewer and fainter streaks, the near ones still larger (the depth cue stays).
+        int n = (int) (620 * Math.min(1.6f, amount));
         float slant = wind * 0.35f;
         float sc = h / 720f;
-        // a cool, grey light and veils of rain in the distance
-        g.color(alpha(0xFF3A4860, 0.22f * Math.min(1, amount)));
+        g.color(alpha(0xFF3A4860, 0.10f * Math.min(1, amount)));
         g.rect(0, 0, w, h);
         for (int k = 0; k < 3; k++) {
             float x = ((t * (90 + k * 40) * (wind >= 0 ? 1 : -1) + k * w / 3) % (w * 1.4f) + w * 1.4f) % (w * 1.4f) - w * 0.2f;
-            g.radial(x, h * 0.45f, w * 0.35f, alpha(0xFFC8D2DC, 0.12f * Math.min(1, amount)), 0x00C8D2DC);
+            g.radial(x, h * 0.45f, w * 0.35f, alpha(0xFFC8D2DC, 0.06f * Math.min(1, amount)), 0x00C8D2DC);
             g.rect(0, 0, w, h);
         }
         for (int i = 0; i < n; i++) {
@@ -458,8 +460,8 @@ public final class Nature {
             float age = (t + rnd(i, 2) * period) % period;
             float y = -len + age * speed;
             float x = rnd(i, 3) * (w + h * Math.abs(slant)) - (slant > 0 ? h * slant : 0) + y * slant;
-            g.color(alpha(0xFFE4ECF4, 0.28f + depth * 0.37f));
-            g.line(x, y, x - len * slant, y - len, (0.7f + depth * 1.4f) * sc);
+            g.color(alpha(0xFFE4ECF4, 0.15f + depth * 0.25f));
+            g.line(x, y, x - len * slant, y - len, (0.6f + depth * 1.2f) * sc);
         }
     }
 

@@ -786,6 +786,42 @@ public final class Art {
         return b;
     }
 
+    /**
+     * v47.2: an object insert is drawn over the darkened scene as the thing itself, which assumes a clear
+     * background. A phone photo of the thing (a shoe on black, a lamp on white) came up as an opaque rectangle. When
+     * the picture has no clear pixels and its four corners agree on one colour, that colour is keyed out with a soft
+     * edge, so only the thing remains.
+     */
+    static void keyObject(Loader L, Backdrop b, String file, int maxSide) {
+        try {
+            int[] d = L.decode(file, maxSide);
+            if (d == null) return;
+            int w = d[0], h = d[1];
+            int[] px = new int[w * h];
+            System.arraycopy(d, 2, px, 0, px.length);
+            for (int c : px) if ((c >>> 24) < 250) return;                  // already a cut-out: leave it
+            int[] corners = {px[0], px[w - 1], px[(h - 1) * w], px[h * w - 1]};
+            int bg = corners[0];
+            for (int c : corners) if (Cutout.dist(c, bg) > 40) return;      // not a plain background: not ours to key
+            // the background colour, read from a border strip (steadier than one corner pixel)
+            long sr = 0, sg = 0, sb = 0, n = 0;
+            for (int x = 0; x < w; x += 3) for (int y : new int[]{0, 1, h - 2, h - 1}) { int c = px[y * w + x]; sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; n++; }
+            for (int y = 0; y < h; y += 3) for (int x : new int[]{0, 1, w - 2, w - 1}) { int c = px[y * w + x]; sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; n++; }
+            bg = 0xFF000000 | (int) (sr / n) << 16 | (int) (sg / n) << 8 | (int) (sb / n);
+            int keyed = 0;
+            for (int i = 0; i < px.length; i++) {
+                int c = px[i];
+                int dist = Cutout.dist(c, bg);
+                float a = Math.max(0, Math.min(1, (dist - 30) / 70f));       // 30: still background .. 100: fully the thing
+                if (a < 1) { px[i] = (Math.round(a * 255) << 24) | (c & 0xFFFFFF); if (a == 0) keyed++; }
+            }
+            if (keyed < px.length / 20) return;                                // hardly any background: leave the picture whole
+            b.img = L.create(px, w, h);
+            b.w = w; b.h = h;
+        } catch (RuntimeException ignored) {
+        }
+    }
+
     /** v40: the flames of a place picture cut out of it (Backdrop.fireImg). */
     static void fireCut(Loader L, String file, Backdrop b) {
         Nature.Scan s = b.scan;
@@ -1066,6 +1102,7 @@ public final class Art {
                     s.pic = b;
                     s.object = f.length >= 5 && f[4].trim().equals("object");
                     b.object = s.object;
+                    if (s.object) keyObject(L, b, f[3], backdropSide);
                     art.shots.add(s);
                     if (s.object) thingLines.add(new String[]{f[2], f[3]});
                 } else if (f[0].equals("title") || f[0].equals("end")) {

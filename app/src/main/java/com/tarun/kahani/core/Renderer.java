@@ -3924,7 +3924,7 @@ public final class Renderer {
         final float cx = side > 0 ? Math.max(vw - inside, vw - edge + w / 2) : Math.min(inside, edge - w / 2), bottom = vh * 0.1f + h;
         final Object img = back.img;
         final float fw = w;
-        g.layerLow("ots:" + fg.c.id + ":" + (side > 0 ? "R" : "L"), vw, vh, 0.6f, new Gfx.Painter() {       // v47: 0.60 (was 0.35) — the shoulder had read as a shapeless lump
+        g.layerLow("ots:" + fg.c.id + ":" + (side > 0 ? "R" : "L"), vw, vh, 0.75f, new Gfx.Painter() {      // v47.2: 0.75 (was 0.60) — at 0.60 the back of the head blurred into something like a face
             public void paint(Gfx gg) {
                 gg.image(img, cx - fw / 2, bottom - h, fw, h);
             }
