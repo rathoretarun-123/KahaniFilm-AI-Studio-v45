@@ -3,21 +3,17 @@ plugins { id 'java' }
 repositories { mavenCentral() }
 java { toolchain { languageVersion = JavaLanguageVersion.of(21) } }
 sourceSets {
-    main { java { srcDirs = ['../../app/src/main/java', '../../tools/jvm'] } }
+    main { java { srcDirs = ['../../app/src/main/java'] } }
 }
 dependencies {
     compileOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
     testCompileOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
-    // JUnit discovers test methods before Robolectric creates its sandbox, so Android
-    // API types must exist on the worker classpath. Use the instrumented framework, never the
-    // pristine android-all jar: Robolectric's bytecode hooks are required for real graphics.
-    testRuntimeOnly 'org.robolectric:android-all-instrumented:14-robolectric-10818077-i7'
+    testRuntimeOnly files("${System.getProperty('user.home')}/.cache/kahani/android-all-14.jar")
     testImplementation 'junit:junit:4.13.2'
     testImplementation('org.robolectric:robolectric:4.14.1') { exclude group: 'androidx.test'; exclude group: 'androidx.test.espresso' }
 }
 test {
-    // Pixel-accurate graphics are enabled with @GraphicsMode(NATIVE) on the test classes.
-    // The LEGACY backend intentionally fakes/no-ops many raster operations and is unsuitable for render QA.
+    systemProperty 'robolectric.graphicsMode', 'NATIVE'
     systemProperty 'robolectric.offline', 'false'
     systemProperty 'kahani.assets', file('../../app/src/main/assets').absolutePath
     systemProperty 'kahani.soak', System.getProperty('kahani.soak', '0')

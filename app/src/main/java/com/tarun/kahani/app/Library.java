@@ -14,9 +14,6 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.zip.ZipEntry;
-import java.util.zip.ZipInputStream;
-import java.security.MessageDigest;
 
 /**
  * The studio library: everything the user ever uploaded, recorded, downloaded or generated (pictures, voice
@@ -24,7 +21,7 @@ import java.security.MessageDigest;
  * reusable in every film.
  */
 public final class Library {
-    public static final String PIC = "pic", VOICE = "voice", SOUND = "sound", SCRIPT = "script";
+    public static final String PIC = "pic", VOICE = "voice", SOUND = "sound";
 
     public static final class Item {
         public String id, type, kind = "", name = "", tags = "", path = "", source = "", meta = "";
@@ -73,7 +70,7 @@ public final class Library {
         java.util.Set<String> known = new java.util.HashSet<String>();
         for (Item it : items) known.add(new File(it.path).getAbsolutePath());
         boolean changed = false;
-        for (String type : new String[]{PIC, VOICE, SOUND, SCRIPT}) {
+        for (String type : new String[]{PIC, VOICE, SOUND}) {
             File[] fs = new File(dir, type).listFiles();
             if (fs == null) continue;
             for (File f : fs) {
@@ -193,85 +190,6 @@ public final class Library {
                 items.add(it);
             }
         } catch (IOException ignored) {
-        }
-    }
-
-    /**
-     * Imports story-pack images once into the app-private library. Multi-image pose/expression/contact sheets
-     * are split using the same reader as phone uploads; each resulting pose/angle is stored in filesDir/library
-     * and survives app restarts without touching the camera roll. Packaged originals remain read-only in assets.
-     */
-    public void importBundledFilmReferences() throws IOException {
-        android.content.SharedPreferences prefs = ctx.getSharedPreferences("kahani", Context.MODE_PRIVATE);
-        if (prefs.getBoolean("bundledFilmReferencesV1", false)) return;
-        String[][] films = {
-                {"aakhiri_chai", "आखिरी चाय"},
-                {"babu_ke_liye", "बाबू के लिए"}
-        };
-        for (String[] film : films) {
-            String assetDir = "film_library/" + film[0] + "/stills";
-            String[] files = ctx.getAssets().list(assetDir);
-            if (files == null) continue;
-            java.util.Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
-            int seq = 0;
-            for (String name : files) {
-                String lower = name.toLowerCase(java.util.Locale.ROOT);
-                if (!(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp"))) continue;
-                if (lower.contains("contact_sheet") || lower.contains("montage") || lower.contains("contact-sheet")) continue;
-                byte[] data;
-                java.io.InputStream in = ctx.getAssets().open(assetDir + "/" + name);
-                try { data = Project.readAll(in); } finally { try { in.close(); } catch (Exception ignored) {} }
-                if (data.length == 0) continue;
-                seq++;
-                String label = film[1] + " reference " + seq;
-                List<Item> split = new ArrayList<Item>();
-                try {
-                    if (SheetSaver.isSheet(data, false)) {
-                        split = SheetSaver.saveToLibrary(this, label, "", data, "bundled:" + film[0]);
-                    }
-                } catch (Throwable ignored) {
-                    split = new ArrayList<Item>();
-                }
-                if (split.isEmpty()) {
-                    String ext = lower.endsWith(".webp") ? ".webp" : lower.endsWith(".png") ? ".png" : ".jpg";
-                    Item it = addBytes(PIC, "", label, film[1] + " " + name.replace('_', ' '), data, ext, "bundled:" + film[0]);
-                    it.setMeta("bundledFilm", film[0]);
-                } else {
-                    for (Item it : split) {
-                        it.tags = (it.tags + " " + film[1] + " reference " + name.replace('_', ' ')).trim();
-                        it.setMeta("bundledFilm", film[0]);
-                    }
-                    save();
-                }
-            }
-        }
-        prefs.edit().putBoolean("bundledFilmReferencesV1", true).apply();
-    }
-
-    /** Story-specific reference images shipped in the APK and exposed as read-only library items. */
-    private void addFilmBuiltIns(String assetDir, String storyTitle) {
-        try {
-            String[] files = ctx.getAssets().list(assetDir);
-            if (files == null) return;
-            java.util.Arrays.sort(files, String.CASE_INSENSITIVE_ORDER);
-            int sequence = 0;
-            for (String f : files) {
-                String lower = f.toLowerCase(java.util.Locale.ROOT);
-                if (!(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp"))) continue;
-                Item it = new Item();
-                it.id = "asset:" + assetDir + "/" + f;
-                it.type = PIC;
-                it.kind = "reference";
-                it.builtIn = true;
-                it.path = "asset:" + assetDir + "/" + f;
-                it.source = "app";
-                it.name = storyTitle + " reference " + (++sequence);
-                it.tags = storyTitle + " reference image " + f.replace('_', ' ').replace('-', ' ');
-                it.setMeta("storyReference", assetDir.substring("film_library/".length(), assetDir.indexOf("/stills")));
-                items.add(it);
-            }
-        } catch (IOException ignored) {
-            // Standard library stays usable if optional film asset packs are absent.
         }
     }
 
@@ -463,92 +381,6 @@ public final class Library {
         return it;
     }
 
-    /**
-     * Imports a reusable user asset bundle into the private library. Original ZIP and an entry manifest are retained.
-     * Media items are indexed with archive path, bundle fingerprint and filmmaker metadata; never tied to a single film.
-     */
-    public synchronized int importZipArchive(InputStream input, String bundleName, String userMetadata) throws IOException {
-        if (input == null) throw new IOException("No archive selected");
-        byte[] archive = Project.readAll(input);
-        if (archive.length == 0 || archive.length > 100 * 1024 * 1024) throw new IOException("Archive must be between 1 byte and 100 MiB");
-        if (archive.length < 4 || archive[0] != 'P' || archive[1] != 'K') throw new IOException("Selected file is not a ZIP archive");
-        final String digest;
-        try {
-            byte[] hash = MessageDigest.getInstance("SHA-256").digest(archive);
-            StringBuilder h = new StringBuilder();
-            for (byte b : hash) h.append(String.format(java.util.Locale.ROOT, "%02x", b & 255));
-            digest = h.toString();
-        } catch (Exception e) { throw new IOException("Could not fingerprint archive", e); }
-        int already = 0;
-        for (Item item : items) if (digest.equals(item.meta("bundleId"))) already++;
-        File bundles = new File(dir, "bundles");
-        if (!bundles.exists() && !bundles.mkdirs()) throw new IOException("Cannot create library bundle directory");
-        File saved = new File(bundles, digest + ".zip");
-        File manifestFile = new File(bundles, digest + ".json");
-        if (already > 0 && saved.exists() && manifestFile.exists()) return already;
-        if (!saved.exists()) {
-            FileOutputStream out = new FileOutputStream(saved);
-            try { out.write(archive); out.getFD().sync(); } finally { out.close(); }
-        }
-        List<Object> entries = new ArrayList<Object>();
-        int imported = 0, totalBytes = 0, entryCount = 0;
-        ZipInputStream zip = new ZipInputStream(new java.io.ByteArrayInputStream(archive));
-        try {
-            ZipEntry entry;
-            while ((entry = zip.getNextEntry()) != null) {
-                if (entry.isDirectory()) { zip.closeEntry(); continue; }
-                String raw = entry.getName().replace('\\', '/');
-                String[] segments = raw.split("/");
-                boolean unsafe = raw.startsWith("/") || raw.matches("^[A-Za-z]:.*");
-                for (String segment : segments) if ("..".equals(segment)) unsafe = true;
-                if (unsafe) { zip.closeEntry(); continue; }
-                java.io.ByteArrayOutputStream buf = new java.io.ByteArrayOutputStream();
-                byte[] block = new byte[8192]; int n;
-                while ((n = zip.read(block)) != -1) {
-                    totalBytes += n;
-                    if (totalBytes > 300 * 1024 * 1024) throw new IOException("Archive expands beyond the 300 MiB safety limit");
-                    buf.write(block, 0, n);
-                }
-                zip.closeEntry();
-                byte[] data = buf.toByteArray();
-                if (data.length == 0) continue;
-                entryCount++;
-                String leaf = segments[segments.length - 1];
-                String lower = leaf.toLowerCase(java.util.Locale.ROOT);
-                String ext = leaf.lastIndexOf('.') >= 0 ? leaf.substring(leaf.lastIndexOf('.')).toLowerCase(java.util.Locale.ROOT) : "";
-                String type = null, kind = "";
-                if (".jpg".equals(ext) || ".jpeg".equals(ext) || ".png".equals(ext) || ".webp".equals(ext)) { type = PIC; kind = "reference"; }
-                else if (".wav".equals(ext) || ".mp3".equals(ext) || ".m4a".equals(ext) || ".ogg".equals(ext) || ".aac".equals(ext)) { type = SOUND; kind = "audio"; }
-                else if (".txt".equals(ext) || ".md".equals(ext) || ".srt".equals(ext)) { type = SCRIPT; kind = "screenplay-or-text"; }
-                Map<String,Object> rec = new LinkedHashMap<String,Object>();
-                rec.put("archivePath", raw); rec.put("bytes", data.length);
-                if (type != null) {
-                    String label = leaf.replaceAll("\\.[^.]+$", "").replace('_', ' ');
-                    Item it = addBytes(type, kind, label, (bundleName == null ? "user bundle" : bundleName) + " " + raw, data, ext, "bundle:" + digest);
-                    it.setMeta("bundleId", digest);
-                    it.setMeta("archiveName", bundleName == null ? "user bundle" : bundleName.replace(';', ' '));
-                    it.setMeta("archivePath", raw.replace(';', ','));
-                    it.setMeta("userMetadata", userMetadata == null ? "" : userMetadata.replace(';', ','));
-                    it.setMeta("assetRole", type.equals(SCRIPT) ? "reusable-screenplay" : type.equals(PIC) ? "visual-reference" : "sound-or-voice");
-                    rec.put("libraryItemId", it.id); rec.put("type", type); rec.put("kind", kind);
-                    imported++;
-                } else rec.put("type", "retained-in-original-archive");
-                entries.add(rec);
-            }
-        } finally { try { zip.close(); } catch (Exception ignored) {} }
-        if (entryCount == 0) throw new IOException("ZIP archive contains no readable files");
-        Map<String,Object> manifest = new LinkedHashMap<String,Object>();
-        manifest.put("schemaVersion", 1); manifest.put("bundleId", digest);
-        manifest.put("archiveName", bundleName == null ? "user bundle" : bundleName);
-        manifest.put("userMetadata", userMetadata == null ? "" : userMetadata);
-        manifest.put("archivePath", saved.getAbsolutePath()); manifest.put("archiveBytes", archive.length);
-        manifest.put("entryCount", entryCount); manifest.put("indexedMediaCount", imported); manifest.put("entries", entries);
-        FileOutputStream out = new FileOutputStream(manifestFile);
-        try { out.write(Json.write(manifest).getBytes("UTF-8")); out.getFD().sync(); } finally { out.close(); }
-        save();
-        return imported;
-    }
-
     public Item addBytes(String type, String kind, String name, String tags, byte[] data, String ext, String source) throws IOException {
         File tmp = File.createTempFile("incoming", ext, dir);
         FileOutputStream o = new FileOutputStream(tmp);
@@ -568,6 +400,45 @@ public final class Library {
     public synchronized void rename(Item it, String name) {
         it.name = name;
         save();
+    }
+
+    /**
+     * Returns saved reference pictures belonging to one named character, place, costume or prop.
+     * SheetSaver stores the durable relation in ofName/of metadata; main pictures without that
+     * metadata are also found by their exact name. This lets later projects reuse the same group.
+     */
+    public synchronized List<Item> referencesFor(String entityName) {
+        List<Item> out = new ArrayList<Item>();
+        if (entityName == null || entityName.trim().length() == 0) return out;
+        String wanted = Txt.norm(entityName);
+        for (Item it : items) {
+            if (!PIC.equals(it.type)) continue;
+            String group = it.meta("ofName");
+            String candidate = group == null || group.length() == 0 ? it.name : group;
+            String norm = Txt.norm(candidate);
+            if (norm.equals(wanted) || (group == null && Txt.norm(it.name).startsWith(wanted + " "))) out.add(it);
+        }
+        java.util.Collections.sort(out, new java.util.Comparator<Item>() {
+            public int compare(Item a, Item b) {
+                int ar = referenceRank(a), br = referenceRank(b);
+                if (ar != br) return ar - br;
+                return a.label().compareToIgnoreCase(b.label());
+            }
+        });
+        return out;
+    }
+
+    private static int referenceRank(Item it) {
+        if ("1".equals(it.meta("sheetMain")) || "1".equals(it.meta("main"))) return 0;
+        String v = it.meta("view");
+        if (v == null) v = it.kind;
+        if (v == null) return 10;
+        String n = Txt.norm(v);
+        if (n.equals("0") || n.contains("front")) return 1;
+        if (n.equals("45") || n.equals("-45") || n.contains("three quarter")) return 2;
+        if (n.equals("90") || n.equals("-90") || n.contains("side")) return 3;
+        if (n.equals("180") || n.contains("back") || n.contains("reverse")) return 4;
+        return 5;
     }
 
     /** Items of a type (and kind, if given), best matches for the query first. */

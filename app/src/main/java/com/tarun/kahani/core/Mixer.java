@@ -54,10 +54,16 @@ public final class Mixer {
      * The mouth's shape along a voice, 100 values a second: how bright the sound is. Round vowels (o, u) are
      * dark, spread vowels (e, i) and s-sounds are bright. 0 = round .. 1 = wide.
      */
-    public static float[] shape(float[] pcm, int sr) {
-        int win = sr / 100;
+    public static float[] shape(float[] pcm, int sr) { return shape(pcm, sr, null); }
+
+    /**
+     * Hybrid 100 Hz mouth-shape track. The audio supplies acoustic cues; a text-informed multilingual
+     * viseme prior distinguishes rounded and spread vowels. It is a fallback, not a phoneme aligner.
+     */
+    public static float[] shape(float[] pcm, int sr, String spokenText) {
+        int win = Math.max(1, sr / 100);
         int n = pcm.length / win + 1;
-        float[] out = new float[n];
+        float[] acoustic = new float[n];
         float y = 0.5f;
         for (int i = 0; i < n; i++) {
             double e = 0, d = 0;
@@ -65,14 +71,65 @@ public final class Mixer {
             for (int j = Math.max(1, a); j < b; j++) { e += pcm[j] * pcm[j]; float df = pcm[j] - pcm[j - 1]; d += df * df; }
             float v = 0.5f;
             if (e > 1e-7 * Math.max(1, b - a)) {
-                // the "centre" frequency of the sound from how fast it changes
                 double fc = sr / (2 * Math.PI) * Math.sqrt(d / e);
                 v = (float) Math.max(0, Math.min(1, (fc - 650) / 1500));
             }
             y += 0.3f * (v - y);
-            out[i] = y;
+            acoustic[i] = y;
+        }
+        if (spokenText == null || spokenText.trim().isEmpty() || n < 2) return acoustic;
+        java.util.List<Integer> cps = new java.util.ArrayList<Integer>();
+        java.util.List<Float> weights = new java.util.ArrayList<Float>();
+        String text = spokenText.toLowerCase(java.util.Locale.ROOT);
+        for (int p = 0; p < text.length();) {
+            int cp = text.codePointAt(p);
+            p += Character.charCount(cp);
+            if (Character.isISOControl(cp)) continue;
+            cps.add(cp);
+            weights.add(Character.isWhitespace(cp) ? 0.45f : isVowelOrMatra(cp) ? 1.35f : isPunctuation(cp) ? 0.65f : 1.0f);
+        }
+        float total = 0;
+        for (Float w : weights) total += w;
+        if (total <= 0) return acoustic;
+        float[] target = new float[n];
+        float cumulative = 0;
+        for (int i = 0; i < cps.size(); i++) {
+            float w = weights.get(i);
+            int from = Math.max(0, Math.min(n - 1, Math.round(cumulative / total * (n - 1))));
+            cumulative += w;
+            int to = Math.max(from + 1, Math.min(n, Math.round(cumulative / total * n)));
+            float value = visemeTarget(cps.get(i));
+            for (int f = from; f < to; f++) target[f] = value;
+        }
+        for (int i = 1; i < n; i++) if (target[i] == 0f) target[i] = target[i - 1];
+        for (int i = n - 2; i >= 0; i--) if (target[i] == 0f) target[i] = target[i + 1];
+        float[] out = new float[n];
+        for (int i = 0; i < n; i++) {
+            float smooth = target[i] * 0.55f + acoustic[i] * 0.45f;
+            float prev = target[Math.max(0, i - 1)], next = target[Math.min(n - 1, i + 1)];
+            out[i] = Math.max(0f, Math.min(1f, smooth * 0.7f + (prev + next) * 0.15f));
         }
         return out;
+    }
+
+    private static boolean isVowelOrMatra(int cp) {
+        return "aeiouy".indexOf(cp) >= 0 || (cp >= 0x0904 && cp <= 0x0914)
+                || (cp >= 0x093E && cp <= 0x094C) || cp == 0x094D;
+    }
+    private static boolean isPunctuation(int cp) {
+        return cp == '.' || cp == ',' || cp == '!' || cp == '?' || cp == ';' || cp == ':'
+                || cp == 0x0964 || cp == 0x0965;
+    }
+    private static float visemeTarget(int cp) {
+        if (Character.isWhitespace(cp) || isPunctuation(cp)) return 0.35f;
+        if ("ou".indexOf(cp) >= 0 || cp == 0x0909 || cp == 0x090A || cp == 0x0941 || cp == 0x0942) return 0.14f;
+        if ("iey".indexOf(cp) >= 0 || cp == 0x0907 || cp == 0x0908 || cp == 0x090F || cp == 0x0910
+                || cp == 0x093F || cp == 0x0940 || cp == 0x0947 || cp == 0x0948) return 0.88f;
+        if ("mbp".indexOf(cp) >= 0 || cp == 0x092E || cp == 0x092C || cp == 0x092A || cp == 0x092D) return 0.24f;
+        if ("fv".indexOf(cp) >= 0 || cp == 0x0935) return 0.63f;
+        if ("sz".indexOf(cp) >= 0 || cp == 0x0938 || cp == 0x0936 || cp == 0x0937 || cp == 0x091A || cp == 0x091C) return 0.82f;
+        if (cp == 'a' || cp == 0x0905 || cp == 0x0906 || cp == 0x093E) return 0.56f;
+        return 0.48f;
     }
 
     /** Linear resample to Synth.SR. */

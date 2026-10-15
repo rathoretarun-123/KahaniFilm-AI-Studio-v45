@@ -7,7 +7,7 @@ import java.util.Locale;
 /**
  * The Technical Director protocol, hardcoded. This replaces creative freedom with engineering discipline: the
  * director is not a storyteller but a Technical Director whose job is temporally stable, spatially accurate,
- * story-faithful, temporally stable, spatially accurate, scale-consistent animated shots. Story intent is non-negotiable; stability serves the story. Plan beats, scenes, shots and transitions before generating SHOTS.
+ * scale-consistent animated shots. It never makes a whole scene at once; it makes SHOTS.
  *
  * Everything here is enforced in code, not only written down:
  *  - Director: locked cameras (P3), shots of about 3 s and never more than 4 s (P6), every spoken line in
@@ -30,9 +30,9 @@ public final class TechnicalDirector {
     public static final float SHOT_SECONDS = 3f;
     /** P6: never longer than 4 seconds per shot. */
     public static final float MAX_SHOT_SECONDS = 4f;
-    /** Where the director cuts (v24): shots of about 3 s, never over the cap — about a quarter more shots than cutting at the cap. */
-    public static float CUT_SECONDS = 2.0f;          // v33: set from the edits (shot_length) before every film; v34: 2 s by default (was 2.6)
-    public static final float CUT_SECONDS_DEFAULT = 2.0f;
+    /** Default edit rhythm: short 1.5-second cuts; dialogue, reactions and establishing beats may hold when needed. */
+    public static float CUT_SECONDS = 1.5f;          // may be overridden by the edit's shot_length setting before a film
+    public static final float CUT_SECONDS_DEFAULT = 1.5f;
     /** C5: a character moves less than 15 % of the frame width in one shot. */
     public static final float MAX_MOTION = 0.15f;
     /** C4.3: one action only, at most 10 % frame movement (the shot table asks for this). */
@@ -65,19 +65,8 @@ public final class TechnicalDirector {
             + "mouth movement during silence, proprietary characters";
     public static final String LIP_SYNC = "close-up, front-facing, face looking directly at the camera 0 degrees, face 65-75% of the frame, "
             + "mouth clearly visible, no shadow on the mouth, soft frontal light on the face, catch-light in the eyes, head almost still, "
-            + "only mouth and jaw move, no head turn, contains_speech = true";
-
-    /** Research-informed pipeline checks: references, editorial continuity, preview review and explicit QC status. */
-    public static final String QUALITY_GATE =
-            "PRODUCTION GATE: preserve the approved script beat and emotional intention; never invent a plot-changing event. "
-            + "Use versioned character/location/prop/costume asset IDs and approved references; do not recreate recurring assets from text alone. "
-            + "Plan establishing, readable action, reaction/eyeline, insert and transition coverage only where the story needs it. "
-            + "Keep screen direction, eyelines, prop ownership, hand-to-object contact, object state and geography continuous across cuts. "
-            + "Stage and time dialogue before animation; retain exact dialogue and audio duration. Use phoneme/viseme alignment when configured; "
-            + "never claim acoustic mouth-shape estimates are phoneme-accurate. Mix room tone, motivated ambience, Foley, music and dialogue ducking. "
-            + "Render a low-resolution animatic/preview first, review every shot and neighbouring cuts, repair only failing shots, then render final output. "
-            + "Check identity, silhouette/anatomy, motion arcs, contact and weight, face/eyes, lip-sync, continuity, clipping, black frames, missing media and export integrity. "
-            + "If a check cannot be performed automatically, mark NEEDS HUMAN REVIEW; never mark it PASS by assumption.";
+            + "only mouth and jaw move, no head turn, contains_speech = true, speech-timed mouth articulation, rounded and spread vowel shapes, "
+            + "closed-lip consonants, natural coarticulation, no mouth motion during silence, no clipped first or last phoneme";
 
     /** P4 and C3: words that are never written in a generation prompt, with what is written instead. */
     public static final String[][] FORBIDDEN = {{"running fast", "walking"}, {"running", "walking"}, {"runs", "walks"}, {"ran ", "walked "},
@@ -128,7 +117,6 @@ public final class TechnicalDirector {
             + "PERFORMANCE: {PERFORMANCE}\n"
             + "CONTINUITY: {CONTINUITY}\n"
             + "END STATE: {END}\n"
-            + QUALITY_GATE + "\n"
             + STABLE + ". {SPEECH}";
 
     /** Replaces {NAME} fields; pairs of name, value. */
@@ -285,11 +273,11 @@ public final class TechnicalDirector {
 
     /** The whole protocol, as given (also in docs/technical-director.md and at the top of the descriptions). */
     public static final String PROTOCOL = ""
-            + "TECHNICAL DIRECTOR PROTOCOL — story-led production with engineering discipline\n"
+            + "TECHNICAL DIRECTOR PROTOCOL — engineering discipline instead of creative freedom\n"
             + "\n"
             + "1. ROLE DEFINITION\n"
             + "You are not a storyteller. You are a Technical Director. Your job is to generate temporally stable, spatially accurate, "
-            + "scale-consistent animated shots. Story intent is non-negotiable; stability serves the story. Plan beats, scenes, shots and transitions before generating SHOTS.\n"
+            + "scale-consistent animated shots. Story is secondary to stability. You will NEVER generate a full scene in one call. You will generate SHOTS.\n"
             + "\n"
             + "2. OBJECTIVE\n"
             + "Produce small animated movies (30-90 seconds) that pass the Pixar Test:\n"
@@ -347,7 +335,7 @@ public final class TechnicalDirector {
             + "directly at camera, 0 degrees. 3. Framing = Face occupies 65-75% of frame, mouth clearly visible, no shadow on mouth. 4. Lighting = Soft "
             + "frontal lighting on face, catch-light in eyes. 5. Dialogue = Max 6 words per shot, one sentence. 6. Motion = Head almost still, only "
             + "mouth/jaw moves, no head turn. 7. Flag = contains_speech = true. If conditions not met, generate silent shot and do lip-sync in post "
-            + "using Wav2Lip. For long dialogue, split into multiple close-ups: Shot A = 4 words, Shot B = 5 words, Shot C = reaction.\n"
+            + "using a phoneme/viseme aligner configured by the user. Keep full spoken-line duration; never truncate dialogue to force a short shot. Time cuts to clause boundaries and prefer viseme timing from final audio; the built-in text-informed track is only a fallback and requires visual QC.\n"
             + "\n"
             + "9. PROMPT TEMPLATES - HARDCODED\n"
             + "IMAGE TEMPLATE (first frame):\n" + IMAGE_TEMPLATE + "\n"
@@ -365,17 +353,7 @@ public final class TechnicalDirector {
             + "(shaky/morph), reduce motion 80% and regenerate from the same first frame  7. Edit: join clips, add sound effects, film grain, slight "
             + "camera shake only in edit if needed  8. Final QC: play at 0.25x speed, check for morphing, floating, finger count\n"
             + "\n"
-            + "12. SCRIPT-TO-ANIMATION PRODUCTION GATE\n"
-            + "A. Parse the complete script; preserve characters, causal events, dialogue, emotional turns and ending. Build a beat sheet with scene purpose, location, cast, props, time-of-day and emotional change.\n"
-            + "B. Build a shot list and animatic timing before final generation. Each shot must serve a beat; add establishing, reaction, insert and transition shots only where they improve clarity or rhythm.\n"
-            + "C. Resolve each entity to a persistent approved asset ID and reference images. Keep costume variants scene-specific and versioned. Never silently invent a missing reference or resolve a major contradiction.\n"
-            + "D. Lock geography, screen direction, eyelines, prop ownership/state, contact points, lighting direction and dialogue timing across adjacent shots.\n"
-            + "E. Generate approved first frames, then short image-conditioned motion. Render previews first. Inspect each shot and both neighbouring cuts; regenerate the smallest defective unit.\n"
-            + "F. Mix dialogue, ambience, Foley, music and transitions with intelligible dialogue, no clipping and intentional silence. Check final video duration, frame rate, aspect ratio, audio sync, black frames and file integrity.\n"
-            + "G. Record PASS / FAIL / NEEDS HUMAN REVIEW for every quality check. Never claim studio-level or Pixar-level quality without a complete visual/audio review. A prompt is guidance, not a guarantee.\n"
-            + QUALITY_GATE + "\n"
-            + "\n"
-            + "13. ERROR CORRECTION\n"
+            + "12. ERROR CORRECTION\n"
             + "- Face morphs: motion too big. Reduce to \"subtle breathing only\".\n- Background moves: add \"static background, background locked, no parallax\".\n"
             + "- Character floats: add \"feet firmly planted, gravity, weight, shadow under feet touching ground\".\n"
             + "- Costume changes: you paraphrased. Copy-paste exact costume lock text.\n"

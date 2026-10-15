@@ -132,6 +132,52 @@ final class AutoLibrary {
         return false;
     }
 
+    /** Bilingual action-to-asset hints for the missing-asset upload queue. */
+    private static void addInferredAssets(List<String[]> targets, Set<String> seen, int scene, String text) {
+        if (text == null) return;
+        String n = Txt.norm(text);
+        String[][] rules = {
+            {"mobile phone", "phone|mobile|cell phone|call|text message|typing message|फोन|मोबाइल|मैसेज", "Mobile phone with screen and realistic hand scale"},
+            {"landline telephone", "landline|rotary phone|telephone receiver|टेलीफोन|लैंडलाइन", "Landline phone with receiver, dial or keypad, cord and cradle"},
+            {"television and remote", "watch tv|television|टीवी देख|remote control|रिमोट", "Television and remote when required by the action"},
+            {"toothbrush and toothpaste", "brush teeth|toothbrush|दाँत साफ|दांत साफ", "Toothbrush, toothpaste and sink if not already supplied by the set"},
+            {"car", "drive|driving|steering wheel|car door|गाड़ी चल|कार चल", "Car with doors, seats, steering controls and wheels"},
+            {"bicycle", "bicycle|cycling|cycle|साइकिल", "Bicycle with wheels, pedals, chain, handlebar and brakes"},
+            {"bus", "board bus|bus ride|get off the bus|बस में चढ़|बस से उतर", "Bus with doors, steps, handrails and seats"},
+            {"horse", "horseback|ride a horse|mount horse|घोड़े पर सवार", "Horse with articulated legs; tack only if established"},
+            {"elephant", "elephant ride|ride an elephant|हाथी पर सवार", "Elephant with trunk, ears, four legs and tail"},
+            {"cow or buffalo and vessel", "milk a cow|milking|buffalo|भैंस|दूध निकाल", "Specified cow or buffalo and a suitable milking vessel"},
+            {"broom", "sweep|broom|झाड़ू", "Broom with handle and bristles"},
+            {"mop and bucket", "mop floor|clean floor|mopping|पोछा|फर्श साफ", "Mop, bucket and suitable floor area"},
+            {"food and utensils", "eat|eating|meal|have breakfast|खाना|भोजन", "Food and utensils supported by the scene and cultural context"},
+            {"tea cup and kettle", "tea|chai|चाय", "Cup and kettle only if required by the described action"},
+            {"book or newspaper", "newspaper|read a book|reading a book|अखबार|अख़बार|किताब पढ़", "Book or newspaper with pages that can turn"},
+            {"computer workstation", "laptop|computer|keyboard|typing on|कंप्यूटर|लैपटॉप", "Computer or laptop with screen and input devices"},
+            {"playground equipment", "swing|seesaw|see-saw|slide|झूला|फिसलपट्टी", "The specific swing, seesaw or slide required by the action"},
+            {"fan", "ceiling fan|table fan|fan rotates|पंखा", "Fan with rotating blades and appropriate mounting"},
+            {"wind-reactive set details", "wind|breeze|storm|हवा|आँधी|आंधी", "Only curtains, shades, foliage or windows present and exposed to wind"},
+            {"rain effects", "rain falls|raining|rainstorm|बारिश|वर्षा", "Rain particles and appropriate wet-surface response"},
+            {"lightning and thunder effects", "lightning|thunder|बिजली चमक|गरज", "Brief lightning flash, timed thunder and motivated illumination"},
+            {"flame light source", "fire|flame|candle|lantern|दीया|आग|लौ", "Flame only when implied, with local light falloff and nearby shadows"},
+            {"night sky", "night sky|stars|starry night|तारे|रात का आसमान", "Night background with restrained stars and consistent ambient illumination"},
+            {"door assembly", "open door|close door|door handle|दरवाज़ा खोल|दरवाजा खोल|दरवाज़ा बंद", "Door with frame, hinges, handle and latch"},
+            {"window assembly", "open window|close window|window shade|खिड़की खोल|खिड़की बंद", "Window with frame and opening pivot; shades only if established"},
+            {"staircase", "stairs|staircase|climb stairs|सीढ़ियाँ|सीढ़ी", "Staircase with consistent tread and riser geometry"},
+            {"bathroom fixtures", "bathe|bathing|shower|नहाना|स्नान", "Suitable bathroom setting with privacy and appropriate fixtures"},
+            {"elevator", "elevator|use the lift|लिफ्ट", "Elevator cabin, doors and control buttons"}
+        };
+        for (String[] rule : rules) {
+            boolean hit = false;
+            for (String term : rule[1].split("\\|")) if (Txt.has(n, term)) { hit = true; break; }
+            if (!hit) continue;
+            String key = Txt.norm(rule[0]);
+            if (!seen.add(key)) continue;
+            targets.add(new String[]{"shot:" + scene + ":" + rule[0],
+                    rule[0] + " (scene " + scene + ", inferred)",
+                    rule[2] + "; inferred from action, upload a reference or skip"});
+        }
+    }
+
     /** Every picture this story still needs: {target, label, description}. */
     static List<String[]> missingTargets(Project project, Story st) {
         Set<Story.CharacterDef> haveChar = new HashSet<Story.CharacterDef>();
@@ -160,6 +206,12 @@ final class AutoLibrary {
             if (f.length >= 4 && f[0].equals("shot")) for (String k : f[2].split(",")) haveShot.add(f[1] + ":" + k.trim());
         }
         Set<String> objSeen = new HashSet<String>();
+        // Find implied props and environmental assets even when the script has no separate object list.
+        // Suggestions are shown in Studio for upload/skip; they never silently alter story canon.
+        for (Story.Scene sc : st.scenes) {
+            addInferredAssets(t, objSeen, sc.number, sc.title + " " + sc.setting);
+            for (Story.Beat bt : sc.beats) if (bt != null && bt.text != null) addInferredAssets(t, objSeen, sc.number, bt.text);
+        }
         // v43: the names of the story's people and places are never things to ask for ("दीपक" the boy is no lamp)
         Set<String> names = new HashSet<String>();
         for (Story.CharacterDef c : st.characters) { names.add(Txt.norm(c.displayName)); for (String a : c.aliases) names.add(Txt.norm(a)); }

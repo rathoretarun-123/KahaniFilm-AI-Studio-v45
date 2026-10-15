@@ -32,8 +32,6 @@ public final class Prefs {
     public static boolean fastMesh(Context c) { return "1".equals(get(c, "fastMesh", "0")); }
     /** Smooth motion: the film at 30 frames per second instead of 24 (a quarter more drawing). */
     public static boolean fps30(Context c) { return !"0".equals(get(c, "fps30", "1")); }
-    /** Optional 60 fps output; substantially more drawing, memory traffic, battery use, and render time. */
-    public static boolean fps60(Context c) { return "1".equals(get(c, "fps60", "0")); }
     /** The director asks before any picture the studio made in 3D is used (a proposal with Use / Reject). */
     public static boolean ask3d(Context c) { return !"0".equals(get(c, "ask3d", "1")); }
     /** v34: before the 3D maker makes anything, the film asks the user for the missing pictures and waits. */

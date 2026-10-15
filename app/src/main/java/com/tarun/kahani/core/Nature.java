@@ -261,6 +261,79 @@ public final class Nature {
         o[0] = hh; o[1] = mx <= 0 ? 0 : d / mx; o[2] = mx;
     }
 
+    // ================================================================== local natural phenomena and ambience
+
+    /** Deterministic lightning flash envelope: brief bright pulse with a weaker after-flash. */
+    public static float lightningFlash(float t, float strikeTime, float strength) {
+        float d=t-strikeTime;
+        if(d<0 || d>0.65f) return 0;
+        float primary=(float)Math.exp(-d*34.0f);
+        float after=d<0.12f?0:(float)(0.32*Math.exp(-(d-0.12f)*10.0));
+        return Math.max(0,Math.min(1,Math.max(primary,after)*Math.max(0,strength)));
+    }
+
+    /** Local point-light contribution from a flame. Returns 0..1; it does not illuminate the whole scene. */
+    public static float localFlameLight(float distance, float radius, float flameStrength, float flicker) {
+        float r=Math.max(0.001f,radius), d=Math.max(0,distance);
+        float falloff=(float)Math.exp(-3.0f*d/r);
+        float f=Math.max(0.25f,Math.min(1.35f,flameStrength*(0.88f+0.12f*flicker)));
+        return Math.max(0,Math.min(1,falloff*f));
+    }
+
+    /** Stable flame flicker for a lamp, candle, diya or campfire. */
+    public static float flameFlicker(float t, int seed) {
+        float a=(float)Math.sin(t*11.7f+seed*1.37f);
+        float b=(float)Math.sin(t*19.1f+seed*0.71f);
+        float c=(float)Math.sin(t*3.2f+seed*2.11f);
+        return Math.max(0.25f,Math.min(1.35f,0.72f+0.17f*a+0.08f*b+0.03f*c));
+    }
+
+    /** Ceiling/table fan speed response; value is normalized and deterministic, including spin-up/coast-down. */
+    public static float fanSpeed(float t, float switchedAt, float targetSpeed, boolean on) {
+        float elapsed=Math.max(0,t-switchedAt), target=on?Math.max(0,Math.min(1,targetSpeed)):0;
+        float response=1-(float)Math.exp(-elapsed*1.8f);
+        return target*response;
+    }
+
+    /** Fan blade phase in radians, suitable for a rotating visual mesh. */
+    public static float fanAngle(float t, float speed, float initialAngle) {
+        return initialAngle + t*Math.max(0,speed)*18.0f;
+    }
+
+    /** Window/shade response to a gust, with a bounded hinge angle and damped return. */
+    public static float flapAngle(float t, float gustTime, float wind, float maxRadians, float damping) {
+        float age=t-gustTime;
+        if(age<0) return 0;
+        float w=Math.max(0,Math.min(1.5f,Math.abs(wind)));
+        float decay=(float)Math.exp(-Math.max(0.1f,damping)*age*3.0f);
+        float angle=(float)Math.sin(age*10.0f)*w*maxRadians*decay;
+        return Math.max(-maxRadians,Math.min(maxRadians,angle));
+    }
+
+    /** A star's subtle twinkle; deterministic per star, never a random frame-to-frame flash. */
+    public static float starBrightness(float t, int seed) {
+        float a=(float)Math.sin(t*(0.8f+(seed%7)*0.07f)+seed*1.91f);
+        float b=(float)Math.sin(t*1.37f+seed*0.73f);
+        return Math.max(0.35f,Math.min(1f,0.72f+0.18f*a+0.10f*b));
+    }
+
+    /** Continuous vehicle travel with smooth start/stop; caller supplies a world-space path distance. */
+    public static float vehicleDistance(float t, float startTime, float endTime, float totalDistance) {
+        if(t<=startTime) return 0;
+        if(t>=endTime) return totalDistance;
+        float u=(t-startTime)/Math.max(0.001f,endTime-startTime);
+        u=u*u*(3-2*u);
+        return totalDistance*u;
+    }
+
+    /** Sound-bed gain for a scene ambience, with smooth fade-in and fade-out at boundaries. */
+    public static float ambienceEnvelope(float t, float start, float end, float fadeSeconds) {
+        if(t<start || t>end) return 0;
+        float fade=Math.max(0.001f,fadeSeconds);
+        float a=Math.min(1,(t-start)/fade), b=Math.min(1,(end-t)/fade);
+        return Math.max(0,Math.min(1,Math.min(a,b)));
+    }
+
     // ================================================================== the living background
 
     public static final int MW = 192, MH = 108;    // the smallest mesh of a living place (plants, water, falls)

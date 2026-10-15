@@ -22,7 +22,7 @@ public class AwtGfx implements Gfx {
         protected boolean removeEldestEntry(Map.Entry<String, BufferedImage> e) { return size() > 6; }
     };
     private final Map<String, Font> fonts = new HashMap<String, Font>();
-    private static Font baseRegular, baseBold;
+    private static Font base;
 
     public AwtGfx(BufferedImage img) {
         this.img = img;
@@ -107,37 +107,16 @@ public class AwtGfx implements Gfx {
     }
 
     private Font font(float size, boolean bold) {
-        Font base = bold ? baseBold : baseRegular;
         if (base == null) {
-            // CI render audits must use a real Devanagari font; logical SansSerif often draws tofu boxes.
-            // Prefer installed Noto Sans Devanagari, but retain portable fallbacks for local developer machines.
-            String[] candidates = bold
-                    ? new String[]{"/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf",
-                                   "/usr/share/fonts/opentype/noto/NotoSansDevanagari-Bold.ttf"}
-                    : new String[]{"/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
-                                   "/usr/share/fonts/opentype/noto/NotoSansDevanagari-Regular.ttf"};
-            for (String candidate : candidates) {
-                try {
-                    java.io.File file = new java.io.File(candidate);
-                    if (file.isFile()) { base = Font.createFont(Font.TRUETYPE_FONT, file); break; }
-                } catch (Exception ignored) { }
+            try {
+                base = Font.createFont(Font.TRUETYPE_FONT, new java.io.File("/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf"));
+            } catch (Exception e) {
+                base = new Font("SansSerif", Font.BOLD, 12);
             }
-            if (base == null) {
-                try {
-                    for (Font installed : java.awt.GraphicsEnvironment.getLocalGraphicsEnvironment().getAllFonts()) {
-                        if (installed.getFontName().toLowerCase(java.util.Locale.ROOT).contains("noto sans devanagari")) {
-                            base = installed.deriveFont(bold ? Font.BOLD : Font.PLAIN, 12f);
-                            break;
-                        }
-                    }
-                } catch (Throwable ignored) { }
-            }
-            if (base == null) base = new Font("SansSerif", bold ? Font.BOLD : Font.PLAIN, 12);
-            if (bold) baseBold = base; else baseRegular = base;
         }
-        String key = size + "/" + bold;
-        Font f = fonts.get(key);
-        if (f == null) { f = base.deriveFont(bold ? Font.BOLD : Font.PLAIN, size); fonts.put(key, f); }
+        String k = size + "/" + bold;
+        Font f = fonts.get(k);
+        if (f == null) { f = base.deriveFont(bold ? Font.BOLD : Font.PLAIN, size); fonts.put(k, f); }
         return f;
     }
 

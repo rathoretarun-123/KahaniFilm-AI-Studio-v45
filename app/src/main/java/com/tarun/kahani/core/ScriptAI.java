@@ -54,16 +54,8 @@ public final class ScriptAI {
                 + "as a screenplay WITHOUT losing any detail: every character (with age, face, hair, dress colours, "
                 + "jewellery, items they carry), every place (with time of day, weather, light and natural sounds), every "
                 + "action, emotion, nuance and sound effect. Keep the author's own words for dialogue wherever possible. "
-                + "Use a rich, precise visual-action vocabulary: anticipation, reach, grasp, contact, release, transfer of weight, "
-                + "gaze shift, blink, breath, hesitation, recoil, settle, follow-through, overlap, foot plant, balance correction, "
-                + "turn-taking, eyeline, screen direction, foreground/midground/background, establishing view, insert, reaction close-up, "
-                + "over-the-shoulder, point-of-view, push-in, pull-back, pan, tilt, tracking, rack focus, motivated cut, sound bridge, room tone. "
-                + "For daily life, identify the complete readable task and its tools/props (prepare, serve, eat, drink, wash, dress, "
-                + "write, read, open, close, carry, put down, sit, stand, walk, wait, greet, clean, cook, travel), but never add an action "
-                + "that changes story facts. Preserve each character's identity, age, face, hair, wardrobe, accessories, handedness when known, "
-                + "and spatial location. Mark explicit facts separately from safe visual inference and unresolved uncertainty. "
-                + "If the story is told in prose, turn reported speech into dialogue lines of the right characters and put actions into stage directions. "
-                + "Use a narrator (" + (hindi ? "कथावाचक" : "Narrator")
+                + "If the story is told in prose, turn the reported speech into dialogue lines of the right characters and "
+                + "put actions into stage directions in brackets. Use a narrator (" + (hindi ? "कथावाचक" : "Narrator")
                 + ") ONLY if the story itself asks for a narrator. Description paragraphs must never become dialogue. "
                 + "Keep it child-friendly and fully clothed. Write in " + (hindi ? "Hindi (Devanagari)" : "English")
                 + ". Output ONLY the screenplay text in exactly this layout, nothing else:\n\n" + (hindi ? FORMAT_HI : FORMAT_EN);
@@ -318,97 +310,6 @@ public final class ScriptAI {
         if (ws != null) for (Object w : ws) if (w instanceof String && ((String) w).trim().length() > 0) { if (b.length() > 0) b.append(", "); b.append(((String) w).trim()); }
         h.words = b.toString();
         return h;
-    }
-
-    /**
-     * Independent story reader: infers missing but necessary visual beats, entities, continuity risks and
-     * questions for the Director/Technical Director. It proposes; it never silently rewrites the author's story.
-     * Output is structured JSON for an approval/production report, not executable scene data.
-     */
-    public static String productionReview(Cloud cloud, Story st) throws IOException {
-        StringBuilder script = new StringBuilder();
-        script.append("TITLE: ").append(Bible.oneLine(st.title)).append("\\nCAST:\\n");
-        for (Story.CharacterDef ch : st.characters) script.append("- ").append(Bible.oneLine(ch.displayName + " " + ch.description)).append("\\n");
-        script.append("PLACES:\\n");
-        for (Story.PlaceDef pl : st.places) script.append("- ").append(Bible.oneLine(pl.name + " " + pl.description)).append("\\n");
-        script.append("PROPS/THINGS:\\n");
-        for (Story.PlaceDef it : st.things) script.append("- ").append(Bible.oneLine(it.name + " " + it.description)).append("\\n");
-        for (int si = 0; si < st.scenes.size(); si++) {
-            Story.Scene sc = st.scenes.get(si);
-            script.append("SCENE ").append(si + 1).append(": ").append(Bible.oneLine(sc.title + " " + sc.setting)).append("\\n");
-            for (Story.Beat bt : sc.beats) script.append(bt.type == Story.Beat.DIALOGUE ? "DIALOGUE " : "ACTION ")
-                    .append(Bible.oneLine(bt.speakerRaw + " " + bt.manner + " " + bt.text)).append("\\n");
-        }
-        String system = "You are an independent story reader and script supervisor for an animated film. Think like a perceptive human reader: infer likely staging, visible objects, geography, time, weather, reactions, transitions and causal steps that the text implies but does not spell out. Use precise vocabulary for micro-actions and daily activities (gaze shift, blink, breath, reach, grasp, contact, release, handoff, weight shift, foot plant, anticipation, hesitation, recoil, settle, follow-through, prop state, entrance/exit, eyeline, screen direction, foreground/midground/background, establishing shot, insert, reaction close-up, POV, over-shoulder, pan, tilt, push-in, tracking, sound bridge, room tone). Track character identity, facial features, wardrobe, accessories, handedness if known, exact location, props and state across shots. Infer complete visible steps of an explicitly described task only when safe; do not invent major plot events, dialogue, motives or a different ending. Distinguish explicit canon, safe visual inference and uncertainty. List every missing character/place/prop/background/sound/voice/rig/reference with evidence, confidence and whether the filmmaker should be asked to upload it. Missing assets must be requested before any library match is proposed; never claim an asset exists in the library without inventory evidence. Check the Director's coverage and Technical Director's feasibility. Return ONLY JSON with keys: beats, inferred_details (scene, category, proposal, evidence, confidence 0..1, requires_approval), missing_assets (name, category, scene, reason, request_upload_first true), continuity_risks, missing_coverage, questions, director_handoff, technical_handoff. Keep authored plot and dialogue intact. Script:\\n";
-        return cloud.ask(system, script.toString(), true);
-    }
-
-    /**
-     * Three-role conference: reader proposes implied story needs, director turns approved intent into coverage,
-     * technical director challenges feasibility/continuity, then a chair reconciles disagreements. The result is a
-     * review/handoff, not an unapproved rewrite of the user's screenplay.
-     */
-    public static String productionConference(Cloud cloud, Story st) throws IOException {
-        // Iterative editorial workflow inspired by publicly described animation practices.
-        // Reader/editor/technical director debate freely; director retains final creative authority.
-        String summary = conferenceScript(st);
-        String reader = productionReview(cloud, st);
-        String editorSystem = "You are the independent FILM EDITOR and animatic editor. Build a proposed rough cut from the screenplay and reader notes. Evaluate audience clarity, emotional rhythm, shot duration, reaction holds, transitions, setup/payoff, redundant shots, dialogue timing, silence, ambience, temporary music and sound bridges. Be candid and specific. Preserve canon and dialogue. Return ONLY JSON with editorial_cut, pacing_risks, confusing_moments, missing_reaction_shots, sound_and_silence_notes, proposed_edits, questions_for_director.";
-        String editor = cloud.ask(editorSystem, "SCREENPLAY:\n" + summary + "\nINDEPENDENT READER NOTES:\n" + reader, true);
-        String directorSystem = "You are the CREATIVE DIRECTOR and final creative authority. Independently evaluate the complete screenplay, reader notes and rough cut as a human filmmaker, not a keyword matcher. For every beat consider motivation, what the audience knows, subtext, action/reaction, pauses, entrances/exits, geography, eyelines, screen direction, character/wardrobe identity, object ownership and state, complete daily-task coverage, natural phenomena and their physical consequences. Plan motivated shot size/angle/movement, blocking, expressions, body mechanics, anticipation, contact, weight transfer, prop handling, camera continuity, dialogue timing, ambience and sound bridges. Preserve authored dialogue, facts, chronology and causal events. Label canon versus safe inference; do not fabricate assets or say a library match exists without inventory proof. Explicitly disposition each Reader/Editor/Technical Director issue; disagree only with reasons and record residual risk. Request missing uploads before suggesting private-library lookup. Return JSON with first_cut, beat_map, proposed_scenes_and_shots, required_entities, performance_and_emotion, reader_proposals_accepted, reader_proposals_rejected_with_reason, editor_notes_accepted, editor_notes_rejected_with_reason, unresolved_questions, technical_handoff.";
-        String director = cloud.ask(directorSystem, "SCREENPLAY:\n" + summary + "\nREADER NOTES:\n" + reader + "\nEDITORIAL ROUGH CUT:\n" + editor, true);
-        String tdSystem = "You are the INDEPENDENT TECHNICAL DIRECTOR and continuity supervisor. Challenge the first cut candidly for asset identity/availability, exact cast/place references, costume continuity, screen direction, prop state/contact, movement/rig feasibility, dialogue timing/lip sync, sound and export. Separate hard blockers from artistic preferences. Return JSON with hard_blockers, risks, reference_asset_requests, continuity_locks, shot_feasibility, dialogue_lipsync_plan, sound_plan, qc_matrix (PASS/FAIL/NEEDS_HUMAN_REVIEW), required_changes, acceptable_tradeoffs.";
-        String technical = cloud.ask(tdSystem, "SCREENPLAY:\n" + summary + "\nREADER:\n" + reader + "\nEDITOR:\n" + editor + "\nDIRECTOR FIRST CUT:\n" + director, true);
-        String readerReplySystem = "You are the independent STORY READER in an open editorial review. Respond directly to the director's cut and technical critique. Defend story clarity where warranted, concede genuine problems, identify missing causal links and audience confusion, and propose minimal fixes preserving author intent. You do not make the final cut. Return JSON with points_supported, points_disputed_with_reason, minimal_revisions, canon_or_dialogue_at_risk, unresolved_questions.";
-        String readerReply = cloud.ask(readerReplySystem, "SCREENPLAY:\n" + summary + "\nREADER NOTES:\n" + reader + "\nDIRECTOR CUT:\n" + director + "\nTECHNICAL CRITIQUE:\n" + technical, true);
-        String editorReplySystem = "You are the FILM EDITOR. Discuss the reader's and technical director's notes against your rough cut. Be candid about pace, clarity, reaction timing, shot economy, transitions, silence and sound. Offer alternatives and tradeoffs. The director retains final creative authority. Return JSON with revised_editorial_cut, notes_supported, notes_disputed_with_reason, timing_changes, transition_changes, sound_changes, alternatives_for_director.";
-        String editorReply = cloud.ask(editorReplySystem, "SCREENPLAY:\n" + summary + "\nEDITOR CUT:\n" + editor + "\nDIRECTOR CUT:\n" + director + "\nTECHNICAL CRITIQUE:\n" + technical + "\nREADER RESPONSE:\n" + readerReply, true);
-        String revisionSystem = "You are the DIRECTOR revising your cut after candid debate. Address material objections and explicitly accept, reject or adapt each with reasons. You—not the editor, reader, technical director or chair—make final creative choices. You may choose artistic tradeoffs but may not pretend missing assets or failed objective checks are passed. Return JSON with revised_cut, director_decisions (issue, role, decision accept|reject|adapt, reason), final_beat_map, final_shot_plan, approved_inferences, approval_required, asset_requests, proposed_scene_insertions, continuity_bible, dialogue_and_sound_plan, technical_blockers_remaining, questions_for_user.";
-        String revision = cloud.ask(revisionSystem, "SCREENPLAY:\n" + summary + "\nREADER:\n" + reader + "\nEDITOR:\n" + editor + "\nDIRECTOR FIRST CUT:\n" + director + "\nTECHNICAL REVIEW:\n" + technical + "\nREADER RESPONSE:\n" + readerReply + "\nEDITOR RESPONSE:\n" + editorReply, true);
-        String verifySystem = "You are the technical director performing a SECOND-PASS check of the revised cut. Verify which prior hard blockers are resolved; don't relitigate artistic preferences. A concern is not resolved merely because the director disagrees. Return JSON with resolved_blockers, remaining_hard_blockers, verified_asset_requirements, continuity_verification, renderability, qc_matrix, acceptable_director_tradeoffs.";
-        String technicalFinal = cloud.ask(verifySystem, "DIRECTOR REVISED CUT:\n" + revision + "\nFIRST TECHNICAL REVIEW:\n" + technical + "\nREADER RESPONSE:\n" + readerReply + "\nEDITOR RESPONSE:\n" + editorReply, true);
-        String finalSystem = "You are the DIRECTOR issuing the FINAL PRODUCTION DECISION after the complete conference. You have final creative authority; other roles may disagree but cannot overrule your creative decisions. Explicitly resolve material disagreements and record accept/reject/adapt with reasons. Preserve canon, dialogue and causal events. Insertions must use exact existing character names and an existing screenplay place; 1-3 visual-only actions; max 8 inserts. auto_apply=true only for high-confidence >=0.85 plot-neutral connective/reaction/establishing coverage. Approved assets must be high-confidence, plot-neutral and require_approval=false; never claim library presence unless verified. Technical truth remains mandatory: set ready_to_render=false for unresolved required assets, invalid references, continuity failures or objective render/export blockers. Return ONLY JSON with final_decision_by (exactly director), director_final_decision, director_decisions, canon_facts, approved_inferences, approval_required, final_beat_map, final_shot_plan, editorial_cut, asset_requests, approved_assets, scene_insertions, continuity_bible, dialogue_and_sound_plan, technical_blockers, qc_matrix, role_disagreements, human_questions, ready_to_render (boolean). approved_assets entries use category place|prop|background, name, description, evidence, confidence 0..1, requires_approval boolean. scene_insertions entries use after_scene (1-based original scene), title, setting (existing place), cast (exact existing names), actions (1-3 visual-only directions), purpose, confidence 0..1, auto_apply boolean. This plan does not prove rendered-film quality.";
-        String finalJson = cloud.ask(finalSystem, "SCREENPLAY:\n" + summary + "\nREADER ORIGINAL NOTES:\n" + reader + "\nEDITOR ORIGINAL CUT:\n" + editor + "\nDIRECTOR FIRST CUT:\n" + director + "\nTECHNICAL FIRST REVIEW:\n" + technical + "\nREADER RESPONSE:\n" + readerReply + "\nEDITOR RESPONSE:\n" + editorReply + "\nDIRECTOR REVISION:\n" + revision + "\nTECHNICAL SECOND PASS:\n" + technicalFinal, true);
-        Object parsed = Cloud.jsonIn(finalJson);
-        if (!(parsed instanceof Map)) return finalJson;
-        @SuppressWarnings("unchecked")
-        Map<String, Object> report = (Map<String, Object>) parsed;
-        // Never manufacture a director sign-off. Validate the final hand-off contract
-        // against the model's actual answer, including a concrete shot plan and decisions.
-        Object shotPlan = report.get("final_shot_plan");
-        Object decisions = report.get("director_decisions");
-        Object signoff = report.get("final_decision_by");
-        Object finalDecision = report.get("director_final_decision");
-        Object readiness = report.get("ready_to_render");
-        boolean contractValid = signoff instanceof String
-                && "director".equalsIgnoreCase(((String) signoff).trim())
-                && finalDecision instanceof String && !((String) finalDecision).trim().isEmpty()
-                && shotPlan instanceof java.util.List && !((java.util.List<?>) shotPlan).isEmpty()
-                && decisions instanceof java.util.List
-                && readiness instanceof Boolean;
-        report.put("conference_contract_valid", Boolean.valueOf(contractValid));
-        report.put("conference_contract_version", 1);
-        report.put("conference_rounds", 9);
-        report.put("reader_original_review", reader);
-        report.put("editor_original_cut", editor);
-        report.put("director_first_cut", director);
-        report.put("technical_first_review", technical);
-        report.put("reader_response", readerReply);
-        report.put("editor_response", editorReply);
-        report.put("director_revision", revision);
-        report.put("technical_second_pass", technicalFinal);
-        return Json.write(report);
-    }
-
-    private static String conferenceScript(Story st) {
-        StringBuilder b = new StringBuilder();
-        b.append("TITLE: ").append(Bible.oneLine(st.title)).append("\\nCAST:\\n");
-        for (Story.CharacterDef ch : st.characters) b.append("- ").append(Bible.oneLine(ch.displayName + " " + ch.description)).append("\\n");
-        b.append("PLACES:\\n"); for (Story.PlaceDef pl : st.places) b.append("- ").append(Bible.oneLine(pl.name + " " + pl.description)).append("\\n");
-        b.append("PROPS:\\n"); for (Story.PlaceDef it : st.things) b.append("- ").append(Bible.oneLine(it.name + " " + it.description)).append("\\n");
-        for (int i=0;i<st.scenes.size();i++) { Story.Scene sc=st.scenes.get(i); b.append("SCENE ").append(i+1).append(": ").append(Bible.oneLine(sc.title+" "+sc.setting)).append("\\n");
-            for (Story.Beat bt:sc.beats) b.append(bt.type==Story.Beat.DIALOGUE?"DIALOGUE ":"ACTION ").append(Bible.oneLine(bt.speakerRaw+" "+bt.manner+" "+bt.text)).append("\\n"); }
-        return b.toString();
     }
 
     /** The nature and physics effects the film engine can show, in the words the director understands. */

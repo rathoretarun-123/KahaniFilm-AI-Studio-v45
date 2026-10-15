@@ -39,6 +39,9 @@ public final class Angles {
         boolean alpha = Cutout.hasAlpha(src);
         boolean[] on = new boolean[w * h];
         int bg = borderColour(src, w, h);
+        int bgLum = (((bg >>> 16) & 255) + ((bg >>> 8) & 255) + (bg & 255)) / 3;
+        int foregroundThreshold = Math.max(10, 40 * bgLum / 248);
+        int fallbackThreshold = Math.max(16, 60 * bgLum / 248);
         if (alpha) { for (int i = 0; i < on.length; i++) on[i] = (src[i] >>> 24) > 100; }
         else {
             // the background is what the border's colour reaches from the border (white clothes on a white sheet
@@ -47,11 +50,11 @@ public final class Angles {
             // v40: a thin frame round each panel shuts the white inside it off from the border: the background never
             // reached it and the whole panel stayed solid. The frame lines (and grid lines) are taken out first.
             boolean[] raw = new boolean[w * h];
-            for (int i = 0; i < raw.length; i++) raw[i] = Cutout.dist(src[i], bg) > 40;
+            for (int i = 0; i < raw.length; i++) raw[i] = Cutout.dist(src[i], bg) > foregroundThreshold;
             boolean[] lined = raw.clone();
             clearPanelFrames(raw, w, h);
             for (int i = 0; i < raw.length; i++) if (lined[i] && !raw[i]) tmp[i] = bg;
-            try { Cutout.removeBackground(tmp, w, h, false, bg); } catch (RuntimeException e) { for (int i = 0; i < tmp.length; i++) tmp[i] = Cutout.dist(src[i], bg) > 60 ? src[i] | 0xFF000000 : 0; }
+            try { Cutout.removeBackground(tmp, w, h, false, bg); } catch (RuntimeException e) { for (int i = 0; i < tmp.length; i++) tmp[i] = Cutout.dist(src[i], bg) > fallbackThreshold ? src[i] | 0xFF000000 : 0; }
             for (int i = 0; i < on.length; i++) on[i] = (tmp[i] >>> 24) > 100;
         }
         clearGridLines(on, w, h);

@@ -5,11 +5,6 @@
 set -euo pipefail
 cd "$(dirname "$0")"
 
-# Ensure the committed story packs are available to direct/local APK builds too.
-if [ "${KAHANIFILM_ASSETS_PREPARED:-0}" != "1" ] && [[ -s Aakhiri_Chai_Assets_Part1.zip && -s Aakhiri_Chai_Assets_Part2.zip && -s Babu_Ke_Liye_Assets_Part1.zip && -s Babu_Ke_Liye_Assets_Part2.zip ]]; then
-  bash tools/scripts/prepare_bundled_film_assets.sh
-fi
-
 ANDROID_JAR=${ANDROID_JAR:-/usr/lib/android-sdk/platforms/android-23/android.jar}
 # Full Android 14 API for compiling (Robolectric's android-all jar from Maven Central).
 ALL_JAR=${ALL_JAR:-$HOME/.cache/kahani/android-all-14.jar}
@@ -36,11 +31,7 @@ if ! javac -nowarn -source 8 -target 8 -encoding UTF-8 -bootclasspath "$ALL_JAR:
 fi
 test -f $B/classes/com/tarun/kahani/app/MainActivity.class
 echo "[3/6] dex"
-# dalvik-exchange was removed from current Android SDK packages; D8 accepts class files in a JAR.
-mkdir -p "$B/dex"
-jar cf "$B/classes.jar" -C "$B/classes" .
-d8 --min-api 26 --lib "$ALL_JAR" --output "$B/dex" "$B/classes.jar"
-cp "$B/dex/classes.dex" "$B/classes.dex"
+dalvik-exchange --dex --min-sdk-version=26 --output=$B/classes.dex $B/classes
 echo "[4/6] package"
 cp $B/base.apk $B/unsigned.apk
 (cd $B && zip -q -j unsigned.apk classes.dex)
