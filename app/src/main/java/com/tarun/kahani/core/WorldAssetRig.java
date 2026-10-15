@@ -155,29 +155,95 @@ public final class WorldAssetRig {
     }
 
     /**
-     * Apply the current pose to mesh vertices. This conservative first implementation
-     * uses hierarchical translation and XYZ rotation with normalized linear blending.
-     * Production integration should cache matrices per frame and use inverse-bind
-     * matrices; keep model-space source vertices immutable.
+     * Skin vertices with the standard pose-world * inverse-bind-world transform.
+     * Bind-space vertices therefore remain fixed when pose == bind, and parent
+     * transforms propagate through the hierarchy. Asset.world is applied last.
+     * Matrices are rebuilt here for correctness; a production renderer may cache
+     * them per pose/frame after invalidation is explicit.
      */
     public static Vec3[] skin(Asset asset, Mesh mesh) {
         if (asset==null || mesh==null) return new Vec3[0];
-        Vec3[] out=new Vec3[mesh.vertices.size()];
-        Transform[] world=new Transform[asset.bones.size()];
-        for (int i=0;i<asset.bones.size();i++) {
+        int count=asset.bones.size();
+        float[][] bindWorld=new float[count][];
+        float[][] poseWorld=new float[count][];
+        float[][] skinning=new float[count][];
+        for (int i=0;i<count;i++) {
             Bone b=asset.bones.get(i);
-            world[i]=compose(b.parent<0?null:world[b.parent],b.pose);
+            float[] bindLocal=matrix(b.bind), poseLocal=matrix(b.pose);
+            bindWorld[i]=b.parent<0?bindLocal:multiply(bindWorld[b.parent],bindLocal);
+            poseWorld[i]=b.parent<0?poseLocal:multiply(poseWorld[b.parent],poseLocal);
+            float[] invBind=invert(bindWorld[i]);
+            skinning[i]=invBind==null?poseWorld[i]:multiply(poseWorld[i],invBind);
         }
+        float[] worldMatrix=matrix(asset.world);
+        Vec3[] out=new Vec3[mesh.vertices.size()];
         for (int i=0;i<mesh.vertices.size();i++) {
             Vertex v=mesh.vertices.get(i);
             Vec3 sum=new Vec3(); float total=0;
-            for (Influence inf:v.skin) if (inf.bone>=0 && inf.bone<world.length && inf.weight>0) {
-                Vec3 p=transformPoint(world[inf.bone],v.position);
+            for (Influence inf:v.skin) if (inf.bone>=0 && inf.bone<count && inf.weight>0) {
+                Vec3 p=transformPoint(skinning[inf.bone],v.position);
                 sum=sum.add(p.scale(inf.weight)); total+=inf.weight;
             }
-            out[i]=total>0.0001f?sum.scale(1f/total):v.position.copy();
+            Vec3 local=total>0.0001f?sum.scale(1f/total):v.position.copy();
+            out[i]=transformPoint(worldMatrix,local);
         }
         return out;
+    }
+
+    /** Row-major affine matrix matching the renderer's XYZ Euler convention (Rz * Ry * Rx * S). */
+    private static float[] matrix(Transform t) {
+        double ax=Math.toRadians(t.rotation.x), ay=Math.toRadians(t.rotation.y), az=Math.toRadians(t.rotation.z);
+        float sx=(float)Math.sin(ax), cx=(float)Math.cos(ax);
+        float sy=(float)Math.sin(ay), cy=(float)Math.cos(ay);
+        float sz=(float)Math.sin(az), cz=(float)Math.cos(az);
+        float[] m=new float[16];
+        m[0]=cz*cy*t.scale.x; m[1]=(cz*sy*sx-sz*cx)*t.scale.y; m[2]=(cz*sy*cx+sz*sx)*t.scale.z; m[3]=t.position.x;
+        m[4]=sz*cy*t.scale.x; m[5]=(sz*sy*sx+cz*cx)*t.scale.y; m[6]=(sz*sy*cx-cz*sx)*t.scale.z; m[7]=t.position.y;
+        m[8]=-sy*t.scale.x;   m[9]=cy*sx*t.scale.y;                  m[10]=cy*cx*t.scale.z;                   m[11]=t.position.z;
+        m[12]=0; m[13]=0; m[14]=0; m[15]=1;
+        return m;
+    }
+
+    private static float[] multiply(float[] a,float[] b) {
+        float[] r=new float[16];
+        for(int row=0;row<4;row++) for(int col=0;col<4;col++) {
+            float v=0;
+            for(int k=0;k<4;k++) v+=a[row*4+k]*b[k*4+col];
+            r[row*4+col]=v;
+        }
+        return r;
+    }
+
+    /** Gauss-Jordan inverse handles non-uniform scale and parent transforms. */
+    private static float[] invert(float[] source) {
+        double[][] a=new double[4][8];
+        for(int r=0;r<4;r++) {
+            for(int c=0;c<4;c++) a[r][c]=source[r*4+c];
+            a[r][r+4]=1;
+        }
+        for(int c=0;c<4;c++) {
+            int pivot=c;
+            for(int r=c+1;r<4;r++) if(Math.abs(a[r][c])>Math.abs(a[pivot][c])) pivot=r;
+            if(Math.abs(a[pivot][c])<1e-9) return null;
+            double[] tmp=a[c]; a[c]=a[pivot]; a[pivot]=tmp;
+            double d=a[c][c]; for(int k=0;k<8;k++) a[c][k]/=d;
+            for(int r=0;r<4;r++) if(r!=c) {
+                double q=a[r][c]; if(q==0) continue;
+                for(int k=0;k<8;k++) a[r][k]-=q*a[c][k];
+            }
+        }
+        float[] out=new float[16];
+        for(int r=0;r<4;r++) for(int c=0;c<4;c++) out[r*4+c]=(float)a[r][c+4];
+        return out;
+    }
+
+    private static Vec3 transformPoint(float[] m,Vec3 p) {
+        float x=m[0]*p.x+m[1]*p.y+m[2]*p.z+m[3];
+        float y=m[4]*p.x+m[5]*p.y+m[6]*p.z+m[7];
+        float z=m[8]*p.x+m[9]*p.y+m[10]*p.z+m[11];
+        float w=m[12]*p.x+m[13]*p.y+m[14]*p.z+m[15];
+        if(Math.abs(w)>1e-6f && Math.abs(w-1f)>1e-6f) { x/=w; y/=w; z/=w; }
+        return new Vec3(x,y,z);
     }
 
     /** Apply smooth, bounded animal locomotion to a conventional quadruped skeleton. */
@@ -201,23 +267,6 @@ public final class WorldAssetRig {
         for (Bone b:a.bones) copy(b.bind,b.pose);
     }
 
-    private static Transform compose(Transform parent,Transform local) {
-        Transform r=local.copy();
-        if (parent==null) return r;
-        Vec3 p=transformPoint(parent,local.position);
-        r.position.x=p.x; r.position.y=p.y; r.position.z=p.z;
-        r.rotation.x+=parent.rotation.x; r.rotation.y+=parent.rotation.y; r.rotation.z+=parent.rotation.z;
-        r.scale.x*=parent.scale.x; r.scale.y*=parent.scale.y; r.scale.z*=parent.scale.z;
-        return r;
-    }
-    private static Vec3 transformPoint(Transform t,Vec3 p) {
-        float x=p.x*t.scale.x, y=p.y*t.scale.y, z=p.z*t.scale.z;
-        double ax=Math.toRadians(t.rotation.x), ay=Math.toRadians(t.rotation.y), az=Math.toRadians(t.rotation.z);
-        float y1=(float)(y*Math.cos(ax)-z*Math.sin(ax)), z1=(float)(y*Math.sin(ax)+z*Math.cos(ax));
-        float x2=(float)(x*Math.cos(ay)+z1*Math.sin(ay)), z2=(float)(-x*Math.sin(ay)+z1*Math.cos(ay));
-        float x3=(float)(x2*Math.cos(az)-y1*Math.sin(az)), y3=(float)(x2*Math.sin(az)+y1*Math.cos(az));
-        return new Vec3(x3+t.position.x,y3+t.position.y,z2+t.position.z);
-    }
     private static void copy(Transform from,Transform to) {
         to.position.x=from.position.x; to.position.y=from.position.y; to.position.z=from.position.z;
         to.rotation.x=from.rotation.x; to.rotation.y=from.rotation.y; to.rotation.z=from.rotation.z;
