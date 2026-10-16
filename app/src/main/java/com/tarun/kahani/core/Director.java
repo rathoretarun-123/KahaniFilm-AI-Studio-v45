@@ -2992,6 +2992,19 @@ public final class Director {
 
     /** v34: rain drums on the umbrella of whoever holds one open in the rain outdoors (the renderer opens it there). */
     private void umbrellaRain() {
+        // v47.4: the umbrella's colour as the story tells it anywhere ("11. मीरा का फटा काला छाता" in the props list), not the studio's pick
+        String allText = null;
+        for (Film.Seg sg : film.segs) for (Film.Actor a : sg.actors) {
+            if (a.look == null || !a.look.umbrella || a.look.umbrellaColor != 0) continue;
+            if (allText == null) {
+                StringBuilder sb = new StringBuilder();
+                for (Story.CharacterDef c : story.characters) sb.append(' ').append(c.description == null ? "" : c.description);
+                for (Story.Scene sc : story.scenes) { sb.append(' ').append(sc.setting == null ? "" : sc.setting); for (Story.Beat b : sc.beats) sb.append(' ').append(b.text == null ? "" : b.text); }
+                allText = sb.toString();
+            }
+            int col = LookDesigner.umbrellaColorIn(allText);
+            if (col != 0) a.look.umbrellaColor = col;
+        }
         for (Film.Seg sg : film.segs) {
             if (!Sets.outdoorSet(sg.set)) continue;
             for (Film.Actor a : sg.actors) {
@@ -3686,6 +3699,15 @@ public final class Director {
         int acts0 = who != null ? who.acts.size() : 0;
         String sig0 = who != null ? stateSig(who) : null;
         float d = sentence(s, t, establishing);
+        // v47.4: an umbrella leaned against the post, hung up, folded or set down goes — whatever else the sentence staged
+        // ("वह छाते को बाँस से टिकाती है" had reached for the post, and the umbrella stayed open over her)
+        Film.Actor umbWho = who != null ? who : lastSubject != null && Txt.has(" " + s, " वह ", " वो ", " उसने ", " she ", " he ") ? actor(lastSubject) : null;   // "वह छाते को…": the one the story was just about
+        if (umbWho != null && Txt.has(s, "छात", "छतरी", "umbrella") && !negated(s)
+                && Txt.has(s, "टिका", "टाँग", "टांग", "समेट", "बंद कर", "रख", "मोड़", "leans", "hangs", "folds", "closes", "puts away", "sets down", "puts down")
+                && umbWho.umbrellaAt(umbWho.look, t + 0.5f) && umbWho.umbrellaUntil > 1e5f) {
+            umbWho.umbrellaUntil = t + 0.3f;
+            film.notes.add("  ↳ the umbrella is put aside by " + umbWho.c.shown() + String.format(java.util.Locale.US, " at %.1f s", t));
+        }
         boolean nothing = stagedCount() == before && film.sfx.size() == sfx0;
         boolean incidental = !nothing && who != null && who.stateAt(t).visible && stateSig(who).equals(sig0);
         if (incidental)

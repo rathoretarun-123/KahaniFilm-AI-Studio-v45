@@ -81,6 +81,8 @@ public final class Look {
     public static final int INJ_ARM = 1, INJ_LEG = 2, INJ_HEAD = 4;
     /** v34: carries an umbrella — opened over the head when it rains outdoors. */
     public boolean umbrella;
+    /** v47.4: the umbrella's colour as the story tells it ("फटा काला छाता"), 0 = the studio's own choice. */
+    public int umbrellaColor;
     /**
      * v35: the body as the story tells it (C_* bits) — a limp; an arm or a leg missing (which side; an artificial leg);
      * fingers missing; one eye; blind; deaf; unable to speak (signs); a hearing aid. Drawn plainly, as part of the
@@ -151,7 +153,7 @@ public final class Look {
         l.energy = energy; l.poise = poise; l.heads = heads; l.arms = arms; l.mount = mount;
         l.glasses = glasses; l.glowGlasses = glowGlasses; l.gadget = gadget; l.techWand = techWand; l.robot = robot;
         l.ledClip = ledClip; l.earphones = earphones; l.lightShoes = lightShoes;
-        l.aid = aid; l.skinFixed = skinFixed; l.injury = injury; l.umbrella = umbrella; l.condition = condition;
+        l.aid = aid; l.skinFixed = skinFixed; l.injury = injury; l.umbrella = umbrella; l.umbrellaColor = umbrellaColor; l.condition = condition;
         return l;
     }
 

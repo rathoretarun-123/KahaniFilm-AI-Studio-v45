@@ -1879,6 +1879,8 @@ public final class Renderer {
         }
         actorY = py; actorScale = scale; actorX = px;          // v35: where this character stands (is its hand in the frame?)
         heldFor(s, a, t, p);                                   // v47.4: a thing picture in the hand, the bag it came out of
+        // v47.4: both hands on a thing (a notebook, a box) — the umbrella is folded under the arm, never floating open beside
+        if (p.heldPic != null && p.umbrellaOpen) { p.umbrellaAmt = 0; p.umbrellaOpen = false; p.umbrellaOver = 0; }
         if (k.netted) mo.sy *= 0.97f;
         if (seat == Film.SEAT_FLOOR && p.sit > 0.05f) {
             // v35: sitting on the floor — indoors on a woven mat (a durrie), outdoors on the ground; the lap is in

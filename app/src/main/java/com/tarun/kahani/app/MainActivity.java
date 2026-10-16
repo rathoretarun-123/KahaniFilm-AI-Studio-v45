@@ -534,6 +534,10 @@ public class MainActivity extends Activity {
         anglesFor(tgt, what, null);
     }
 
+    /** v47.4: the angles dialog is open — the library's own matches wait until it closes (never a dialog over a dialog). */
+    private boolean anglesOpen;
+    private List<Placement> pendingLibrary;
+
     private void anglesFor(final String tgt, final String what, final String from) {
         anglesTarget = tgt;
         anglesFrom = from;
@@ -564,6 +568,13 @@ public class MainActivity extends Activity {
         ScrollView sv = new ScrollView(this);
         sv.addView(box);
         dlg[0] = new AlertDialog.Builder(this).setTitle("📷 Angles of " + what).setView(sv).setNegativeButton("Cancel", null).create();
+        dlg[0].setOnDismissListener(new android.content.DialogInterface.OnDismissListener() {
+            public void onDismiss(android.content.DialogInterface d) {
+                anglesOpen = false;
+                if (pendingLibrary != null) { List<Placement> ps = pendingLibrary; pendingLibrary = null; reviewPlacements(ps, "Pictures from your library that fit this story"); }
+            }
+        });
+        anglesOpen = true;
         dlg[0].show();
     }
 
@@ -3546,6 +3557,7 @@ public class MainActivity extends Activity {
                 if (e != null) { if (!quietIfNone) toast("Could not do it: " + e.getMessage()); return; }
                 List<Placement> ps = (List<Placement>) r;
                 if (ps.isEmpty()) { if (!quietIfNone) toast("No pictures in your library fit this story yet"); return; }
+                if (quietIfNone && anglesOpen) { pendingLibrary = ps; return; }      // v47.4: the upload dialog is open — shown when it closes
                 reviewPlacements(ps, "Pictures from your library that fit this story");
             }
         });
@@ -4884,7 +4896,7 @@ public class MainActivity extends Activity {
         dir.addView(toggle("Free pictures of the story's objects for inserts (Fluent Emoji 3D on GitHub, MIT)", "freeObjects", true));
         dir.addView(toggle("Human QC: show me every shot's first frame before the film is made", "humanQc", true));
         dir.addView(toggle("Smooth motion: 30 frames per second instead of 24 (every move smoother; a quarter more drawing)", "fps30", true));
-        dir.addView(toggle("Smoother motion: 40 frames per second (on by default; two-thirds more drawing than 24; a cinema-smooth look; device/encoder dependent)", "fps40", true));
+        dir.addView(toggle("Smoother motion: 40 frames per second (off by default: films are made at 24; two-thirds more drawing; device/encoder dependent)", "fps40", false));
         dir.addView(toggle("Reader looks up unknown words online (free Wikipedia summary; your cloud as a fallback) — slower first run; results cached", "lookUp", false));
         dir.addView(toggle("High frame rate: 60 fps final video (roughly twice the 30 fps frame work; slower, hotter, larger workload; device/encoder dependent)", "fps60", false));
         dir.addView(toggle("Faster drawing: a mesh cell of 2 pixels instead of 1 (about twice as fast, a little less smooth)", "fastMesh", false));

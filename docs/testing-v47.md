@@ -430,7 +430,7 @@ The phone (12:30 IST): "why is this picture so dark, make it sharper, as the upl
 the scan's flagged frames — the fades into and out of the title and end cards, dark by design. The film itself was already
 brighter than the uploaded night lane (luma 88 against 51) but is lifted further: the auto-exposure target 0.34 (was 0.30),
 a night may lift twice as far (0.12) and an evening to 0.2, and the unsharp mask runs 1.1..1.9 (was 0.95..1.75). Measured on
-जोड़ी 34–36 s at 640 wide: luma 85–87 → 92–95, edge energy 30.6–31.6 → 32.6–33.8. 40 frames per second is the default.
+जोड़ी 34–36 s at 640 wide: luma 85–87 → 92–95, edge energy 30.6–31.6 → 32.6–33.8. 40 frames per second was made the default (reverted to 24 the same afternoon, below).
 
 
 ### 6.9 The recheck the user asked for (14:00 IST): posture, tangible and intangible things, rigid and soft, daily activity, weather
@@ -488,3 +488,32 @@ campfire (fire 1.0); leaves flying in the wind now bring the wind with them (W_W
   park, meditation, breakfast) → `pictures/29..48`, linked to their phrases in vocabulary_hi.md (45 of 61 phrases have a
   picture now; the 16 without are seats, bathing, brushing, getting off a bus or train, which the Director stages from
   its own tables).
+
+### 6.11 "It looks like no one is holding the umbrella" (15:40 IST): the umbrella, 24 fps again, and a red CI
+
+The user's sheet of आखिरी चाय (60–105 s): at 90 and 105 s a red open umbrella hung over आरव's head with no hand on it,
+while मीरा stood beside him holding the notebook in both hands. Three causes, three fixes:
+
+- **The script puts it away**: "मीरा फटा काला छाता लेकर आती है। वह छाते को बाँस से टिकाती है।" — the second sentence had
+  staged a reach for the post, so the everyday rows (where the put-aside lived) were never consulted, and its subject is
+  "वह", which names nobody. The put-aside is checked in staged() itself now, whatever else the sentence staged, and a
+  pronoun subject is the one the story was just about. Note in the film's log: "the umbrella is put aside by मीरा at 50.6 s"
+  (scene 2's first seconds).
+- **Both hands on a thing**: while a character holds a thing picture (the notebook, a box) the umbrella is folded, never
+  open beside them (Renderer, after heldFor).
+- **Its colour**: the story says "फटा काला छाता"; the studio drew red. Look.umbrellaColor is read from the words within a
+  few words of the umbrella anywhere in the story (the props list included): काला/black, लाल/red, नीला/blue, हरा, पीला,
+  सफ़ेद, गुलाबी, बैंगनी, भूरा; the studio's own pick only when the story names none.
+
+Re-rendered 92–118 s: the umbrella leans folded at मीरा's feet, dark; nothing floats; she holds the notebook. The 46.8–47.05 s
+flicker the scan flags is the lightning the script writes ("दीवारें एक पल के लिए सफ़ेद हो जाती हैं"), a bolt drawn with it.
+
+**24 frames per second is the default again** (the user): the switch says so; 40 and 60 stay as options.
+
+**CI red on 48a976e** (AppTest v38SeveralPictures…: "a gallery button for angles:scene:1:बगीचा"): the automatic library
+search (6.x, "this is not happening") finished in the background during the next case and put its review dialog on top of
+the upload dialog, so the test found the wrong dialog. Fixed for the user too: while the upload dialog is open the library's
+matches wait and are shown the moment it closes; never a dialog over a dialog. App package compiles; suite OK (40 tests).
+
+40 fps full renders (v494, before the umbrella fix): जोड़ी 5386 frames luma 90.9; चाय 7357 frames luma 96.9; बाबू 4629
+frames luma 117.1; every flagged frame a card fade or the lightning.

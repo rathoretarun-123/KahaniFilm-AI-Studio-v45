@@ -157,6 +157,25 @@ public final class LookDesigner {
      * "छड़ी के सहारे", "बैसाखी", "व्हीलचेयर पर", "walks with a cane", "in a wheelchair"); a bare "छड़ी" is a walking
      * stick only for an old person (a magic wand otherwise).
      */
+    /** v47.4: the colour named within a few words of the umbrella, else 0. */
+    static int umbrellaColorIn(String all) {
+        if (all == null) return 0;
+        String t = all.toLowerCase(java.util.Locale.ROOT);
+        String[] keys = {"छाता", "छतरी", "छाते", "umbrella"};
+        Object[][] cols = {{"काला", 0xFF2B2B33}, {"काली", 0xFF2B2B33}, {"black", 0xFF2B2B33}, {"लाल", 0xFFD8322F}, {"red", 0xFFD8322F}, {"नीला", 0xFF1E6FD0}, {"नीली", 0xFF1E6FD0}, {"blue", 0xFF1E6FD0},
+                {"हरा", 0xFF2E8B57}, {"हरी", 0xFF2E8B57}, {"green", 0xFF2E8B57}, {"पीला", 0xFFE8B923}, {"पीली", 0xFFE8B923}, {"yellow", 0xFFE8B923}, {"सफ़ेद", 0xFFEDEDE6}, {"सफेद", 0xFFEDEDE6}, {"white", 0xFFEDEDE6},
+                {"गुलाबी", 0xFFE26BA6}, {"pink", 0xFFE26BA6}, {"बैंगनी", 0xFF7B4FB0}, {"purple", 0xFF7B4FB0}, {"भूरा", 0xFF7A5230}, {"brown", 0xFF7A5230}};
+        for (String k : keys) {
+            int at = t.indexOf(k);
+            while (at >= 0) {
+                String near = t.substring(Math.max(0, at - 40), Math.min(t.length(), at + k.length() + 25));
+                for (Object[] c : cols) if (near.contains((String) c[0])) return (Integer) c[1];
+                at = t.indexOf(k, at + 1);
+            }
+        }
+        return 0;
+    }
+
     public static int aidIn(String t, boolean old) {
         if (Txt.has(t, "व्हीलचेयर", "व्हील चेयर", "व्हील-चेयर", "पहिया कुर्सी", "पहियों वाली कुर्सी", "wheelchair", "wheel chair", "wheel-chair")) return Look.AID_WHEELCHAIR;
         if (Txt.has(t, "वॉकर", "वाकर के सहारे", "walking frame", "zimmer", "with a walker", "with her walker", "with his walker", "on a walker", "on her walker", "on his walker",
@@ -731,6 +750,8 @@ public final class LookDesigner {
         if (cover > 0) l.glasses = cover;
         l.injury = injuryIn(all);
         l.umbrella = Txt.has(all, "छाता", "छतरी", "umbrella");
+        // v47.4: its colour from the words beside it ("फटा काला छाता", "a red umbrella") — never a colour the story did not say
+        if (l.umbrella) l.umbrellaColor = umbrellaColorIn(all);
         // v34: what helps the character walk
         l.aid = aidIn(all, l.kind == Look.OLD_MAN || Txt.has(all, "बूढ़", "बुज़ुर्ग", "बुजुर्ग", "दादा", "दादी", "नाना", "नानी", "old ", "elderly", "grandpa", "grandma"));
         // v35: the body as the description tells it (a limp, an arm or a leg missing, fingers, one eye, blind, deaf, mute)
