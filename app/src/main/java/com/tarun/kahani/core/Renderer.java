@@ -1509,7 +1509,7 @@ public final class Renderer {
                 p.umbrellaOpen = true;
                 // v43: it opens (not pops open): over 0.7 s after it is taken up, and as the rain comes on
                 float taken = a.umbrellaFrom >= 0 && !(look.umbrella) ? Rig.smooth(a.umbrellaFrom, a.umbrellaFrom + 0.7f, t) : 1;
-                p.umbrellaAmt = Math.min(taken, Rig.smooth(0.05f, 0.3f, rainNow));
+                p.umbrellaAmt = Math.min(taken, Rig.smooth(0.01f, 0.06f, rainNow));     // v47.3: open while it rains at all — half-folded in light rain, the dome sat on the head
                 // v47.3: under one umbrella with someone taller (a woman beside a young man), the dome is held up over
                 // the taller head — it used to cross the neighbour's face at the carrier's head height
                 float ownH = actorHeight(a.look, a.c, art, s), ax0 = Director.xAt(a, t);
