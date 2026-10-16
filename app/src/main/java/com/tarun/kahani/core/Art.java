@@ -323,7 +323,40 @@ public final class Art {
         float off = Angles.headFeatures(r)[2];
         if (!Float.isNaN(off) && Math.abs(off) >= 0.03f) return off > 0 ? 1 : -1;
         int f = facingOf(r);
-        return f != 0 ? f : sideFacing(r, skin);
+        if (f == 0) f = sideFacing(r, skin);
+        // v47.3: the reading must not depend on the size the picture was read at (at the phone's larger size बाबू's side
+        // picture read as "unknown" and his front stood on the bench): read again at the smaller sizes the rules were
+        // made for, halving until it answers
+        Cutout.Result q = r;
+        while (f == 0 && q.h > 500) {
+            q = half(q);
+            float o2 = Angles.headFeatures(q)[2];
+            if (!Float.isNaN(o2) && Math.abs(o2) >= 0.03f) f = o2 > 0 ? 1 : -1;
+            if (f == 0) f = facingOf(q);
+            if (f == 0) f = sideFacing(q, skin);
+        }
+        return f;
+    }
+
+    /** The cut-out at half its size (each pixel the mean of four, alpha-weighted), its face points kept as fractions. */
+    static Cutout.Result half(Cutout.Result r) {
+        int w = Math.max(1, r.w / 2), h = Math.max(1, r.h / 2);
+        int[] px = new int[w * h];
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            int a = 0, rr = 0, gg = 0, bb = 0, n = 0;
+            for (int dy = 0; dy < 2; dy++) for (int dx = 0; dx < 2; dx++) {
+                int sx = Math.min(r.w - 1, x * 2 + dx), sy = Math.min(r.h - 1, y * 2 + dy);
+                int c = r.px[sy * r.w + sx], ca = c >>> 24;
+                a += ca; rr += (c >> 16 & 255) * ca; gg += (c >> 8 & 255) * ca; bb += (c & 255) * ca; n++;
+            }
+            if (a == 0) { px[y * w + x] = 0; continue; }
+            px[y * w + x] = ((a / n) << 24) | ((rr / a) << 16) | ((gg / a) << 8) | (bb / a);
+        }
+        Cutout.Result q = new Cutout.Result();
+        q.px = px; q.w = w; q.h = h;
+        q.mouthX = r.mouthX; q.mouthY = r.mouthY; q.mouthW = r.mouthW; q.eyeLX = r.eyeLX; q.eyeRX = r.eyeRX; q.eyeY = r.eyeY; q.eyeR = r.eyeR;
+        q.headTop = r.headTop; q.faceTop = r.faceTop; q.chinY = r.chinY; q.skin = r.skin; q.lip = r.lip; q.faceFound = r.faceFound; q.eyesSeen = r.eyesSeen; q.heads = r.heads;
+        return q;
     }
 
     /**

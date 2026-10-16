@@ -70,7 +70,7 @@ public final class FilmLook {
         this.small = new int[sw * sh];
         this.lumRing = new int[w * 5];
         this.blurRing = new int[w * 5];
-        this.sharpen = Math.round(256 * Math.max(0.70f, Math.min(1.40f, 0.70f + h / 1080f * 0.70f)));      // v47.1: 0.70..1.40 (was 0.45..1.00): the user said blur is still too much, push sharpening further
+        this.sharpen = Math.round(256 * Math.max(0.95f, Math.min(1.75f, 0.95f + h / 1080f * 0.80f)));      // v47.3: 0.95..1.75 — the user's reference clips are crisper still      // v47.1: 0.70..1.40 (was 0.45..1.00): the user said blur is still too much, push sharpening further
     }
 
     /** Row y of the frame as it is now (before it is finished): its light, and its light blurred across (1 4 6 4 1). */
@@ -225,7 +225,7 @@ public final class FilmLook {
                 // v47.1: threshold 384 (was 512) picks up finer detail; cap 28 (was 20) lifts strong edges harder
                 int detail = (lumRing[r2 + x] << 8) - blur, mag = Math.abs(detail) - 384;
                 if (mag > 0) {
-                    int lift = (Math.min(mag, 28 << 8) * sharpen) >> 16;
+                    int lift = (Math.min(mag, 34 << 8) * sharpen) >> 16;
                     if (detail < 0) lift = -lift;
                     cr = cr + lift < 0 ? 0 : cr + lift > 255 ? 255 : cr + lift;
                     cg = cg + lift < 0 ? 0 : cg + lift > 255 ? 255 : cg + lift;
