@@ -28,6 +28,8 @@ public final class Art {
     public static final class Sprite {
         /** v47.4: the picture itself shows a stick or a folded umbrella hanging at the side (not lifted out): the studio draws none of its own. */
         public boolean rodInPicture;
+        /** v47.4: a side view (a profile): its face points cannot be trusted for drawn eyelids or a mouth — they landed on the cheek and the ear ("new lips"). */
+        public boolean profile;
         /** v47.4: the lifted rod is a folded umbrella (black, hanging at the side): the renderer lifts it, opens it over the head and folds it again (docs/reference/daily_activities/umbrella_open_close.gif). */
         public boolean rodIsUmbrella;
         public Object img;
@@ -121,6 +123,7 @@ public final class Art {
             if (sprite != null || loader == null) return sprite;
             Sprite v = makeSprite(loader, file, spriteSide, beast);
             if (v == null) return null;
+            v.profile = Math.abs(angle) >= 60 && Math.abs(angle) <= 120;
             if (facePoints != null && facePoints[0] > 0) {
                 v.mouthX = facePoints[0]; v.mouthY = facePoints[1]; v.mouthHW = facePoints[2];
                 v.eyeLX = facePoints[3]; v.eyeLY = facePoints[4]; v.eyeRX = facePoints[5]; v.eyeRY = facePoints[6]; v.eyeR = facePoints[7];
@@ -810,6 +813,24 @@ public final class Art {
      * screen pixel): the full picture down to two and a half times smaller (sampled between four pixels, a picture up
      * to that small stays smooth and is the sharpest), then the half, then the quarter.
      */
+    /**
+     * v47.4: the copy one level finer than mip() picks, and how much of it to lay over (0..1), in a band either side of
+     * each switch — so the picture's sharpness changes smoothly as the camera pushes in or the character walks nearer,
+     * never jumping from one frame to the next (the user: "different sharpness in every frame").
+     */
+    public static Object mipFiner(Object full, Object half, Object quarter, float shrink) {
+        // the neighbouring copy across the nearest switch: above a switch the finer one, below it the coarser one
+        if (quarter != null && half != null && shrink >= 4.4f && shrink < 6.2f) return shrink >= 5f ? half : quarter;
+        if (half != null && shrink >= 1.9f && shrink < 3.1f) return shrink >= 2.5f ? full : half;
+        return null;
+    }
+    public static float mipBlend(float shrink) {
+        // 0.5 exactly at a switch from either side, falling to 0 at the band's edges: no step anywhere
+        if (shrink >= 4.4f && shrink < 6.2f) return shrink >= 5f ? 0.5f * (1 - (shrink - 5f) / 1.2f) : 0.5f * (shrink - 4.4f) / 0.6f;
+        if (shrink >= 1.9f && shrink < 3.1f) return shrink >= 2.5f ? 0.5f * (1 - (shrink - 2.5f) / 0.6f) : 0.5f * (shrink - 1.9f) / 0.6f;
+        return 0;
+    }
+
     public static Object mip(Object full, Object half, Object quarter, float shrink) {
         if (shrink >= 5f && quarter != null) return quarter;
         if (shrink >= 2.5f && half != null) return half;
@@ -1764,6 +1785,7 @@ public final class Art {
                 // the hair behind), so it is drawn facing the way of the walk — never walking backwards
                 // v47.2: an explicit "view|name|90|file" line (the user's own side picture, as the phone and
                 // CastFromUploads write it) counts as the user's side as well as the tagged one from a pose sheet
+                if (idx == 1) v.profile = true;
                 if (idx == 1 && (f.length == 4 || (f.length == 5 && USER_SIDE.equals(f[4]))) && v.pixelsForSampling != null) {
                     v.faces = turnedFacing(v.pixelsForSampling, main.skin);
                     v.userSide = v.faces != 0;

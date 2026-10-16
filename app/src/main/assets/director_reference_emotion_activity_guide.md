@@ -137,3 +137,40 @@ model:  backbone: dinov2_vits14  image_size: 384  dropout: 0.5data:  batch_size:
 ## 19. Appendix C: Sample Data & Configs
 Sample Annotation JSON:{  "image_path": "gallery/dark_back_001.jpg",  "face_bbox": null,  "face_confidence": 0.08,  "face_confidence_enhanced": 0.22,  "view": "back_view",  "yaw": 178,  "light_level": "very_low",  "emotion": "No_Face",  "activity": "standing_stationary",  "keypoints": [[...]],  "attributes": {"ear_visible": false, "hair_visible": true, "backpack": true}}Success Criteria for Production Release:- Dark Back Gold accuracy >=96%- False Emotion on Back <=2%- Overall latency <200ms on cloud- No regression on Bright Front accuracy >94%
 End of Guide - Iterate with real failures from your gallery
+## 20. Lessons from the user's own reference GIFs and pictures (16 October 2026)
+
+The user uploaded these to teach the director, the technical director, the reader and the editor. Each line is what the
+studio now does, in the code, because of it. The files are in the source at `docs/reference/daily_activities/`
+(and `pictures/`, 48 stills) and `docs/reference/nature/`; the phrase list ships as `vocab/daily_activities_hi.txt`.
+
+**Things in the hands**
+- *Umbrella open and close* (umbrella_open_close.gif): taken from the side, lifted to the chest, opened over 1.2 s, held up
+  by a visible shaft in a closed fist; folded the same way back. A character whose own picture already shows the folded
+  umbrella keeps that one, and no second umbrella is drawn in any shot. Its colour is the story's ("फटा काला छाता").
+- *Book hold, open, close, put down* (book_hold_open_close_put_down.gif): held closed at the chest in both hands; opened
+  into two leaves when the words open or read it; closed when they close it; set down in front with a bend of the body.
+- *Boy with a box*, *backpack on the shoulders*: a thing comes out of the bag or the box it was in, never out of the air;
+  a thing held with nothing said of taking it is in the hand from the holder's first step in the part.
+- Things that open and close (book, laptop, umbrella, door, box, bag, phone, fan, scissors…) are rigid in their parts but
+  not one rigid piece while they move; soft things (cloth, bag, rope, flag) hang and flutter with the wind.
+
+**Daily activities** (the 61 phrases of `vocabulary_hi.md`, each staged and checked): getting up, brushing, yoga,
+breakfast, the laptop, walking, family dinner, reading in bed, bathing, cooking, washing and folding clothes,
+vacuuming, shopping, the dog in the park, meditation, TV on the sofa, watering the garden, driving, the phone, the gym,
+playing with children, the newspaper on the balcony, feeding pigeons, the dishes, doors of the house and the car,
+boarding and leaving a bus, a train, a plane, stairs, the lift, every kind of seat, ball and frisbee, board games,
+video games, gali cricket, puzzles, a squat, warming the hands at the fire, filling water, hanging clothes, the pocket.
+
+**Natural phenomena** (nature/ clips): wind blows one way and everything it moves goes that way — leaves, petals, grass,
+hair, clothes, a held cloth; a kite or leaves in the air bring their wind; rain makes splashes on the ground and drips
+from roofs; a river, a stream or a waterfall that flows moves the water in the place's picture; the sea has waves; a
+jump into water splashes at the jumper; lightning flashes the walls white for a moment; fog, snow, fire and its light,
+candle and diya light on the face, a bonfire, a sunset.
+
+**The face**: on a side view (a profile) no eyelids and no mouth are painted — the picture's own face is the face; on a
+front view the mouth only opens between the picture's own lips (never a second pair of lips).
+
+**Every frame**: films are made at 24 frames per second. Before the film is made every shot is played frame by frame at
+check size and each two frames in a row are compared (morphing, shaking: the shot's motion is calmed and played again);
+while the film is written every frame is metered (FinalQc.Meter) and floating feet are read from the renderer's record.
+The director's call is final on what the checks flag.

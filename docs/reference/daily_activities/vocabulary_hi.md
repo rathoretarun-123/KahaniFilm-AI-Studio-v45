@@ -74,3 +74,8 @@ Pictures not tied to one phrase: none — every picture is the still of one phra
 - The 3D scene maker and the still-picture maker take them as style references (framing, light, posture) when the user's own
   pictures do not show the activity; the quality check measures the film's frame of that activity against them.
 - They are not inserted into films: the user's own characters play the activity in their own pictures.
+
+## The GIF lessons (16 October)
+- `umbrella_open_close.gif` (+ frames sheet): how an umbrella is lifted, opened, held over the head and folded.
+- `book_hold_open_close_put_down.gif` (+ frames sheet): how a book is held at the chest, opened, closed and set down.
+What the studio does with them is listed in the app's guide, section 20 of `director_reference_emotion_activity_guide.md`.

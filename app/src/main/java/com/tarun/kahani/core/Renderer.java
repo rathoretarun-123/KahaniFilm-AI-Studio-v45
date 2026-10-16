@@ -3355,6 +3355,9 @@ public final class Renderer {
         return false;
     }
 
+    /** v47.4: a side view, however it came (a view, a pose-sheet panel, a picture whose facing was read): no painted face on it. */
+    static boolean isProfile(Art.Sprite sp) { return sp != null && (sp.profile || sp.faces != 0 || sp.userSide); }
+
     private static void spriteUmbrella(Gfx g, Look look, Pose p, float h) {
         int skin = p.skinHint != 0 ? p.skinHint : look.skin;
         float top = p.sit > 0.5f || p.body == Pose.SIT ? -h * 0.86f : -h * 1.1f;
@@ -4277,6 +4280,8 @@ public final class Renderer {
             g.imageRect(sp.img, (colL - left) / w * sp.w, cut * sp.h, (colR - colL) / w * sp.w, sp.h * (neck - cut), colL, top + cut * h, colR - colL, h * (neck - cut));
             g.imageRect(sp.img, 0, neck * sp.h, sp.w, sp.h * (1 - neck), left, top + neck * h, w, h * (1 - neck));
         } else if (rigged) {
+            // v47.4: a profile's face mesh opens no jaw — its mouth point is not where its mouth is (a dark slit on the cheek)
+            if (isProfile(sp) && st != null) { st.jaw = 0; st.lipWide = 0; st.lipRound = 0; }
             // sitting / kneeling: the legs fold, so the picture comes down to keep the feet on the ground
             float rise = rig.feetRise(st, h);
             if (rise > 0) g.translate(0, rise);
@@ -4311,6 +4316,7 @@ public final class Renderer {
                 rig.bodyMesh(rf, st, left, top, w, h, h * pxPerUnit);
             }
             g.imageMesh(bodyImg, rf.cols, rf.rows, rf.body);
+            if (!bare) { Object finer = Art.mipFiner(sp.img, sp.imgHalf, sp.imgQuarter, shrink); float bl = Art.mipBlend(shrink); if (finer != null && bl > 0.01f) { g.save(); g.setAlpha(bl); g.imageMesh(finer, rf.cols, rf.rows, rf.body); g.restore(); } }
             if (p.wet > 0.02f && sp.wetImg != null && !bare) { g.save(); g.setAlpha(Math.min(0.85f, p.wet)); g.imageMesh(sp.wetImg, rf.cols, rf.rows, rf.body); g.restore(); }
             // v47.2: the rigid rod (a walking stick) hangs straight from where the hand holds it — the mesh carries
             // the hand, the rod itself never bends or shortens
@@ -4392,10 +4398,13 @@ public final class Renderer {
             // the eyes, mouth and tears below are drawn in the head's own position
             Rig.applyHead(rf, g);
         } else {
-            Object img = Art.mip(sp.img, sp.imgHalf, sp.imgQuarter, sp.h / Math.max(1f, h * pxPerUnit));
+            float shr = sp.h / Math.max(1f, h * pxPerUnit);
+            Object img = Art.mip(sp.img, sp.imgHalf, sp.imgQuarter, shr);
+            Object finerImg = Art.mipFiner(sp.img, sp.imgHalf, sp.imgQuarter, shr); float blend = Art.mipBlend(shr);
             if (wetA > 0.01f) onGround(g, img, null, 1, 1, left, top, w, h, true, 0, 0, wetA);
             if (sunA > 0) onGround(g, sp.shadowImg, null, 1, 1, left, top, w, h, false, sunDx, sunSq, sunA);
             g.image(img, left, top, w, h);
+            if (finerImg != null && blend > 0.01f) { g.save(); g.setAlpha(blend); g.image(finerImg, left, top, w, h); g.restore(); }
             if (p.wet > 0.02f && sp.wetImg != null) { g.save(); g.setAlpha(Math.min(0.85f, p.wet)); g.image(sp.wetImg, left, top, w, h); g.restore(); }
         }
         if (rigged && rig.animal && st.jaw > 0.12f) {
@@ -4412,7 +4421,7 @@ public final class Renderer {
             g.color(0xF0F5F2EA);    // a tooth or two at the front
             g.oval(tx - rig.headSide * Math.abs(tx - hx) * 0.1f, hy + Math.abs(ly - hy) * 0.08f, Math.abs(tx - hx) * 0.05f, Math.abs(ly - hy) * 0.09f);
         }
-        if (sp.faceKnown && !(rigged && rig.animal && !rig.eyesOnHead)) {
+        if (sp.faceKnown && !isProfile(sp) && !(rigged && rig.animal && !rig.eyesOnHead)) {     // v47.4: never on a profile (they landed on the cheek)
             // v40: on the turned face (the rig's turn moves the eyes and the mouth with the mesh)
             boolean turns = rigged && !beast && st != null && (st.turn != 0 || st.headTurn != 0);
             float ex1 = left + (sp.eyeLX + (turns ? rig.yawShift(st, sp.eyeLX, sp.eyeLY) : 0)) * w, ey1 = top + sp.eyeLY * h;

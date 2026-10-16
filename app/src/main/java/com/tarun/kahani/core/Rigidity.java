@@ -72,6 +72,22 @@ public final class Rigidity {
         return Txt.hasStart(t, BOOK_WORDS);
     }
 
+    /**
+     * v47.4 (the user: "opening of book, laptop, umbrella etc makes them non rigid from rigid, include similar kinds of
+     * things"): things that are rigid in their parts but open and close at a hinge, a fold or a spring — while they open
+     * or close they are not one rigid piece: the book's leaves part, the umbrella's canopy spreads, the laptop's lid turns.
+     */
+    public static final String[] OPENS_WORDS = {"किताब", "पुस्तक", "कॉपी", "नोटबुक", "डायरी", "अख़बार", "अखबार", "पत्रिका", "चिट्ठी", "ख़त", "खत", "लिफ़ाफ़ा", "लिफाफा",
+            "लैपटॉप", "लैपटाप", "छाता", "छतरी", "छाते", "पंखा", "हाथ-पंखा", "दरवाज़ा", "दरवाजा", "खिड़की", "अलमारी", "संदूक", "सन्दूक", "बक्सा", "डिब्बा", "डब्बा", "सूटकेस", "बटुआ", "पर्स",
+            "कैंची", "चाकू", "फ़ोल्डिंग", "टिफ़िन", "टिफिन", "ढक्कन", "थैला", "बैग", "चश्मा", "फ़ोन", "फोन", "मोबाइल", "पिंजरा", "ताला", "नल",
+            "book", "notebook", "diary", "newspaper", "magazine", "letter", "envelope", "laptop", "umbrella", "fan", "door", "window", "cupboard", "wardrobe", "chest", "trunk", "box",
+            "suitcase", "wallet", "purse", "scissors", "pocket knife", "folding", "tiffin", "lid", "bag", "glasses", "spectacles", "phone", "cage", "lock", "tap"};
+    public static boolean opens(String text) {
+        if (text == null) return false;
+        String t = " " + text.toLowerCase(java.util.Locale.ROOT).replace('_', ' ') + " ";
+        return Txt.hasStart(t, OPENS_WORDS);
+    }
+
     public static boolean isRigid(String text) { return kind(text) == RIGID; }
     public static boolean isSoft(String text) { return kind(text) == SOFT; }
 
@@ -100,6 +116,9 @@ public final class Rigidity {
         StringBuilder sb = new StringBuilder("Rigid and soft things (the technical director's ledger): ");
         if (!rigid.isEmpty()) sb.append("rigid — drawn straight, never bent by the rig or the wind: ").append(join(rigid)).append(". ");
         if (!soft.isEmpty()) sb.append("soft — move with the body and the wind through the mesh: ").append(join(soft)).append('.');
+        // v47.4: what opens and closes — rigid parts, but not one rigid piece while it opens (the book's leaves, the umbrella's canopy, the laptop's lid)
+        List<String> opening = found(all.toString(), OPENS_WORDS);
+        if (!opening.isEmpty()) sb.append(" Opens and closes (hinged or folding — not rigid while it moves): ").append(join(opening)).append('.');
         return sb.toString();
     }
 

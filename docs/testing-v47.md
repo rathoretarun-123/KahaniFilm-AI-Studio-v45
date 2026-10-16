@@ -542,3 +542,18 @@ frames luma 117.1; every flagged frame a card fade or the lightning.
   been on by default). The studio's settings say so.
 
 Suite OK (40 tests); app package compiles.
+- **New lips on a profile** (आरव's side close-ups, 59–66 s): closed eyelids were painted across his cheek and ear and a dark
+  mouth slit on his cheek — the face points of a side picture are not where its eyes and mouth are. On any side view (a
+  view, a pose-sheet panel, a picture whose facing was read) no eyelids and no mouth are painted and the face mesh opens
+  no jaw; the picture's own face is the face. Re-rendered every half second of 59–66 s: clean.
+- **Sharpness changing frame to frame**: as the camera pushes in or a character walks nearer, the picture switched
+  between its full, half and quarter copies in one frame, so its sharpness jumped. It now cross-fades between the two
+  copies over a band either side of each switch (0.5 of each exactly at the switch), so it never steps.
+- **Wind direction**: falling and flying leaves and petals drift the wind's way whichever way it blows (they had drifted
+  right even in a left wind). "हवा में पतंग उड़ी", "हवा में पत्ते उड़े", "घास लहराती है" bring their wind.
+- **Water**: a flowing river or stream and a waterfall ("पानी बह रहा है", "झरना") move the water in the place's picture;
+  "छपाक से कूदता है" splashes at the jumper with its sound; the sea's waves as before.
+- **Things that open and close** (book, notebook, laptop, umbrella, door, box, bag, phone, fan, scissors…) are a class of
+  their own in the technical director's ledger: rigid in their parts, not one rigid piece while they open.
+- **The director's guide** shipped in the app gains section 20: what each of the user's GIFs and pictures taught.
+Suite OK (40 tests).

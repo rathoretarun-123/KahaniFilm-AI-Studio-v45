@@ -5799,6 +5799,7 @@ public final class Director {
     static final String[] STORM = {"तूफ़ान", "तूफान", "storm", "cyclone", "toofan"};
     static final String[] DUST = {"आँधी", "आंधी", "dust storm", "sandstorm", "aandhi"};
     static final String[] WIND = {"हवा चल", "हवा बह", "तेज़ हवा", "तेज हवा", "ठंडी हवा", "हवा के झोंक", "हवा का झोंका", "हवा में उड़", "हवा में लहरा",
+            "हवा में पतंग", "पतंग उड़ी", "पतंग उड़ रही", "पतंग उड़ती", "हवा में पत्ते", "पत्ते उड़", "घास लहरा", "kite flies", "kites fly", "kite soars",
             "सरसराती हवा", "wind", "breeze", "gust", "windy", "hawa chal",
             // v43: the strong wind by what it does
             "ज़ोर की हवा", "जोर की हवा", "हवा तेज़", "हवा तेज", "डालियाँ हिल", "डालियां हिल", "पत्ते सरसरा"};
@@ -9897,7 +9898,6 @@ public final class Director {
         if (s == null) return;
         if (boatIn(s)) { open(Film.W_BOAT, t, 1f); if (wOpen[Film.W_SEA] < 0 && !Txt.has(s, "नदी", "river", "तालाब", "lake", "झील")) open(Film.W_SEA, t, 0.6f); }
         if (Txt.has(seaWords(s), SEA) && !Txt.has(s, "जाएँगे", "जाएंगे", "चलेंगे", "will go", "let's go")) open(Film.W_SEA, t, 0.8f);
-        if (Txt.has(s, RAINBOW)) rainbow(t);
         if (Txt.has(s, BIRDS_FLY)) open(Film.W_BIRDS, t, 1f);
         if (Txt.has(s, FIREFLY)) open(Film.W_FIREFLIES, t, 1f);
         if (Txt.has(s, STARS) && (seg.tod == Sets.NIGHT || seg.tod == Sets.EVENING)) open(Film.W_STARS, t, 1f);
@@ -9993,6 +9993,8 @@ public final class Director {
         boolean rumble = Txt.has(s, "बादल", "आसमान", "आकाश", "cloud", "sky") && Txt.has(s, RUMBLE) && !Txt.has(s, "शेर", "बाघ", "lion", "tiger");
         if (!place && (Txt.has(s, THUNDER) || rumble) && !negated(s)) { lightning(t + 0.2f, film.weather.size() + (int) t); d = Math.max(d, 1.8f); }
         if (Txt.has(seaWords(s), SEA)) open(Film.W_SEA, t, Txt.has(s, "ऊँची लहर", "ऊंची लहर", "big waves", "high waves", "rough sea") ? 1.3f : 0.8f);
+        if (wOpen[Film.W_SEA] < 0 && Txt.has(s, "पानी बह", "नदी बह", "धारा बह", "नाला बह", "झरना", "झरने", "पानी की धार", "water flows", "river flows", "stream flows", "flowing water", "waterfall") && !negated(s)) open(Film.W_SEA, t, 0.45f);   // v47.4: flowing water moves
+        if (Txt.has(s, "छपाक", "छप से", "पानी में कूद", "पानी में गिर", "splash", "jumps into the water", "falls into the water")) { Film.Actor jw = lastSubject != null ? actor(lastSubject) : null; Film.Fx sp = fx(Film.FX_WATER_HIT, t + 0.5f, t + 2.5f, jw != null ? xAt(jw, t + 0.5f) : 640, 0, jw, null); sp.color = 2; film.sfx.add(new Film.Sfx(Film.SFX_SPLASH, t + 0.5f, 1.2f, 0.8f)); }   // v47.4: the splash
         if (boatIn(s)) { open(Film.W_BOAT, t, 1f); if (wOpen[Film.W_SEA] < 0 && !Txt.has(s, "नदी", "river", "तालाब", "lake", "झील")) open(Film.W_SEA, t, 0.6f); }
         if (Txt.has(s, CANDLE) && !negated(s)) { open(Film.W_CANDLES, t, 1f); candleKind = 0; }
         else if (Txt.has(s, DIYA) && !negated(s)) { open(Film.W_CANDLES, t, 1f); candleKind = 1; }
