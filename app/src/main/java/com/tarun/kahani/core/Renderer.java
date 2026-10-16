@@ -3597,7 +3597,7 @@ public final class Renderer {
         // show (its folded thighs read as a shorter person standing in front of the seat). A line in a close shot
         // keeps the front picture (its lips are found surely); the change comes with the cut.
         if (sp.views != null && sp.view(1) != null && sp.view(1).userSide && p.sit > 0.3f && k.body == Pose.SIT && p.seat > Film.SEAT_FLOOR
-                && p.seat != Film.SEAT_WHEELCHAIR && p.seat != Film.SEAT_BED && k.anchor == Film.A_GROUND && camZ <= 1.6f) {
+                && p.seat != Film.SEAT_WHEELCHAIR && p.seat != Film.SEAT_BED && k.anchor == Film.A_GROUND && (camZ <= 1.6f || !speaking)) {
             // in profile the knees reach forward: someone standing that close on the facing side would be drawn
             // through them, so the front picture (folded) keeps that moment
             float hh = actorHeight(a.look, a.c, art, s), ax = Director.xAt(a, t);
@@ -3607,7 +3607,7 @@ public final class Renderer {
                 Film.Key ok = o.stateAt(t);
                 if (!ok.visible || ok.body == Pose.SIT || ok.body == Pose.LIE) continue;
                 float dx = Director.xAt(o, t) - ax;
-                if (Math.abs(dx) < 0.45f * hh && Math.signum(dx) == Math.signum(k.facing)) { blocked = true; break; }
+                if (Math.abs(dx) < 0.32f * hh && Math.signum(dx) == Math.signum(k.facing)) { blocked = true; break; }     // (v47.3: 0.32 — whoever comes up stops beyond the knees since v47.2, so the profile stays)
             }
             if (!blocked) return sp.view(1);
         }
