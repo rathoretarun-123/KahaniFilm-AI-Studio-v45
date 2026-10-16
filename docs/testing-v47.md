@@ -386,3 +386,11 @@ when they stand right under it and never more than a quarter of her height up (i
 trim runs on cut-outs only (a picture with its white background had its edges cleared first and then passed for a cut-out:
 every चाय character came up on a white panel for one probe). CI on 98d17b7: green; the pure-JVM suite: 40 tests pass.
 
+Fourth pass (11:00 IST), the three films rendered again on e34d53d and read still by still: जोड़ी 84 luma / 39.5 contrast, 0 flicker;
+चाय 89.6 / 40.7 (4 flicker frames: the lightning); बाबू 108 / 52. No purple under the cobbler; the newspaper under him, the
+glass and the toolbox beside him from the first frame; the shoe in नन्ही's hand as she runs in, in his hands after; the box
+out from behind the toolbox and set beside him once the shoes are out; the red shoes in her lap, gone when worn. In चाय the
+notebook stays in आरव's hand through the film, the umbrella is over मीरा only until she leans it on the post. Key frames:
+`docs/img/v47/jodi_v474_things.jpg`, `docs/img/v47/chai_v474_things.jpg`. A put-aside umbrella stays aside in the next part
+(`thingsCarried`); a notebook is 0.16 of its holder.
+
