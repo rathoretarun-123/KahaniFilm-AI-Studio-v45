@@ -242,16 +242,18 @@ public final class ScriptAI {
     public static String identify(Cloud cloud, String fileName, byte[] jpeg, List<String> candidates) {
         String byName = matchName(fileName, candidates);
         if (byName != null) return byName;
-        if (cloud == null || !cloud.hasGemini() || jpeg == null) return null;
-        try {
-            List<byte[]> ims = new ArrayList<byte[]>();
-            ims.add(jpeg);
-            String a = cloud.gemini("You match pictures to the cast and places of a children's film.",
-                    "Which ONE of these does the picture show? Answer with the exact name only, or NONE.\n" + candidates, false, ims, null);
-            return matchName(a, candidates);
-        } catch (IOException e) {
-            return null;
+        if (cloud == null || !cloud.hasAiKey() || jpeg == null) return null;
+        List<byte[]> ims = new ArrayList<byte[]>();
+        ims.add(jpeg);
+        String sys = "You match pictures to the cast and places of a children's film.";
+        String q = "Which ONE of these does the picture show? Answer with the exact name only, or NONE.\n" + candidates;
+        if (cloud.hasGemini()) {
+            try { return matchName(cloud.gemini(sys, q, false, ims, null), candidates); } catch (IOException e) { /* v47.4: ChatGPT at once */ }
         }
+        if (cloud.hasOpenAI()) {
+            try { return matchName(cloud.openai(sys, q, false, ims), candidates); } catch (IOException e) { return null; }
+        }
+        return null;
     }
 
     /** What the AI saw in a picture. */

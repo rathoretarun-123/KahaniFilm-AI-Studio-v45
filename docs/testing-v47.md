@@ -584,3 +584,17 @@ Suite OK (40 tests).
   every shot. Two more fixes: the yellow letter the girl takes out of her bag was put on the ground a second later (the
   "set down when a cup comes to the hand" rule fired on a non-vessel item); it now yields only to a cup, glass, kulhad,
   plate, bottle or tea. The end page also showed the two-panel picture framed small; it now fills like the title page.
+
+### 6.14 The AI keys (17:20 IST): "not able to access the Gemini API key", a ChatGPT key, ChatGPT at once when Gemini fails
+
+- **Gemini**: the app asked one model only (gemini-2.5-flash). A key that cannot reach that model (retired, renamed, not
+  on the key's tier: HTTP 404, or 400 "not found") read as a broken key. Gemini calls now try the next model in turn
+  (gemini-flash-latest, then gemini-2.0-flash) and keep the one that answers. The key test in Settings uses the same path.
+- **ChatGPT key**: Settings → Your keys has "OpenAI ChatGPT (used at once when Gemini fails)", saved and tested like the
+  others (platform.openai.com/api-keys). The app calls OpenAI chat completions (gpt-4.1-mini, then gpt-4o-mini).
+- **Gemini fails → ChatGPT at once**: story reading, every question to the model and picture recognition go Gemini →
+  ChatGPT → the free model. With both keys Gemini gets a single try, and no retry waits after the last try.
+  Tested against a local stand-in server: a retired Gemini model fell to gemini-flash-latest; with Gemini answering 503
+  ChatGPT answered in 3 ms (had waited 4 s); a picture question went to ChatGPT the same way. The voices stay Gemini's
+  (ChatGPT has none of that kind); without Gemini the built-in voices speak.
+Suite OK (40 tests); the app package compiles.

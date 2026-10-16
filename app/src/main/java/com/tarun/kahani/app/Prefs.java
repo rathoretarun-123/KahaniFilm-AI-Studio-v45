@@ -58,6 +58,7 @@ public final class Prefs {
     public static Cloud cloud(Context c) {
         Cloud cl = new Cloud();
         cl.geminiKey = geminiKey(c);
+        cl.openaiKey = get(c, "openaiKey", "").trim();      // v47.4: the user's ChatGPT key, used at once when Gemini fails
         cl.freesoundKey = get(c, "freesoundKey", "");
         cl.pixabayKey = get(c, "pixabayKey", "");
         cl.pexelsKey = get(c, "pexelsKey", "");

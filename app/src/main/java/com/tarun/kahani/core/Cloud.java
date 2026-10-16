@@ -23,6 +23,13 @@ import java.util.Map;
  */
 public final class Cloud {
     public String geminiKey = "";
+    /** v47.4 (the user): an OpenAI (ChatGPT) key — used at once whenever Gemini fails, before the free model. */
+    public String openaiKey = "";
+    public String openaiBase = "https://api.openai.com/v1";
+    /** The OpenAI models tried in turn (a newer one first; an account without it falls to the next). */
+    public String[] openaiModels = {"gpt-4.1-mini", "gpt-4o-mini"};
+    /** The Gemini models tried in turn when the first is not available to the key (a retired or renamed model). */
+    public String[] geminiFallbackModels = {"gemini-flash-latest", "gemini-2.0-flash"};
     public String geminiBase = "https://generativelanguage.googleapis.com/v1beta";
     public String textModel = "gemini-2.5-flash";
     public String ttsModel = "gemini-2.5-flash-preview-tts";
@@ -38,6 +45,9 @@ public final class Cloud {
     public volatile String lastError = "";
 
     public boolean hasGemini() { return geminiKey != null && geminiKey.trim().length() > 20; }
+    public boolean hasOpenAI() { return openaiKey != null && openaiKey.trim().length() > 20; }
+    /** Any key of the user's for a strong model (Gemini or ChatGPT). */
+    public boolean hasAiKey() { return hasGemini() || hasOpenAI(); }
 
     // ------------------------------------------------------------------ HTTP
 
@@ -132,6 +142,7 @@ public final class Cloud {
                 if (e.code != 429 && e.code != 500 && e.code != 502 && e.code != 503 && e.code != 504) throw e;
                 // a daily quota is not worth waiting for
                 if (e.code == 429 && e.body.contains("PerDay")) throw e;
+                if (i + 1 >= tries) throw e;      // v47.4: no wait after the last try (the next model or ChatGPT goes at once)
                 sleep(Math.min(40000, 4000L << i));
             } catch (java.net.SocketTimeoutException e) {
                 last = e;
@@ -150,10 +161,17 @@ public final class Cloud {
     public String ask(final String system, final String prompt, final boolean json) throws IOException {
         if (hasGemini()) {
             try {
-                return retry(new Call<String>() { public String run() throws IOException { return gemini(system, prompt, json, null, null); } }, 3);
+                // (v47.4: with a ChatGPT key as well, Gemini gets one try — when it fails ChatGPT answers at once)
+                return retry(new Call<String>() { public String run() throws IOException { return gemini(system, prompt, json, null, null); } }, hasOpenAI() ? 1 : 3);
             } catch (IOException e) {
-                lastError = e.getMessage();
-                // fall through to the keyless model
+                lastError = "Gemini: " + e.getMessage();
+            }
+        }
+        if (hasOpenAI()) {
+            try {
+                return retry(new Call<String>() { public String run() throws IOException { return openai(system, prompt, json, null); } }, 2);
+            } catch (IOException e) {
+                lastError = (lastError.length() > 0 ? lastError + " · " : "") + "ChatGPT: " + e.getMessage();
             }
         }
         return retry(new Call<String>() { public String run() throws IOException { return pacedPollinations(system, prompt, json); } }, 3);
@@ -182,10 +200,63 @@ public final class Cloud {
         gen.put("maxOutputTokens", 60000);       // long screenplays must never be cut off
         if (json) gen.put("responseMimeType", "application/json");
         body.put("generationConfig", gen);
-        Object r = postJson(geminiBase + "/models/" + (model == null ? textModel : model) + ":generateContent?key=" + enc(geminiKey.trim()), body);
-        String t = geminiText(r);
-        if (t == null) throw new IOException("Gemini: empty answer");
-        return t;
+        // v47.4: the model the key cannot reach (retired, renamed, not on this key's tier: HTTP 404 / 400 "not found")
+        // falls to the next in the list, so a working key never reads as broken
+        List<String> models = new ArrayList<String>();
+        models.add(model == null ? textModel : model);
+        if (model == null) for (String m : geminiFallbackModels) if (!models.contains(m)) models.add(m);
+        IOException last = null;
+        for (String m : models) {
+            try {
+                Object r = postJson(geminiBase + "/models/" + m + ":generateContent?key=" + enc(geminiKey.trim()), body);
+                String t = geminiText(r);
+                if (t == null) throw new IOException("Gemini: empty answer");
+                if (!m.equals(textModel) && model == null) textModel = m;      // the one that answered is used from now on
+                return t;
+            } catch (HttpError e) {
+                last = e;
+                boolean missing = e.code == 404 || (e.code == 400 && e.body != null && (e.body.contains("not found") || e.body.contains("NOT_FOUND") || e.body.contains("is not supported")));
+                if (!missing) throw e;
+            }
+        }
+        throw last != null ? last : new IOException("Gemini: no model answered");
+    }
+
+    /**
+     * v47.4: OpenAI chat completions (the user's ChatGPT key) with optional pictures (JPEG bytes). The models of
+     * openaiModels are tried in turn when one is not available to the key.
+     */
+    public String openai(String system, String prompt, boolean json, List<byte[]> images) throws IOException {
+        if (!hasOpenAI()) throw new IOException("no ChatGPT key");
+        List<Object> msgs = new ArrayList<Object>();
+        if (system != null && system.length() > 0) msgs.add(map("role", "system", "content", system));
+        if (images == null || images.isEmpty()) msgs.add(map("role", "user", "content", prompt));
+        else {
+            List<Object> content = new ArrayList<Object>();
+            content.add(map("type", "text", "text", prompt));
+            for (byte[] im : images) content.add(map("type", "image_url", "image_url", map("url", "data:image/jpeg;base64," + b64(im))));
+            msgs.add(map("role", "user", "content", content));
+        }
+        IOException last = null;
+        for (String m : openaiModels) {
+            Map<String, Object> body = map("model", m, "messages", msgs, "temperature", 0.4);
+            if (json) body.put("response_format", map("type", "json_object"));
+            try {
+                byte[] out = request("POST", openaiBase + "/chat/completions", "application/json", Json.write(body).getBytes("UTF-8"),
+                        new String[]{"Authorization", "Bearer " + openaiKey.trim()});
+                Object r = Json.parse(new String(out, "UTF-8"));
+                List<Object> ch = Json.arr(r, "choices");
+                if (ch == null || ch.isEmpty()) throw new IOException("ChatGPT: empty answer");
+                String t = Json.str(Json.obj(ch.get(0), "message"), "content", "");
+                if (t.length() == 0) throw new IOException("ChatGPT: empty answer");
+                return t;
+            } catch (HttpError e) {
+                last = e;
+                boolean missing = e.code == 404 || (e.code == 400 && e.body != null && e.body.contains("model"));
+                if (!missing) throw e;
+            }
+        }
+        throw last != null ? last : new IOException("ChatGPT: no model answered");
     }
 
     /** Gemini listens to a sound (WAV bytes) and answers the prompt. Needs a Gemini key. */
@@ -215,13 +286,20 @@ public final class Cloud {
 
     /** Looks at a picture (JPEG) and answers: Gemini when a key is set, otherwise the free keyless vision model. */
     public String vision(String prompt, byte[] jpeg) throws IOException {
+        List<byte[]> ims = new ArrayList<byte[]>();
+        ims.add(jpeg);
         if (hasGemini()) {
             try {
-                List<byte[]> ims = new ArrayList<byte[]>();
-                ims.add(jpeg);
                 return gemini("You are a careful film director's assistant.", prompt, true, ims, null);
             } catch (IOException e) {
-                lastError = e.getMessage();
+                lastError = "Gemini: " + e.getMessage();
+            }
+        }
+        if (hasOpenAI()) {
+            try {
+                return openai("You are a careful film director's assistant.", prompt, true, ims);
+            } catch (IOException e) {
+                lastError = (lastError.length() > 0 ? lastError + " · " : "") + "ChatGPT: " + e.getMessage();
             }
         }
         List<Object> content = new ArrayList<Object>();

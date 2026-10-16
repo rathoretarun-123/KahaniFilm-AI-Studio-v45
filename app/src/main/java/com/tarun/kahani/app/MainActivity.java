@@ -4858,11 +4858,13 @@ public class MainActivity extends Activity {
         // ---- 1. keys, right at the top: every tool that takes a key, where to get it, one line each
         LinearLayout keys = Ui.card(this);
         keys.addView(Ui.title(this, "🔑 Your keys (optional)"));
-        keys.addView(Ui.text(this, "Everything works without a key. A key only adds: smarter story reading and picture recognition (Gemini), "
+        keys.addView(Ui.text(this, "Everything works without a key. A key only adds: smarter story reading and picture recognition (Gemini, or ChatGPT — "
+                + "when Gemini fails or is busy, ChatGPT answers at once), "
                 + "the most lifelike voices (ElevenLabs), more real sound recordings (Freesound) and more photos (Pixabay, Pexels). "
                 + "Each key is free to make and stays only on this phone.", 13, Ui.SUB, false));
         final String[][] tools = {
                 {"geminiKey", "Google Gemini", "aistudio.google.com/apikey → Create API key", "AIza…"},
+                {"openaiKey", "OpenAI ChatGPT (used at once when Gemini fails)", "platform.openai.com/api-keys → Create new secret key", "sk-…"},
                 {"elevenKey", "ElevenLabs voices", "elevenlabs.io → profile → API keys → Create", "sk_…"},
                 {"freesoundKey", "Freesound recordings", "freesound.org/apiv2/apply → Create new API credentials", "key"},
                 {"pixabayKey", "Pixabay pictures", "pixabay.com/api/docs → signed in, the key is on that page", "key"},
@@ -5009,6 +5011,7 @@ public class MainActivity extends Activity {
                         background("Testing the key…", new Work() {
                             public Object run() throws Exception {
                                 if (tl[0].equals("geminiKey")) return Prefs.cloud(MainActivity.this).gemini(null, "Reply with the single word OK", false, null, null);
+                                if (tl[0].equals("openaiKey")) return Prefs.cloud(MainActivity.this).openai(null, "Reply with the single word OK", false, null);
                                 return testKey(tl[0]);
                             }
                         }, new Done() {
