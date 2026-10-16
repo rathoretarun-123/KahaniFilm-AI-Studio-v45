@@ -272,6 +272,18 @@ public final class PoseSense {
         float lastW = last / w90, w90m = w90 / maxW;
         float eyes = eyeY < 0 ? -1 : (eyeY * h - top) / hh;            // the eyes' height in the figure
         out[1] = (w90m >= 0.88f && lastW < 0.4f) || (w90m >= 0.8f && lastW < 0.15f);
+        // v47.3: a seated shape read another way — squatting, cross-legged, sitting on the ground with the hands over
+        // the face: the figure not much taller than wide (up to 1.6), its lower two fifths one solid mass (filled 92%)
+        // as wide as the figure (90%). A jump with the legs apart is full of gaps (72%); a child holding her shoes or
+        // a man pointing is narrow below (52-77%). Measured on the जोड़ी sheets: the six seated panels of 43 read
+        // 0.94-0.96 filled and 0.97-1.0 wide, every other panel fails one of the three.
+        {
+            float aspect = hh / (float) Math.max(1, r - l + 1);
+            long lowC = 0, lowS = 0; int lowMax = 0;
+            for (int i = (int) (hh * 0.6f); i < hh; i++) { lowC += count[i]; lowS += width[i]; lowMax = Math.max(lowMax, width[i]); }
+            float lowFill = lowS == 0 ? 0 : lowC / (float) lowS, lowW = lowMax / (float) Math.max(1, r - l + 1);
+            if (aspect <= 1.6f && lowFill >= 0.92f && lowW >= 0.9f) out[1] = true;
+        }
         out[0] = !out[1] && ((lastW >= 0.8f && solidF >= 0.85f && (w90m >= 0.6f || eyes >= 0.22f)) || (lastW >= 0.97f && solidF >= 0.95f));
         return out;
     }

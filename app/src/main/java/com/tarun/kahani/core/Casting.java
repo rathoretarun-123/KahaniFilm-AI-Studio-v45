@@ -167,6 +167,23 @@ public final class Casting {
         // The one exception the film draws: the back of the head and shoulder in the foreground of an over-the-shoulder
         // shot is the user's own back picture (Renderer.otsBack) — the record names that picture, as it is drawn
         if (rigged(sp)) {
+            // v47.3: the one pose a standing picture's rig cannot show well is sitting on the ground (cross-legged, squatting,
+            // on the floor with the face in the hands): the folded legs read as a short person standing. Where the user gave a
+            // seated picture of their own (the pose sheets' squatting cobbler, the girl crying on the ground), it plays that
+            // moment — a front-ish one with its face found first (its lips and blinks still live), the feeling of the moment
+            // when there is one
+            if (System.getProperty("kahani.castDebug") != null) { StringBuilder sb = new StringBuilder(); for (Art.PoseSprite p : ps) sb.append(' ').append(p.pose).append('/').append((int) p.angle).append(p.closeUp ? "c" : "").append(p.beast ? "b" : ""); System.err.println("CAST want pose=" + w.pose + " closeOk=" + w.closeOk + " shoulder=" + w.shoulder + " poses:" + sb); }
+            if (w.pose == PoseSense.SIT) {
+                int bestSit = -1; float bestSc = -1e9f;
+                for (int i = 0; i < ps.size(); i++) {
+                    Art.PoseSprite p = ps.get(i);
+                    if (p.pose != PoseSense.SIT || p.closeUp || p.beast) continue;
+                    float sc = (isFrontish(p.angle) ? 2 : 0) + (p.faceKnown() ? 1.5f : 0) + (p.emotion == w.emotion ? 1 : p.emotion == PoseSense.NEUTRAL ? 0.5f : 0);
+                    if (i == keep) sc += 4;
+                    if (sc > bestSc) { bestSc = sc; bestSit = i; }
+                }
+                if (bestSit >= 0) return bestSit;
+            }
             if (!w.shoulder) return MAIN;
             // the shoulder: the user's own back picture standing (as Renderer.otsBack draws it), else the rig (its view)
             for (int i = 0; i < ps.size(); i++) if (Math.abs(Math.abs(ps.get(i).angle) - 180) < 1 && ps.get(i).pose == PoseSense.STAND) return i;

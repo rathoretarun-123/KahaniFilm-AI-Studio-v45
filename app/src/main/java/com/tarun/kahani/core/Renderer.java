@@ -1952,6 +1952,7 @@ public final class Renderer {
         // v27: the director's choice for this shot — the user's own picture of this angle, pose and feeling, drawn as
         // it is for the whole shot (nothing bent, nothing swaying, no step cycle): the pose is in the picture
         Art.PoseSprite chosen = k.costume > 0 ? null : chosenPicture(sp, a, t, p);     // pose pictures show the character's own clothes
+        if (POSE_DEBUG) { Film.Shot dsh = shotAt(t); System.err.println("CHOSEN t=" + t + " " + a.c.displayName + " idx=" + (dsh == null ? "-" : dsh.pictures.get(a.c.id)) + " poses=" + (sp == null || sp.poses == null ? -1 : sp.poses.size()) + " chosen=" + (chosen == null ? "-" : chosen.pose + "/" + chosen.angle)); }
         if (DEBUG_DRAW) System.out.printf(java.util.Locale.US, "DRAW t=%.2f %s body=%d sit=%.2f seat=%d chosen=%s rig=%s legs=%s%n", t, a.c.shown(), p.body, p.sit, p.seat,
                 chosen == null ? "-" : chosen.file + "(" + PoseSense.poseName(chosen.pose) + ")", sp == null || sp.rig == null ? "none" : sp.rig.still ? "still" : sp.rig.animal ? "animal" : "full",
                 sp == null || sp.rig == null ? "-" : String.valueOf(sp.rig.legs));
@@ -1973,7 +1974,7 @@ public final class Renderer {
                 pxs += ((sp.mouthX - 0.5f) * wMain - (real.mouthX - 0.5f) * wReal) * (p.facing < 0 ? -1 : 1);
             }
             // v39: a sitting picture on a sofa, a chair or a bed sits on its cushion, not on the floor in front of it
-            if (chosen.pose == PoseSense.SIT && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)
+            if (chosen.pose == PoseSense.SIT && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing)
                 pys -= seatTopOf(p.seat) * h;
             if (camStill && pixelStep > 0) { pxs = Math.round(pxs / pixelStep) * pixelStep; pys = Math.round(pys / pixelStep) * pixelStep; }
             g.save();
