@@ -679,3 +679,21 @@ effects): the three films and the sample story unchanged; of the older test stor
 Staging now (every half second): scene 1 the old man seated on the bench; scene 2 still seated, the child runs in,
 kneels to her bag, stands and steps toward him; scene 3 he is seated, she sits beside him. The other three films'
 staging is unchanged (posture and actions compared every half second before and after).
+
+### 6.18 The script format in both languages (20:05 IST)
+
+The user: "the story will be written in this format: title, all the characters (name, age and description in ( )), all
+the objects, all the places and backgrounds, then the story, दृश्य 1, descriptions in ( ), dialogues in " ", no * / #,
+and finally END … convert this to Hindi as well and train your reader … it should not ask for images of intangible
+things like wind, water, sky and emotions … it should rewrite my earlier installed version."
+- **The reader** knows the headings in Hindi and English (शीर्षक/Title, पात्र/Characters, वस्तुएं/Objects, स्थान और
+  पृष्ठभूमि/Places and Backgrounds, कहानी/Story, दृश्य 1/Scene 1, समाप्त/END). The rewrite applies only when the lists are
+  the format's "name (…)" lines; the older bulleted formats read as before (2,090 stories compared). A colon inside a
+  description no longer cuts into the name. An English script in the format (tools/testdata/user_format_en) reads in full.
+- **Not asked for**: the head noun decides ("पानी की बाल्टी" is a bucket and is asked for; "बारिश का पानी", "दोपहर की
+  धूप", "ठंडी हवा", "आसमान और हवा" are not); feelings (खुशी, प्यार, उदासी, आँसू …), fire, shade, rays and waves join wind,
+  water, sky, sunlight, rain, sound and dust.
+- **The story page** shows the format line and a "📝 Script format / स्क्रिप्ट का तरीका" button with the whole guide in
+  Hindi and English (assets/help/script_format.txt), which can be copied; docs/script_format.md.
+- **Updates install over the installed app**: the signing key is committed, and every CI build now has a higher version
+  code (47 × 10000 + the run number; the footer shows v47.0.<run>).

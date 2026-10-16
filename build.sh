@@ -19,6 +19,13 @@ if [ ! -f "$ALL_JAR" ]; then
 fi
 VERSION_CODE=$(grep -o 'versionCode="[0-9]*"' app/src/main/AndroidManifest.xml | grep -o '[0-9]*')
 VERSION_NAME=$(grep -o 'versionName="[^"]*"' app/src/main/AndroidManifest.xml | cut -d'"' -f2)
+# every CI build is a higher version than the one before it, so a new APK always installs as an update over the app
+# already on the phone (same package, same committed signing key, a larger version code)
+if [ -n "${GITHUB_RUN_NUMBER:-}" ]; then
+  VERSION_CODE=$((VERSION_CODE * 10000 + GITHUB_RUN_NUMBER))
+  VERSION_NAME="$VERSION_NAME.$GITHUB_RUN_NUMBER"
+fi
+echo "version $VERSION_NAME ($VERSION_CODE)"
 
 B=build
 rm -rf $B && mkdir -p $B/gen $B/classes

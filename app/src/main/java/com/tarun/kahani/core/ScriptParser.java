@@ -577,11 +577,21 @@ public final class ScriptParser {
         String[] lines = raw.replace("\r\n", "\n").replace('\r', '\n').split("\n", -1);
         boolean fmt = false;
         int heads = 0;
+        java.util.Set<String> kinds = new java.util.HashSet<String>();
+        // (and its lists are the format's: "name (…)" lines — a bulleted "* Maya: 9 years, …" list under English headings is
+        // the older format the reader reads as it is)
+        int entries = 0, paren = 0;
+        String sec = "";
         for (String l : lines) {
-            String h = l.trim().replaceAll("[:：]$", "").trim();
-            if (h.equals("पात्र") || h.equals("वस्तुएं") || h.equals("वस्तुएँ") || h.equals("स्थान और पृष्ठभूमि") || h.equals("स्थान") || h.equals("कहानी")) heads++;
+            String k = userHeading(l);
+            if (k != null) { if (!k.equals("end")) kinds.add(k); sec = k; continue; }
+            String tl = l.trim();
+            if (tl.isEmpty() || !(sec.equals("char") || sec.equals("thing") || sec.equals("place"))) continue;
+            entries++;
+            if (tl.indexOf('(') > 0 && !tl.matches("^(?:[*•\\-–—#]|[0-9०-९]+[.)]).*")) paren++;
         }
-        fmt = heads >= 3;
+        heads = kinds.size();
+        fmt = heads >= 3 && entries > 0 && paren * 10 >= entries * 6;
         java.util.regex.Pattern speech = java.util.regex.Pattern.compile("^\\s*([^:：\"“”()]{1,40}?)\\s*[:：]\\s*[\"“]([^\"”]*)[\"”]\\s*\\(([^)]*)\\)\\s*$");
         StringBuilder out = new StringBuilder();
         String section = "";
@@ -593,12 +603,15 @@ public final class ScriptParser {
             java.util.regex.Matcher sp = speech.matcher(t);
             if (sp.matches()) { out.append(sp.group(1).trim()).append(" (").append(sp.group(3).trim()).append("): \"").append(sp.group(2).trim()).append("\"\n"); continue; }
             if (!fmt) { out.append(l).append('\n'); continue; }
-            String h = t.replaceAll("[:：]$", "").trim();
-            if (h.equals("पात्र")) { section = "char"; n = 0; out.append("पात्र:\n"); continue; }
-            if (h.equals("वस्तुएं") || h.equals("वस्तुएँ")) { section = "thing"; n = 0; out.append("वस्तुएँ:\n"); continue; }
-            if (h.equals("स्थान और पृष्ठभूमि") || h.equals("स्थान")) { section = "place"; n = 0; out.append("स्थान:\n"); continue; }
-            if (h.equals("कहानी")) { section = "story"; out.append("कहानी:\n"); continue; }
-            if (h.equals("समाप्त") || h.equals("The End")) { out.append('\n'); continue; }      // the end card says it; it is no direction
+            String hk = userHeading(t);
+            if ("char".equals(hk)) { section = "char"; n = 0; out.append("पात्र:\n"); continue; }
+            if ("thing".equals(hk)) { section = "thing"; n = 0; out.append("वस्तुएँ:\n"); continue; }
+            if ("place".equals(hk)) { section = "place"; n = 0; out.append("स्थान:\n"); continue; }
+            if ("story".equals(hk)) { section = "story"; out.append("कहानी:\n"); continue; }
+            if ("end".equals(hk)) { out.append('\n'); continue; }      // the end card says it; it is no direction
+            // "Scene 1" / "दृश्य - 1" / "दृश्य १": the scene heading the reader knows
+            java.util.regex.Matcher sm = SCENE_HEAD.matcher(t);
+            if (section.equals("story") && sm.matches()) t = "दृश्य " + sm.group(1);
             if (section.equals("story") && t.startsWith("(") && t.endsWith(")") && t.length() > 80) {
                 // v47.5: a long direction of comma-joined clauses, each a sentence of its own ("…उस पर रघुवीर जी बैठे हैं, उनकी
                 // कमर झुकी हुई … टिकी है, …"): one sentence each, so each clause's subject does only its own action
@@ -609,19 +622,24 @@ public final class ScriptParser {
                 if (section.equals("story") && t.matches("^दृश्य\\s*[0-9०-९]+\\s*$")) {
                     // the scene's place: the listed place its first direction names (most of its words), or the one before ("वही जगह")
                     String dir = "";
-                    for (int j = i + 1; j < lines.length && j < i + 4; j++) if (lines[j].trim().startsWith("(")) { dir = Txt.norm(lines[j]); break; }
+                    for (int j = i + 1; j < lines.length && j < i + 4; j++) if (lines[j].trim().startsWith("(")) { dir = Txt.norm(lines[j]).toLowerCase(java.util.Locale.ROOT); break; }
                     boolean same = dir.contains(Txt.norm("वही जगह")) || dir.contains(Txt.norm("उसी जगह")) || dir.toLowerCase(java.util.Locale.ROOT).contains("same place");
                     String best = null; float bestF = 0;
                     for (String pl : places) {
                         String[] ws = pl.split("\\s+"); int have = 0, all = 0;
-                        for (String w : ws) { if (w.length() < 2 || w.equals("का") || w.equals("के") || w.equals("की") || w.equals("और") || w.equals("-")) continue; all++; if (dir.contains(Txt.norm(w))) have++; }
+                        for (String w : ws) {
+                            String lw = w.toLowerCase(java.util.Locale.ROOT);
+                            if (lw.length() < 2 || lw.matches("का|के|की|और|-|the|of|and|an|in|at|on")) continue;
+                            all++;
+                            if (dir.contains(Txt.norm(w).toLowerCase(java.util.Locale.ROOT))) have++;
+                        }
                         float f = all == 0 ? 0 : have / (float) all;
                         if (f > bestF || (f == bestF && best != null && pl.length() > best.length())) { bestF = f; best = pl; }
                     }
                     String place = same && lastPlace != null ? lastPlace : bestF >= 0.6f ? best : lastPlace != null ? lastPlace : best;
                     if (place != null) { lastPlace = place; out.append(t).append(": ").append(place).append('\n'); continue; }
                 }
-                out.append(l).append('\n');
+                out.append(t.equals(l.trim()) ? l : t).append('\n');
                 continue;
             }
             // an entry: "name (age) (description)" / "name (description)" / "name - part (description)"
@@ -630,6 +648,7 @@ public final class ScriptParser {
             if (par > 0) {
                 name = t.substring(0, par).trim();
                 desc = t.substring(par).replaceAll("^\\(|\\)$", "").replace(") (", ", ").replace(")(", ", ").trim();
+                desc = desc.replace(':', ',').replace('：', ',');      // (a colon inside the description is no "name: description" cut)
             }
             name = name.replaceAll("\\s+[-–—]\\s+.*$", "").trim();          // "गांव का पुराना डाकघर - बाहरी हिस्सा": the place's name
             if (name.length() == 0) { out.append(l).append('\n'); continue; }
@@ -637,6 +656,26 @@ public final class ScriptParser {
             out.append(++n).append(". ").append(name).append(section.equals("place") ? ": " : " - ").append(desc).append('\n');
         }
         return out.toString();
+    }
+
+    /** v47.5: "Scene 1", "दृश्य 1", "दृश्य - 1", "दृश्य १" alone on a line. */
+    static final Pattern SCENE_HEAD = Pattern.compile("^(?:दृश्य|scene)\\s*[-–—:.]?\\s*([0-9०-९]+)\\s*[:：.]?\\s*$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+
+    /**
+     * v47.5: a heading of the user's script format alone on its line, in Hindi or English (the user: "first title, all the
+     * characters, all the objects, all the places and backgrounds, then the story, दृश्य 1 …, and finally END"): "char",
+     * "thing", "place", "story", "end", or null.
+     */
+    static String userHeading(String line) {
+        String h = line.trim().replaceAll("[:：\\-–—.]+$", "").trim().toLowerCase(java.util.Locale.ROOT);
+        if (h.isEmpty() || h.length() > 40) return null;
+        if (h.matches("पात्र|पात्रों का विवरण|पात्र परिचय|किरदार|characters?|cast|the characters")) return "char";
+        if (h.matches("वस्तुएं|वस्तुएँ|वस्तुयें|वस्तुए|वस्तु|सामान|प्रॉप्स|objects?|props|things|the objects")) return "thing";
+        if (h.matches("स्थान और पृष्ठभूमि|स्थान व पृष्ठभूमि|स्थान एवं पृष्ठभूमि|स्थान|पृष्ठभूमि|जगह|जगहें|स्थान और पृष्ठभूमियाँ|places?|locations?|backgrounds?"
+                + "|places? (?:and|&) backgrounds?|locations? (?:and|&) backgrounds?|the places")) return "place";
+        if (h.matches("कहानी|कथा|पटकथा|story|the story|script|screenplay")) return "story";
+        if (h.matches("समाप्त|समाप्ति|अंत|the end|end|द एंड")) return "end";
+        return null;
     }
 
     /** v47.5: the comma-joined clauses of a direction as sentences: a cut after each clause that ends on a finite verb. */

@@ -302,16 +302,42 @@ public final class Bible {
     static final String[] INTANGIBLE = {"हवा", "आसमान", "आकाश", "बारिश", "बरसात", "बूँद", "बूंद", "धूप", "रोशनी", "रौशनी", "उजाला", "अंधेरा", "अँधेरा", "अंधकार", "आवाज़", "आवाज", "शोर",
             "खुशबू", "ख़ुशबू", "महक", "गंध", "बादल", "बिजली", "कोहरा", "धुंध", "धुआँ", "धुआं", "भाप", "समय", "शाम", "सुबह", "रात", "दोपहर", "चाँदनी", "चांदनी", "तारे", "सूरज", "सूर्य", "चाँद", "चांद",
             "ठंड", "ठण्ड", "गर्मी", "सन्नाटा", "ख़ामोशी", "खामोशी", "संगीत", "गीत", "मौसम", "तूफ़ान", "तूफान", "आँधी", "आंधी", "ओस", "बर्फ़", "बर्फ", "पानी", "कीचड़", "कीचड", "माहौल", "यादें", "याद", "सपना", "दर्द", "डर", "धूल", "धूलकण", "धूल-मिट्टी", "dust",
+            // v47.5 (the user: "it should not ask for images of intangible things like wind, water, sky and emotions"): feelings,
+            // fire and shade — the studio draws and plays them
+            "खुशी", "ख़ुशी", "दुख", "दुःख", "ग़म", "गम", "प्यार", "प्रेम", "ममता", "गुस्सा", "ग़ुस्सा", "क्रोध", "उदासी", "मुस्कान", "मुस्कुराहट", "हँसी", "हंसी", "आँसू", "आंसू",
+            "भावना", "भावनाएं", "भावनाएँ", "एहसास", "अहसास", "उम्मीद", "आशा", "सुकून", "शांति", "तनाव", "चिंता", "अकेलापन", "इंतज़ार", "इंतजार", "ख़ामोशी", "सांस", "साँस",
+            "धड़कन", "गूँज", "गूंज", "आग", "लौ", "लपट", "लपटें", "छाया", "छाँव", "छांव", "परछाई", "परछाईं", "किरण", "किरणें", "इंद्रधनुष", "लहर", "लहरें", "हवाएँ", "हवाएं",
+            "love", "happiness", "sadness", "anger", "joy", "emotion", "emotions", "feeling", "feelings", "hope", "tears", "smile", "laughter", "loneliness", "peace",
+            "breath", "heartbeat", "echo", "fire", "flame", "flames", "shade", "shadow", "shadows", "rays", "rainbow", "waves", "air",
             "wind", "breeze", "sky", "rain", "drizzle", "sunlight", "sunshine", "light", "darkness", "dark", "sound", "noise", "voice", "smell", "scent", "cloud", "clouds", "lightning", "thunder",
             "fog", "mist", "smoke", "steam", "time", "evening", "morning", "night", "afternoon", "moonlight", "stars", "sun", "moon", "cold", "heat", "silence", "music", "song", "weather", "storm",
             "dew", "snow", "water", "mud", "atmosphere", "mood", "memory", "memories", "dream", "pain", "fear"};
     /** True for a thing no picture is asked for (see INTANGIBLE): its name is one of those words, or starts with one ("बारिश का पानी", "हवा में"). */
     public static boolean intangible(String name) {
         if (name == null) return true;
-        String n = Txt.norm(name).trim();
+        String n = Txt.norm(name).trim().toLowerCase(java.util.Locale.ROOT);
         if (n.isEmpty()) return true;
-        String head = n.split("[\\s,/]+")[0];
-        for (String w : INTANGIBLE) { String x = Txt.norm(w); if (n.equals(x) || head.equals(x) || n.startsWith(x + " ") || n.endsWith(" " + x)) return true; }
+        // v47.5: what the name is, is its head noun — the last word, after the last "का / की / के" ("पानी की बाल्टी" is a
+        // bucket, "धूप का चश्मा" glasses, "हवा में उड़ती पतंग" a kite; "बारिश का पानी", "दोपहर की धूप", "ठंडी हवा" are
+        // water, sunlight, wind); in English the word before "of" ("a bucket of water", but "the sound of rain").
+        // A list ("आसमान और हवा", "सूखे पत्ते और धूल") is drawn by the studio when its last part is.
+        String[] parts = n.split("\\s+(?:और|एवं|तथा|and|&)\\s+|\\s*[,/]\\s*");
+        String last = parts[parts.length - 1].trim();
+        if (last.isEmpty()) return false;
+        return intangibleHead(last);
+    }
+    private static boolean intangibleHead(String part) {
+        String p = part;
+        for (String g : new String[]{" का ", " की ", " के "}) { int i = p.lastIndexOf(g); if (i >= 0) p = p.substring(i + g.length()); }
+        int of = p.indexOf(" of ");
+        if (of > 0 && p.charAt(0) < 0x0900) p = p.substring(0, of);
+        p = p.replaceAll("^(?:the|a|an)\\s+", "").trim();
+        String[] ws = p.split("[\\s]+");
+        String head = ws[ws.length - 1];
+        for (String w : INTANGIBLE) {
+            String x = Txt.norm(w).toLowerCase(java.util.Locale.ROOT);
+            if (p.equals(x) || head.equals(x) || p.endsWith(" " + x)) return true;
+        }
         return false;
     }
 

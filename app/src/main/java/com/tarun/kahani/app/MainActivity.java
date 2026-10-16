@@ -1163,6 +1163,27 @@ public class MainActivity extends Activity {
         }
     }
 
+    /** v47.5: the script format every story is written in (assets/help/script_format.txt), Hindi first, then English; it can be copied as a start. */
+    private void showScriptFormat() {
+        String guide;
+        try { guide = new String(Project.readAll(getAssets().open("help/script_format.txt")), "UTF-8"); }
+        catch (Exception e) { guide = "शीर्षक, पात्र, वस्तुएं, स्थान और पृष्ठभूमि, कहानी, दृश्य 1, समाप्त"; }
+        final String text = guide;
+        TextView tv = Ui.text(this, text, 14, Ui.TEXT, false);
+        tv.setTextIsSelectable(true);
+        tv.setPadding(Ui.dp(this, 16), Ui.dp(this, 8), Ui.dp(this, 16), Ui.dp(this, 8));
+        android.widget.ScrollView sv = new android.widget.ScrollView(this);
+        sv.addView(tv);
+        new AlertDialog.Builder(this).setTitle("📝 Script format / स्क्रिप्ट का तरीका").setView(sv)
+                .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface d, int w) {
+                        ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                        if (cm != null) cm.setPrimaryClip(android.content.ClipData.newPlainText("script format", text));
+                        toast("The format is copied");
+                    }
+                }).setNegativeButton("Close", null).show();
+    }
+
     private Edits edits() { return Edits.fromJson(project.read("edits.json")); }
     private void saveEdits(Edits e) { project.write("edits.json", e.toJson()); }
 
@@ -1173,6 +1194,11 @@ public class MainActivity extends Activity {
         LinearLayout c1 = Ui.card(this);
         c1.addView(Ui.title(this, "1. Story"));
         c1.addView(Ui.text(this, "Hindi, English or Hinglish — a story or a script. Character and place descriptions are used for the pictures, never read aloud.", 13, Ui.SUB, false));
+        // v47.5 (the user: "the story will be written in this format … convert this to Hindi as well"): the format, in both languages
+        c1.addView(Ui.text(this, "शीर्षक → पात्र → वस्तुएं → स्थान और पृष्ठभूमि → कहानी → दृश्य 1 … → समाप्त.  Descriptions in ( ), dialogues in \" \".", 12, Ui.SUB, false));
+        c1.addView(Ui.small(this, "📝 Script format / स्क्रिप्ट का तरीका", Ui.BLUE, new View.OnClickListener() {
+            public void onClick(View v) { showScriptFormat(); }
+        }));
         scriptBox = new EditText(this);
         scriptBox.setText(project.read("script.txt"));
         scriptBox.setHint("Paste your story here…");
