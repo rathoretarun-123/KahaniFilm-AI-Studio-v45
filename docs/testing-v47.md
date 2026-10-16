@@ -400,3 +400,9 @@ whole reading fell back to the built-in reader. `Cloud.retry` now waits the 30 s
 calls are paced to 31 s apart before they are made (`pacedPollinations`); the progress text says so. A Gemini key in
 Settings has no such limit.
 
+The phone (11:20 IST): "once I uploaded the key in one version, it should not ask again while installing the updated version
+over it." CI made a fresh signing key on every run (`tools/debug.keystore` was never in the repository), so every build had
+a different signature, Android refused to install one over the other, and the uninstall wiped the settings with the key.
+The keystore is committed now (a debug key, password `android`); every build from here is signed the same and updates in
+place with the settings kept. One last uninstall is needed to move from a build signed before this to the first build after.
+
