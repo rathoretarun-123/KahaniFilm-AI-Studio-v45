@@ -464,3 +464,10 @@ letter), so their frames are unchanged by the flutter; it is there for the next 
 - Guard: "तेज़ हवा चलने लगती है" (the wind, a storm, a train, a clock "चलने लगती") walks nobody even when a character is
   named in the clause before it ("सीता के बाल उड़ते हैं और तेज़ हवा चलने लगती है" → W_WIND 1.0, nobody moves); "घर की तरफ़ चल
   पड़ता है" walks off towards home; "दोनों साथ-साथ … चल पड़ते हैं" walks both. Suite OK (40 tests).
+- Full जोड़ी at 40 fps on the patched core (v494): 5386 frames, luma 90.9, flagged only the card fades (as v490). One
+  defect by eye at 50 s: a magenta sliver 4 px wide at the toolbox's right edge (568..571, 283..313). Its cause: the
+  toolbox sheet panel has a wedge of the sheet's pick colour beside the box on its black panel, behind the frame line,
+  where the border flood never reaches. Art.keyObject now sweeps the pick colour itself (chroma magenta: red and blue
+  high and alike, green far below) wherever it is, floods its darker blend with the frame and the box's shadow, and fades
+  the pink-tinted edge pixels, unless the thing itself is magenta (over 30% of what is left). Re-keyed: toolbox 0 magenta
+  pixels (was 358), steel glass 0 (was 1727 half-opaque); 44–60 s re-rendered: 0 magenta pixels in every still.

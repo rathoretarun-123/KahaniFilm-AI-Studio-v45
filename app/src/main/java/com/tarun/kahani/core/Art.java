@@ -1000,12 +1000,33 @@ public final class Art {
                 if (near < cnt * 0.9f) break;
                 for (int m = 0; m < len; m++) key[idx[m]] = true;
             }
+            // v47.4: the sheet's pick colour (a bright chroma magenta) is never a thing's own colour — a wedge of it left
+            // beside the toolbox on its black panel, behind the frame line where the flood never reached, goes too, and
+            // the blend pixels along it; unless the thing itself is magenta (over 30% of what is left is)
+            int mag = 0, left = 0;
+            for (int i = 0; i < px.length; i++) if (!key[i]) { left++; if (chromaMagenta(px[i], false)) mag++; }
+            if (mag > 0 && mag < left * 0.3f) {
+                qn = 0;
+                for (int i = 0; i < px.length; i++) if (!key[i] && chromaMagenta(px[i], false)) { key[i] = true; queue[qn++] = i; }
+                // (and from there over its darker blend with the frame or the thing's shadow, as far as it runs)
+                for (int qi = 0; qi < qn; qi++) {
+                    int i = queue[qi], x = i % w, y = i / w;
+                    int[] nb = {x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1};
+                    for (int j : nb) if (j >= 0 && !key[j] && chromaMagenta(px[j], true)) { key[j] = true; queue[qn++] = j; }
+                }
+                if (KEY_DEBUG) System.out.println("KEY " + file + ": pick-colour sweep " + mag + " px");
+            }
             int keyed = 0;
             for (int i = 0; i < px.length; i++) {
                 if (key[i]) { px[i] = px[i] & 0xFFFFFF; keyed++; continue; }
                 int x = i % w, y = i / w;
                 boolean edge = (x > 0 && key[i - 1]) || (x < w - 1 && key[i + 1]) || (y > 0 && key[i - w]) || (y < h - 1 && key[i + w]);
-                if (edge) { float a = Math.max(0.35f, Math.min(1, (Cutout.dist(px[i], bg) - 40) / 60f)); px[i] = (Math.round(a * 255) << 24) | (px[i] & 0xFFFFFF); }
+                if (edge) {
+                    float a = Math.max(0.35f, Math.min(1, (Cutout.dist(px[i], bg) - 40) / 60f));
+                    int r = (px[i] >> 16) & 255, gg = (px[i] >> 8) & 255, bb = px[i] & 255;
+                    if (mag > 0 && r > gg + 40 && bb > gg + 30) a = 0.3f;          // a pink-tinted blend with the pick colour: nearly gone
+                    px[i] = (Math.round(a * 255) << 24) | (px[i] & 0xFFFFFF);
+                }
             }
             if (KEY_DEBUG) System.out.printf(java.util.Locale.US, "KEY %s: bg=%06x seed=%06x corner=%06x keyed=%d%% frame=%d%n", file, bg & 0xFFFFFF, seed & 0xFFFFFF, cornerBg & 0xFFFFFF, 100 * keyed / px.length, frame);
             if (keyed < px.length / 20 || keyed > px.length * 0.9f) return;    // hardly any background, or nothing left: leave the picture whole
@@ -1013,6 +1034,13 @@ public final class Art {
         } catch (RuntimeException e) {
             if (KEY_DEBUG) e.printStackTrace();
         }
+    }
+
+    /** v47.4: a chroma-key magenta (red and blue high and alike, green far below): the pick colour of a sheet, never a thing's. Loose: its blend with a dark frame or a thing's edge. */
+    static boolean chromaMagenta(int c, boolean loose) {
+        int r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255, lo = Math.min(r, b), hi = Math.max(r, b);
+        if (loose) return lo > 70 && g < lo * 0.6f && hi - lo <= hi * 0.45f;
+        return lo > 130 && g < lo * 0.4f && hi - lo <= hi * 0.3f;
     }
 
     /**
