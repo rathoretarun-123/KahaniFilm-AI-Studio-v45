@@ -412,3 +412,8 @@ earlier film was never placed. Now the studio searches the library on its own th
 again when the story changes; `libscan.txt` remembers), the things of the script are targets like the characters and
 places, and a matched thing is placed as its own object picture for every scene (`shot||name|file|object`).
 
+The phone (11:50 IST): "it is asking for the picture of हवा, sky etc — they should not be asked." A script's list of things
+may describe the wind, the sky, the rain, the light, a smell, a time of day; `Bible.intangible` names them (Hindi and
+English), and the director's plan never asks for them, the library search never targets them, and the staging never
+looks for a picture of them — the studio draws the weather and the light and plays the sounds.
+

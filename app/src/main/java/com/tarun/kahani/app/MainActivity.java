@@ -3292,7 +3292,7 @@ public class MainActivity extends Activity {
         for (Story.CharacterDef c : st.characters) t.add(new String[]{"char:" + keyFor(c), c.shown(), c.description});
         for (String[] p : Bible.places(st)) t.add(new String[]{"place:" + p[0], st.shown(p[0]), p[1]});
         // v47.4: the things the script lists are targets too (a library prop picture was never placed on one)
-        for (Story.PlaceDef th : st.things) if (th.name != null && th.name.trim().length() > 0) t.add(new String[]{"thing:" + th.name.trim(), th.name.trim(), th.description == null ? "" : th.description});
+        for (Story.PlaceDef th : st.things) if (th.name != null && th.name.trim().length() > 0 && !Bible.intangible(th.name)) t.add(new String[]{"thing:" + th.name.trim(), th.name.trim(), th.description == null ? "" : th.description});
         t.add(new String[]{"title", "Title page", "title picture / movie poster of " + st.title + ", main characters together"});
         t.add(new String[]{"end", "End page", "ending picture, calm landscape, sunset, the end"});
         return t;

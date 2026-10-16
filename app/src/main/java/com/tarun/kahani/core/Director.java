@@ -3545,7 +3545,7 @@ public final class Director {
             if (kind == TK_NONE && thingKind(n) == Film.THING_PLACE && idxOf(n, HOLD_WORDS) < 0 && idxOf(n, TAKE_WORDS) < 0 && idxOf(n, GIVE_WORDS) < 0 && !n.contains(" और ") && !n.contains(";")) kind = Film.THING_PLACE;
             if (kind == Film.THING_PLACE && heldNow(sh.pic, t) != null) continue;          // in someone's hand: it lies nowhere
             if (THING_DEBUG) System.out.println("THING " + key + " kind=" + kind + " who=" + (who == null ? "-" : who.c.shown()) + " win=[" + win + "] <- " + s);
-            if (Txt.has(Txt.norm(key), SET_WORDS)) continue;
+            if (Txt.has(Txt.norm(key), SET_WORDS) || Bible.intangible(key)) continue;
             if (kind == TK_NONE) continue;
             if (kind == TK_DOWN) { if (who != null) endHold(who, sh.pic, t + 0.5f, true); continue; }
             if (kind == TK_WEAR) { if (who != null) endHold(who, sh.pic, t + 0.6f, false); continue; }

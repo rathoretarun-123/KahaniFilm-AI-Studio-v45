@@ -282,6 +282,27 @@ public final class Bible {
     }
 
     /** Most words of a also appear in b (so "रत्नगढ़ का विशाल महल और बगीचा" ~ "रत्नगढ़ का महल और बगीचा"). */
+    /**
+     * v47.4 (the user: "it is asking for the picture of हवा, sky etc — they should not be asked"): the weather, the sky, the
+     * light, a sound, a smell, a time of day, the cold — things a script's list may describe, but no picture can be
+     * handed in for; the studio draws or plays them.
+     */
+    static final String[] INTANGIBLE = {"हवा", "आसमान", "आकाश", "बारिश", "बरसात", "बूँद", "बूंद", "धूप", "रोशनी", "रौशनी", "उजाला", "अंधेरा", "अँधेरा", "अंधकार", "आवाज़", "आवाज", "शोर",
+            "खुशबू", "ख़ुशबू", "महक", "गंध", "बादल", "बिजली", "कोहरा", "धुंध", "धुआँ", "धुआं", "भाप", "समय", "शाम", "सुबह", "रात", "दोपहर", "चाँदनी", "चांदनी", "तारे", "सूरज", "सूर्य", "चाँद", "चांद",
+            "ठंड", "ठण्ड", "गर्मी", "सन्नाटा", "ख़ामोशी", "खामोशी", "संगीत", "गीत", "मौसम", "तूफ़ान", "तूफान", "आँधी", "आंधी", "ओस", "बर्फ़", "बर्फ", "पानी", "कीचड़", "कीचड", "माहौल", "यादें", "याद", "सपना", "दर्द", "डर",
+            "wind", "breeze", "sky", "rain", "drizzle", "sunlight", "sunshine", "light", "darkness", "dark", "sound", "noise", "voice", "smell", "scent", "cloud", "clouds", "lightning", "thunder",
+            "fog", "mist", "smoke", "steam", "time", "evening", "morning", "night", "afternoon", "moonlight", "stars", "sun", "moon", "cold", "heat", "silence", "music", "song", "weather", "storm",
+            "dew", "snow", "water", "mud", "atmosphere", "mood", "memory", "memories", "dream", "pain", "fear"};
+    /** True for a thing no picture is asked for (see INTANGIBLE): its name is one of those words, or starts with one ("बारिश का पानी", "हवा में"). */
+    public static boolean intangible(String name) {
+        if (name == null) return true;
+        String n = Txt.norm(name).trim();
+        if (n.isEmpty()) return true;
+        String head = n.split("[\\s,/]+")[0];
+        for (String w : INTANGIBLE) { String x = Txt.norm(w); if (n.equals(x) || head.equals(x) || n.startsWith(x + " ") || n.endsWith(" " + x)) return true; }
+        return false;
+    }
+
     public static boolean similar(String a, String b) {
         String[] wa = Txt.norm(a).split("\\s+");
         String nb = " " + Txt.norm(b) + " ";

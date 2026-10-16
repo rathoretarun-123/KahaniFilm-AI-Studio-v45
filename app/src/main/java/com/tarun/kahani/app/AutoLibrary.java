@@ -169,6 +169,7 @@ final class AutoLibrary {
         for (Story.PlaceDef th : st.things) {
             String nm = th.name.trim();
             if (nm.length() < 2 || names.contains(Txt.norm(nm)) || haveShot.contains(":" + nm) || !objSeen.add("*:" + Txt.norm(nm))) continue;
+            if (Bible.intangible(nm)) continue;          // v47.4: the wind, the sky, the rain, the light — never a picture to ask for
             boolean have = false;
             for (String hs : haveShot) if (hs.endsWith(":" + nm)) have = true;
             if (have) continue;
