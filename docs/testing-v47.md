@@ -471,3 +471,15 @@ letter), so their frames are unchanged by the flutter; it is there for the next 
   high and alike, green far below) wherever it is, floods its darker blend with the frame and the box's shadow, and fades
   the pink-tinted edge pixels, unless the thing itself is magenta (over 30% of what is left). Re-keyed: toolbox 0 magenta
   pixels (was 358), steel glass 0 (was 1727 half-opaque); 44–60 s re-rendered: 0 magenta pixels in every still.
+
+### 6.10 The user's activity vocabulary (14:45 IST): 61 phrases, 28 reference pictures
+
+The user gave 61 daily-activity phrases ("सुबह उठना" … "नदी के किनारे बैठना") and 28 Pixar-style stills of them, to be kept in the
+library and the vocabulary of the reader and the director. Kept: `docs/reference/daily_activities/pictures/` (28 pictures,
+named by their activity), `docs/reference/daily_activities/vocabulary_hi.md` (every phrase, what the Director stages for it,
+its picture) and `app/src/main/assets/vocab/daily_activities_hi.txt` (the phrase list the app ships). Every phrase was run
+through the staging probe as "राम <phrase>ता है।"; 45 were staged right already (seats, vehicles, chores, throws, weather,
+candle light). Fixed: the lift in and out, boarding a train, shopping, the dog in the park (walks); the laptop and the
+keyboard (hands at the keys); vacuuming and cleaning (a task); board games, puzzles and video games (floor sit, hands to
+the pieces); meditation; getting up in the morning (stands, rubs the eyes); "दिये" spelt so (diya light); bonfire and
+campfire (fire 1.0); leaves flying in the wind now bring the wind with them (W_WIND 0.6, wind 0.4). Suite OK (40 tests).

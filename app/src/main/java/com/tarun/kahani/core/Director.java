@@ -3846,6 +3846,14 @@ public final class Director {
         {new String[]{"खिड़की से", "खिड़की के बाहर", "बाहर देख", "out of the window", "looks out"}, Pose.CURIOUS, Film.G_TURN, 1.6f, EV_NONE},
         {new String[]{"कपड़े बदल", "ड्रेस बदल", "changes clothes", "changes his clothes", "changes her clothes"}, -1, Film.G_TURN, 1.4f, EV_NONE},
         {new String[]{"धीरे-धीरे चल", "धीरे धीरे चल", "टहल", "चहलकदमी", "लंगड़ा", "walks slowly", "strolls", "paces", "limps"}, -1, -1, 2.6f, EV_WALK},
+        // v47.4: the user's activity vocabulary (docs/reference/daily_activities/vocabulary_hi.md): the lift, the train, shopping, the dog in the park
+        {new String[]{"लिफ्ट में", "लिफ़्ट में", "लिफ्ट से", "लिफ़्ट से", "into the lift", "out of the lift", "the elevator", "ट्रेन में चढ़", "ट्रेन पर चढ़", "boards the train", "gets on the train",
+                "खरीदारी", "ख़रीदारी", "shopping", "सुपरमार्केट", "supermarket", "कुत्ते को पार्क", "कुत्ते के साथ पार्क", "कुत्ते के साथ टहल", "dog in the park", "dog to the park"}, -1, -1, 2.6f, EV_WALK},
+        {new String[]{"लैपटॉप", "लैपटाप", "कंप्यूटर", "कम्प्यूटर", "टाइप कर", "laptop", "computer", "types", "typing", "keyboard"}, Pose.CURIOUS, Film.G_REACH, 2.6f, EV_NONE},
+        {new String[]{"वैक्यूम", "vacuum", "सफाई कर", "सफ़ाई कर", "पोंछा लगा", "पोछा लगा", "झाड़-पोंछ", "cleans the", "mops", "dusting", "tidies"}, -1, -1, 2.8f, EV_SWEEP},
+        {new String[]{"बोर्ड गेम", "लूडो", "शतरंज", "कैरम", "साँप-सीढ़ी", "सांप-सीढ़ी", "board game", "ludo", "chess", "carrom", "snakes and ladders", "पजल", "पहेली", "puzzle", "jigsaw", "वीडियो गेम", "video game", "गेम खेल"}, Pose.CURIOUS, Film.G_REACH, 2.6f, EV_FLOOR},
+        {new String[]{"ध्यान लगा", "ध्यान कर", "ध्यान में", "meditat", "आँखें बंद करके बैठ", "आंखें बंद करके बैठ"}, Pose.RELIEVED, -1, 2.6f, EV_FLOOR},
+        {new String[]{"सुबह उठ", "नींद से उठ", "बिस्तर से उठ", "gets up in the morning", "gets out of bed", "out of bed"}, -1, Film.G_RUB_EYES, 1.8f, EV_STAND},
         // v47.4: plain walking — with a stick, on foot, setting off ("छड़ी लेकर चलता है", "चल पड़ती है"); the wind "चलती है" names no one, so it never fires
         {new String[]{"लेकर चलता", "लेकर चलती", "लेकर चलते", "पैदल चल", "पैदल जा", "चलने लगता", "चलने लगती", "चलने लगते", "चल पड़ता", "चल पड़ती", "चल पड़ते", "चल देता", "चल देती", "चल देते",
                 "starts walking", "sets off", "walks on", "walks ahead", "walks with a stick", "walks with his stick", "walks with her stick", "on foot"}, -1, -1, 2.6f, EV_WALK},
@@ -5687,12 +5695,12 @@ public final class Director {
     static final String[] FOG = {"कोहरा", "कोहरे", "धुंध", "fog", "mist", "kohra"};
     static final String[] FOG_STOP = {"कोहरा छँट", "कोहरा छंट", "धुंध छँट", "धुंध छंट", "fog lifted", "fog cleared", "mist cleared",
             "fog lifts", "fog clears", "mist lifts", "mist clears", "mist slowly clears", "fog slowly lifts", "कोहरा हट", "धुंध हट"};
-    static final String[] FIRE = {"अलाव", "आग जल", "आग के पास", "आग के चारों", "आग जला", "लकड़ियाँ जल", "हवन", "campfire", "bonfire", "fire burning",
+    static final String[] FIRE = {"अलाव", "आग जल", "आग के पास", "आग के चारों", "आग जला", "लकड़ियाँ जल", "हवन", "campfire", "bonfire", "fire burning", "बोनफायर", "बोनफ़ायर", "कैम्पफायर", "कैंपफायर", "कैम्प फायर",
             "around the fire", "by the fire", "lit a fire"};
     static final String[] FIREFLY = {"जुगनू", "firefl"};
     static final String[] PETALS = {"फूल बरस", "फूलों की वर्षा", "फूलों की बारिश", "पुष्प वर्षा", "पंखुड़ियाँ", "पंखुड़ियां", "petals", "shower of flowers", "flowers rained"};
     static final String[] LEAVES = {"पत्ते उड़", "पत्ते गिर", "पतझड़", "सूखे पत्ते", "falling leaves", "leaves fly", "leaves flew", "autumn",
-            "पत्ते झड़", "leaves fall", "dry leaves", "leaves are falling", "leaves drift"};
+            "पत्ते झड़", "leaves fall", "dry leaves", "leaves are falling", "leaves drift", "पत्तों का उड़", "पत्तों के उड़", "पत्ते हवा में", "पत्तियाँ उड़", "पत्तियां उड़", "leaves in the wind", "leaves swirl"};
     static final String[] STARS = {"तारे", "सितारे", "तारों", "stars", "starry"};
     static final String[] RAINBOW = {"इंद्रधनुष", "इन्द्रधनुष", "rainbow"};
     static final String[] SEA = {"समुद्र", "सागर", "समंदर", "ocean", "sea ", "seashore", "beach", "लहरें", "लहरों", "waves", "shore", "तट पर"};
@@ -5712,7 +5720,7 @@ public final class Director {
         return false;
     }
     static final String[] CANDLE = {"मोमबत्ती", "मोमबत्तियाँ", "candle"};
-    static final String[] DIYA = {"दीया", "दीये", "दीयों", "दीपक", "दीप जल", "दीपावली", "दिवाली", "diya", "diwali", "oil lamp", "lamps",
+    static final String[] DIYA = {"दीया", "दीये", "दीयों", "दिया जल", "दिये", "दियों", "दिये की रोशनी", "दीपक", "दीप जल", "दीपावली", "दिवाली", "diya", "diwali", "oil lamp", "lamps",
             // v43: the aarti's flame
             "आरती उतार", "आरती कर", "आरती की थाली", "aarti"};
     static final String[] TORCH = {"मशाल", "मशालें", "लालटेन", "torch", "lantern"};
@@ -9845,7 +9853,7 @@ public final class Director {
         else if (nightFalls && seg != null && Sets.outdoorSet(seg.set)) open(Film.W_STARS, t + 3.5f, 0.7f);
         if (Txt.has(s, STARS) && (seg == null || seg.tod == Sets.NIGHT || seg.tod == Sets.EVENING)) open(Film.W_STARS, t, 1f);
         if (Txt.has(s, RAINBOW)) rainbow(t);
-        if (Txt.has(s, LEAVES)) open(Film.W_LEAVES, t, 1f);
+        if (Txt.has(s, LEAVES)) { open(Film.W_LEAVES, t, 1f); if (Txt.has(s, "हवा", "wind", "breeze", "उड़", "swirl", "fly")) open(Film.W_WIND, t, 0.6f); }   // v47.4: leaves that fly have a wind to fly in
         if (Txt.has(s, PETALS) || flowersRain) {
             if (place) open(Film.W_PETALS, t, 1f);
             else film.weather.add(new Film.Weather(Film.W_PETALS, t, t + 7, 1f));
