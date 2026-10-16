@@ -568,7 +568,7 @@ public final class ScriptParser {
     private static boolean listsEnd(String l) {
         String h = l.trim();
         // (v42: a start word alone on its line — "आरंभ", "शुरू", "प्रारंभ")
-        if (h.replaceAll("[#*:：\\-–—=_.!।\\s]+$", "").replaceAll("^[#*\\s]+", "").matches("^(आरंभ|आरम्भ|प्रारंभ|प्रारम्भ|शुरू|शुरु|शुरुआत)$")) return true;
+        if (h.replaceAll("[#*:：\\-–—=_.!।\\s]+$", "").replaceAll("^[#*\\s]+", "").matches("(?iu)^(आरंभ|आरम्भ|प्रारंभ|प्रारम्भ|शुरू|शुरु|शुरुआत|कहानी|कथा|पटकथा|स्क्रिप्ट|story|the story|script|screenplay)$")) return true;
         return h.matches("^[-–—_*=~]{3,}$") || Txt.has(h, "स्क्रिप्ट शुरू", "कहानी शुरू", "पटकथा शुरू", "स्क्रिप्ट आरंभ", "कहानी आरंभ", "पटकथा आरंभ",
                 "कहानी प्रारंभ", "पटकथा प्रारंभ", "स्क्रिप्ट प्रारंभ", "कहानी की शुरुआत", "स्क्रिप्ट की शुरुआत")
                 || h.toLowerCase(java.util.Locale.ROOT).matches("^(the )?(script|story|screenplay|film) (starts|begins).*") || h.toLowerCase(java.util.Locale.ROOT).matches("^fade in[:.]?$");

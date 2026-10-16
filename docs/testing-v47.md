@@ -557,3 +557,9 @@ Suite OK (40 tests); app package compiles.
   their own in the technical director's ledger: rigid in their parts, not one rigid piece while they open.
 - **The director's guide** shipped in the app gains section 20: what each of the user's GIFs and pictures taught.
 Suite OK (40 tests).
+- **A script laid out as the user writes them** (characters, objects, places, backgrounds, then "कहानी:" and the scenes
+  with dialogue in quotes): checked with a sample. Characters, objects, places, scenes, speakers and quoted lines are all
+  read; a lone "कहानी:" / "Story:" heading now ends the lists (it had been read into the last background's description).
+- Full 24 fps render of आखिरी चाय on this head (v520): 4408 frames, every frame scanned; flagged only the title and end
+  fades and the lightning the script writes. Per-second sheets: one umbrella (folded, as मीरा's pictures show), the
+  notebook in आरव's hand from his first step and set down before the tea, no painted marks on any profile.
