@@ -2067,6 +2067,86 @@ public final class Art {
      */
     public static float[] panelInset(int[] px, int w, int h) {
         if (w < 16 || h < 16) return null;
+        // v47.4: a cut that kept two panels of the sheet with the gutter between them (बाबू's tree, with a strip of
+        // leaves from the next panel below it): only the biggest panel is the place — the crop moves into it
+        int[] main = mainPanel(px, w, h);
+        if (main != null) {
+            int mw = main[2] - main[0], mh = main[3] - main[1];
+            int[] sub = new int[mw * mh];
+            for (int y = 0; y < mh; y++) System.arraycopy(px, (main[1] + y) * w + main[0], sub, y * mw, mw);
+            float[] in = panelInset(sub, mw, mh);
+            float il = in == null ? 0 : in[0], it = in == null ? 0 : in[1], ir = in == null ? 0 : in[2], ib = in == null ? 0 : in[3];
+            return new float[]{(main[0] + il * mw) / w, (main[1] + it * mh) / h, (w - main[2] + ir * mw) / w, (h - main[3] + ib * mh) / h};
+        }
+        return panelInsetOne(px, w, h);
+    }
+
+    /**
+     * v47.4: the biggest panel of a picture that holds more than one — split at a band of the border's colour running
+     * right across inside it (a gutter, at least 2 px, not at an edge): {x0, y0, x1, y1}, or null for one panel.
+     */
+    static int[] mainPanel(int[] px, int w, int h) {
+        // the gutter's colour: the one most of the four corners share (a panel running off one edge spoils an average)
+        int[] cs = {px[0], px[w - 1], px[(h - 1) * w], px[h * w - 1]};
+        int bg = cs[0], bestN = -1;
+        for (int c : cs) { int n = 0; for (int o : cs) if (Cutout.dist(c, o) < 40) n++; if (n > bestN) { bestN = n; bg = c; } }
+        if (bestN < 2) return null;
+        int lim = 40;
+        boolean[] rowG = new boolean[h], colG = new boolean[w];
+        for (int y = 0; y < h; y++) { int same = 0, cnt = 0; for (int x = 0; x < w; x += 2) { cnt++; if (Cutout.dist(px[y * w + x], bg) < lim) same++; } rowG[y] = same >= cnt * 0.9f; }
+        for (int x = 0; x < w; x++) { int same = 0, cnt = 0; for (int y = 0; y < h; y += 2) { cnt++; if (Cutout.dist(px[y * w + x], bg) < lim) same++; } colG[x] = same >= cnt * 0.9f; }
+        int[] ys = biggestRun(rowG, h), xs = biggestRun(colG, w);
+        if (ys == null && xs == null) return null;
+        int y0 = ys == null ? 0 : ys[0], y1 = ys == null ? h : ys[1], x0 = xs == null ? 0 : xs[0], x1 = xs == null ? w : xs[1];
+        if ((y1 - y0) < h * 0.4f || (x1 - x0) < w * 0.4f) return null;      // no panel worth the name: leave the picture as it is
+        // a sheet's panel: the gutter at any of its edges goes too (one edge is enough here — it is a sheet), measured
+        // inside the panel's own rows and columns, and the rounded corner's flat colour past it
+        x0 = edgeIn(px, w, bg, lim, x0, x1, y0, y1, 0); x1 = edgeIn(px, w, bg, lim, x0, x1, y0, y1, 1);
+        y0 = edgeIn(px, w, bg, lim, x0, x1, y0, y1, 2); y1 = edgeIn(px, w, bg, lim, x0, x1, y0, y1, 3);
+        int round = Math.round(Math.min(x1 - x0, y1 - y0) * 0.035f);        // the panel's rounded corners
+        x0 += round; x1 -= round; y0 += round; y1 -= round;
+        if ((y1 - y0) < h * 0.4f || (x1 - x0) < w * 0.4f) return null;
+        return new int[]{x0, y0, x1, y1};
+    }
+
+    /** The edge (side 0 left, 1 right, 2 top, 3 bottom) moved in past columns or rows that are 85% the gutter's colour within the panel. */
+    private static int edgeIn(int[] px, int w, int bg, int lim, int x0, int x1, int y0, int y1, int side) {
+        int pos = side == 0 ? x0 : side == 1 ? x1 : side == 2 ? y0 : y1, step = side == 0 || side == 2 ? 1 : -1;
+        for (int k = 0; k < 60; k++) {
+            int line = pos + (step > 0 ? 0 : -1), same = 0, cnt = 0;
+            if (side < 2) { for (int y = y0; y < y1; y += 2) { cnt++; if (Cutout.dist(px[y * w + line], bg) < lim) same++; } }
+            else { for (int x = x0; x < x1; x += 2) { cnt++; if (Cutout.dist(px[line * w + x], bg) < lim) same++; } }
+            if (cnt == 0 || same < cnt * 0.5f) break;      // (half the line the gutter's: the rounded corners and a soft edge still count)
+            pos += step;
+        }
+        return pos;
+    }
+
+    /** The longest run of non-gutter lines when an inner gutter band (2+ lines, not touching an edge) splits them; null when none does. */
+    private static int[] biggestRun(boolean[] g, int n) {
+        boolean inner = false;
+        for (int i = 2; i < n - 2; i++) {
+            if (!g[i]) continue;
+            int j = i; while (j < n && g[j]) j++;
+            boolean before = false, after = false;
+            for (int k = 0; k < i; k++) if (!g[k]) { before = true; break; }
+            for (int k = j; k < n; k++) if (!g[k]) { after = true; break; }
+            if (j - i >= 2 && before && after && Math.min(i, n - j) > n * 0.08f) inner = true;
+            i = j;
+        }
+        if (!inner) return null;
+        int best0 = -1, best1 = -1;
+        for (int i = 0; i < n; i++) {
+            if (g[i]) continue;
+            int j = i; while (j < n && !g[j]) j++;
+            if (j - i > best1 - best0) { best0 = i; best1 = j; }
+            i = j;
+        }
+        return best0 < 0 ? null : new int[]{best0, best1};
+    }
+
+    static float[] panelInsetOne(int[] px, int w, int h) {
+        if (w < 16 || h < 16) return null;
         int bg = Angles.borderColour(px, w, h);
         int lim = 40, maxStrip = Math.max(2, Math.min(w, h) / 6);
         int l = gutterStrip(px, w, h, bg, lim, maxStrip, 0), r = gutterStrip(px, w, h, bg, lim, maxStrip, 1);

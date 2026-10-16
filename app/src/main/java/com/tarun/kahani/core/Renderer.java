@@ -125,10 +125,11 @@ public final class Renderer {
      */
     private float[] coverCrop(Art.Backdrop b, float frameAR) {
         float cx = (b.x0 + b.x1) / 2 * b.w, cy = (b.y0 + b.y1) / 2 * b.h;
-        float w = b.w, h = w / frameAR;
-        if (h > b.h) { h = b.h; w = h * frameAR; }
-        // keep the chosen crop's size if it is smaller and has the right shape already
-        float x0 = Math.max(0, Math.min(b.w - w, cx - w / 2)), y0 = Math.max(0, Math.min(b.h - h, cy - h / 2));
+        // v47.4: inside the backdrop's own crop window (a sheet panel's gutter and the next panel stay out), not the whole picture
+        float aw = Math.max(1, (b.x1 - b.x0) * b.w), ah = Math.max(1, (b.y1 - b.y0) * b.h), ax0 = b.x0 * b.w, ay0 = b.y0 * b.h;
+        float w = aw, h = w / frameAR;
+        if (h > ah) { h = ah; w = h * frameAR; }
+        float x0 = Math.max(ax0, Math.min(ax0 + aw - w, cx - w / 2)), y0 = Math.max(ay0, Math.min(ay0 + ah - h, cy - h / 2));
         return new float[]{x0 / b.w, y0 / b.h, (x0 + w) / b.w, (y0 + h) / b.h};
     }
 
@@ -205,7 +206,11 @@ public final class Renderer {
     private void drawTitle(Gfx g, Film.Seg s, float t) {
         float u = (t - s.t0) / Math.max(0.1f, s.t1 - s.t0);
         boolean text = s.backdrop == null || art.titleText;      // v47: when the user gives a title picture, the studio adds no text and no sparkles over it
-        if (s.backdrop != null) {
+        if (s.backdrop != null && art != null && art.title != s.backdrop) {
+            // v47.4: no title picture of the user's — the first place stands in: it fills the frame through its own crop
+            // (inside a sheet panel's gutter), never shown whole with the sheet's border and the next panel
+            cover(g, s.backdrop, 1.0f + 0.03f * u, 0, 0);
+        } else if (s.backdrop != null) {
             contain(g, s.backdrop, 1.0f + 0.012f * u, !text);
         } else {
             g.save();

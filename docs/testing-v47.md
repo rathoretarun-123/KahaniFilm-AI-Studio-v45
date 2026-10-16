@@ -563,3 +563,16 @@ Suite OK (40 tests).
 - Full 24 fps render of आखिरी चाय on this head (v520): 4408 frames, every frame scanned; flagged only the title and end
   fades and the lightning the script writes. Per-second sheets: one umbrella (folded, as मीरा's pictures show), the
   notebook in आरव's hand from his first step and set down before the tea, no painted marks on any profile.
+
+### 6.13 Continued refinement (17:30 IST): बाबू's place picture
+
+- **The sheet's border and the next panel in every बाबू shot** (and two thin vertical lines down the left): बाबू's place
+  picture is a 640 px cut of a contact sheet that kept two panels — the tree, then the sheet's white gutter, then a strip
+  of leaves from the panel below — inside a white rounded border. The gutter trim only looked at the outer edges. A
+  picture split by a gutter band running right across it now keeps only its biggest panel; that panel's own gutter at
+  any edge and its rounded corners go too (the gutter's colour is the one most of the four corners share). बाबू's tree:
+  crop 8.3% left, 6.9% top, 2.2% right, 35.9% bottom. The other films' places are unchanged (no inner gutter).
+- **The title page showed that picture whole** with the border, framed small in the middle. With no title picture of the
+  user's, the first place now fills the frame through its own crop; and a filled frame (cover) now stays inside the
+  picture's crop window (it had used the whole picture's width, bringing the left border back).
+Suite OK (40 tests).
