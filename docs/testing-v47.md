@@ -693,7 +693,25 @@ things like wind, water, sky and emotions … it should rewrite my earlier insta
 - **Not asked for**: the head noun decides ("पानी की बाल्टी" is a bucket and is asked for; "बारिश का पानी", "दोपहर की
   धूप", "ठंडी हवा", "आसमान और हवा" are not); feelings (खुशी, प्यार, उदासी, आँसू …), fire, shade, rays and waves join wind,
   water, sky, sunlight, rain, sound and dust.
-- **The story page** shows the format line and a "📝 Script format / स्क्रिप्ट का तरीका" button with the whole guide in
-  Hindi and English (assets/help/script_format.txt), which can be copied; docs/script_format.md.
+- **The story page** shows the format line and a "📝 Script format (Hindi and English)" button with the whole guide in
+  Hindi and English (assets/help/script_format.txt), which can be copied; docs/script_format.md. The screen's own text
+  stays English, as AppTest requires of every screen (CI caught a Hindi label on it).
 - **Updates install over the installed app**: the signing key is committed, and every CI build now has a higher version
   code (47 × 10000 + the run number; the footer shows v47.0.<run>).
+
+### 6.19 The camera the script writes (20:25 IST)
+
+The user: "it should understand what a shot means … refine camera angle as well." A description's camera words are now
+the shot for that moment (Director.scriptCamera), kept by the later framing passes:
+- wide shot (वाइड, लॉन्ग शॉट, wide shot, establishing shot) — the whole place; opening a part, the part's own
+  establishing move is kept;
+- medium shot (मीडियम शॉट, medium shot) — the one it is about, or the group;
+- close-up (क्लोज़-अप, close-up; "करीब से … दिखता है") — the face, or the hands when a thing in them is named
+  ("चिट्ठी पर करीब से … हर अक्षर साफ दिखता है");
+- the camera pulls back / pushes in (पीछे जाता, पुल-बैक, ज़ूम आउट, pulls back; पास आता, आगे बढ़ता, ज़ूम इन, push in) —
+  slowly from close on them to the whole place, or the other way;
+- from above / from below (ऊपर से, हाई एंगल, from above; नीचे से, लो एंगल, from below) — the camera's angle;
+- "कट टू …" is a cut. Words that also name an action (पीछे जाता, ऊपर से, नीचे से, पास आता) count only beside a camera
+  word (कैमरा, शॉट, दृश्य, एंगल, camera, shot, view).
+In the films: बाबू के लिए 7 of its camera notes now framed as written; आखिरी चाय's closing pull back; आखिरी चिट्ठी's close
+look at the letter and its closing pull back to the wide.

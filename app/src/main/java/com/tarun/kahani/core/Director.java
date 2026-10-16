@@ -4635,6 +4635,7 @@ public final class Director {
 
     /** Stages one sentence of a stage direction; returns its duration. */
     private float sentence(String s, float t, boolean establishing) {
+        int cams0 = seg != null ? seg.cams.size() : 0;
         rode = false;
         travelAfter = 0;
         List<Story.CharacterDef> ms = mentionsWithGroups(s, null);
@@ -4729,7 +4730,11 @@ public final class Director {
         if (Txt.has(s, "ढोल", "नगाड़")) film.sfx.add(new Film.Sfx(Film.SFX_DRUMS, t, 6, 0.5f));
 
         // ---- establishing description of the location (no actions) – just hold
-        if (establishing && group.isEmpty()) return 2.4f;
+        if (establishing && group.isEmpty()) {
+            // (a camera note of its own — "मीडियम वाइड", "कट टू मीडियम क्लोज़-अप" — still frames the opening)
+            float sc = scriptCamera(s, t, 2.4f, null, group, cams0, true);
+            return sc >= 0 ? Math.max(2.4f, sc) : 2.4f;
+        }
 
         if (subj != null) { lastSubject = subj.c; }
         if (group.size() > 1) {
@@ -5186,6 +5191,10 @@ public final class Director {
         if (!playStaged) d = Math.max(d, playDelay + travelFrom(s, t + playDelay, subj, target, group));
         if (travelFramed) focusSet = true;
 
+        // v47.5 (the user: "it should understand what a shot means … refine camera angle as well"): a camera direction the
+        // script writes in the description is the shot — it wins over the director's own choice for this sentence
+        float sc = scriptCamera(s, t, d, subj, group, cams0, establishing);
+        if (sc >= 0) { d = Math.max(d, sc); focusSet = true; }
         if (!focusSet && !establishing) {
             List<Film.Actor> vis = new ArrayList<Film.Actor>();
             for (Film.Actor a : group) if (a.stateAt(t + d * 0.5f).visible) vis.add(a);
@@ -5194,6 +5203,130 @@ public final class Director {
             else cam(t, 640, 360, 1.0f, 0.6f);
         }
         return d;
+    }
+
+    // ------------------------------------------------------------------ v47.5: the camera the script asks for
+
+    static final String[] CAM_CONTEXT = {"कैमरा", "कैमरे", "शॉट", "दृश्य", "एंगल", "फ्रेम", "फ़्रेम", "camera", "shot", "angle", "view", "frame", "lens"};
+    static final String[] CAM_WIDE = {"वाइड", "लॉन्ग शॉट", "लांग शॉट", "पूरा दृश्य", "पूरी जगह दिख", "wide shot", "wide angle", "long shot", "establishing shot", "full view", "a wide", "the wide"};
+    static final String[] CAM_MEDIUM = {"मीडियम शॉट", "मीडियम", "मध्यम शॉट", "medium shot", "mid shot", "mid-shot", "medium close"};
+    static final String[] CAM_CLOSE = {"क्लोज़-अप", "क्लोज़ अप", "क्लोज-अप", "क्लोज अप", "क्लोज़अप", "क्लोजअप", "close-up", "close up", "closeup", "extreme close"};
+    static final String[] CAM_CLOSE_SOFT = {"करीब से", "क़रीब से", "नज़दीक से", "नजदीक से", "पास से"};
+    static final String[] CAM_PULL = {"पीछे जाता", "पीछे जाती", "पीछे हटता", "पीछे हटती", "ज़ूम आउट", "जूम आउट", "दूर होता", "दूर जाता", "पुल-बैक", "पुल बैक", "pulls back", "pull back", "pull-back", "pulling back",
+            "zoom out", "zooms out", "zooming out", "dolly out", "moves away", "pulls away"};
+    static final String[] CAM_PUSH = {"पास आता", "पास जाता", "करीब आता", "करीब जाता", "आगे बढ़ता", "ज़ूम इन", "जूम इन", "push in", "pushes in", "pushing in", "zoom in", "zooms in",
+            "zooming in", "dolly in", "moves closer", "moves in"};
+    static final String[] CAM_HIGH = {"ऊपर से", "ऊँचाई से", "ऊंचाई से", "टॉप एंगल", "हाई एंगल", "from above", "high angle", "top angle", "top shot", "bird's eye", "birds eye", "overhead"};
+    static final String[] CAM_LOW = {"नीचे से", "लो एंगल", "from below", "low angle", "worm's eye", "looking up at"};
+
+    /** Camera words of a description: {size 0 none / 1 wide / 2 medium / 3 close, move 0 / -1 pull back / +1 push in, angle 0 / -1 high / +1 low}, or null. */
+    static int[] cameraWords(String s) {
+        String low = s.toLowerCase(java.util.Locale.ROOT);
+        boolean ctx = Txt.has(low, CAM_CONTEXT);
+        // ("चिट्ठी पर करीब से … हर अक्षर साफ दिखता है": seen up close is a close-up too)
+        boolean seen = Txt.has(low, "दिखता", "दिखती", "दिखते", "दिखाई", "दिख रहा", "दिख रही", "is seen", "can be seen", "visible");
+        int size = Txt.has(low, CAM_CLOSE) || ((ctx || seen) && Txt.has(low, CAM_CLOSE_SOFT)) ? 3 : Txt.has(low, CAM_WIDE) ? 1 : Txt.has(low, CAM_MEDIUM) ? 2 : 0;
+        boolean zoomWord = Txt.has(low, "ज़ूम", "जूम", "zoom", "dolly", "पुल-बैक", "पुल बैक", "pull-back");
+        int move = (ctx || zoomWord) && Txt.has(low, CAM_PULL) ? -1 : (ctx || zoomWord) && Txt.has(low, CAM_PUSH) ? 1 : 0;
+        int angle = ctx && Txt.has(low, CAM_HIGH) ? -1 : ctx && Txt.has(low, CAM_LOW) ? 1 : 0;
+        if (size == 0 && move == 0 && angle == 0) return null;
+        return new int[]{size, move, angle};
+    }
+
+    /**
+     * Frames the sentence as the script's camera words say (returns the time it needs, or -1 with none): a wide shot of
+     * the whole place, a medium shot or a close-up of the one it is about (of the hands, for a thing in them), a slow
+     * pull back to the wide shot or a push in to the face, from above or from below. The script's shot is kept by the
+     * later framing passes; whatever the sentence's other rules framed is replaced.
+     */
+    private float scriptCamera(String s, float t, float d, Film.Actor subj, List<Film.Actor> group, int cams0, boolean establishing) {
+        if (seg == null) return -1;
+        int[] cw = cameraWords(s);
+        if (cw == null) return -1;
+        // a wide opening asked for ("वाइड एस्टैब्लिशिंग शॉट"): the part's own establishing shot is that — kept as it is
+        if (establishing && cw[0] <= 1 && cw[1] == 0 && cw[2] == 0) {
+            for (Film.Cam c : seg.cams) if (c.t >= t - 0.2f) c.keep = true;
+            scriptShots++;
+            film.notes.add(String.format(java.util.Locale.US, "  ↳ the script's camera at %.1f s: the wide establishing shot", t));
+            return 2.4f;
+        }
+        // the cameras this sentence's own rules set (and, opening a part, its establishing move) give way to the script's
+        for (int i = seg.cams.size() - 1; i >= 0; i--) {
+            Film.Cam c = seg.cams.get(i);
+            if (c.t >= t - (establishing ? 0.2f : 0.01f) && (i >= cams0 || establishing)) seg.cams.remove(i);
+        }
+        boolean cut = Txt.has(s, "कट टू", "कट करके", "cut to", "cuts to");
+        List<Film.Actor> vis = new ArrayList<Film.Actor>();
+        for (Film.Actor a : (group != null && !group.isEmpty() ? group : seg.actors)) if (a.stateAt(t + 0.3f).visible && !vis.contains(a)) vis.add(a);
+        if (vis.isEmpty()) for (Film.Actor a : seg.actors) if (a.stateAt(t + 0.3f).visible) vis.add(a);
+        Film.Actor one = subj != null && subj.stateAt(t + 0.3f).visible ? subj : vis.size() == 1 ? vis.get(0) : null;
+        // a close-up of a thing in someone's hands ("चिट्ठी पर करीब से … हर अक्षर साफ दिखता है"): the hands holding it
+        Film.Fx held = null;
+        if (cw[0] == 3) {
+            String n = Txt.norm(s);
+            for (Film.Fx f : seg.fx) {
+                if (f.type != Film.FX_HELD || f.kind == Film.THING_PLACE || f.a == null || f.what == null || f.t0 > t + 0.3f || f.t1 <= t) continue;
+                String[] ws = Txt.norm(f.what).split("\\s+");
+                if (startOf(n, stemHi(ws[ws.length - 1])) >= 0) { held = f; break; }
+            }
+        }
+        boolean slow = Txt.has(s, "धीरे", "slowly", "gently", "slow ");
+        float need = 0;
+        Film.Cam c0 = null, c1 = null;
+        int at0 = seg.cams.size();
+        if (cw[1] != 0) {
+            // a move: from close on them to the whole place (pull back), or from the whole place in to their face (push in)
+            float dur = Math.max(d, slow ? 5.0f : 3.6f);
+            boolean back = cw[1] < 0;
+            if (back) { closeFrame(one, vis, t, 1.9f); cam(t + dur, 640, 360, 1.0f, dur * 0.95f); }
+            else { cam(t, 640, 360, 1.0f, 0.6f); closeFrame(one, vis, t + dur, 2.1f); seg.cams.get(seg.cams.size() - 1).ease = dur * 0.95f; }
+            need = dur;
+        } else if (cw[0] == 1) {
+            cam(t, 640, 360, 1.0f, 0.7f);
+            need = Math.max(d, 2.4f);
+        } else if (cw[0] == 3) {
+            if (held != null) {
+                Film.Actor h = held.a;
+                float hh = heightOf(h);
+                Film.Key hk = h.stateAt(t + 0.3f);
+                float hy = hk.body == Pose.SIT ? ground - hh * 0.36f : ground - hh * 0.5f;
+                cam(t, xAt(h, t) + hk.facing * hh * 0.12f, hy, 2.4f, 0.6f);
+            } else if (one != null) { camOn(one, t, 2.3f); seg.cams.get(seg.cams.size() - 1).subject = one; }
+            else closeFrame(null, vis, t, 1.8f);
+            need = Math.max(d, 2.4f);
+        } else if (cw[0] == 2) {
+            if (one != null) camOn(one, t, 1.35f); else if (vis.size() >= 2) camGroup(vis, t, d); else cam(t, 640, 360, 1.0f, 0.6f);
+            need = Math.max(d, 2.0f);
+        } else {
+            // an angle only: the shot the director would take, seen from above or from below
+            if (one != null) camOn(one, t, 1.35f); else if (vis.size() >= 2) camGroup(vis, t, d); else cam(t, 640, 360, 1.0f, 0.6f);
+            need = Math.max(d, 2.0f);
+        }
+        for (int i = at0; i < seg.cams.size(); i++) {
+            Film.Cam c = seg.cams.get(i);
+            c.keep = true;
+            if (cw[2] != 0) c.angle = cw[2];
+            if (cut && i == at0) c.ease = 0;          // "कट टू …": a cut, not a move
+        }
+        scriptShots++;
+        film.notes.add(String.format(java.util.Locale.US, "  ↳ the script's camera at %.1f s: %s%s%s", t,
+                cw[0] == 1 ? "wide" : cw[0] == 2 ? "medium" : cw[0] == 3 ? (held != null ? "close-up of the " + held.what + " in the hands" : "close-up") : "",
+                cw[1] < 0 ? " pulling back to the wide" : cw[1] > 0 ? " pushing in" : "", cw[2] < 0 ? ", from above" : cw[2] > 0 ? ", from below" : ""));
+        return need;
+    }
+    /** Shots framed as the script's camera words asked. */
+    public int scriptShots;
+
+    /** A close frame: on the one it is about, else round the group. */
+    private void closeFrame(Film.Actor one, List<Film.Actor> vis, float t, float zoom) {
+        if (one != null) { camOn(one, t, zoom); seg.cams.get(seg.cams.size() - 1).subject = one; return; }
+        if (vis.size() >= 2) {
+            camGroup(vis, t, 1f);
+            Film.Cam c = seg.cams.get(seg.cams.size() - 1);
+            c.zoom = Math.min(2.0f, c.zoom * 1.35f);
+            return;
+        }
+        cam(t, 640, 360, Math.min(1.6f, zoom), 0.4f);
     }
 
     // ------------------------------------------------------------------ the director's manual: reactions and looks

@@ -1174,7 +1174,7 @@ public class MainActivity extends Activity {
         tv.setPadding(Ui.dp(this, 16), Ui.dp(this, 8), Ui.dp(this, 16), Ui.dp(this, 8));
         android.widget.ScrollView sv = new android.widget.ScrollView(this);
         sv.addView(tv);
-        new AlertDialog.Builder(this).setTitle("📝 Script format / स्क्रिप्ट का तरीका").setView(sv)
+        new AlertDialog.Builder(this).setTitle("📝 Script format").setView(sv)
                 .setPositiveButton("Copy", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface d, int w) {
                         ClipboardManager cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
@@ -1195,8 +1195,9 @@ public class MainActivity extends Activity {
         c1.addView(Ui.title(this, "1. Story"));
         c1.addView(Ui.text(this, "Hindi, English or Hinglish — a story or a script. Character and place descriptions are used for the pictures, never read aloud.", 13, Ui.SUB, false));
         // v47.5 (the user: "the story will be written in this format … convert this to Hindi as well"): the format, in both languages
-        c1.addView(Ui.text(this, "शीर्षक → पात्र → वस्तुएं → स्थान और पृष्ठभूमि → कहानी → दृश्य 1 … → समाप्त.  Descriptions in ( ), dialogues in \" \".", 12, Ui.SUB, false));
-        c1.addView(Ui.small(this, "📝 Script format / स्क्रिप्ट का तरीका", Ui.BLUE, new View.OnClickListener() {
+        // (the screen itself stays in English, as every screen does; the guide it opens is in Hindi and English)
+        c1.addView(Ui.text(this, "Script format: Title, Characters, Objects, Places and Backgrounds, Story, Scene 1 … END. Descriptions in ( ), dialogues in \" \".", 12, Ui.SUB, false));
+        c1.addView(Ui.small(this, "📝 Script format (Hindi and English)", Ui.BLUE, new View.OnClickListener() {
             public void onClick(View v) { showScriptFormat(); }
         }));
         scriptBox = new EditText(this);
