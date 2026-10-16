@@ -2234,7 +2234,7 @@ public final class Renderer {
                     int item = act.item == Pose.I_NONE ? Pose.I_GLASS : act.item;
                     if (film != null && film.kulhad && (item == Pose.I_TEA || item == Pose.I_CUP)) item = Pose.I_KULHAD;
                     p.holdR = item;
-                    if (picture) { p.armR = 12 + up * 12; p.toMouth = up; p.toMouthItem = item; }
+                    if (picture) { p.armR = 12 + up * 12; p.toMouth = up; p.toMouthItem = item; if (up > 0.85f) p.eyesClosed = true; }     // (v47.3: the eyes close on the sip, as in the user's reference)
                     else { p.armR = 24 + up * 62; p.elbowR = 28 + up * 128; }
                     p.nod -= up * (item == Pose.I_BOTTLE ? 0.42f : 0.22f);
                     if (up > 0.9f) p.mouth = Math.max(p.mouth, 0.05f + 0.04f * (float) Math.max(0, Math.sin(u * 9)));
@@ -4472,9 +4472,20 @@ public final class Renderer {
                         default: tx = ecx + p.facing * ed * 0.75f + jig; ty = ey + ed * 0.55f;
                     }
                 }
+                // v47.3 (the user's Gemini reference, docs/reference): a cup or a kulhad is held at the chest in both hands
+                // before it rises to the lips, and comes back there; the elbow stays at the side
+                float ex = hx + p.facing * w * 0.1f, ey = hy - h * 0.12f;
+                boolean vessel = p.toMouthItem != -1 && p.toMouthItem != Pose.I_PHONE && p.toMouthItem != Pose.I_BRUSH && !Pose.makeup(p.toMouthItem);
+                if (vessel) { hx = p.facing * w * 0.02f; hy = -h * 0.6f; }
                 float ix = hx + (tx - hx) * u, iy = hy + (ty - hy) * u;
-                // v47.3: the forearm comes up with it from the elbow at the side — the hand at the lips used to float alone
-                if (u > 0.02f) forearm(g, hx + p.facing * w * 0.1f, hy - h * 0.12f, ix - p.facing * mw * 0.3f, iy + mw * 0.55f, h * 0.042f, sp.skin, u);
+                // the forearm comes up with it from the elbow at the side — the hand at the lips used to float alone
+                forearm(g, ex, ey, ix - p.facing * mw * 0.3f, iy + mw * 0.55f, h * 0.042f, sp.skin, vessel ? 1 : u);
+                if (vessel && u < 0.6f) {
+                    // the other hand round it too while it is held low
+                    float k2 = mw / 4.4f * (1 - u / 0.6f);
+                    g.color(Puppet.shade(sp.skin, 0.8f)); g.roundRect(ix - p.facing * mw * 0.5f - 7 * k2, iy - 6 * k2, 14 * k2, 8 * k2, 3.5f * k2);
+                    g.color(sp.skin); g.roundRect(ix - p.facing * mw * 0.5f - 6.5f * k2, iy - 5.5f * k2, 13 * k2, 7 * k2, 3.2f * k2);
+                }
                 drawToLips(g, p.toMouthItem, ix, iy, mw, p.facing, u, sp.skin, p.time);
                 if (p.toMouthItem == -1) { if (p.holdR == Pose.I_PLATE) drawItem(g, p.holdR, hx, hy, h, p); return; }
                 return;
