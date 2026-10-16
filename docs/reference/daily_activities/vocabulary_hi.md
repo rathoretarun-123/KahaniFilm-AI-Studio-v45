@@ -1,7 +1,7 @@
 # Daily-activity vocabulary (the user's list of 16 October 2026) and its reference pictures
 
 The 61 phrases the user gave, what the Director stages for each (verified with the staging probe on `राम <phrase>ता है।`),
-and the reference picture the user uploaded for it in `pictures/` (28 pictures, Pixar-style stills). The reader, the director and
+and the reference picture the user uploaded for it in `pictures/` (48 pictures, Pixar-style stills, two batches of 16 October). The reader, the director and
 the technical director share this list: every phrase is in `Director.EVERYDAY` (or the vehicle, seat, weather and light tables).
 
 | # | phrase | the Director stages | reference picture |
@@ -9,39 +9,39 @@ the technical director share this list: every phrase is in `Director.EVERYDAY` (
 | 1 | सुबह उठना | lying/seated → stands, rubs the eyes |  |
 | 2 | दाँत ब्रश करना | task at the mouth |  |
 | 3 | योग और व्यायाम करना | exercise | 08_yoga_stretch_mat.jpg |
-| 4 | नाश्ता करना | eats |  |
+| 4 | नाश्ता करना | eats | 48_eating_breakfast.jpg |
 | 5 | लैपटॉप पर काम करना | hands at the keys (reach), attentive | 19_laptop_work_on_floor.jpg, 23_laptop_work_at_desk.jpg |
 | 6 | पैदल चलना | walks |  |
 | 7 | परिवार के साथ रात का खाना खाना | eats | 12_family_dinner_table.jpg |
 | 8 | बिस्तर पर किताब पढ़ना | reads |  |
 | 9 | नहाना | bathes |  |
-| 10 | खाना पकाना | cooks |  |
-| 11 | कपड़े धोना और तह करना | washes |  |
+| 10 | खाना पकाना | cooks | 40_cooking_stir_fry.jpg |
+| 11 | कपड़े धोना और तह करना | washes | 39_folding_laundry.jpg |
 | 12 | वैक्यूम से सफाई करना | sweeps/cleans (task) |  |
 | 13 | सुपरमार्केट में खरीदारी करना | walks along |  |
-| 14 | कुत्ते को पार्क में घुमाना | walks, the dog beside |  |
-| 15 | ध्यान लगाना | exercise/still (floor) |  |
-| 16 | सोफे पर टीवी देखना | sits, laughs |  |
-| 17 | बगीचे में पौधों को पानी देना | waters (task) |  |
-| 18 | कार चलाना | drives off |  |
-| 19 | फोन पर बात करना | phone task |  |
-| 20 | जिम में वजन उठाना | exercise |  |
-| 21 | बच्चों के साथ खेलना | plays | 03_playing_toys_on_floor.jpg |
-| 22 | बालकनी में अखबार पढ़ना | reads |  |
+| 14 | कुत्ते को पार्क में घुमाना | walks, the dog beside | 46_walking_dog_park.jpg |
+| 15 | ध्यान लगाना | exercise/still (floor) | 47_meditating_balcony.jpg |
+| 16 | सोफे पर टीवी देखना | sits, laughs | 45_watching_tv_on_sofa.jpg |
+| 17 | बगीचे में पौधों को पानी देना | waters (task) | 32_watering_garden_plants.jpg |
+| 18 | कार चलाना | drives off | 29_driving_car_suburb.jpg, 36_driving_car_city.jpg |
+| 19 | फोन पर बात करना | phone task | 38_talking_on_phone_desk.jpg |
+| 20 | जिम में वजन उठाना | exercise | 42_lifting_weights_gym.jpg |
+| 21 | बच्चों के साथ खेलना | plays | 03_playing_toys_on_floor.jpg, 41_playing_with_children_blocks.jpg |
+| 22 | बालकनी में अखबार पढ़ना | reads | 44_reading_newspaper_balcony.jpg |
 | 23 | कबूतरों को दाना खिलाना | scatters grain (throw) | 25_feeding_pigeons_bench.jpg |
-| 24 | बर्तन धोना | washes |  |
-| 25 | घर का दरवाजा खोलना | reach |  |
-| 26 | घर का दरवाजा बंद करना | reach |  |
-| 27 | कार का दरवाजा खोलना | reach |  |
-| 28 | कार का दरवाजा बंद करना | reach |  |
+| 24 | बर्तन धोना | washes | 43_washing_dishes.jpg |
+| 25 | घर का दरवाजा खोलना | reach | 37_opening_house_door.jpg |
+| 26 | घर का दरवाजा बंद करना | reach | 30_closing_house_door_leaving.jpg |
+| 27 | कार का दरवाजा खोलना | reach | 35_opening_car_door.jpg |
+| 28 | कार का दरवाजा बंद करना | reach | 33_closing_car_door_from_inside.jpg |
 | 29 | बस में चढ़ना | boards, rides off | 24_boarding_bus.jpg |
 | 30 | बस से उतरना | gets off, walks |  |
 | 31 | ट्रेन में चढ़ना | walks aboard | 27_boarding_train_platform.jpg |
 | 32 | ट्रेन से उतरना | walks |  |
 | 33 | बस में बैठना | rides |  |
 | 34 | कार में बैठकर ड्राइव करना | drives off |  |
-| 35 | ट्रेन में खिड़की के पास बैठना | sits |  |
-| 36 | हवाई जहाज में बैठना | sits |  |
+| 35 | ट्रेन में खिड़की के पास बैठना | sits | 31_sitting_in_train_by_window.jpg |
+| 36 | हवाई जहाज में बैठना | sits | 34_sitting_in_aeroplane.jpg |
 | 37 | सीढ़ियाँ चढ़ना | walks | 26_climbing_stairs.jpg |
 | 38 | सीढ़ियाँ उतरना | walks | 22_going_down_stairs.jpg |
 | 39 | सोफे पर बैठना | sits (sofa) | 20_resting_on_sofa_rain.jpg |

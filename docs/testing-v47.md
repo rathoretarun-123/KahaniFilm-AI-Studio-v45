@@ -483,3 +483,8 @@ candle light). Fixed: the lift in and out, boarding a train, shopping, the dog i
 keyboard (hands at the keys); vacuuming and cleaning (a task); board games, puzzles and video games (floor sit, hands to
 the pieces); meditation; getting up in the morning (stands, rubs the eyes); "दिये" spelt so (diya light); bonfire and
 campfire (fire 1.0); leaves flying in the wind now bring the wind with them (W_WIND 0.6, wind 0.4). Suite OK (40 tests).
+- 15:10 IST: 20 more reference pictures from the user (driving, doors of the house and the car, the train seat, the aeroplane
+  seat, watering, the phone, laundry, cooking, playing with children, the gym, the dishes, the newspaper, TV, the dog in the
+  park, meditation, breakfast) → `pictures/29..48`, linked to their phrases in vocabulary_hi.md (45 of 61 phrases have a
+  picture now; the 16 without are seats, bathing, brushing, getting off a bus or train, which the Director stages from
+  its own tables).
