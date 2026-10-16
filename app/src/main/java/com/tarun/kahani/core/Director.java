@@ -5948,19 +5948,35 @@ public final class Director {
     private void facesInFrame() {
         float ar = TechnicalDirector.ratio(opt.aspect);
         for (Film.Seg sg : film.segs) for (Film.Cam c : sg.cams) {
-            if (c.place || c.zoom > 3.2f) continue;
+            if (c.place || c.zoom > 4.5f) { if (System.getProperty("kahani.camDebug") != null) System.err.printf(java.util.Locale.US, "FACES skip %.2f zoom=%.2f place=%b%n", c.t, c.zoom, c.place); continue; }
             float fh = 720f / c.zoom, fw = fh * ar;
             float headTop = Float.MAX_VALUE, faceLow = -Float.MAX_VALUE;
             int n = 0;
+            float intruder = 0, intruderH = 0;       // someone just outside a close single, whose face would show at its edge
             for (Film.Actor a : sg.actors) {
                 if (a.look == null || !a.look.isHumanoid()) continue;
                 Film.Key k = a.stateAt(c.t + 0.1f);
                 if (!k.visible || k.anchor != Film.A_GROUND) continue;
                 float h = heightOf(a) * poseHeight(a, c.t + 0.1f), x = xAt(a, c.t + 0.1f);
-                if (Math.abs(x - c.cx) > fw / 2 + 0.15f * h) continue;      // not in this frame
+                if (Math.abs(x - c.cx) > fw / 2 - 0.12f * h) {
+                    if (Math.abs(x - c.cx) < fw / 2 + 0.3f * h) { intruder = x - c.cx; intruderH = h; }
+                    continue;      // not (or only just) in this frame: a close single is framed on its subject
+                }
                 n++;
                 headTop = Math.min(headTop, sg.ground - h);
                 faceLow = Math.max(faceLow, sg.ground - h * (k.body == Pose.STAND ? 0.82f : 0.78f));
+            }
+            if (System.getProperty("kahani.camDebug") != null) System.err.printf(java.util.Locale.US, "FACES cam %.2f zoom=%.2f cy=%.0f n=%d headTop=%.0f faceLow=%.0f intruder=%.0f%n", c.t, c.zoom, c.cy, n, headTop, faceLow, intruder);
+            // an over-the-shoulder shot keeps its framing (the foreground back is drawn at the frame's edge whatever cx is)
+            boolean ots = false;
+            for (Film.Shot sh : film.shots) if (Math.abs(sh.t - c.t) < 0.06f && sh.ots != null && sh.ots.length() > 0) { ots = true; break; }
+            if (ots && n < 2) continue;
+            if (n == 1 && intruder != 0 && c.zoom >= 1.8f) {
+                // a close single with a neighbour's face at its edge: the frame slides away from them by what it takes
+                float over = fw / 2 + 0.3f * intruderH - Math.abs(intruder);
+                c.cx += -Math.signum(intruder) * Math.min(fw * 0.15f, over);
+                facesKept++;
+                continue;
             }
             if (n < 2) continue;
             float room = 0.07f, foot = 0.2f;
@@ -5970,8 +5986,9 @@ public final class Director {
                 if (z < c.zoom) { c.zoom = z; fh = 720f / z; }
             }
             float cy = c.cy;
-            if (headTop < cy - fh / 2 + room * fh) cy = headTop - room * fh + fh / 2;
             if (faceLow > cy + fh / 2 - foot * fh) cy = faceLow + foot * fh - fh / 2;
+            // the head first: a cut head is worse than a low face (an over-the-shoulder's foreground back sits low)
+            if (headTop < cy - fh / 2 + room * fh) cy = headTop - room * fh + fh / 2;
             cy = Math.max(fh / 2, Math.min(720 - fh / 2, cy));
             if (Math.abs(cy - c.cy) > 1 || c.zoom < 720f / fh - 0.001f) facesKept++;
             c.cy = cy;
@@ -5984,7 +6001,7 @@ public final class Director {
         switch (k.body) {
             case Pose.LIE: return 0.35f;
             case Pose.KNEEL: case Pose.CROUCH: return 0.75f;
-            case Pose.SIT: return 0.72f;
+            case Pose.SIT: return 0.86f;      // (a picture seated in profile keeps most of its height: the thighs swing up, the trunk stays)
             default: return 1;
         }
     }
