@@ -4087,6 +4087,9 @@ public final class Director {
             // a fall of something else (a leaf, the rain, a thing dropped), not of the one named
             if (kind == EV_FALL && Txt.has(w, "हाथ से", "छूट", "पत्ते", "पत्ता", "बूँद", "बूंद", "बारिश", "बर्फ", "ओले", "गिरा दे", "गिरा दि", "गिरा दी",
                     "drops the", "leaves fall", "rain falls", "snow falls", "night falls", "silence falls", "falls asleep")) continue;
+            // v47.4: the wind, a storm, a train or a clock "चलने लगती है" walks nobody
+            if (kind == EV_WALK && Txt.has(w, "हवा चल", "हवाएँ चल", "हवाएं चल", "आँधी चल", "आंधी चल", "तूफ़ान चल", "तूफान चल", "लू चल", "ट्रेन चल", "रेल चल", "गाड़ी चल", "बस चल", "घड़ी चल", "पंखा चल", "काम चल", "बात चल",
+                    "wind picks", "wind starts", "wind blows", "storm", "train", "clock", "engine")) continue;
             // "देता है" gives only to someone ("बिल्ली को दूध देता है"); "रख देता है", "दिखाई देता है" are other verbs
             if (kind == EV_GIVE && (Txt.has(w, "दिखाई", "सुनाई", "ध्यान", "जवाब", "धोखा", "रख दे", "छोड़ दे", "फेंक दे", "हटा दे", "खोल दे", "बंद कर दे", "बता दे", "दिखा दे")
                     || (!Txt.has(w, " को ", "gives", "hands", "offers", "तोहफ़ा", "तोहफा", "उपहार", "गिफ्ट", "थमा", "सौंप") && target == null))) continue;

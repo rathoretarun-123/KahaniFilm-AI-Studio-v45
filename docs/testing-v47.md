@@ -461,3 +461,6 @@ letter), so their frames are unchanged by the flutter; it is there for the next 
   picture (Bible.intangible). Fixed: **hanging a thing** ("झंडा टाँगता", "hangs a") and **a hand into the pocket** ("जेब से
   सिक्का") staged nothing, both are a reach now; **hope** ("उम्मीद", "आशा", "hopes") had no feeling, it lifts the face.
   Suite OK (40 tests) again.
+- Guard: "तेज़ हवा चलने लगती है" (the wind, a storm, a train, a clock "चलने लगती") walks nobody even when a character is
+  named in the clause before it ("सीता के बाल उड़ते हैं और तेज़ हवा चलने लगती है" → W_WIND 1.0, nobody moves); "घर की तरफ़ चल
+  पड़ता है" walks off towards home; "दोनों साथ-साथ … चल पड़ते हैं" walks both. Suite OK (40 tests).
