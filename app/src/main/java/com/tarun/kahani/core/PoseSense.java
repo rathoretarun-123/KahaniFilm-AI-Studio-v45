@@ -236,6 +236,7 @@ public final class PoseSense {
      * pictures from users' character sheets (read at 320 px): 136 read right (the rest: half-length pictures showing both thighs,
      * a laughing face over a cup at the frame). eyeY: the eyes' height in the picture (0..1), or -1 when not found.
      */
+    static final boolean SENSE_DEBUG = System.getProperty("kahani.senseDebug") != null;
     public static boolean[] framing(int[] px, int w, int h, float eyeY) {
         boolean[] out = new boolean[2];
         if (px == null || w < 4 || h < 4 || px.length < w * h) return out;
@@ -282,7 +283,14 @@ public final class PoseSense {
             long lowC = 0, lowS = 0; int lowMax = 0;
             for (int i = (int) (hh * 0.6f); i < hh; i++) { lowC += count[i]; lowS += width[i]; lowMax = Math.max(lowMax, width[i]); }
             float lowFill = lowS == 0 ? 0 : lowC / (float) lowS, lowW = lowMax / (float) Math.max(1, r - l + 1);
-            if (aspect <= 1.6f && lowFill >= 0.92f && lowW >= 0.9f) out[1] = true;
+            // (v47.4: and a figure, not a panel — a picture kept with its background inside a transparent margin is one
+            // solid rectangle, which passed all three and re-tagged every picture of a sheet as seated: its head rows
+            // must be narrow (the top 12% under 70% of the width) and the whole under 72% filled; the seated जोड़ी panels: 0.49-0.66 and 0.65-0.67; the sheets' panels: 0.67-1.0 and 0.77-1.0)
+            long allC = 0; int topMax = 0;
+            for (int i = 0; i < hh; i++) { allC += count[i]; if (i < hh * 0.12f) topMax = Math.max(topMax, width[i]); }
+            float fill = allC / (float) ((long) maxW * hh), topW = topMax / (float) maxW;
+            if (aspect <= 1.6f && lowFill >= 0.92f && lowW >= 0.9f && topW <= 0.7f && fill <= 0.72f) out[1] = true;
+            if (SENSE_DEBUG) System.out.printf(java.util.Locale.US, "SENSE %dx%d aspect=%.2f lowFill=%.2f lowW=%.2f lastW=%.2f w90m=%.2f solidF=%.2f eyes=%.2f topW=%.2f fill=%.2f", r - l + 1, hh, aspect, lowFill, lowW, lastW, w90m, solidF, eyes, topW, fill);
         }
         out[0] = !out[1] && ((lastW >= 0.8f && solidF >= 0.85f && (w90m >= 0.6f || eyes >= 0.22f)) || (lastW >= 0.97f && solidF >= 0.95f));
         return out;

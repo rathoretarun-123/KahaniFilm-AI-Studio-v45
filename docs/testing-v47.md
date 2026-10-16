@@ -329,3 +329,47 @@ References kept with the source: `docs/reference/gemini_tea_kulhad_thali.mp4` (t
 | Crisper output | Unsharp mask 0.95..1.75 (0.70..1.40), 34-level cap; no halos at 1280 wide |
 
 The user's two Gemini reference clips sit in `docs/reference/` with frame sheets; the cup, the kulhad and the thali follow the first.
+
+### 6.8 Things in hands (09:00–10:30 IST): "an object can't enter the frame floating from anywhere"
+
+The user's rule, after the notebook insert: *"objects don't move and appear like this — it must be in the person's bag and he
+must have taken it out."* The insert of a thing's picture (a cut-in over the whole frame, v47.2–47.3) is gone. Every
+sentence that names one of the user's thing pictures now stages it (`Director.thingsIn`, `Film.FX_HELD`):
+
+| The sentence says | What the film does |
+|---|---|
+| निकालता / takes out | It comes up out of a bag at the hip (a box on the ground beside someone sitting on the floor; the box *picture* lying beside them when the story put one there; the box the other holds out) in the hand, over 1.4 s — only the part above the bag's mouth is drawn, so it comes out of the bag, not through it — and stays in the hand. The bag is there from the start of the part. |
+| पकड़े / हाथ में / उठाता / holding, picks up | In the picture's own hand from the sentence on, at the side, the fingers over its near edge (नन्ही runs in with her broken shoe; इस्माइल picks it up). |
+| आगे बढ़ाते / थमा / को देती / hands, offers | Held out toward the other; the next "पकड़ते हैं" by the other moves it to their hand (the letter from the girl to बाबू). |
+| रखा / बिछे / सामने / पड़ा / lying, beside | It lies in the scene **from the start of the part**, where it would be (things do not appear): the newspaper under इस्माइल, the steel glass and the toolbox beside him. |
+| पटक देती / रख देती / puts down | Set on the ground at the feet, where it stays; a hand that takes something new sets down what it held. |
+| पहनती / puts on | It goes (the red shoes are on her feet). |
+| a hut, a tree, a bench, a stove, a wall, the umbrella, the stick, a bag | Never a picture of its own: the place has them, or the studio draws them. |
+
+Continuity: what someone holds at the end of a part is in their hand at the start of the next, and what lay in the same
+place still lies there (`thingsCarried`). Two pictures claiming one word ("जूते": the broken shoe, the red pair) go to the
+better match, then to the one spoken of last; the owner's name in a key ("आरव की नोटबुक") is not the thing's word; a story
+may call a thing by another name (ख़त / पत्र / चिट्ठी). The seated panel of the user's own keeps playing a sit: the thing rests
+in its lap against the chest, with no drawn forearm across the picture.
+
+`ThingsInHandsTest` (pure JVM) directs जोड़ी and बाबू with synthetic thing pictures and asserts all of the above: no insert, the
+placed things from the part's start, the shoe's three stages, the box from behind the toolbox, the red pair out of the box
+held out, the letter out of the girl's bag, handed over, and in बाबू's hands at the start of the next part.
+
+Keying the thing pictures (`Art.keyObject`): AI prop sheets come with coloured grounds and a thin black frame (the steel glass
+on magenta, the shoe box on green). The ground is now the colour most of the ring past the frame has, and the background is
+what a flood from the border reaches (within 40 of 765; wider in the outer band) — a black shoe on a black ground keeps its
+black, the dark toolbox keeps its wood (keying by colour alone had eaten both), and a plain sliver left by the sheet's split
+goes with the frame.
+
+The seated-shape rule of §6.7 was too loose: a picture kept with its background inside a transparent margin is one solid
+rectangle, which passed all three measures and re-tagged every picture of a sheet as seated (CI: the back picture was no
+longer "standing", the main picture of sheet 15 read as a sit). It now also asks for a figure: the head rows narrow (the top
+12% under 70% of the width) and the whole under 72% filled — the seated जोड़ी panels: 0.49–0.66 and 0.65–0.67; the sheets'
+panels: 0.67–1.0 and 0.77–1.0.
+
+The user's reference animations for daily activities and natural phenomena (sweeping, washing dishes, walking a dog, watering,
+cooking, exercising, reading, watching TV, a fire, rain on a street; the sun over a meadow, a waterfall, the aurora, storms,
+waves, a volcano, dusk, snowfall, a desert, a meteor, an autumn valley) are kept as small MP4s with six-frame sheets in
+`docs/reference/daily_activities/` and `docs/reference/nature/`.
+

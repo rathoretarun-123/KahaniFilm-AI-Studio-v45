@@ -9,6 +9,11 @@ All screens and instructions in the app are in English; the story, dialogue and 
 push; download the **KahaniFilm-v47-apk** artifact from the latest green run under *Actions*. The launcher shows
 **KahaniFilm v47** in a deep-plum theme; the home screen prints `v47.0` in its footer.
 
+## New in v47.4 (16 October 2026, morning)
+
+- **Things in hands, never floating in:** a thing's picture is no longer an insert over the frame. The sentence stages it — taken out of a bag at the hip or a box beside (it rises out of it in the hand), held in the picture's own hand, held out and taken by the other, lying in its place from the start of the part, put down at the feet; carried from part to part. Prop sheets with coloured grounds and a thin frame key cleanly (the black shoe keeps its black). Details: `docs/testing-v47.md` §6.8.
+- The seated-shape rule of v47.3 asks for a real figure, not a panel (CI's two red tests). The user's reference animations for daily activities and natural phenomena are kept in `docs/reference/`.
+
 ## New in v47.3 (16 October 2026, before dawn)
 
 - **The second morning pass:** the user's own seated pictures play a sit on the ground (the squatting cobbler, the girl crying on the floor), inserts are cutaways with nobody under them, the umbrella stays open in rain, the side picture's facing reads the same at the phone's picture size, crisper output. Details: `docs/testing-v47.md` §6.7.

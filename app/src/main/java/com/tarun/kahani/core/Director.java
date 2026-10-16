@@ -311,7 +311,7 @@ public final class Director {
         Story.CharacterDef heroDef = PixarLead.hero(story);
         film.hero = heroDef == null ? "" : heroDef.shown();
         maPauses = 0; comicBeats = 0; shadowPasses = 0; framedHead = 0; framedFeet = 0; framedFace = 0; faceFillSum = 0; faceFillN = 0;
-        thoughtBeats = 0; dutchCount = 0; dutchUsed = 0; usedInserts.clear(); povShots = 0; loudReactions = 0; bridges = 0;
+        thoughtBeats = 0; dutchCount = 0; dutchUsed = 0; usedInserts.clear(); thingSaid.clear(); povShots = 0; loudReactions = 0; bridges = 0;
 
         // ---------------- scenes
         for (int si = 0; si < story.scenes.size(); si++) {
@@ -1281,6 +1281,7 @@ public final class Director {
             a.stepFps = opt.onTwos ? PixarLead.stepFps(c) : 0;
             seg.actors.add(a);
         }
+        thingsCarried();          // v47.4: what was in a hand or lay in its place at the end of the part before is so here too
         // v34: the tallest of the part (a giant, a rider on her lion) keeps its head inside the picture — the camera
         // never looks above the place's picture, so the whole cast is drawn smaller together (their sizes keep to
         // each other) when the tallest would rise above its top
@@ -3300,6 +3301,9 @@ public final class Director {
         // v41: the swing or the slide is in the place itself (played on, swaying in the wind): no picture of it over the scene
         if (shot != null && shot.object && shot.keys != null) for (String key : shot.keys)
             if ((swingProp != null && Txt.has(key, PlayPics.SWING_KEYS)) || (slideProp != null && Txt.has(key, PlayPics.SLIDE_KEYS))) { shot = null; break; }
+        // v47.4 (the user: "an object can't enter the frame floating from anywhere"): a thing's picture is never an insert
+        // over the frame — each sentence stages it in a hand, out of a bag, or in its place (thingsIn)
+        if (shot != null && shot.object) shot = null;
         // v41: an uploaded picture of a moment is a reference, never shown in place of the moment: the rig acts it (the
         // picture stays in the library for the user to look at)
         if (shot != null && !shot.object) {
@@ -3324,6 +3328,7 @@ public final class Director {
         }
         for (String s : sents) {
             float d = staged(s, tc, establishing);
+            thingsIn(s, tc);
             tc += d;
         }
         estab = false;
@@ -3375,6 +3380,267 @@ public final class Director {
             film.notes.add("  ↳ cinematic shot: " + Txt.withoutParens(text).substring(0, Math.min(40, Txt.withoutParens(text).length())) + "…");
         }
         return tc;
+    }
+
+    // ---------------------------------------------------------------- v47.4: things in hands and in their places
+    /*
+     * v47.4 (the user: "any object just can't enter the frame floating from anywhere — it must be in the person's bag
+     * and he must have taken it out"): a thing's picture never cuts in over the frame. The sentence says what becomes
+     * of it, and that is staged: taken out — it comes up out of a bag at the hip (a box on the ground beside someone
+     * seated) in the hand, where it stays; held — it is in the hand from the sentence on (a girl running in with her
+     * broken shoe); held out — toward the other; lying, kept, in front of, beside — it lies in the scene from the
+     * start of the part, where it would be (things do not appear); put down — the hand sets it on the ground, where it
+     * stays; worn, eaten — it goes. A hand that takes something new sets what it held at the feet. A hut, a tree, a
+     * bench, a stove, a wall: the place has them; never in a hand, never a picture of their own.
+     */
+    static final String[] TAKE_WORDS = {"निकाल", "takes out", "take out", "took out", "pulls out", "brings out", "draws out", "fishes out", "gets out"};
+    static final String[] GIVE_WORDS = {"आगे बढ़ा", "आगे बढा", "थमा", "सौंप", "को देत", "को दे देत", "दे देत", "दे दी", "दे दिय", "पकड़ा देत", "पकडा देत", "hands ", "offers", "gives", "holds out", "passes"};
+    static final String[] HOLD_WORDS = {"पकड़", "पकड", "हाथ में", "हाथों में", "लिए हुए", "लिये हुए", "थामे", "उठा", "सीने से लगा", "बचा", "सँभाल", "संभाल", "खोल", "पलट", "holding", "opens", "saves", "protect", "holds", "in his hand", "in her hand", "in hand", "carrying", "carries", "picks up", "lifts", "clutch", "takes the", "takes her", "takes his", "takes it"};
+    static final String[] PLACE_WORDS = {"रखा", "रखी", "रखे", "बिछा", "बिछी", "बिछे", "पड़ा", "पड़ी", "पड़े", "पडा", "पडी", "पडे", "सामने", "के पास", "के पीछे", "टिका", "लटक", "के नीचे", "placed", "lying", "lies", "on the ground", "beside", "next to", "on the table", "stands", "hangs", "leans"};
+    static final String[] DOWN_WORDS = {"पटक", "रख देत", "रख दिय", "रख दी", "नीचे रख", "रखता", "रखती", "रखते", "फेंक", "गिरा", "puts down", "puts it down", "sets down", "drops", "throws down", "tosses", "lays down", "puts the", "puts it"};
+    static final String[] WEAR_WORDS = {"पहन", "puts on", "wears", "खा लेत", "पी लेत", "slips on"};
+    /** Things of the place, not of a hand: never shown on their own (the place picture has them; the studio draws the seats, the umbrella, the stick, the school bag). */
+    static final String[] SET_WORDS = {"खोख", "दुकान", "टपरी", "पेड़", "पेड", "बेंच", "स्टूल", "कुर्सी", "मेज़", "मेज", "अंगीठ", "चूल्ह", "बर्तन", "केतली", "मर्तबान", "दीवार", "दरवाज़", "दरवाज", "खिड़क", "बाल्टी", "बांस", "बाँस",
+            "छात", "छतरी", "छड़ी", "छडी", "लाठी", "बैग", "थैल", "झोल", "बस्त", "shop", "stall", "hut", "tree", "bench", "stool", "chair", "table", "stove", "kettle", "jar", "wall", "door", "window", "bucket", "counter", "umbrella", "stick", "cane", "bag", "backpack", "satchel"};
+    static final String[] CONTAINER_WORDS = {"डिब्ब", "बक्स", "संदूक", "box", "trunk", "chest", "carton"};
+    static final String[] THING_STOP = {"का", "की", "के", "को", "से", "में", "पर", "वाला", "वाली", "वाले", "हुआ", "हुई", "हुए", "एक", "सा", "सी", "ये", "यह", "वो", "वह", "और", "the", "a", "an", "of", "his", "her", "its", "with", "old", "new"};
+    private static final int TK_NONE = -1, TK_DOWN = 4, TK_WEAR = 5;
+    private static final boolean THING_DEBUG = System.getProperty("kahani.thingDebug") != null;
+    /** When each thing's picture was last spoken of in this film (two pictures claiming one word: the one spoken of last). */
+    private final Map<Art.Backdrop, Float> thingSaid = new HashMap<Art.Backdrop, Float>();
+
+    /** A Hindi word's stem (the trailing vowel signs and plural endings off; "जूतों" and "जूता" meet at "जूत"); an English word's without its plural s. */
+    static String stemHi(String w) {
+        String n = Txt.norm(w).trim();
+        if (n.isEmpty()) return n;
+        if (n.charAt(0) < 0x0900) return n.length() > 3 && n.endsWith("s") ? n.substring(0, n.length() - 1) : n;
+        return n.replaceAll("(ों|ें|ीं|ां|े|ो|ी|ा|ू|ु|ि|ै|ौ|ं)+$", "");
+    }
+    private static boolean thingWordChar(char c) { return Character.isLetterOrDigit(c) || (c >= 0x0900 && c <= 0x097F); }
+    /** Where a stem starts a word in the (normalised) sentence, or -1. */
+    static int startOf(String n, String stem) {
+        int i = n.indexOf(stem);
+        while (i >= 0) {
+            if (i == 0 || !thingWordChar(n.charAt(i - 1))) {
+                int j = i + stem.length(); boolean ok = true;
+                for (; j < n.length() && thingWordChar(n.charAt(j)); j++) {
+                    char c = n.charAt(j);
+                    if ((c >= 0x0915 && c <= 0x0939) || (c >= 0x0958 && c <= 0x095F) || (c < 0x0900 && j - i - stem.length() >= 2)) { ok = false; break; }
+                }
+                if (ok) return i;
+            }
+            i = n.indexOf(stem, i + 1);
+        }
+        return -1;
+    }
+    private static int idxOf(String n, String[] words) {
+        int b = -1;
+        for (String w : words) { int i = n.indexOf(Txt.norm(w)); if (i >= 0 && (b < 0 || i < b)) b = i; }
+        return b;
+    }
+    /** What the sentence's words round the thing say becomes of it (the earliest verb wins; a put-down before a kept). */
+    static int thingKind(String win) {
+        int[][] c = {{idxOf(win, DOWN_WORDS), TK_DOWN}, {idxOf(win, WEAR_WORDS), TK_WEAR}, {idxOf(win, TAKE_WORDS), Film.THING_TAKE}, {idxOf(win, GIVE_WORDS), Film.THING_GIVE},
+                {idxOf(win, HOLD_WORDS), Film.THING_HOLD}, {idxOf(win, PLACE_WORDS), Film.THING_PLACE}};
+        int best = TK_NONE, bi = Integer.MAX_VALUE;
+        for (int[] x : c) if (x[0] >= 0 && x[0] < bi) { bi = x[0]; best = x[1]; }
+        return best;
+    }
+    /** A thing's natural size, as a share of the height of the one holding it. */
+    static float thingSize(String key) {
+        String k = Txt.norm(key);
+        if (Txt.has(k, "गिलास", "कप", "कुल्हड", "प्याल", "glass", "cup", "kulhad", "mug")) return 0.12f;
+        if (Txt.has(k, "चश्म", "रिबन", "घड़ी", "घडी", "अंगूठ", "glasses", "spectacles", "ribbon", "ring", "watch", "coin", "key")) return 0.09f;
+        if (Txt.has(k, "जूत", "सैंडल", "चप्पल", "shoe", "sandal", "slipper")) return 0.17f;
+        if (Txt.has(k, "खत", "पत्र", "चिट्ठी", "लिफाफ", "letter", "envelope")) return 0.13f;
+        if (Txt.has(k, "रूमाल", "handkerchief", "hanky")) return 0.11f;
+        if (Txt.has(k, "नोटबुक", "कॉपी", "किताब", "डायरी", "notebook", "book", "diary", "register")) return 0.2f;
+        if (Txt.has(k, "औजार", "tool")) return 0.34f;
+        if (Txt.has(k, "डिब्ब", "बक्स", "संदूक", "box", "trunk", "chest", "carton")) return 0.24f;
+        if (Txt.has(k, "अखबार", "newspaper")) return 0.3f;
+        if (Txt.has(k, "थाली", "plate", "thali", "tray")) return 0.2f;
+        return 0.18f;
+    }
+
+    /** Other names the story may call a thing by (stems). */
+    static final String[][] THING_SYNONYMS = {{"खत", "पत्र", "चिट्ठ", "चिठ्ठ", "लिफाफ", "letter"}, {"चश्म", "ऐनक", "glasses"}, {"गिलास", "ग्लास", "glass"}, {"नोटबुक", "कॉप", "डायर", "notebook"},
+            {"जूत", "shoe"}, {"डिब्ब", "box"}, {"रूमाल", "handkerchief"}, {"थाल", "plate"}, {"किताब", "पुस्तक", "book"}, {"रिबन", "ribbon"}, {"अखबार", "समाचारपत्र", "newspaper"}};
+    private static final java.util.Map<Art.Backdrop, Float> NO_SAID = new HashMap<Art.Backdrop, Float>();
+
+    /** The user's thing pictures this sentence speaks of: {shot, where in the normalised sentence, how many of its words, the word places}. */
+    private List<Object[]> objectShots(String n, float t) {
+        List<Object[]> out = new ArrayList<Object[]>();
+        for (Art.Shot sh : art.shots) {
+            if (!sh.object || sh.pic == null || sh.pic.img == null || sh.keys == null || sh.keys.length == 0) continue;
+            String key = Txt.norm(sh.keys[0]).trim();
+            if (key.isEmpty()) continue;
+            List<String> stems = new ArrayList<String>();
+            for (String w : key.split("[\\s,]+")) {
+                if (w.isEmpty() || Txt.has(" " + w + " ", spaced(THING_STOP))) continue;
+                if (story != null && ScriptParser.resolve(story, w) != null) continue;        // "आरव की नोटबुक": the name is the owner's, not the thing's
+                String st = stemHi(w);
+                if (st.length() >= 2) stems.add(st);
+            }
+            if (stems.isEmpty()) continue;
+            String head = stems.get(stems.size() - 1);
+            List<String> names = new ArrayList<String>(stems);
+            for (String st : stems) for (String[] syn : THING_SYNONYMS) if (java.util.Arrays.asList(syn).contains(st)) for (String o : syn) if (!names.contains(o)) names.add(o);
+            int score = 0, at = -1; boolean headFound = false; int longest = 0;
+            Set<Integer> places = new java.util.HashSet<Integer>();
+            for (String st : names) {
+                int i = startOf(n, st);
+                if (i < 0) continue;
+                score++; places.add(i);
+                if (at < 0 || i < at) at = i;
+                if (st.equals(head) || (stems.indexOf(st) < 0 && isSynonymOf(head, st))) headFound = true;
+                longest = Math.max(longest, st.length());
+            }
+            if (at < 0) continue;
+            // enough to be sure: the whole name, two of its words, its head noun, or — once it has been spoken of in the
+            // last half minute — any one of its longer words ("जूते" after "लाल जूते": the red pair)
+            boolean whole = n.contains(key);
+            Float said = thingSaid.get(sh.pic);
+            if (!(whole || score >= 2 || (headFound && (head.length() >= 3 || stems.size() == 1)) || (longest >= 3 && said != null && t - said < 30))) continue;
+            out.add(new Object[]{sh, at, score, places});
+        }
+        // two pictures claiming the same word ("जूते": the broken shoe, the red pair): the better match, then the one
+        // spoken of last
+        for (int i = 0; i < out.size(); i++) for (int j = out.size() - 1; j > i; j--) {
+            Object[] a = out.get(i), b = out.get(j);
+            boolean shared = false;
+            for (Integer pl : (Set<Integer>) a[3]) if (((Set<Integer>) b[3]).contains(pl)) shared = true;
+            if (!shared) continue;
+            Float ta = thingSaid.get(((Art.Shot) a[0]).pic), tb = thingSaid.get(((Art.Shot) b[0]).pic);
+            boolean bWins = (Integer) b[2] > (Integer) a[2] || ((Integer) b[2] == (Integer) a[2] && tb != null && (ta == null || tb > ta));
+            if (bWins) out.set(i, b);
+            out.remove(j);
+        }
+        return out;
+    }
+    private static boolean isSynonymOf(String head, String st) { for (String[] syn : THING_SYNONYMS) if (java.util.Arrays.asList(syn).contains(head) && java.util.Arrays.asList(syn).contains(st)) return true; return false; }
+    private static String[] spaced(String[] ws) { String[] o = new String[ws.length]; for (int i = 0; i < ws.length; i++) o[i] = " " + ws[i] + " "; return o; }
+
+    /** Stages the user's thing pictures this sentence speaks of (see above). */
+    private void thingsIn(String s, float t) {
+        if (seg == null || art == null || art.shots.isEmpty()) return;
+        String n = Txt.norm(s);
+        List<Object[]> found = objectShots(n, t);
+        if (found.isEmpty()) return;
+        Film.Actor who = lastSubject != null ? actor(lastSubject) : null;
+        java.util.Collections.sort(found, new java.util.Comparator<Object[]>() { public int compare(Object[] a, Object[] b) { return (Integer) a[1] - (Integer) b[1]; } });
+        for (Object[] o : found) {
+            Art.Shot sh = (Art.Shot) o[0];
+            int at = (Integer) o[1];
+            String key = sh.keys[0].trim();
+            thingSaid.put(sh.pic, t);
+            // the words round the thing: a little before it (the participle: "बिछे अखबार", "रखा गिलास") and after it
+            // up to the next thing named (Hindi verbs follow their objects)
+            int end = n.length(), from = Math.max(0, at - 24);
+            for (Object[] q : found) { int j = (Integer) q[1]; if (j > at && j < end) end = j; if (j < at && j > from) from = j + 1; }
+            for (String cut : new String[]{" और ", ",", ";", "।", " and "}) { int j = n.lastIndexOf(cut, at); if (j >= 0 && j + cut.length() > from) from = j + cut.length(); int e = n.indexOf(cut, at); if (e >= 0 && e < end && !cut.equals(",")) end = e; }
+            String win = n.substring(from, Math.max(from, end));
+            int kind = thingKind(win);
+            if (kind == TK_NONE && thingKind(n) == Film.THING_PLACE && idxOf(n, HOLD_WORDS) < 0 && idxOf(n, TAKE_WORDS) < 0 && idxOf(n, GIVE_WORDS) < 0 && !n.contains(" और ") && !n.contains(";")) kind = Film.THING_PLACE;
+            if (kind == Film.THING_PLACE && heldNow(sh.pic, t) != null) continue;          // in someone's hand: it lies nowhere
+            if (THING_DEBUG) System.out.println("THING " + key + " kind=" + kind + " who=" + (who == null ? "-" : who.c.shown()) + " win=[" + win + "] <- " + s);
+            if (Txt.has(Txt.norm(key), SET_WORDS)) continue;
+            if (kind == TK_NONE) continue;
+            if (kind == TK_DOWN) { if (who != null) endHold(who, sh.pic, t + 0.5f, true); continue; }
+            if (kind == TK_WEAR) { if (who != null) endHold(who, sh.pic, t + 0.6f, false); continue; }
+            if (kind == Film.THING_PLACE) {
+                float hh = who != null && who.look != null ? Renderer.actorHeight(who.look, who.c, art, seg) : 300;
+                boolean under = Txt.has(win, "बिछ", "पर बैठ", "spread", "sits on", "sitting on");
+                boolean onFloor = who != null && who.stateAt(t).body != Pose.STAND;          // a sitter's folded legs reach further: beside means past them
+                float x = who != null ? xAt(who, t) + (under ? 0 : who.stateAt(t).facing * hh * (onFloor ? 0.45f : 0.32f)) : 640;
+                placeAt(sh.pic, thingSize(key), key, who, seg.t0, x);        // there from the start of the part: things do not appear
+                film.notes.add("  ↳ " + key + ": lies in its place from the start of the part" + (who != null ? ", beside " + who.c.shown() : "") + String.format(java.util.Locale.US, " (named at %.1f s)", t));
+                continue;
+            }
+            if (who == null || who.look == null) continue;
+            if (kind == Film.THING_HOLD && heldNow(sh.pic, t) != null && heldNow(sh.pic, t).a != who && Txt.has(win, "उनके हाथ", "उसके हाथ", "in his hand", "in her hand", "in their hand")) continue;   // "पत्र उनके हाथों में है": the other keeps it
+            // into the hand: what it held goes down at the feet; the same thing from another's hand changes hands; a box
+            // or a bag another held, now opened into, leaves their hands
+            endHold(who, null, t, true);
+            for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind != Film.THING_PLACE && f.pic == sh.pic && f.a != who && f.t1 > t) f.t1 = t;
+            if (kind == Film.THING_TAKE) for (Film.Fx f : seg.fx)
+                if (f.type == Film.FX_HELD && f.a != who && f.kind != Film.THING_PLACE && f.t1 > t && f.what != null && Txt.has(Txt.norm(f.what), CONTAINER_WORDS)) f.t1 = t + 0.3f;
+            for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == sh.pic && f.t1 > t) f.t1 = t;    // picked up from where it lay
+            Film.Fx f = fx(Film.FX_HELD, t, 1e6f, 0, 0, who, null);
+            f.pic = sh.pic; f.kind = kind; f.size = thingSize(key); f.what = key; f.t2 = kind == Film.THING_TAKE ? t + 1.4f : t;
+            if (kind == Film.THING_TAKE) {
+                Film.Key k = who.stateAt(t);
+                boolean seated = k.body == Pose.SIT || k.body == Pose.KNEEL || k.body == Pose.CROUCH;
+                int src = 0;
+                float hh = Renderer.actorHeight(who.look, who.c, art, seg);
+                Film.Fx otherBox = null; boolean boxBeside = false;
+                for (Film.Fx q : seg.fx) {
+                    if (q.type != Film.FX_HELD || q.what == null || q.t0 > t || q.t1 <= t || q.pic == sh.pic || !(Txt.has(Txt.norm(q.what), CONTAINER_WORDS) || Txt.has(Txt.norm(q.what), "औजार", "tool"))) continue;
+                    if (q.kind == Film.THING_PLACE && Math.abs(q.x - xAt(who, t)) < hh * 2.2f) boxBeside = true;         // the box picture lying beside them
+                    else if (q.kind != Film.THING_PLACE && q.a != who) otherBox = q;                                       // the box the other holds out
+                }
+                if (otherBox != null) { src = 4; endHold(otherBox.a, otherBox.pic, t + 0.4f, true); }                    // (set down at their feet once it is empty)
+                else if (boxBeside) src = 3;
+                if (src == 0) src = seated && (k.seat == Film.SEAT_FLOOR || Txt.has(win, "बक्स", "डिब्बे", "box", "trunk", "chest")) ? 2 : 1;
+                if (who.bagFrom < 0 || src >= 3) { who.bagFrom = src >= 3 ? t : seg.t0; who.bagKind = src; }
+                who.acts.add(new Film.Act(t, t + 1.4f, Film.G_REACH));
+                film.notes.add("  ↳ " + key + ": taken out of " + (src == 4 ? "the box held out to " : src == 3 ? "the box beside " : src == 2 ? "the box on the floor beside " : "the bag of ") + who.c.shown() + String.format(java.util.Locale.US, ", in the hand from %.1f s on", t));
+            } else film.notes.add("  ↳ " + key + ": " + (kind == Film.THING_GIVE ? "held out by " : "in the hand of ") + who.c.shown() + String.format(java.util.Locale.US, " from %.1f s", t));
+        }
+    }
+    /**
+     * v47.4: things do not come and go between parts — what someone held at the end of the part before is in their hand
+     * from the start of this one (its bag with it), and what lay in the same place still lies there.
+     */
+    private void thingsCarried() {
+        Film.Seg prev = null;
+        for (int i = film.segs.size() - 2; i >= 0; i--) if (film.segs.get(i).type == Film.S_SCENE) { prev = film.segs.get(i); break; }
+        if (prev == null) return;
+        boolean samePlace = prev.scene == seg.scene;
+        for (Film.Fx f : prev.fx) {
+            if (f.type != Film.FX_HELD || f.pic == null || f.t1 < prev.t1 - 0.05f) continue;
+            if (f.kind == Film.THING_PLACE) {
+                if (!samePlace) continue;
+                Film.Actor a = null;
+                if (f.a != null) for (Film.Actor x : seg.actors) if (x.c == f.a.c) a = x;
+                Film.Fx g = fx(Film.FX_HELD, seg.t0, 1e6f, f.x, f.y, a, null);
+                g.pic = f.pic; g.kind = Film.THING_PLACE; g.size = f.size; g.what = f.what;
+            } else if (f.a != null) {
+                for (Film.Actor a : seg.actors) {
+                    if (a.c != f.a.c || a.look == null) continue;
+                    Film.Fx g = fx(Film.FX_HELD, seg.t0, 1e6f, 0, 0, a, null);
+                    g.pic = f.pic; g.kind = Film.THING_HOLD; g.size = f.size; g.what = f.what; g.t2 = seg.t0;
+                    if (f.a.bagKind == 1 || f.a.bagKind == 2) { a.bagFrom = seg.t0; a.bagKind = f.a.bagKind; }
+                    thingSaid.put(f.pic, seg.t0);
+                }
+            }
+        }
+    }
+
+    /** Ends what the actor holds (one thing, or all) at t: set down at the feet (down), or simply gone (worn, eaten). */
+    private void endHold(Film.Actor who, Art.Backdrop pic, float t, boolean down) {
+        for (Film.Fx f : new ArrayList<Film.Fx>(seg.fx)) {
+            if (f.type != Film.FX_HELD || f.a != who || f.kind == Film.THING_PLACE || f.t1 <= t || (pic != null && f.pic != pic)) continue;
+            f.t1 = t;
+            if (down && who.look != null) placeAt(f.pic, f.size, f.what, who, t, xAt(who, t) + who.stateAt(t).facing * Renderer.actorHeight(who.look, who.c, art, seg) * 0.28f);
+        }
+    }
+    private Film.Fx heldNow(Art.Backdrop pic, float t) {
+        for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind != Film.THING_PLACE && f.pic == pic && f.t0 <= t && f.t1 > t) return f;
+        return null;
+    }
+    private void placeAt(Art.Backdrop pic, float size, String what, Film.Actor who, float t, float x) {
+        for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == pic && f.t1 > t) return;
+        // not on top of another thing lying there: the next one a little further along
+        float hh = who != null && who.look != null ? Renderer.actorHeight(who.look, who.c, art, seg) : 300, dir = who != null ? who.stateAt(t).facing : 1;
+        boolean under = who != null && Math.abs(x - xAt(who, t)) < hh * 0.1f;        // spread under them: where they are, whatever else lies beside
+        for (int guard = 0; guard < 6 && !under; guard++) {
+            boolean clash = false;
+            for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.t1 > t && Math.abs(f.x - x) < hh * 0.22f) clash = true;
+            if (!clash) break;
+            x += dir * hh * 0.2f;
+        }
+        Film.Fx f = fx(Film.FX_HELD, t, 1e6f, Math.max(100, Math.min(1180, x)), 0, who, null);
+        f.pic = pic; f.kind = Film.THING_PLACE; f.size = size; f.what = what;
     }
 
     // ---------------------------------------------------------------- v41: everyday words

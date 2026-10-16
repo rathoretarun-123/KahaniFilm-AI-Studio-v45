@@ -919,6 +919,7 @@ public final class Art {
      * the picture has no clear pixels and its four corners agree on one colour, that colour is keyed out with a soft
      * edge, so only the thing remains.
      */
+    private static final boolean KEY_DEBUG = System.getProperty("kahani.keyDebug") != null;
     static void keyObject(Loader L, Backdrop b, String file, int maxSide) {
         try {
             int[] d = L.decode(file, maxSide);
@@ -926,27 +927,86 @@ public final class Art {
             int w = d[0], h = d[1];
             int[] px = new int[w * h];
             System.arraycopy(d, 2, px, 0, px.length);
-            boolean cut = false;
-            for (int c : px) if ((c >>> 24) < 250) { cut = true; break; }
-            if (cut) { cropToThing(L, b, px, w, h); return; }                 // already a cut-out: only its margins go
+            int clear = 0;
+            for (int c : px) if ((c >>> 24) < 250) clear++;
+            if (clear > px.length / 25) { cropToThing(L, b, px, w, h); return; }      // already a cut-out: only its margins go (v47.4: a few soft edge pixels are no cut-out)
             int[] corners = {px[0], px[w - 1], px[(h - 1) * w], px[h * w - 1]};
             int bg = corners[0];
-            for (int c : corners) if (Cutout.dist(c, bg) > 40) return;      // not a plain background: not ours to key
-            // the background colour, read from a border strip (steadier than one corner pixel)
-            long sr = 0, sg = 0, sb = 0, n = 0;
-            for (int x = 0; x < w; x += 3) for (int y : new int[]{0, 1, h - 2, h - 1}) { int c = px[y * w + x]; sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; n++; }
-            for (int y = 0; y < h; y += 3) for (int x : new int[]{0, 1, w - 2, w - 1}) { int c = px[y * w + x]; sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; n++; }
-            bg = 0xFF000000 | (int) (sr / n) << 16 | (int) (sg / n) << 8 | (int) (sb / n);
+            for (int c : corners) if (Cutout.dist(c, bg) > 40) { if (KEY_DEBUG) System.out.println("KEY " + file + ": corners differ"); return; }      // not a plain background: not ours to key
+            // v47.4: the background colour is the one most of the outer ring (8%) is — a sheet's panel keeps a thin dark
+            // frame round its magenta or green ground, and the frame's black had passed for the background (the steel
+            // glass came up on a magenta square); the frame itself goes with it
+            // (the ring from 3% to 10% in from the edge, past the frame line; coarse bins, so a slightly noisy ground still
+            // outvotes a plain black frame; the colour is the mean of the ring's pixels near the winning bin)
+            int rw0 = Math.max(1, Math.round(w * 0.03f)), rh0 = Math.max(1, Math.round(h * 0.03f)), rw = Math.max(rw0 + 2, Math.round(w * 0.1f)), rh = Math.max(rh0 + 2, Math.round(h * 0.1f));
+            java.util.Map<Integer, long[]> bins = new java.util.HashMap<Integer, long[]>();
+            for (int y = rh0; y < h - rh0; y++) for (int x = rw0; x < w - rw0; x++) {
+                if (x >= rw && x < w - rw && y >= rh && y < h - rh) continue;
+                int c = px[y * w + x], key = ((c >> 20) & 15) << 8 | ((c >> 12) & 15) << 4 | ((c >> 4) & 15);
+                long[] b2 = bins.get(key);
+                if (b2 == null) bins.put(key, b2 = new long[4]);
+                b2[0]++; b2[1] += (c >> 16) & 255; b2[2] += (c >> 8) & 255; b2[3] += c & 255;
+            }
+            long[] top = null;
+            for (long[] b2 : bins.values()) if (top == null || b2[0] > top[0]) top = b2;
+            if (top == null) return;
+            int seed = 0xFF000000 | (int) (top[1] / top[0]) << 16 | (int) (top[2] / top[0]) << 8 | (int) (top[3] / top[0]);
+            long sr2 = 0, sg2 = 0, sb2 = 0, n2 = 0;
+            for (int y = rh0; y < h - rh0; y++) for (int x = rw0; x < w - rw0; x++) {
+                if (x >= rw && x < w - rw && y >= rh && y < h - rh) continue;
+                int c = px[y * w + x];
+                if (Cutout.dist(c, seed) <= 60) { sr2 += (c >> 16) & 255; sg2 += (c >> 8) & 255; sb2 += c & 255; n2++; }
+            }
+            bg = n2 == 0 ? seed : 0xFF000000 | (int) (sr2 / n2) << 16 | (int) (sg2 / n2) << 8 | (int) (sb2 / n2);
+            int frame = Math.max(1, Math.round(Math.min(w, h) * 0.012f));
+            int cornerBg = corners[0];
+            // v47.4: the background is what the border reaches without crossing an edge — a flood from the border over
+            // pixels near the background colour (within 40 of 765), so a black shoe on a black ground keeps its black
+            // (keying by colour alone had eaten it, and the dark toolbox with it); the thing's edge softens over one pixel
+            // (in the outer band — the frame line and the blend between it and the ground — anything near either colour
+            // is ground; further in only the ground's own colour, within 40 of 765)
+            int band = Math.max(frame * 3, Math.round(Math.min(w, h) * 0.04f));
+            boolean[] key = new boolean[px.length];
+            int[] queue = new int[px.length]; int qn = 0;
+            for (int i = 0; i < px.length; i++) {
+                int x = i % w, y = i / w;
+                if (x != 0 && y != 0 && x != w - 1 && y != h - 1) continue;
+                if (Cutout.dist(px[i], bg) <= 120 || Cutout.dist(px[i], cornerBg) <= 120) { key[i] = true; queue[qn++] = i; }
+            }
+            for (int qi = 0; qi < qn; qi++) {
+                int i = queue[qi], x = i % w, y = i / w;
+                int[] nb = {x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1};
+                for (int j : nb) {
+                    if (j < 0 || key[j]) continue;
+                    int jx = j % w, jy = j / w;
+                    boolean outer = jx < band || jy < band || jx >= w - band || jy >= h - band;
+                    int dbg = Cutout.dist(px[j], bg);
+                    if (dbg <= 40 || (outer && (dbg <= 120 || Cutout.dist(px[j], cornerBg) <= 120))) { key[j] = true; queue[qn++] = j; }
+                }
+            }
+            // a plain sliver along an edge (the next panel's ground, left by the sheet's split) goes too
+            for (int side = 0; side < 4; side++) for (int k = 0; k < Math.max(2, Math.min(w, h) / 12); k++) {
+                long er = 0, eg = 0, eb = 0; int cnt = 0, len = side < 2 ? h : w;
+                int[] idx = new int[len];
+                for (int m = 0; m < len; m++) { int x = side == 0 ? k : side == 1 ? w - 1 - k : m, y = side < 2 ? m : side == 2 ? k : h - 1 - k; idx[m] = y * w + x; if (!key[idx[m]]) { cnt++; er += (px[idx[m]] >> 16) & 255; eg += (px[idx[m]] >> 8) & 255; eb += px[idx[m]] & 255; } }
+                if (cnt < len * 0.6f) break;
+                int mean = 0xFF000000 | (int) (er / cnt) << 16 | (int) (eg / cnt) << 8 | (int) (eb / cnt);
+                int near = 0; for (int m = 0; m < len; m++) if (!key[idx[m]] && Cutout.dist(px[idx[m]], mean) <= 36) near++;
+                if (near < cnt * 0.9f) break;
+                for (int m = 0; m < len; m++) key[idx[m]] = true;
+            }
             int keyed = 0;
             for (int i = 0; i < px.length; i++) {
-                int c = px[i];
-                int dist = Cutout.dist(c, bg);
-                float a = Math.max(0, Math.min(1, (dist - 30) / 70f));       // 30: still background .. 100: fully the thing
-                if (a < 1) { px[i] = (Math.round(a * 255) << 24) | (c & 0xFFFFFF); if (a == 0) keyed++; }
+                if (key[i]) { px[i] = px[i] & 0xFFFFFF; keyed++; continue; }
+                int x = i % w, y = i / w;
+                boolean edge = (x > 0 && key[i - 1]) || (x < w - 1 && key[i + 1]) || (y > 0 && key[i - w]) || (y < h - 1 && key[i + w]);
+                if (edge) { float a = Math.max(0.35f, Math.min(1, (Cutout.dist(px[i], bg) - 40) / 60f)); px[i] = (Math.round(a * 255) << 24) | (px[i] & 0xFFFFFF); }
             }
+            if (KEY_DEBUG) System.out.printf(java.util.Locale.US, "KEY %s: bg=%06x seed=%06x corner=%06x keyed=%d%% frame=%d%n", file, bg & 0xFFFFFF, seed & 0xFFFFFF, cornerBg & 0xFFFFFF, 100 * keyed / px.length, frame);
             if (keyed < px.length / 20) return;                                // hardly any background: leave the picture whole
             cropToThing(L, b, px, w, h);
-        } catch (RuntimeException ignored) {
+        } catch (RuntimeException e) {
+            if (KEY_DEBUG) e.printStackTrace();
         }
     }
 

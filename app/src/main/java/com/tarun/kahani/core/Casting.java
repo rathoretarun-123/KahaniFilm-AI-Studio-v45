@@ -23,6 +23,8 @@ public final class Casting {
         public float angle = Angles.FRONT;
         public int pose = PoseSense.STAND, emotion = PoseSense.NEUTRAL;
         public boolean speaking, ots;
+        /** v47.4: one of the user's thing pictures is in this character's hands right now (the rig holds it; a seated panel's hands are its own). */
+        public boolean holding;
         /** v40: the shoulder in the foreground of an over-the-shoulder shot (not merely a back turned while leaving). */
         public boolean shoulder;
         /** v39: the shot is close enough for a picture of the face and shoulders only. */
@@ -94,6 +96,7 @@ public final class Casting {
                 if (Math.abs(dx) >= 40 && Math.abs(dx) <= 900 && Math.signum(dx) == Math.signum(k.facing)) { w.angle = Angles.THREE_QUARTER; break; }
             }
         }
+        for (Film.Fx f : s.fx) if (f.type == Film.FX_HELD && f.a == a && f.kind != Film.THING_PLACE && t >= f.t0 && t < f.t1) w.holding = true;
         // the pose: the body's state, the gesture of the moment, the walk
         switch (k.body) {
             case Pose.SIT: case Pose.KNEEL: w.pose = PoseSense.SIT; break;

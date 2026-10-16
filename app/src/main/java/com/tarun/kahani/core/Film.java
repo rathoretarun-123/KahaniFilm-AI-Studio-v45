@@ -298,6 +298,9 @@ public final class Film {
         public int order;
         /** v41: from when they carry an umbrella the story hands them ("छाता लेकर …"); -1: none taken up (Look.umbrella: always). */
         public float umbrellaFrom = -1;
+        /** v47.4: from when they carry a bag at the hip (1) or have a box on the ground beside them (2) — something was taken out of it; -1: none. */
+        public float bagFrom = -1;
+        public int bagKind;
         public boolean umbrellaAt(Look lk, float t) { return (lk != null && lk.umbrella) || (umbrellaFrom >= 0 && t >= umbrellaFrom - 1e-3f); }
         /** Spider-Verse: the frame rate this character's poses step on (24 experts, 12 learners, 8 rebels; 0 = smooth, every frame). */
         public int stepFps;
@@ -384,7 +387,9 @@ public final class Film {
                                   //      on its side, the car's crumpled bumper and smoke from its bonnet, the dust
             FX_ANIMAL = 54,
             FX_BLOOD = 55,        // v45: a wound bleeding on actor a (kind: BLOOD_*), from t0 until t1 (bandaged, or the scene's end)
-            FX_SHROUD = 56;       // v45: a white sheet over the one lying dead (a), from t0       // v44: an animal of the place at x (kind: Look.SP_*; color: facing): grazing, then at t2
+            FX_SHROUD = 56,
+            FX_HELD = 57;         // v47.4: one of the user's thing pictures in a hand (a: whose; kind THING_*: taken out of a bag, held,
+                                  //      held out; t2: when it is fully out) or lying placed at x (THING_PLACE), size: its share of a's height       // v45: a white sheet over the one lying dead (a), from t0       // v44: an animal of the place at x (kind: Look.SP_*; color: facing): grazing, then at t2
                                   //      it lifts its head and bolts off the edge of the picture (hunting), or stays
     /** v44: FX_INSERT kinds and the moves of a driver's feet and hands (FX_INSERT.color bits). */
     public static final int INS_STEER = 0, INS_PEDALS = 1, INS_CYCLE_FEET = 2, INS_ARROW = 3, INS_BOW = 4;
@@ -398,6 +403,9 @@ public final class Film {
     /** v43: how long a hired vehicle takes to drive up or drive off (FX_VEHICLE). */
     public static final float VEHICLE_MOVE = 2.2f;
 
+    /** v47.4: what becomes of a thing's picture (Fx.kind of FX_HELD). */
+    public static final int THING_TAKE = 0, THING_HOLD = 1, THING_PLACE = 2, THING_GIVE = 3;
+
     public static final class Fx {
         public float t0, t1;
         public int type;
@@ -407,6 +415,9 @@ public final class Film {
         public float t2;                  // secondary moment (e.g. bud turns into flower)
         public Art.Backdrop pic;          // full-screen cinematic picture (FX_SHOT)
         public int kind;                  // FX_THROW / FX_FALL: 0 stone, 1 ball, 2 fruit, 3 flower
+        /** v47.4 (FX_HELD): the thing's natural size as a share of its holder's height, and its name in the manifest. */
+        public float size;
+        public String what;
         public Fx(int type, float t0, float t1) { this.type = type; this.t0 = t0; this.t1 = t1; }
     }
 

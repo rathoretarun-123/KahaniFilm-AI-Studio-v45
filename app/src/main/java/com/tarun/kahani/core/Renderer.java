@@ -1435,16 +1435,9 @@ public final class Renderer {
     static final class Motion { float dx, dy, rot, sx = 1, sy = 1; }
     private final Motion mo = new Motion();
 
-    /** v47.3: an insert of the thing itself is a cut away from the people: while it is up, nobody is drawn under it. */
-    private boolean insertOn(Film.Seg s, float t) {
-        for (Film.Fx f : s.fx) if (f.type == Film.FX_SHOT && f.pic != null && f.pic.object && t >= f.t0 + 0.2f && t <= f.t1 - 0.2f) return true;
-        return false;
-    }
-
     private void drawActor(Gfx g, Film.Seg s, Film.Actor a, float t) {
         Film.Key k = a.stateAt(t);
         if (!k.visible) return;
-        if (insertOn(s, t)) return;      // v47.3: the insert shows the thing, not the people with a thing hanging between them
         // v38: in an over-the-shoulder shot the speaker is the shoulder in the foreground — never also on the stage
         // beside the listener (the same person twice, the face half hidden behind the own shoulder)
         Film.Shot osh = shotAt(t);
@@ -1883,6 +1876,7 @@ public final class Renderer {
             }
         }
         actorY = py; actorScale = scale; actorX = px;          // v35: where this character stands (is its hand in the frame?)
+        heldFor(s, a, t, p);                                   // v47.4: a thing picture in the hand, the bag it came out of
         if (k.netted) mo.sy *= 0.97f;
         if (seat == Film.SEAT_FLOOR && p.sit > 0.05f) {
             // v35: sitting on the floor — indoors on a woven mat (a durrie), outdoors on the ground; the lap is in
@@ -4171,6 +4165,7 @@ public final class Renderer {
         // every picture moves through its mesh, also lying down or hanging upside down (the whole picture is
         // turned; the body still breathes, the face still speaks and changes expression)
         boolean rigged = rig != null && (!beast || p.body != Pose.HANG) && !(p.noHeadwear && sp.turbanY > 0 && !bare);
+        if (p.heldPic != null) { p.holdR = Pose.I_NONE; p.toMouth = 0; }     // v47.4: the user's picture of the thing is in the hands, not the studio's drawn one
         // v40: a front picture of a person is never mirrored (it turns through its mesh); a turned one faces its way
         float mirror = mirrorFor(sp, p);
         Rig.State st = rigged ? rigState(p, actor, sp, mirror) : null;
@@ -4191,6 +4186,7 @@ public final class Renderer {
             if (st != null && !beast && Math.abs(st.legLAng) + Math.abs(st.legRAng) >= 8) STAT[7].incrementAndGet();
         }
         g.save();
+        if ((p.bagKind == 1 || p.bagKind == 2) && p.body != Pose.LIE && !beast) drawBag(g, p, h);     // v47.4: behind the body, at the hip / on the ground beside
         if (p.body == Pose.LIE && !beast) {
             // v35: by the lie amount (lying back, sitting up), onto the mattress of a bed
             float L = p.lie > 0 ? p.lie : 1f;
@@ -4526,6 +4522,108 @@ public final class Renderer {
             }
             drawItem(g, p.holdL, hx, hy, h, p);
         }
+        // v47.4: the user's picture of a thing in the hand — coming up out of the bag, held at the chest, held out
+        if (p.heldPic != null && p.body != Pose.LIE && !beast) {
+            float hx = p.facing * w * 0.36f, hy = -h * 0.45f;
+            if (rigged) {
+                rig.handAt(rf, st, 1, hand);
+                hx = hand[0] * mirror * mo.sx;
+                hy = hand[1] * mo.sy + rig.feetRise(st, h);
+            }
+            // a seated panel of the user's own (its arms are its own, folded where they are): the thing rests in the lap,
+            // against the chest, with no drawn forearm reaching across the picture
+            boolean lap = actor != null && art != null && art.sprites.get(actor.c.id) != sp && p.sit > 0.5f;
+            drawHeld(g, p, h, w, hx, hy, p.skinHint != 0 ? p.skinHint : sp.skin != 0 ? sp.skin : look.skin, lap);
+        }
+    }
+
+    private static final boolean HELD_DEBUG = System.getProperty("kahani.heldDebug") != null;
+    /** v47.4: the thing in this character's hand right now (Film.FX_HELD), and the bag or box it came out of. */
+    private void heldFor(Film.Seg s, Film.Actor a, float t, Pose p) {
+        p.heldPic = null; p.bagKind = 0;
+        if (a.bagFrom >= 0 && t >= a.bagFrom) p.bagKind = a.bagKind;
+        for (Film.Fx f : s.fx) {
+            if (f.type != Film.FX_HELD || f.a != a || f.kind == Film.THING_PLACE || t < f.t0 || t >= f.t1 || f.pic == null || f.pic.img == null) continue;
+            p.heldPic = f.pic.img; p.heldAspect = f.pic.w / (float) Math.max(1, f.pic.h); p.heldSize = f.size > 0 ? f.size : 0.18f; p.heldKind = f.kind;
+            p.heldH = actorHeight(a.look, a.c, art, s);
+            p.heldU = f.t2 > f.t0 ? Math.min(1, (t - f.t0) / (f.t2 - f.t0)) : 1;
+        }
+    }
+
+    /** v47.4: a cloth bag hanging at the hip from a strap over the shoulder, or a wooden box on the ground beside (drawn behind the body). */
+    private static void drawBag(Gfx g, Pose p, float h) {
+        float fc = p.facing >= 0 ? 1 : -1;
+        if (p.bagKind == 2) {
+            float bw = h * 0.3f, bh = h * 0.19f, x = fc * h * 0.36f;
+            g.color(Puppet.alpha(0xFF000000, 0.18f)); g.oval(x, h * 0.004f, bw * 0.55f, h * 0.02f);
+            g.color(0xFF5D4037); g.roundRect(x - bw / 2, -bh, bw, bh, h * 0.012f);
+            g.color(0xFF795548); g.rect(x - bw / 2 + h * 0.012f, -bh + h * 0.014f, bw - h * 0.024f, bh * 0.28f);
+            g.color(0xFF3E2723); g.line(x - bw / 2, -bh * 0.62f, x + bw / 2, -bh * 0.62f, h * 0.008f);
+            g.color(0xFFB08D57); g.roundRect(x - h * 0.02f, -bh * 0.6f, h * 0.04f, h * 0.03f, h * 0.006f);
+        } else {
+            float bw = h * 0.2f, bh = h * 0.2f, x = fc * h * 0.17f, y = -h * 0.42f;
+            g.color(0xFF3E2723); g.line(-fc * h * 0.1f, -h * 0.8f, x, y + h * 0.02f, h * 0.016f);
+            g.color(0xFF5D4037); g.roundRect(x - bw / 2, y, bw, bh, h * 0.02f);
+            g.color(0xFF6D4C41); g.roundRect(x - bw / 2, y - h * 0.01f, bw, bh * 0.35f, h * 0.02f);
+        }
+    }
+
+    /**
+     * v47.4: the thing's picture in the hand. Taking out (heldU 0..1): the hand goes down to the bag's mouth (the box's
+     * top edge), the thing rises out of it — only the part above the mouth is drawn, so it comes out of the bag rather
+     * than through it — up to the chest, where it is held in both hands (one, held out to the other); the forearm comes
+     * up to it from the elbow at the side, as the cup does. The picture's own hand stays where the picture has it.
+     */
+    private void drawHeld(Gfx g, Pose p, float h, float w, float hx, float hy, int skin, boolean lap) {
+        float fc = p.facing >= 0 ? 1 : -1;
+        float H = p.heldH > 0 ? p.heldH : h;
+        float sz = Math.max(50, p.heldSize * H);                              // its own size by the standing height, whatever panel plays; never under 50 (a child's shoe still reads)
+        if (HELD_DEBUG) System.err.printf(java.util.Locale.US, "HELD t=%.2f u=%.2f kind=%d bag=%d sz=%.1f h=%.1f H=%.1f hand=%.1f,%.1f lap=%b%n", p.time, p.heldU, p.heldKind, p.bagKind, sz, h, p.heldH, hx, hy, lap);
+        float tw = p.heldAspect >= 1 ? sz : sz * p.heldAspect, th = p.heldAspect >= 1 ? sz / p.heldAspect : sz;
+        // where it rests: in the picture's own hand, at the side (one carries a shoe or a box so), the fingers over its
+        // near edge; held out: forward from that hand; in a seated panel's lap: against the chest
+        float cx = hx + fc * tw * 0.42f, cy = hy - th * 0.12f;
+        if (p.heldKind == Film.THING_GIVE) { cx = hx + fc * (tw * 0.5f + h * 0.1f); cy = hy - h * 0.08f; }
+        if (lap) { cx = fc * w * 0.1f; cy = -h * 0.36f; if (p.heldKind == Film.THING_GIVE) { cx = fc * w * 0.3f; cy = -h * 0.42f; } }
+        // where it comes out: the bag's mouth at the hip, the box's top edge on the ground beside, the box picture lying
+        // beside (3), or the box the other holds out at chest height (4)
+        float mx = p.bagKind == 2 ? fc * h * 0.36f : p.bagKind == 3 ? fc * H * 0.45f : p.bagKind == 4 ? fc * (w * 0.5f + h * 0.12f) : fc * h * 0.17f;
+        float my = p.bagKind == 2 ? -h * 0.19f : p.bagKind == 3 ? -H * 0.24f : p.bagKind == 4 ? -h * 0.5f : -h * 0.42f;
+        float u = p.heldU, vis = 1, tx = cx, ty = cy;
+        if (u < 0.3f) vis = 0;                                                   // the hand goes down into it
+        else if (u < 1) {
+            float k = ease01((u - 0.3f) / 0.7f);
+            float sy = my + th * 0.5f + h * 0.02f;
+            tx = mx + (cx - mx) * k; ty = sy + (cy - sy) * k;
+            vis = Math.max(0, Math.min(1, (my - (ty - th / 2)) / th));
+        } else ty = cy + (float) Math.sin(p.time * 1.7f) * h * 0.004f;
+        if (vis > 0.01f) {
+            int pw = g.imageWidth(p.heldPic), ph = g.imageHeight(p.heldPic);
+            if (pw > 0 && ph > 0) g.imageRect(p.heldPic, 0, 0, pw, ph * vis, tx - tw / 2, ty - th / 2, tw, th * vis);
+        }
+        if (vis <= 0.01f) return;
+        // the fingers over the near edge (and, held against the chest, the other hand under the far side)
+        float hxr = tx - fc * tw * 0.44f, hyr = ty + th * 0.2f;
+        g.color(Puppet.shade(skin, 0.82f)); g.roundRect(hxr - h * 0.022f, hyr - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
+        g.color(skin); g.roundRect(hxr - h * 0.02f, hyr - h * 0.014f, h * 0.04f, h * 0.028f, h * 0.011f);
+        if (lap && u >= 1 && p.heldKind != Film.THING_GIVE) {
+            float ox = tx + fc * tw * 0.4f, oy = ty + th * 0.38f;
+            g.color(Puppet.shade(skin, 0.82f)); g.roundRect(ox - h * 0.022f, oy - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
+            g.color(skin); g.roundRect(ox - h * 0.02f, oy - h * 0.014f, h * 0.04f, h * 0.028f, h * 0.011f);
+        }
+    }
+
+    /** v47.4: a thing's picture lying in its place on the ground (behind the people), a soft contact shadow under it. */
+    private void placedThing(Gfx g, Film.Seg s, Film.Fx f, float t) {
+        if (f.pic == null || f.pic.img == null) return;
+        float hh = f.a != null && f.a.look != null ? actorHeight(f.a.look, f.a.c, art, s) : 300;
+        float ps = perspective(s, f.y);
+        float sz = Math.max(50 * ps, (f.size > 0 ? f.size : 0.18f) * hh * ps);
+        float aspect = f.pic.w / (float) Math.max(1, f.pic.h);
+        float tw = aspect >= 1 ? sz : sz * aspect, th = aspect >= 1 ? sz / aspect : sz;
+        float y = s.ground + f.y;
+        g.color(Puppet.alpha(0xFF000000, 0.22f)); g.oval(f.x, y + 2, tw * 0.5f, th * 0.08f + 3);
+        g.image(f.pic.img, f.x - tw / 2, y - th, tw, th);
     }
 
     /**
@@ -4886,6 +4984,7 @@ public final class Renderer {
                 case Film.FX_ANIMAL: if (behind) animalFx(g, s, f, t); break;
                 case Film.FX_BLOOD: if (!behind) bloodFx(g, s, f, t); break;
                 case Film.FX_SHROUD: if (!behind) shroudFx(g, s, f, t); break;
+                case Film.FX_HELD: if (behind && f.kind == Film.THING_PLACE) placedThing(g, s, f, t); break;
                 case Film.FX_VEHICLE: if (behind && f.a != null) hiredVehicle(g, s, f, t); break;
                 case Film.FX_KITCHEN: if (!behind && f.a != null && currentKitchen(s, f, t)) kitchen(g, s, f, t); break;
                 case Film.FX_DOOR: if (f.kind == 0) roomDoor(g, s, f, t, !behind); break;
