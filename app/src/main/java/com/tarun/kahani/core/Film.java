@@ -303,6 +303,8 @@ public final class Film {
         public int bagKind;
         /** v47.4: when it is put aside (leaned against the post, closed, hung up); 1e6: never. */
         public float umbrellaUntil = 1e6f;
+        /** v47.4: the user's own picture of this character's umbrella (an object picture named so), drawn in place of the studio's dome. */
+        public Art.Backdrop umbrellaPic;
         public boolean umbrellaAt(Look lk, float t) { return t < umbrellaUntil && ((lk != null && lk.umbrella) || (umbrellaFrom >= 0 && t >= umbrellaFrom - 1e-3f)); }
         /** Spider-Verse: the frame rate this character's poses step on (24 experts, 12 learners, 8 rebels; 0 = smooth, every frame). */
         public int stepFps;
@@ -420,6 +422,8 @@ public final class Film {
         /** v47.4 (FX_HELD): the thing's natural size as a share of its holder's height, and its name in the manifest. */
         public float size;
         public String what;
+        /** v47.4 (FX_HELD, a book-like thing): open in the hands from openFrom until openUntil (the user's reference: book_hold_open_close_put_down.gif). */
+        public float openFrom = 1e6f, openUntil = 1e6f;
         public Fx(int type, float t0, float t1) { this.type = type; this.t0 = t0; this.t1 = t1; }
     }
 

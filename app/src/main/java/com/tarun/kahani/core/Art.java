@@ -26,6 +26,10 @@ public final class Art {
     }
 
     public static final class Sprite {
+        /** v47.4: the picture itself shows a stick or a folded umbrella hanging at the side (not lifted out): the studio draws none of its own. */
+        public boolean rodInPicture;
+        /** v47.4: the lifted rod is a folded umbrella (black, hanging at the side): the renderer lifts it, opens it over the head and folds it again (docs/reference/daily_activities/umbrella_open_close.gif). */
+        public boolean rodIsUmbrella;
         public Object img;
         /** v35: the picture at half and a quarter of its size (null when too small): drawn far smaller than its pixels, a picture shimmers. */
         public Object imgHalf, imgQuarter;
@@ -492,6 +496,12 @@ public final class Art {
         // picture below the hand and drawn straight by the renderer: the rig's mesh had bent बाबू's stick with his legs
         if (!animal) {
             int[] rod = findRod(r.px, r.w, r.h);
+            if (rod == null) rod = findDarkRod(r.px, r.w, r.h);      // v47.4: a folded umbrella hanging against the leg (no gap to find it by)
+            if (rod == null && darkRodSeen(r.px, r.w, r.h)) {
+                // (v47.4: lifting a glossy black umbrella out of a black-edged figure left half of it behind — the user saw
+                // it "both open and folded"; the picture keeps it, folded, as the user drew it, and nothing is drawn over it)
+                s.rodInPicture = true;
+            }
             if (rod != null) {
                 int rx0 = rod[0], ry0 = rod[1], rx1 = rod[2], ry1 = rod[3];
                 int rw = rx1 - rx0 + 1, rh = ry1 - ry0 + 1;
@@ -526,6 +536,149 @@ public final class Art {
      * box {x0, y0, x1, y1} and leaves its pixels in rodMask, or null when there is none. A braid, a scarf's end or a
      * sleeve never reaches the ground, so they are not taken; the part of the rod inside the hand stays with the body.
      */
+    /**
+     * v47.4: a rod that hangs against the body, with no background between them — मीरा's folded black umbrella down her
+     * yellow kurta: a thin (2..7% of the width), near-vertical run of dark pixels from below the hip to the ground, much
+     * darker than what is beside it on both sides in most of its rows (a black trouser leg is wide, a bag's strap is
+     * short, a braid never reaches the ground). Its box, with its pixels in rodMask; null when there is none.
+     */
+    static int[] findDarkRod(int[] px, int w, int h) {
+        if (w < 40 || h < 80) return null;
+        int maxW = Math.max(3, Math.round(w * 0.11f)), minW = Math.max(2, Math.round(w * 0.012f)), bottomMost = -1;
+        for (int y = h - 1; y >= 0 && bottomMost < 0; y--) for (int x = 0; x < w; x++) if ((px[y * w + x] >>> 24) > 128) { bottomMost = y; break; }
+        if (bottomMost < h * 0.5f) return null;
+        int[] rodL = new int[h], rodR = new int[h];
+        java.util.Arrays.fill(rodL, -1);
+        int rows = 0, firstRow = -1, lastRow = -1, bestFirst = -1, bestLast = -1, bestRows = 0, contrastRows = 0, bestContrast = 0;
+        boolean dbg = System.getProperty("kahani.rodDebug") != null;
+        for (int y = Math.round(h * 0.4f); y <= bottomMost; y++) {
+            int row = y * w, x = 0, pickL = -1, pickR = -1; float pickD = 1e9f; boolean pickContrast = false;
+            float prevCx = lastRow >= 0 && y - lastRow <= 3 ? (rodL[lastRow] + rodR[lastRow]) / 2f : Float.NaN;
+            while (x < w) {
+                while (x < w && !dark(px[row + x])) x++;
+                if (x >= w) break;
+                int x0 = x;
+                while (x < w && dark(px[row + x])) x++;
+                int rw = x - x0;
+                if (rw < minW || rw > maxW) continue;
+                // lighter on both sides (or background on one side): a thing against the clothes, not a fold of them
+                int lL = sideLum(px, w, row, x0 - 1, -1), lR = sideLum(px, w, row, x, 1);
+                int dl = lum(px[row + x0 + rw / 2]);
+                boolean con = (lL < 0 || lL > dl + 60) && (lR < 0 || lR > dl + 60) && !(lL < 0 && lR < 0);
+                float cx = (x0 + x - 1) / 2f, d = Float.isNaN(prevCx) ? rw : Math.abs(cx - prevCx);
+                if (!Float.isNaN(prevCx) && d > maxW) continue;
+                if (d < pickD) { pickD = d; pickL = x0; pickR = x - 1; pickContrast = con; }
+            }
+            if (dbg && y % 40 == 0) System.out.println("  row " + y + " pick=" + pickL + ".." + pickR + " con=" + pickContrast);
+            if (pickL < 0) continue;
+            if (lastRow >= 0 && y - lastRow > 3) {
+                if (rows > bestRows && lastRow >= bottomMost - h * 0.1f) { bestRows = rows; bestFirst = firstRow; bestLast = lastRow; bestContrast = contrastRows; }
+                rows = 0; firstRow = -1; contrastRows = 0;
+            }
+            if (firstRow < 0) firstRow = y;
+            rodL[y] = pickL; rodR[y] = pickR; lastRow = y; rows++; if (pickContrast) contrastRows++;
+        }
+        if (rows > bestRows && lastRow >= bottomMost - h * 0.1f) { bestRows = rows; bestFirst = firstRow; bestLast = lastRow; bestContrast = contrastRows; }
+        if (System.getProperty("kahani.rodDebug") != null) System.out.println("darkrod: first=" + bestFirst + " last=" + bestLast + " rows=" + bestRows + " contrast=" + bestContrast + " bottom=" + bottomMost + " h=" + h);
+        if (bestFirst < 0 || bestRows < h * 0.28f || bestRows < 0.75f * (bestLast - bestFirst + 1) || bestContrast < bestRows * 0.7f) return null;
+        float meanCx = 0; int n = 0;
+        for (int y = bestFirst; y <= bestLast; y++) if (rodL[y] >= 0) { meanCx += (rodL[y] + rodR[y]) / 2f; n++; }
+        meanCx /= Math.max(1, n);
+        int x0 = w, x1 = -1;
+        for (int y = bestFirst; y <= bestLast; y++) if (rodL[y] >= 0) { x0 = Math.min(x0, rodL[y]); x1 = Math.max(x1, rodR[y]); }
+        if (x1 - x0 + 1 > maxW * 3) return null;
+        rodMask = new boolean[w * h];
+        for (int y = bestFirst; y <= bestLast; y++) if (rodL[y] >= 0) for (int x = rodL[y]; x <= rodR[y]; x++) rodMask[y * w + x] = true;
+        return new int[]{x0, bestFirst, x1, bestLast};
+    }
+    /**
+     * v47.4: is there a dark thin near-vertical thing hanging down the side of the figure from the hip to the ground
+     * (मीरा's glossy folded umbrella, broken by highlights into pieces no rod finder can lift)? Looser than findDarkRod:
+     * nothing is cut out on its word, the studio only draws no umbrella or stick of its own over such a picture.
+     */
+    static boolean darkRodSeen(int[] px, int w, int h) {
+        if (w < 40 || h < 80) return false;
+        int bottomMost = -1;
+        for (int y = h - 1; y >= 0 && bottomMost < 0; y--) for (int x = 0; x < w; x++) if ((px[y * w + x] >>> 24) > 128) { bottomMost = y; break; }
+        if (bottomMost < h * 0.5f) return false;
+        int y0 = Math.round(h * 0.45f), maxW = Math.max(3, Math.round(w * 0.12f)), minW = Math.max(2, Math.round(w * 0.01f));
+        float[] cxs = new float[h]; java.util.Arrays.fill(cxs, Float.NaN);
+        int picks = 0;
+        for (int y = y0; y <= bottomMost; y++) {
+            int row = y * w, x = 0; float best = Float.NaN; int bestW = 0;
+            while (x < w) {
+                while (x < w && !darkish(px[row + x])) x++;
+                if (x >= w) break;
+                int x0 = x;
+                while (x < w && darkish(px[row + x])) x++;
+                // a gloss on a black umbrella breaks its run: a gap of a few lighter pixels with dark beyond is still it
+                while (x < w - 7) { int k = 1; while (k <= 6 && x + k < w && !darkish(px[row + x + k]) && (px[row + x + k] >>> 24) > 128) k++; if (k > 6 || x + k >= w || !darkish(px[row + x + k])) break; x += k; while (x < w && darkish(px[row + x])) x++; }
+                int rw = x - x0;
+                if (rw < minW || rw > maxW) continue;
+                // at the figure's edge, and much lighter clothing or skin further in (a black trouser leg or a dark
+                // profile is dark on its inner side too; a shadow under the arm is not at the edge)
+                int lL = sideLum(px, w, row, x0 - 1, -1), lR = sideLum(px, w, row, x, 1);
+                boolean edge = lL < 0 || lR < 0;
+                int inner = lL < 0 ? innerLum(px, w, row, x, 1) : innerLum(px, w, row, x0 - 1, -1);
+                int core = lum(px[row + x0 + rw / 2]);
+                if (System.getProperty("kahani.rodDebug2") != null && y % 40 == 0) System.out.println("  y" + y + " run " + x0 + "+" + rw + " L=" + lL + " R=" + lR + " inner=" + inner + " core=" + core);
+                boolean apart = lL < 0 && lR < 0 && core < 60;                       // hanging clear of the body (background both sides), black
+                if ((apart || (edge && inner > core + 60)) && rw > bestW) { bestW = rw; best = (x0 + x - 1) / 2f; }
+            }
+            if (!Float.isNaN(best)) { cxs[y] = best; picks++; }
+        }
+        if (picks < (bottomMost - y0) * 0.3f) return false;
+        float[] sorted = new float[picks]; int n = 0;
+        for (int y = y0; y <= bottomMost; y++) if (!Float.isNaN(cxs[y])) sorted[n++] = cxs[y];
+        java.util.Arrays.sort(sorted);
+        float median = sorted[n / 2]; int near = 0;
+        for (int y = y0; y <= bottomMost; y++) if (!Float.isNaN(cxs[y]) && Math.abs(cxs[y] - median) < w * 0.12f) near++;
+        boolean seen = near >= (bottomMost - y0) * 0.3f;
+        seenMedianX = median;
+        if (System.getProperty("kahani.rodDebug") != null) System.out.println("darkrod seen=" + seen + " picks=" + picks + " near=" + near + " of " + (bottomMost - y0) + " median x=" + median + " / " + w);
+        return seen;
+    }
+    /** The dark pixels of the thing darkRodSeen found (near its line, from the hip to the ground and up to the hand), as a box, their mask in rodMask. */
+    private static float seenMedianX;
+    static int[] umbrellaRodBox(int[] px, int w, int h) {
+        float med = seenMedianX;
+        int band = Math.round(w * 0.12f), y0 = Math.round(h * 0.25f);
+        boolean[] m = new boolean[w * h];
+        int x0 = w, x1 = -1, ya = h, yb = -1;
+        for (int y = y0; y < h; y++) {
+            int row = y * w, x = 0;
+            while (x < w) {
+                while (x < w && !darkish(px[row + x])) x++;
+                if (x >= w) break;
+                int s0 = x;
+                while (x < w && darkish(px[row + x])) x++;
+                float cx = (s0 + x - 1) / 2f;
+                if (Math.abs(cx - med) > band || x - s0 > w * 0.14f) continue;
+                if (y < h * 0.45f && Math.abs(cx - med) > band * 0.6f) continue;     // above the hip only what sits on its line (the handle)
+                for (int k = s0; k < x; k++) m[row + k] = true;
+                x0 = Math.min(x0, s0); x1 = Math.max(x1, x - 1); ya = Math.min(ya, y); yb = Math.max(yb, y);
+            }
+        }
+        if (x1 < 0 || yb - ya < h * 0.25f) return null;
+        rodMask = m;
+        return new int[]{x0, ya, x1, yb};
+    }
+    private static boolean darkish(int c) { return (c >>> 24) > 128 && lum(c) < 72; }
+    /** The brightness of the opaque pixels 8..20 steps to one side (dir ±1), or -1 when background comes first. */
+    private static int innerLum(int[] px, int w, int row, int x, int dir) {
+        int sum = 0, n = 0;
+        for (int k = 8; k <= 20; k++) { int xx = x + dir * k; if (xx < 0 || xx >= w) break; int c = px[row + xx]; if ((c >>> 24) <= 128) break; sum += lum(c); n++; }
+        return n < 6 ? -1 : sum / n;
+    }
+    private static boolean dark(int c) { return (c >>> 24) > 128 && lum(c) < 70; }
+    private static int lum(int c) { return (((c >> 16) & 255) * 299 + ((c >> 8) & 255) * 587 + (c & 255) * 114) / 1000; }
+    /** The brightness of the opaque pixels a few steps to one side (dir ±1), or -1 when it is background there. */
+    private static int sideLum(int[] px, int w, int row, int x, int dir) {
+        int sum = 0, n = 0;
+        for (int k = 1; k <= 6; k++) { int xx = x + dir * k; if (xx < 0 || xx >= w) break; int c = px[row + xx]; if ((c >>> 24) <= 128) break; sum += lum(c); n++; }
+        return n < 3 ? -1 : sum / n;
+    }
+
     static int[] findRod(int[] px, int w, int h) {
         if (w < 40 || h < 80) return null;
         int maxW = Math.max(3, Math.round(w * 0.07f)), bottomMost = -1;

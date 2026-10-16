@@ -517,3 +517,28 @@ matches wait and are shown the moment it closes; never a dialog over a dialog. A
 
 40 fps full renders (v494, before the umbrella fix): जोड़ी 5386 frames luma 90.9; चाय 7357 frames luma 96.9; बाबू 4629
 frames luma 117.1; every flagged frame a card fade or the lightning.
+
+### 6.12 The user's next round (16:30 IST): umbrella twice, the notebook from nowhere, 24 fps hard-coded, the book
+
+- **The umbrella shown open and folded at once** (the user's two stills). मीरा's own three pictures hold her folded black
+  umbrella. A detector (Art.darkRodSeen: a dark thin thing hanging down the figure's edge from the hip to the ground,
+  much darker than the clothes beside it) marks such a picture, and the studio then draws no umbrella of its own for that
+  character in any shot, close-ups included. Lifting it out to open it (as in the user's GIF) left half of it behind on
+  a black-edged figure, so the picture keeps it folded, as the user drew it. Checked on all 18 character pictures of the
+  three films: मीरा's three are marked; बाबू's stick is still lifted as a stick.
+- **The user's umbrella and book GIFs** are in the library (`umbrella_open_close.gif`, `book_hold_open_close_put_down.gif`
+  with frame sheets). From them: an umbrella opens over 1.2 s (was 0.7) and folds the same; the drawn umbrella's shaft is
+  a two-tone rod with a fist on the handle (it had been a hair-thin line, so the dome looked to float); a book-like thing
+  (book, notebook, diary, letter, newspaper) is held at the chest in both hands, opens into two leaves of pages when the
+  words open or read it, closes when they close it, and goes down to the ground in front with a bend when it is set down.
+- **The notebook "appearing from nowhere"**: the script has आरव run in clutching it, but it came into his hand at the
+  sentence (24.8 s). A held thing with nothing said of taking it is now in the hand from the holder's first moment in the
+  part (9 s here), unless the story picks it up from where it lay.
+- **The notebook under the tea**: when a kulhad, a cup or a plate comes to the hand, the thing picture in it is set down
+  beside them first, in that part and the parts after; "दोनों हाथों से कुल्हड़ पकड़ता है" gives आरव the kulhad (the kulhad
+  is a carried thing now, and "दोनों हाथों" is a pair of hands, not both characters).
+- **The umbrella's colour** is the story's ("फटा काला छाता"), read from the props list too.
+- **24 frames per second, hard-coded** (the user, several times): FilmJob.FPS = 24; the 30/40/60 switches are gone (30 had
+  been on by default). The studio's settings say so.
+
+Suite OK (40 tests); app package compiles.

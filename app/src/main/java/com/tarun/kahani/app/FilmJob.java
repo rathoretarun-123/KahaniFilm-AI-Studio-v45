@@ -29,6 +29,9 @@ import java.util.Map;
  * Lives outside the Activity so turning the phone does not stop it.
  */
 public final class FilmJob implements Runnable {
+    /** v47.4: every film is made at 24 frames per second — the animation standard (the user, 16 October: "24 frames per second which is best for animations, hard code it"). */
+    static final int FPS = 24;
+
     public static volatile FilmJob current;
 
     public final Project project;
@@ -635,7 +638,7 @@ public final class FilmJob implements Runnable {
             if (film.duration > 30 * 60 + 30) warning = "The film is longer than 30 minutes (" + fmt((long) film.duration) + ") — it will take longer to make.";
             film.subtitles = ed.subtitles;
             filmSeconds = film.duration;
-            { int[] psz = ed.size(); plannedFrames = (int) Math.ceil(film.duration * (Prefs.fps60(ctx) ? 60 : Prefs.fps40(ctx) ? 40 : Prefs.fps30(ctx) ? 30 : 24)); plannedW = psz[0]; plannedH = psz[1]; }
+            { int[] psz = ed.size(); plannedFrames = (int) Math.ceil(film.duration * FPS); plannedW = psz[0]; plannedH = psz[1]; }
             updateEta();
             check();
             // pipeline steps 1-2: the Character Lock Sheet of every character and the Location Lock Plate of every
@@ -687,7 +690,7 @@ public final class FilmJob implements Runnable {
 
             // ---------------- video
             int[] want = ed.size();
-            int fps = Prefs.fps60(ctx) ? 60 : Prefs.fps40(ctx) ? 40 : Prefs.fps30(ctx) ? 30 : 24; // v47: 40 fps is opt-in (smoother than 30, lighter than 60); the device encoder and render time must sustain it
+            int fps = FPS; // v47: 40 fps is opt-in (smoother than 30, lighter than 60); the device encoder and render time must sustain it
             File out = new File(project.dir, "film_new.mp4");
             Grade grade = new Grade(ed);
             // if this phone's encoder refuses a size, try smaller ones automatically

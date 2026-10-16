@@ -1507,9 +1507,10 @@ public final class Renderer {
             float rainNow = Math.max(film.weather(Film.W_RAIN, t), film.weather(Film.W_STORM, t));
             if (a.umbrellaAt(look, t) && look.isHumanoid() && rainNow > 0.05f && k.body != Pose.LIE && k.body != Pose.HANG && a.look.mount < 0) {
                 p.umbrellaOpen = true;
+                if (a.umbrellaPic != null && a.umbrellaPic.img != null) { p.umbrellaPic = a.umbrellaPic.img; p.umbrellaPicAspect = a.umbrellaPic.w / (float) Math.max(1, a.umbrellaPic.h); }
                 // v43: it opens (not pops open): over 0.7 s after it is taken up, and as the rain comes on
-                float taken = a.umbrellaFrom >= 0 && !(look.umbrella) ? Rig.smooth(a.umbrellaFrom, a.umbrellaFrom + 0.7f, t) : 1;
-                if (a.umbrellaUntil < 1e5f) taken = Math.min(taken, Rig.smooth(a.umbrellaUntil, a.umbrellaUntil - 0.5f, t));     // v47.4: folded as it is put aside
+                float taken = a.umbrellaFrom >= 0 && !(look.umbrella) ? Rig.smooth(a.umbrellaFrom, a.umbrellaFrom + 1.2f, t) : 1;     // v47.4: 1.2 s, as the user's reference opens it
+                if (a.umbrellaUntil < 1e5f) taken = Math.min(taken, Rig.smooth(a.umbrellaUntil, a.umbrellaUntil - 1.2f, t));     // v47.4: folded as it is put aside     // v47.4: folded as it is put aside
                 p.umbrellaAmt = Math.min(taken, Rig.smooth(0.01f, 0.06f, rainNow));     // v47.3: open while it rains at all — half-folded in light rain, the dome sat on the head
                 // v47.3: under one umbrella with someone taller (a woman beside a young man), the dome is held up over
                 // the taller head — it used to cross the neighbour's face at the carrier's head height
@@ -2003,7 +2004,7 @@ public final class Renderer {
                 drawSprite(g, real, look, p, hReal, 0, a);
                 g.setAlpha(1);
             } else drawSprite(g, real, look, p, hReal, 0, a);
-            if (p.umbrellaOpen && umbrellaInView(a, t, hReal)) spriteUmbrella(g, look, p, hReal);
+            if (p.umbrellaOpen && !umbrellaInPicture(a, real) && umbrellaInView(a, t, hReal)) spriteUmbrella(g, look, p, hReal);   // v47.4: a picture that shows the umbrella folded at the side gets no second one
             g.restore();
             g.restore();
             return;
@@ -2031,7 +2032,7 @@ public final class Renderer {
             }
             drawSprite(g, drawn, look, p, h, mo.rot, a);
             if (turn < 0.999f) g.restore();
-            if (p.umbrellaOpen && umbrellaInView(a, t, h)) spriteUmbrella(g, look, p, h);
+            if (p.umbrellaOpen && !umbrellaInPicture(a, drawn) && umbrellaInView(a, t, h)) spriteUmbrella(g, look, p, h);
         }
         else {
             // v34 (realism): a drawn character's shadow from the sun, a soft flattened oval thrown away from it
@@ -3339,6 +3340,21 @@ public final class Renderer {
         g.restore();
     }
 
+    /**
+     * v47.4: the user's own pictures of this character already show their umbrella (folded, hanging from the hand): no
+     * second one is drawn — not in this picture, and not in a close-up cut from another of theirs where it is out of frame
+     * (the user: "here umbrella is both open and closed"). Any of the character's pictures showing it is enough.
+     */
+    private boolean umbrellaInPicture(Film.Actor a, Art.Sprite shown) {
+        if (shown != null && (shown.rodInPicture || shown.rodIsUmbrella)) return true;
+        if (art == null || a == null || a.c == null) return false;
+        Art.Sprite main = art.sprites.get(a.c.id);
+        if (main != null && (main.rodInPicture || main.rodIsUmbrella)) return true;
+        if (main != null && main.views != null) for (Art.Sprite v : main.views) if (v != null && (v.rodInPicture || v.rodIsUmbrella)) return true;
+        if (main != null) for (Art.Sprite v : new Art.Sprite[]{main.top}) if (v != null && (v.rodInPicture || v.rodIsUmbrella)) return true;
+        return false;
+    }
+
     private static void spriteUmbrella(Gfx g, Look look, Pose p, float h) {
         int skin = p.skinHint != 0 ? p.skinHint : look.skin;
         float top = p.sit > 0.5f || p.body == Pose.SIT ? -h * 0.86f : -h * 1.1f;
@@ -3346,10 +3362,26 @@ public final class Renderer {
         // v47.3: held — the shaft comes down to a hand at chest height, and a forearm comes up to it from the elbow at
         // the side (the dome used to float over the head with the shaft ending in the air beside the shoulder)
         float gx = p.facing * h * 0.13f, gy = -h * 0.58f;
-        Puppet.drawUmbrella(g, p.facing * h * 0.03f, top, h * 0.3f, gx, gy, Puppet.umbrellaColor(look), p.facing, p.time, p.wind, p.umbrellaAmt);
+        if (p.umbrellaPic != null) {
+            // v47.4: the user's own umbrella picture — its handle's end (near the lower right of such a picture) in the fist,
+            // the canopy up over the head; mirrored to the facing; folding and opening as a fade and a shrink at the hand
+            float o = Math.max(0, Math.min(1, p.umbrellaAmt));
+            float pw = h * 0.78f * (0.55f + 0.45f * o), ph = pw / Math.max(0.3f, p.umbrellaPicAspect);
+            int iw = g.imageWidth(p.umbrellaPic), ih = g.imageHeight(p.umbrellaPic);
+            g.save();
+            g.translate(gx, gy);
+            if (p.facing < 0) g.scale(-1, 1);
+            if (o < 1) g.setAlpha(Math.max(0.15f, o));
+            g.rotate((float) Math.sin(p.time * 1.7f) * 2f + p.wind * 4f);
+            if (iw > 0 && ih > 0) g.imageRect(p.umbrellaPic, 0, 0, iw, ih, -pw * 0.78f, -ph * 0.9f, pw, ph);
+            g.restore();
+        } else Puppet.drawUmbrella(g, p.facing * h * 0.03f, top, h * 0.3f, gx, gy, Puppet.umbrellaColor(look), p.facing, p.time, p.wind, p.umbrellaAmt);
         if (p.umbrellaAmt > 0.3f) {
             float ex = Float.isNaN(p.umbHandX) ? p.facing * h * 0.2f : p.umbHandX, ey = Float.isNaN(p.umbHandY) ? -h * 0.5f : p.umbHandY - h * 0.08f;
             forearm(g, ex, ey, gx, gy + h * 0.015f, h * 0.05f, skin, 1);
+            // v47.4: a fist closed round the handle, so the umbrella is plainly held
+            g.color(Puppet.shade(skin, 0.8f)); g.roundRect(gx - h * 0.034f, gy - h * 0.012f, h * 0.068f, h * 0.05f, h * 0.02f);
+            g.color(skin); g.roundRect(gx - h * 0.03f, gy - h * 0.009f, h * 0.06f, h * 0.044f, h * 0.018f);
             g.color(skin); g.roundRect(gx - h * 0.03f, gy - h * 0.025f, h * 0.06f, h * 0.05f, h * 0.015f);
             g.color(Puppet.shade(skin, 0.86f)); g.line(gx - h * 0.012f, gy - h * 0.02f, gx - h * 0.012f, gy + h * 0.02f, h * 0.005f); g.line(gx + h * 0.012f, gy - h * 0.02f, gx + h * 0.012f, gy + h * 0.02f, h * 0.005f);
         }
@@ -4285,7 +4317,26 @@ public final class Renderer {
             if (sp.rodImg != null && !bare) {
                 float[] hp = meshPoint(rf, sp.rodU, sp.rodV);
                 float rw = sp.rodW * w, rh = sp.rodH * h;
-                g.image(sp.rodImg, hp[0] - rw / 2, hp[1], rw, rh);
+                float amt = sp.rodIsUmbrella && p.umbrellaOpen ? Math.max(0, Math.min(1, p.umbrellaAmt)) : 0;
+                if (amt <= 0.001f) g.image(sp.rodImg, hp[0] - rw / 2, hp[1], rw, rh);
+                else {
+                    // v47.4: the folded umbrella from the picture, opened the way the user's reference shows (umbrella_open_close.gif):
+                    // the hand lifts it from the side to the chest, turning it tip-up; the canopy opens there; the open
+                    // umbrella rises over the head. Folding is the same road back.
+                    float lift = Math.min(1, amt / 0.3f), open = Math.max(0, (amt - 0.3f) / 0.7f);
+                    float gripX = hp[0], gripY = hp[1] + (top + h * 0.42f - hp[1]) * lift;
+                    g.save(); g.translate(gripX, gripY); g.rotate(180f * lift);
+                    if (open > 0) g.setAlpha(Math.max(0, 1 - open * 1.6f));
+                    g.image(sp.rodImg, -rw / 2, 0, rw, rh);
+                    g.restore();
+                    if (open > 0) {
+                        float domeTop = (gripY - rh) + ((top - h * 0.12f) - (gripY - rh)) * open;
+                        Puppet.drawUmbrella(g, gripX, domeTop, h * 0.3f, gripX, gripY, Puppet.umbrellaColor(look), 1, p.time, p.wind, open);
+                    }
+                    int skin = sp.skin != 0 ? sp.skin : look.skin;
+                    g.color(Puppet.shade(skin, 0.8f)); g.roundRect(gripX - h * 0.034f, gripY - h * 0.012f, h * 0.068f, h * 0.05f, h * 0.02f);
+                    g.color(skin); g.roundRect(gripX - h * 0.03f, gripY - h * 0.009f, h * 0.06f, h * 0.044f, h * 0.018f);
+                }
             }
             if (st.sit > 0.3f && !beast && p.body != Pose.LIE && p.seat >= 0 && p.seat != Film.SEAT_FLOOR) {
                 // v35: seated, the lap shades the shins just under the knees — the fold that says "sitting" in a
@@ -4552,6 +4603,11 @@ public final class Renderer {
             p.heldPic = f.pic.img; p.heldAspect = f.pic.w / (float) Math.max(1, f.pic.h); p.heldSize = f.size > 0 ? f.size : 0.18f; p.heldKind = f.kind; p.heldSoft = Rigidity.isSoft(f.what);
             p.heldH = actorHeight(a.look, a.c, art, s);
             p.heldU = f.t2 > f.t0 ? Math.min(1, (t - f.t0) / (f.t2 - f.t0)) : 1;
+            // v47.4: open in the hands between the words that open and close it (never past the hold's end), and going
+            // down to its place over the last 0.6 s when it is set down
+            p.heldOpen = f.openFrom < 1e5f ? Rig.smooth(f.openFrom, f.openFrom + 0.6f, t) * (1 - Rig.smooth(Math.min(f.openUntil, f.t1 - 0.5f), Math.min(f.openUntil, f.t1 - 0.5f) + 0.6f, t)) : 0;
+            p.heldDown = 0;
+            if (f.t1 < 1e5f && t > f.t1 - 0.6f) for (Film.Fx q : s.fx) if (q.type == Film.FX_HELD && q.kind == Film.THING_PLACE && q.pic == f.pic && Math.abs(q.t0 - f.t1) < 0.15f) { p.heldDown = Rig.smooth(f.t1 - 0.6f, f.t1, t); break; }
         }
     }
 
@@ -4588,6 +4644,8 @@ public final class Renderer {
         // where it rests: in the picture's own hand, at the side (one carries a shoe or a box so), the fingers over its
         // near edge; held out: forward from that hand; in a seated panel's lap: against the chest
         float cx = hx + fc * tw * 0.42f, cy = hy - th * 0.12f;
+        boolean book = p.heldOpen > 0.001f;                                         // v47.4: a book opened is held at the chest in both hands (the user's reference)
+        if (book) { cx = fc * w * 0.06f; cy = -h * 0.47f + th * 0.1f; }
         if (p.heldKind == Film.THING_GIVE) { cx = hx + fc * (tw * 0.5f + h * 0.1f); cy = hy - h * 0.08f; }
         if (lap) { cx = fc * w * 0.1f; cy = -h * 0.36f; if (p.heldKind == Film.THING_GIVE) { cx = fc * w * 0.3f; cy = -h * 0.42f; } }
         if (lap && h < w * 1.25f) { cx = fc * w * 0.16f; cy = -h * 0.14f; }     // a face-and-shoulders panel: the hands are below it; the thing shows at its lower edge, held low
@@ -4603,14 +4661,37 @@ public final class Renderer {
             tx = mx + (cx - mx) * k; ty = sy + (cy - sy) * k;
             vis = Math.max(0, Math.min(1, (my - (ty - th / 2)) / th));
         } else ty = cy + (float) Math.sin(p.time * 1.7f) * h * 0.004f;
+        // v47.4: set down — it goes from the hands to the ground in front of the feet as the body bends
+        if (p.heldDown > 0.001f) { float d = ease01(p.heldDown); tx += fc * h * 0.22f * d; ty += ((-th * 0.5f) - ty) * d; }
         if (vis > 0.01f) {
             int pw = g.imageWidth(p.heldPic), ph = g.imageHeight(p.heldPic);
             if (pw > 0 && ph > 0) {
-                if (p.heldSoft && u >= 1) softPicture(g, p.heldPic, pw, ph, tx - tw / 2, ty - th / 2, tw, th, p.wind, p.time, h);
+                float k = ease01(Math.max(0, Math.min(1, p.heldOpen)));
+                if (k > 0.001f) {
+                    // v47.4: opened like a book — two leaves of pages spread from the hinge, the cover turning edge-on at it
+                    float lw = tw * 0.92f * k;
+                    g.color(0xFFF3EBD8); g.rect(tx - lw, ty - th / 2, lw, th); g.rect(tx, ty - th / 2, lw, th);
+                    g.color(0xFFD9CDB4); g.line(tx - lw, ty - th / 2, tx - lw, ty + th / 2, 1.5f); g.line(tx + lw, ty - th / 2, tx + lw, ty + th / 2, 1.5f);
+                    g.color(0xFFBDB3A0);
+                    for (int li = 1; li <= 4; li++) { float ly = ty - th / 2 + th * (0.18f + 0.16f * li); if (lw > 8) { g.line(tx - lw * 0.85f, ly, tx - lw * 0.15f, ly, 1); g.line(tx + lw * 0.15f, ly, tx + lw * 0.85f, ly, 1); } }
+                    g.color(0xFF8A7A62); g.line(tx, ty - th / 2, tx, ty + th / 2, 2);
+                    float cw = tw * (1 - k) + 2;
+                    g.imageRect(p.heldPic, 0, 0, pw, ph * vis, tx - cw / 2, ty - th / 2, cw, th * vis);
+                } else if (p.heldSoft && u >= 1) softPicture(g, p.heldPic, pw, ph, tx - tw / 2, ty - th / 2, tw, th, p.wind, p.time, h);
                 else g.imageRect(p.heldPic, 0, 0, pw, ph * vis, tx - tw / 2, ty - th / 2, tw, th * vis);
             }
         }
         if (vis <= 0.01f) return;
+        if (book) {
+            // both hands on an open book: a hand at each outer edge
+            float k = ease01(Math.max(0, Math.min(1, p.heldOpen))), lw = tw * 0.92f * k;
+            for (int sd = -1; sd <= 1; sd += 2) {
+                float hx2 = tx + sd * (lw > 4 ? lw * 0.9f : tw * 0.44f), hy2 = ty + th * 0.3f;
+                g.color(Puppet.shade(skin, 0.82f)); g.roundRect(hx2 - h * 0.022f, hy2 - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
+                g.color(skin); g.roundRect(hx2 - h * 0.02f, hy2 - h * 0.014f, h * 0.04f, h * 0.028f, h * 0.011f);
+            }
+            return;
+        }
         // the fingers over the near edge (and, held against the chest, the other hand under the far side)
         float hxr = tx - fc * tw * 0.44f, hyr = ty + th * 0.2f;
         g.color(Puppet.shade(skin, 0.82f)); g.roundRect(hxr - h * 0.022f, hyr - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);

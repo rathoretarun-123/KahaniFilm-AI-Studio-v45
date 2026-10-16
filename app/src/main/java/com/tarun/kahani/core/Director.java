@@ -413,6 +413,7 @@ public final class Director {
         film.notes.add("End page: \"" + end.text1 + "\"" + (this.art.end != null ? " (your picture)" : " (made by the studio)") + " + music");
         film.duration = end.t1;
         mobility();
+        thingsYield();
         umbrellaRain();
         walkSounds();
         settleStays();
@@ -2991,20 +2992,86 @@ public final class Director {
     }
 
     /** v34: rain drums on the umbrella of whoever holds one open in the rain outdoors (the renderer opens it there). */
+    /**
+     * v47.4: a thing picture in the hand yields to what the story puts there next — a kulhad, a plate, a cup (a drawn
+     * item in a key, or an eating or drinking act): the notebook is set down beside them a moment before, never held
+     * under the tea (the drawn item had been suppressed while the picture was in the hand, so आरव never got his चाय).
+     */
+    private void thingsYield() {
+        Film.Seg keep = seg;
+        for (Film.Seg sg : film.segs) {
+            if (sg.type != Film.S_SCENE) continue;
+            seg = sg;
+            for (Film.Fx f : new ArrayList<Film.Fx>(sg.fx)) {
+                if (f.type != Film.FX_HELD || f.kind == Film.THING_PLACE || f.a == null || f.pic == null) continue;
+                float at = -1;
+                for (Film.Key k : f.a.keys) if (k.t > f.t0 + 0.4f && k.t < f.t1 && (k.holdR != Pose.I_NONE || k.holdL != Pose.I_NONE)) { at = k.t; break; }
+                for (Film.Act ac : f.a.acts) if ((ac.type == Film.G_DRINK || ac.type == Film.G_EAT) && ac.t0 > f.t0 + 0.4f && ac.t0 < f.t1 && (at < 0 || ac.t0 < at)) at = ac.t0;
+                if (at < 0) continue;
+                float tk = Math.max(f.t0 + 0.3f, at - 0.4f);
+                f.t1 = tk;
+                if (f.a.look != null) placeAt(f.pic, f.size, f.what, f.a, tk, xAt(f.a, tk) + f.a.stateAt(tk).facing * Renderer.actorHeight(f.a.look, f.a.c, art, sg) * 0.28f);
+                film.notes.add("  ↳ " + f.a.c.shown() + " sets " + f.what + String.format(java.util.Locale.US, " down at %.1f s (a cup or a plate comes to the hand)", tk));
+                // the parts after carried the hold on (thingsCarried ran while the parts were staged): those copies go too,
+                // the thing lies where it was set down until the story takes it up again
+                boolean after = false;
+                for (Film.Seg s2 : film.segs) {
+                    if (s2 == sg) { after = true; continue; }
+                    if (!after || s2.type != Film.S_SCENE) continue;
+                    boolean taken = false;
+                    for (Film.Fx f2 : s2.fx) if (f2.type == Film.FX_HELD && f2.pic == f.pic && f2.kind == Film.THING_TAKE && f2.t0 > s2.t0 + 0.1f) taken = true;
+                    if (taken) break;
+                    for (Film.Fx f2 : new ArrayList<Film.Fx>(s2.fx)) {
+                        if (f2.type != Film.FX_HELD || f2.pic != f.pic || f2.kind == Film.THING_PLACE || f2.a == null || f2.a.c != f.a.c || f2.t0 > s2.t0 + 0.1f) continue;
+                        s2.fx.remove(f2);
+                        Film.Seg keep2 = seg; seg = s2;
+                        if (f2.a.look != null) placeAt(f.pic, f.size, f.what, f2.a, s2.t0, xAt(f2.a, s2.t0) + f2.a.stateAt(s2.t0).facing * Renderer.actorHeight(f2.a.look, f2.a.c, art, s2) * 0.28f);
+                        seg = keep2;
+                    }
+                }
+            }
+        }
+        seg = keep;
+    }
+
     private void umbrellaRain() {
         // v47.4: the umbrella's colour as the story tells it anywhere ("11. मीरा का फटा काला छाता" in the props list), not the studio's pick
         String allText = null;
         for (Film.Seg sg : film.segs) for (Film.Actor a : sg.actors) {
-            if (a.look == null || !a.look.umbrella || a.look.umbrellaColor != 0) continue;
+            if (System.getProperty("kahani.umbDebug") != null && a.look != null) System.err.printf(java.util.Locale.US, "UMB? %s seg@%.0f look.umbrella=%b from=%.1f col=%06x%n", a.c.shown(), sg.t0, a.look.umbrella, a.umbrellaFrom, a.look.umbrellaColor & 0xFFFFFF);
+            if (a.look == null || !(a.look.umbrella || a.umbrellaFrom >= 0) || a.look.umbrellaColor != 0) continue;
             if (allText == null) {
                 StringBuilder sb = new StringBuilder();
+                for (Story.PlaceDef th : story.things) sb.append(' ').append(th.name).append(' ').append(th.description == null ? "" : th.description);
                 for (Story.CharacterDef c : story.characters) sb.append(' ').append(c.description == null ? "" : c.description);
                 for (Story.Scene sc : story.scenes) { sb.append(' ').append(sc.setting == null ? "" : sc.setting); for (Story.Beat b : sc.beats) sb.append(' ').append(b.text == null ? "" : b.text); }
                 allText = sb.toString();
             }
             int col = LookDesigner.umbrellaColorIn(allText);
             if (col != 0) a.look.umbrellaColor = col;
+            if (System.getProperty("kahani.umbDebug") != null) System.err.printf(java.util.Locale.US, "UMB %s look.umbrella=%b from=%.1f until=%.1f col=%06x things=%d text=%d%n", a.c.shown(), a.look.umbrella, a.umbrellaFrom, a.umbrellaUntil, col & 0xFFFFFF, story.things.size(), allText.length());
         }
+        // v47.4: one who takes the umbrella up in the first second of a shot, and was already in view in the shot before
+        // (she walked in under it): it was up there too, from her first step — not folded in the rain until the cut
+        Film.Seg prevSeg = null;
+        for (Film.Seg sg : film.segs) {
+            if (sg.type == Film.S_SCENE && prevSeg != null && prevSeg.type == Film.S_SCENE)
+                for (Film.Actor a : sg.actors) {
+                    if (a.look == null || a.look.umbrella || a.umbrellaFrom < 0 || a.umbrellaFrom > sg.t0 + 1.2f) continue;
+                    for (Film.Actor pa : prevSeg.actors) {
+                        if (pa.c != a.c || pa.look == null || pa.look.umbrella || pa.umbrellaFrom >= 0 || !pa.stateAt(prevSeg.t1 - 0.3f).visible) continue;
+                        for (float tt = prevSeg.t0; tt < prevSeg.t1; tt += 0.25f) if (pa.stateAt(tt).visible) { pa.umbrellaFrom = Math.max(prevSeg.t0, tt - 0.7f); break; }
+                    }
+                }
+            if (sg.type == Film.S_SCENE) prevSeg = sg;
+        }
+        // v47.4: the user's own picture of the umbrella (an object picture whose name says छाता / umbrella) is what is held
+        Art.Backdrop umbPic = null;
+        if (art != null) for (Art.Shot sh : art.shots) {
+            if (!sh.object || sh.pic == null || sh.pic.img == null || sh.keys == null || sh.keys.length == 0) continue;
+            if (Txt.has(" " + Txt.norm(sh.keys[0]) + " ", "छाता", "छतरी", "छाते", "umbrella", "chhata", "chata")) { umbPic = sh.pic; break; }
+        }
+        if (umbPic != null) for (Film.Seg sg : film.segs) for (Film.Actor a : sg.actors) if (a.look != null && (a.look.umbrella || a.umbrellaFrom >= 0)) a.umbrellaPic = umbPic;
         for (Film.Seg sg : film.segs) {
             if (!Sets.outdoorSet(sg.set)) continue;
             for (Film.Actor a : sg.actors) {
@@ -3559,6 +3626,15 @@ public final class Director {
             if (kind == Film.THING_PLACE && heldNow(sh.pic, t) != null) continue;          // in someone's hand: it lies nowhere
             if (THING_DEBUG) System.out.println("THING " + key + " kind=" + kind + " who=" + (who == null ? "-" : who.c.shown()) + " win=[" + win + "] <- " + s);
             if (Txt.has(Txt.norm(key), SET_WORDS) || Bible.intangible(key)) continue;
+            // v47.4: a book-like thing in the hands opens and closes as the words say (the user's reference: the book is
+            // held closed at the chest in both hands, opened, read, closed, set down on the desk)
+            if (Rigidity.bookLike(key)) {
+                Film.Fx hf = heldNow(sh.pic, t);
+                if (hf != null) {
+                    if (Txt.has(win, "खोल", "पन्ने", "पन्ना", "पलट", "पढ़", "opens", "turns the page", "turning the page", "reads", "reading", "unfolds", "looks through", "leafs") && hf.openFrom > 1e5f) { hf.openFrom = t + 0.2f; film.notes.add("  ↳ " + key + " is opened" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
+                    if (Txt.has(win, "बंद कर", "बंद कि", "closes", "shuts", "folds") && hf.openFrom < 1e5f && hf.openUntil > 1e5f) { hf.openUntil = t + 0.2f; film.notes.add("  ↳ " + key + " is closed" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
+                }
+            }
             if (kind == TK_NONE) continue;
             if (kind == TK_DOWN) { if (who != null) endHold(who, sh.pic, t + 0.5f, true); continue; }
             if (kind == TK_WEAR) { if (who != null) endHold(who, sh.pic, t + 0.6f, false); continue; }
@@ -3579,9 +3655,18 @@ public final class Director {
             for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind != Film.THING_PLACE && f.pic == sh.pic && f.a != who && f.t1 > t) f.t1 = t;
             if (kind == Film.THING_TAKE) for (Film.Fx f : seg.fx)
                 if (f.type == Film.FX_HELD && f.a != who && f.kind != Film.THING_PLACE && f.t1 > t && f.what != null && Txt.has(Txt.norm(f.what), CONTAINER_WORDS)) f.t1 = t + 0.3f;
-            for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == sh.pic && f.t1 > t) f.t1 = t;    // picked up from where it lay
-            Film.Fx f = fx(Film.FX_HELD, t, 1e6f, 0, 0, who, null);
-            f.pic = sh.pic; f.kind = kind; f.size = thingSize(key); f.what = key; f.t2 = kind == Film.THING_TAKE ? t + 1.4f : t;
+            boolean pickedUp = false;
+            for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == sh.pic && f.t1 > t) { f.t1 = t; pickedUp = true; }    // picked up from where it lay
+            // v47.4: held, with nothing said of taking it ("वह अपनी नीली नोटबुक को बचाने की कोशिश करता है" as he runs in):
+            // it was in the hand all along — from the holder's first moment in this part, never popping into the hand
+            // at the sentence (the user: "the notebook is appearing from nowhere")
+            float heldFrom = t;
+            if (kind == Film.THING_HOLD && !pickedUp) {
+                for (float tt = seg.t0; tt < t; tt += 0.25f) if (who.stateAt(tt).visible) { heldFrom = tt; break; }
+                for (Film.Fx q : seg.fx) if (q.type == Film.FX_HELD && q.a == who && q.kind != Film.THING_PLACE && q.pic != sh.pic && q.t1 > heldFrom && q.t0 < t) heldFrom = Math.max(heldFrom, q.t1);   // not while another thing was in that hand
+            }
+            Film.Fx f = fx(Film.FX_HELD, heldFrom, 1e6f, 0, 0, who, null);
+            f.pic = sh.pic; f.kind = kind; f.size = thingSize(key); f.what = key; f.t2 = kind == Film.THING_TAKE ? t + 1.4f : heldFrom;
             if (kind == Film.THING_TAKE) {
                 Film.Key k = who.stateAt(t);
                 boolean seated = k.body == Pose.SIT || k.body == Pose.KNEEL || k.body == Pose.CROUCH;
@@ -3640,7 +3725,7 @@ public final class Director {
         for (Film.Fx f : new ArrayList<Film.Fx>(seg.fx)) {
             if (f.type != Film.FX_HELD || f.a != who || f.kind == Film.THING_PLACE || f.t1 <= t || (pic != null && f.pic != pic)) continue;
             f.t1 = t;
-            if (down && who.look != null) placeAt(f.pic, f.size, f.what, who, t, xAt(who, t) + who.stateAt(t).facing * Renderer.actorHeight(who.look, who.c, art, seg) * 0.28f);
+            if (down && who.look != null) { placeAt(f.pic, f.size, f.what, who, t, xAt(who, t) + who.stateAt(t).facing * Renderer.actorHeight(who.look, who.c, art, seg) * 0.28f); who.acts.add(new Film.Act(t - 0.6f, t + 0.15f, Film.G_REACH)); }   // v47.4: bends to set it down
         }
     }
     private Film.Fx heldNow(Art.Backdrop pic, float t) {
@@ -3668,7 +3753,18 @@ public final class Director {
      * everyday words give its character at least a face and a gesture — no sentence of the script goes by with nothing
      * on the screen.
      */
+    /** v47.4: "दोनों हाथों से", "दोनों आँखें" name a pair of hands or eyes, not both characters — the pair word goes before the sentence is read. */
+    static String bodyPairs(String s) {
+        if (s == null || !s.contains("दोनों") && !s.contains("both")) return s;
+        String[] parts = {"हाथों", "हाथ", "आँखों", "आँखें", "आंखों", "आंखें", "पैरों", "पैर", "पाँवों", "पांवों", "कानों", "कान", "घुटनों", "घुटने", "कंधों", "कंधे", "बाहों", "बाँहों", "होंठ", "गालों", "गाल"};
+        for (String b : parts) s = s.replace("दोनों " + b, b);
+        String[] en = {"hands", "eyes", "feet", "ears", "knees", "shoulders", "arms", "cheeks", "legs"};
+        for (String b : en) s = s.replace("both " + b, b).replace("both her " + b, "her " + b).replace("both his " + b, "his " + b);
+        return s;
+    }
+
     private float staged(String s, float t, boolean establishing) {
+        s = bodyPairs(s);
         // v43: two clauses, each with its own subject named ("माँ फिसल जाती हैं और राहुल उनका हाथ पकड़कर उन्हें उठाता है"):
         // each is staged in its turn (one sentence gave both actions to the first one named). Not for rides, which
         // read the whole sentence ("स्कूटर स्टार्ट करता है और प्रिया पीछे बैठती है").
@@ -4223,7 +4319,14 @@ public final class Director {
                 case EV_STAND: if (now.body == Pose.SIT || now.body == Pose.LIE || now.body == Pose.KNEEL) { Film.Key k = keyAt(a, t0); k.body = Pose.STAND; k.seat = -1; k.eyesShut = false; } break;
                 case EV_EYES: { Film.Key k = keyAt(a, t0 + 0.2f); k.eyesShut = true; Film.Key k2 = keyAt(a, t0 + dur); k2.eyesShut = false; break; }
                 case EV_WAKE: if (now.eyesShut) { Film.Key k = keyAt(a, t0); k.eyesShut = false; } break;
-                case EV_UMBRELLA: if (human && a.umbrellaFrom < 0 && (a.look == null || !a.look.umbrella)) a.umbrellaFrom = t0 + 0.4f; break;
+                case EV_UMBRELLA:
+                    if (human && a.umbrellaFrom < 0 && (a.look == null || !a.look.umbrella)) {
+                        a.umbrellaFrom = t0 + 0.4f;
+                        // v47.4: one who comes in carrying it ("छाता लेकर आती है") has had it open since she came into view, not opened it at the stall
+                        if (seg != null && Txt.has(w, "लेकर", "लिए", "लिये", "ताने", "taani", "carrying", "with an umbrella", "under an umbrella", "under her umbrella", "under his umbrella"))
+                            for (float tt = seg.t0; tt < t0; tt += 0.25f) if (a.stateAt(tt).visible) { a.umbrellaFrom = Math.min(a.umbrellaFrom, Math.max(seg.t0, tt - 0.7f)); break; }
+                    }
+                    break;
                 case EV_WALK: case EV_RUN: {
                     if (!human || now.anchor != Film.A_GROUND) break;
                     float x = xAt(a, t);
@@ -6461,6 +6564,7 @@ public final class Director {
         {new String[]{"किताब", "पुस्तक", "a book", "the book", "his book", "her book"}, Pose.I_BOOK},
         {new String[]{"थाली", "प्लेट", "plate"}, Pose.I_PLATE},
         {new String[]{"गिलास", "glass of"}, Pose.I_GLASS},
+        {new String[]{"कुल्हड़", "कुल्हड", "kulhad", "kulhar", "clay cup"}, Pose.I_KULHAD},
         {new String[]{"कप में", "कप लेकर", "कप लिए", "का कप", "के कप", "प्याला", "प्याली", "mug", "a cup", "the cup"}, Pose.I_CUP},
         {new String[]{"बोतल", "bottle"}, Pose.I_BOTTLE},
         {new String[]{"अख़बार", "अखबार", "newspaper"}, Pose.I_PAPER},
@@ -6478,7 +6582,7 @@ public final class Director {
      */
     private float carryFrom(String s, float t, List<Film.Actor> who) {
         if (seg == null || negated(s)) return 0;
-        if (!Txt.has(s, "लेकर", "ले कर", "लिए", "लिये", "हाथ में", "थामे", "पकड़े हुए", "पकड़े", "आगे बढ़ा", "सीने से लगा", "निकालती है", "निकालता है", "carries", "carrying", "holding", "holds a", "holds the", "brings", "bringing", "with a tray", "pulls out", "takes out", "clutches"))
+        if (!Txt.has(s, "लेकर", "ले कर", "लिए", "लिये", "हाथ में", "थामे", "पकड़े हुए", "पकड़े", "पकड़ता", "पकड़ती", "पकड़ते", "थामता", "थामती", "थामते", "हाथों से", "takes the", "holds the", "grips the", "clutches the", "आगे बढ़ा", "सीने से लगा", "निकालती है", "निकालता है", "carries", "carrying", "holding", "holds a", "holds the", "brings", "bringing", "with a tray", "pulls out", "takes out", "clutches"))
             return 0;
         if (Txt.has(s, "छाता", "छतरी", "umbrella")) return 0;
         int item = Pose.I_NONE;
@@ -6969,7 +7073,12 @@ public final class Director {
         // v41: "प्रिया छाता लेकर कार से उतरती है": from now on she carries an umbrella (it opens over her while it rains)
         if (Txt.has(s, "छाता", "छतरी", "छाते", "umbrella") && !negated(s) && !Txt.has(s, "छाता बंद", "छतरी बंद", "closes the umbrella", "छाता भूल", "no umbrella", "without an umbrella", "बिना छात")
                 && Txt.has(s, "लेकर", "ले कर", "लेती", "लेता", "लेते", "ले ली", "ले लिया", "खोल", "उठा", "पकड़", "लिए", "लिये", "take", "open", "with an umbrella", "with umbrella", "hold", "carr")) {
-            for (Film.Actor a : who) if (a.look != null && a.look.isHumanoid() && !a.look.umbrella && a.umbrellaFrom < 0) { a.umbrellaFrom = t; umbrellasTaken++; }
+            for (Film.Actor a : who) if (a.look != null && a.look.isHumanoid() && !a.look.umbrella && a.umbrellaFrom < 0) {
+                a.umbrellaFrom = t; umbrellasTaken++;
+                // v47.4: one who comes in carrying it ("छाता लेकर आती है") has had it open since she came into view, not opened it at the stall
+                if (seg != null && Txt.has(s, "लेकर", "ले कर", "लिए", "लिये", "carrying", "with an umbrella", "under an umbrella", "under her umbrella", "under his umbrella"))
+                    for (float tt = seg.t0; tt < t; tt += 0.25f) if (a.stateAt(tt).visible) { a.umbrellaFrom = Math.max(seg.t0, tt - 0.7f); break; }
+            }
         }
         d = Math.max(d, mealFrom(s, t, who));
         d = Math.max(d, taskFrom(s, t, who));

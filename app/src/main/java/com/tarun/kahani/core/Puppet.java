@@ -345,6 +345,7 @@ public final class Puppet {
     }
 
     static int umbrellaColor(Look l) {
+        if (l.umbrellaColor != 0) return l.umbrellaColor;      // v47.4: the colour the story named
         int c = l.primary;
         int r = (c >> 16) & 255, gg = (c >> 8) & 255, bl = c & 255;
         boolean reddish = r > gg + 40 && r > bl + 40;
@@ -363,9 +364,15 @@ public final class Puppet {
         float R = R0 * (0.14f + 0.86f * o);
         top += (1 - o) * R0 * 0.25f;
         float ax = cx + sway * R0, base = top + R0 * (0.42f + 0.5f * (1 - o));
-        g.color(0xFF4E342E);
-        g.line(ax, top, hx, hy, Math.max(2, R * 0.03f));
-        g.begin(); g.moveTo(hx, hy); g.quadTo(hx, hy + R * 0.14f, hx - facing * R * 0.1f, hy + R * 0.1f); g.strokePath(Math.max(2, R * 0.035f));
+        // v47.4: the shaft reads on any background — a dark edge with a lighter wood core (it had been a two-pixel brown
+        // line, lost against hair and a rainy wall, so the dome looked to float with nobody holding it)
+        float sw = Math.max(3, R * 0.05f);
+        g.color(0xFF2E1F18);
+        g.line(ax, top, hx, hy, sw);
+        g.begin(); g.moveTo(hx, hy); g.quadTo(hx, hy + R * 0.14f, hx - facing * R * 0.1f, hy + R * 0.1f); g.strokePath(sw);
+        g.color(0xFFA1683C);
+        g.line(ax, top, hx, hy, Math.max(1.2f, sw * 0.45f));
+        g.begin(); g.moveTo(hx, hy); g.quadTo(hx, hy + R * 0.14f, hx - facing * R * 0.1f, hy + R * 0.1f); g.strokePath(Math.max(1.2f, sw * 0.45f));
         g.begin();
         g.moveTo(ax - R, base);
         g.cubicTo(ax - R * 0.95f, top - R * 0.05f, ax + R * 0.95f, top - R * 0.05f, ax + R, base);

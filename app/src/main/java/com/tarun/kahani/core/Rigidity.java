@@ -64,6 +64,14 @@ public final class Rigidity {
         return soft ? SOFT : rigid ? RIGID : UNKNOWN;
     }
 
+    /** v47.4: a thing that opens like a book in the hands — a book, a notebook, a diary, a letter, a newspaper. */
+    public static final String[] BOOK_WORDS = {"किताब", "पुस्तक", "कॉपी", "नोटबुक", "डायरी", "अख़बार", "अखबार", "पत्रिका", "चिट्ठी", "ख़त", "खत", "पत्र", "लिफ़ाफ़ा", "लिफाफा", "एल्बम", "रजिस्टर", "book", "notebook", "diary", "letter", "newspaper", "magazine", "album", "register", "ledger"};
+    public static boolean bookLike(String text) {
+        if (text == null) return false;
+        String t = " " + text.toLowerCase(java.util.Locale.ROOT).replace('_', ' ') + " ";
+        return Txt.hasStart(t, BOOK_WORDS);
+    }
+
     public static boolean isRigid(String text) { return kind(text) == RIGID; }
     public static boolean isSoft(String text) { return kind(text) == SOFT; }
 
