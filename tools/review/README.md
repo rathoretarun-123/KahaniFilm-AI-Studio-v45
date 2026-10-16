@@ -16,3 +16,9 @@ Used to check every film frame by frame on a desktop JVM, exactly as the phone d
 Compile core (app/src/main/java/com/tarun/kahani/core) and tools/jvm into one classes directory with `javac -source 8
 -target 8 -cp android-all-14.jar`, then run the probes with that directory on the class path. Render a film with
 `java -cp <classes> com.tarun.kahani.jvm.MakeFilm <script> <assets dir> out.mp4 640 24 <stills dir>` from the repo root.
+- `P2.java <script>` — dumps what the reader made of a script: title, characters with age, things, places (and which
+  are intangible), the places the studio asks pictures of, every scene with its beats and manners. `U.java <script>`
+  prints the reader's rewrite of the owner's format.
+- `cloudtest/srv.py <port>` — a fake Gemini and OpenAI server: Gemini answers, fails, or names a model "not found" (POST
+  /mode/down or /mode/fallback); OpenAI checks the Bearer key. `cloudtest/C.java` points Cloud at it to check that a
+  failing Gemini falls to ChatGPT at once. Run with `-Dhttp.nonProxyHosts=127.0.0.1` behind a proxy.

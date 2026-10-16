@@ -1,0 +1,70 @@
+char|इस्माइल चाचा|ismail_front.png
+view|इस्माइल चाचा|90|ismail_side_right.png
+view|इस्माइल चाचा|180|ismail_back.png
+view|इस्माइल चाचा|-45|ismail_quarter.png
+pose|इस्माइल चाचा|ismail_side_left_1.png|180|8|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_1_1.png|-45|0|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_1_2.png|-45|2|6|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_1_3.png|0|2|1|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_1_4.png|-45|1|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_1_5.png|180|8|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_1_6.png|-90|1|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_1_7.png|-90|7|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_2_1.png|-45|2|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_2_2.png|-45|0|2|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_2_3.png|-45|2|6|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_2_4.png|0|2|1|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_2_5.png|0|0|6|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_poses_2_6.png|-90|1|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_1_1.png|180|0|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_1_2.png|180|8|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_1_3.png|-90|7|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_1_4.png|180|8|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_1_5.png|180|0|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_1_6.png|180|8|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_2_1.png|180|0|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_2_2.png|180|8|8|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_2_3.png|-45|1|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_2_4.png|-45|1|0|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_2_5.png|-45|2|6|1|0|0|0|0|0|0|0|0
+pose|इस्माइल चाचा|ismail_angles_2_6.png|0|2|0|1|0|0|0|0|0|0|0|0
+char|नन्ही|nanhi_front.png
+view|नन्ही|90|nanhi_side_right.png
+view|नन्ही|180|nanhi_back.png
+view|नन्ही|-45|nanhi_quarter.png
+pose|नन्ही|nanhi_side_left_1.png|-90|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_quarter_2_1.png|-90|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_1_1.png|-45|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_1_2.png|-90|2|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_1_3.png|-90|0|3|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_1_4.png|-45|9|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_1_5.png|-45|1|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_1_6.png|-90|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_2_1.png|-90|2|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_2_2.png|-45|0|3|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_2_3.png|180|2|8|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_2_4.png|-45|1|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_2_5.png|-90|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_2_6.png|-45|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_3_1.png|-90|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_3_2.png|-45|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_3_3.png|180|0|8|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_3_4.png|-90|2|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_3_5.png|-90|7|2|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_poses_3_6.png|-45|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_angles_1_1.png|-90|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_angles_1_2.png|0|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_angles_1_3.png|-45|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_angles_1_4.png|-45|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_angles_1_5.png|-90|0|0|1|0|0|0|0|0|0|0|0
+pose|नन्ही|nanhi_angles_1_6.png|180|0|8|1|0|0|0|0|0|0|0|0
+shot||टूटा हुआ काला जूता|prop_broken_shoe_sheet_p0.png|object
+shot||लाल जूतों की जोड़ी|prop_red_shoes_glass_sheet_p0.png|object
+shot||स्टील का गिलास|prop_red_shoes_glass_sheet_p1.png|object
+shot||लाल जूतों का डिब्बा|prop_shoes_box_sheet_p1.png|object
+shot||पुराना अखबार|prop_newspaper_sheet_p0.png|object
+shot||औजारों वाला बक्सा|prop_toolbox_khokha_sheet_p1.png|object
+shot||लकड़ी का खोखा|prop_khokha_sheet_p0.png|object
+scene|1|place_khokha_lane_rain.png
+title|title_poster.png|0
+end|end_card.png|0

@@ -1,0 +1,2 @@
+MISSING_REFERENCE: लाल डाक पेटी — Visible in storyboard/scene images, but no isolated mailbox reference was identified.
+MISSING_REFERENCE: पास की चाय की दुकान — Mentioned in the screenplay; supplied stills do not clearly isolate a matching tea-shop background.
