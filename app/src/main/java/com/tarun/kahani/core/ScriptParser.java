@@ -174,6 +174,7 @@ public final class ScriptParser {
      */
     public static Story parse(String raw) {
         if (raw == null) raw = "";
+        raw = userFormat(raw);
         java.util.Map<String, String> back = new java.util.HashMap<String, String>();
         List<String> converted = new ArrayList<String>();
         String text = Hinglish.convertScript(raw, back, converted);
@@ -562,6 +563,74 @@ public final class ScriptParser {
         return sh != null && (Txt.has(sh, "स्थल", "जगहें", "जगहे", "पृष्ठभूमि", "बैकग्राउंड", "लोकेशंस", "लोकेशन्स", "सेट्स", "स्थान सूची", "स्थान विवरण", "स्थानों")
                 || Txt.norm(sh).equals(Txt.norm("स्थान"))
                 || Txt.hasWord(sh, "backgrounds", "background", "sets", "scenery", "venues", "where", "locales", "world"));
+    }
+
+    /**
+     * v47.4: the user's script format from now on (16 October: "this will be the format of every script"):
+     *   शीर्षक: … / पात्र / one line each "नाम (78 साल) (description)" / वस्तुएं / "name (description)" / स्थान और पृष्ठभूमि /
+     *   "name - part (description)" / कहानी / दृश्य 1 / "(direction)" / नाम: "line" (manner) / … / समाप्त
+     * rewritten into the list form the reader knows ("1. नाम - 78 साल, description", "नाम (manner): "line"", each scene
+     * headed by the listed place its first direction is set in). A script in any other form passes through unchanged,
+     * except a spoken line with its manner after the quote, which is always turned round (the manner was spoken).
+     */
+    static String userFormat(String raw) {
+        String[] lines = raw.replace("\r\n", "\n").replace('\r', '\n').split("\n", -1);
+        boolean fmt = false;
+        int heads = 0;
+        for (String l : lines) {
+            String h = l.trim().replaceAll("[:：]$", "").trim();
+            if (h.equals("पात्र") || h.equals("वस्तुएं") || h.equals("वस्तुएँ") || h.equals("स्थान और पृष्ठभूमि") || h.equals("स्थान") || h.equals("कहानी")) heads++;
+        }
+        fmt = heads >= 3;
+        java.util.regex.Pattern speech = java.util.regex.Pattern.compile("^\\s*([^:：\"“”()]{1,40}?)\\s*[:：]\\s*[\"“]([^\"”]*)[\"”]\\s*\\(([^)]*)\\)\\s*$");
+        StringBuilder out = new StringBuilder();
+        String section = "";
+        int n = 0;
+        List<String> places = new ArrayList<String>();
+        String lastPlace = null;
+        for (int i = 0; i < lines.length; i++) {
+            String l = lines[i], t = l.trim();
+            java.util.regex.Matcher sp = speech.matcher(t);
+            if (sp.matches()) { out.append(sp.group(1).trim()).append(" (").append(sp.group(3).trim()).append("): \"").append(sp.group(2).trim()).append("\"\n"); continue; }
+            if (!fmt) { out.append(l).append('\n'); continue; }
+            String h = t.replaceAll("[:：]$", "").trim();
+            if (h.equals("पात्र")) { section = "char"; n = 0; out.append("पात्र:\n"); continue; }
+            if (h.equals("वस्तुएं") || h.equals("वस्तुएँ")) { section = "thing"; n = 0; out.append("वस्तुएँ:\n"); continue; }
+            if (h.equals("स्थान और पृष्ठभूमि") || h.equals("स्थान")) { section = "place"; n = 0; out.append("स्थान:\n"); continue; }
+            if (h.equals("कहानी")) { section = "story"; out.append("कहानी:\n"); continue; }
+            if (h.equals("समाप्त") || h.equals("The End")) { out.append('\n'); continue; }      // the end card says it; it is no direction
+            if (t.length() == 0 || section.equals("story") || section.length() == 0) {
+                if (section.equals("story") && t.matches("^दृश्य\\s*[0-9०-९]+\\s*$")) {
+                    // the scene's place: the listed place its first direction names (most of its words), or the one before ("वही जगह")
+                    String dir = "";
+                    for (int j = i + 1; j < lines.length && j < i + 4; j++) if (lines[j].trim().startsWith("(")) { dir = Txt.norm(lines[j]); break; }
+                    boolean same = dir.contains(Txt.norm("वही जगह")) || dir.contains(Txt.norm("उसी जगह")) || dir.toLowerCase(java.util.Locale.ROOT).contains("same place");
+                    String best = null; float bestF = 0;
+                    for (String pl : places) {
+                        String[] ws = pl.split("\\s+"); int have = 0, all = 0;
+                        for (String w : ws) { if (w.length() < 2 || w.equals("का") || w.equals("के") || w.equals("की") || w.equals("और") || w.equals("-")) continue; all++; if (dir.contains(Txt.norm(w))) have++; }
+                        float f = all == 0 ? 0 : have / (float) all;
+                        if (f > bestF || (f == bestF && best != null && pl.length() > best.length())) { bestF = f; best = pl; }
+                    }
+                    String place = same && lastPlace != null ? lastPlace : bestF >= 0.6f ? best : lastPlace != null ? lastPlace : best;
+                    if (place != null) { lastPlace = place; out.append(t).append(": ").append(place).append('\n'); continue; }
+                }
+                out.append(l).append('\n');
+                continue;
+            }
+            // an entry: "name (age) (description)" / "name (description)" / "name - part (description)"
+            String name = t, desc = "";
+            int par = t.indexOf('(');
+            if (par > 0) {
+                name = t.substring(0, par).trim();
+                desc = t.substring(par).replaceAll("^\\(|\\)$", "").replace(") (", ", ").replace(")(", ", ").trim();
+            }
+            name = name.replaceAll("\\s+[-–—]\\s+.*$", "").trim();          // "गांव का पुराना डाकघर - बाहरी हिस्सा": the place's name
+            if (name.length() == 0) { out.append(l).append('\n'); continue; }
+            if (section.equals("place")) places.add(name);
+            out.append(++n).append(". ").append(name).append(section.equals("place") ? ": " : " - ").append(desc).append('\n');
+        }
+        return out.toString();
     }
 
     /** v39: the end of the lists before the script ("---", "स्क्रिप्ट शुरू", "Script starts"). */

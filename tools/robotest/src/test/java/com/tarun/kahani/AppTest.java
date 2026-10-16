@@ -354,7 +354,20 @@ public class AppTest {
             if (tf.get(pl) != null) placed++;
             assertTrue(((List<?>) of.get(pl)).size() > 3);
         }
-        assertTrue(placed >= 3);
+        // v47.4 (the user: "it is not able to identify correct pictures from library"): offline, with no name to go by,
+        // a weak colour guess is no longer placed on its own — it waits for "Change"; a placed one is a likely match
+        Field sf = pc.getDeclaredField("score"); sf.setAccessible(true);
+        for (Object pl : ps) if (tf.get(pl) != null) assertTrue("placed only when likely: " + sf.get(pl), ((Float) sf.get(pl)) >= 0.45f);
+        if (placed == 0) {
+            // the user taps Change and picks the top choice offered for each picture
+            java.util.Set<String> taken = new java.util.HashSet<String>();
+            for (Object pl : ps) for (Object o : (List<?>) of.get(pl)) {
+                String[] op = (String[]) o;
+                if (!op[0].startsWith("char:") || !taken.add(op[0])) continue;
+                tf.set(pl, op[0]); lf.set(pl, op[1]); placed++; break;
+            }
+        }
+        assertTrue(placed >= 1);
         call(a, "applyPlacements", new Class<?>[]{List.class}, ps);
         for (int i = 0; i < 50 && p.read("cast.txt").split("\n").length < placed; i++) { Thread.sleep(100); idle(); }
         System.out.println("CAST: " + p.read("cast.txt"));

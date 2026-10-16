@@ -615,3 +615,17 @@ extra things … it is not able to identify correct pictures from library."
 - **Library matching**: a library picture is placed only where the match is likely (its name, the AI, or a strong
   reading of the picture: 0.45, was 0.12); a weaker guess is left unplaced for the user's "Change".
 - AppTest updated to the new rule (no costume, pose or extra-shot requests; the progress card's row count).
+
+### 6.16 The user's script format from now on (18:00 IST): "आखिरी चिट्ठी"
+
+The user sent the format every script will follow: शीर्षक, then पात्र ("नाम (78 साल) (description)" one per line), वस्तुएं
+("name (description)"), स्थान और पृष्ठभूमि ("name - part (description)"), कहानी, दृश्य 1 …, directions in ( ), spoken lines
+as नाम: "line" (manner), and समाप्त. The reader read it badly: no ages or descriptions, none of the 13 objects, 1 of 4
+places, and every spoken line kept its manner after the quote (the voice would have spoken it). A pre-reader
+(ScriptParser.userFormat) now turns this format into the lists the reader knows, heads each scene with the listed place
+its first direction is set in ("वही जगह" keeps the place before), drops the closing "समाप्त", and — for every script —
+turns a spoken line with its manner after the quote round. Result on the user's script (kept as
+tools/testdata/aakhiri_chitthi): both characters with age and full description; all 13 objects; places गांव का पुराना
+डाकघर, नीम के पेड़ के नीचे का कोना, कच्चा रास्ता (आसमान और हवा is not asked for); all three scenes at the neem corner;
+every line clean with its manner. The other films' scripts read as before; suite OK (40 tests).
+AppTest's library test follows the confident-match rule (a weak offline guess waits for Change).
