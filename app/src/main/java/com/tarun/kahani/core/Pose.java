@@ -21,7 +21,9 @@ public final class Pose {
             // v44: the bow (an arrow on it while drawn), a wine glass, a beer mug, a whisky glass, a snowball, a spear
             I_BOW = 35, I_WINE = 36, I_BEER = 37, I_WHISKY = 38, I_SNOWBALL = 39, I_SPEAR = 40, I_SHIELD = 41,
             // v47: a letter / envelope, a shoe, a cardboard box (held in both hands, like a child's gift)
-            I_LETTER = 42, I_SHOE = 43, I_BOX = 44;
+            I_LETTER = 42, I_SHOE = 43, I_BOX = 44,
+            // v47.3: a kulhad — the clay cup of a tea stall (the story's word for its cups)
+            I_KULHAD = 45;
 
     /** v37/v44: a make-up tool (it goes to its place on the face), not a drink or a weapon. */
     public static boolean makeup(int item) { return item >= I_KAJAL && item <= I_ROPE && item != I_MUG && item != I_ROPE; }
@@ -67,6 +69,10 @@ public final class Pose {
     public float kneel;
     /** v47.3: the umbrella is held up to clear someone taller beside its carrier: their height in the carrier's heights (0: nobody). */
     public float umbrellaOver;
+    /** v47.3: where the umbrella's carrier's own hand rests (the picture's side), so a forearm can be drawn up to the shaft; NaN: unknown. */
+    public float umbHandX = Float.NaN, umbHandY = Float.NaN;
+    /** v47.3: the picture's own skin colour (0: the look's). */
+    public int skinHint;
     public int seat = -1;
     public float nod;                  // + head down, - head up
     public float wave;                 // > 0 while waving: the arm swings out and back
@@ -116,7 +122,7 @@ public final class Pose {
         walk = 0; walkAmt = 0; tilt = 0; headTilt = 0; bob = 0; squash = 1; holdR = I_NONE; holdL = I_NONE;
         disguised = false; noHeadwear = false; wearsTurban = false; redFace = false; tears = false; sweat = false;
         eyesClosed = false; fist = false; glowWand = false; carrying = false; turbanBand = 0; wind = 0; wet = 0;
-        sit = 0; lie = 0; kneel = 0; umbrellaOver = 0; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; toMouth = 0; toMouthItem = 0;
+        sit = 0; lie = 0; kneel = 0; umbrellaOver = 0; umbHandX = umbHandY = Float.NaN; skinHint = 0; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; toMouth = 0; toMouthItem = 0;
         gazeX = 0; gazeY = 0; gazeHeld = 0; turnBody = 0; turnHead = 0;
         kajal = 0; lipstick = 0; bindi = 0; mehndi = 0; powder = 0; facePaint = 0; towel = 0; flush = 0;
         bowDraw = 0; arrowOn = false; pedal = 0; pedalAmt = 0;

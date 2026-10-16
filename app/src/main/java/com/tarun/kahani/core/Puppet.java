@@ -1353,7 +1353,7 @@ public final class Puppet {
                 g.color(0xFF6D4C41); g.roundRect(hx - 7, hy - 16, 14, 24, 5);
                 g.color(0xFF90CAF9); g.rect(hx - 4, hy - 20, 8, 5);
                 break;
-            case Pose.I_CUP: case Pose.I_TEA: case Pose.I_GLASS: case Pose.I_PLATE:
+            case Pose.I_CUP: case Pose.I_TEA: case Pose.I_GLASS: case Pose.I_PLATE: case Pose.I_KULHAD:
                 drawVessel(g, hold, hx, hy, b.headR / 34f, p.time);
                 break;
             // v44: the bow, the shield, the spear, the grown-ups' glasses, a snowball
@@ -1636,6 +1636,23 @@ public final class Puppet {
                         float sx = x + (i == 0 ? -2.5f : 2.5f) * k, sy = y - 17 * k - ph * 16 * k;
                         g.begin(); g.moveTo(sx, sy + 6 * k); g.quadTo(sx + 3 * k * (float) Math.sin(t * 3 + i), sy + 3 * k, sx, sy); g.strokePath(1.3f * k);
                     }
+                }
+                break;
+            }
+            case Pose.I_KULHAD: {
+                // v47.3: a kulhad — unglazed clay, a little wider at the rim than the foot, a rough thrown ring or two,
+                // the tea's surface at the top and its steam
+                g.color(0xFFB5652F);
+                g.begin(); g.moveTo(x - 7.5f * k, y - 16 * k); g.lineTo(x + 7.5f * k, y - 16 * k); g.lineTo(x + 5.5f * k, y); g.lineTo(x - 5.5f * k, y); g.close(); g.fillPath();
+                g.color(0xFF9E4F22); g.line(x - 6.8f * k, y - 11 * k, x + 6.8f * k, y - 11 * k, 0.9f * k); g.line(x - 6.2f * k, y - 6 * k, x + 6.2f * k, y - 6 * k, 0.7f * k);
+                g.color(0xFFD08A5A); g.line(x - 4 * k, y - 14 * k, x - 3 * k, y - 2 * k, 1.1f * k);
+                g.color(0xFFC9763F); g.strokeOval(x, y - 16 * k, 7.5f * k, 2.2f * k, 1.2f * k);
+                g.color(0xFFB07A4A); g.oval(x, y - 16 * k, 6.2f * k, 1.7f * k);
+                for (int i = 0; i < 2; i++) {
+                    float ph = (t * 0.6f + i * 0.5f) % 1f;
+                    g.color(alpha(0xFFFFFFFF, 0.35f * (1 - ph)));
+                    float sx = x + (i == 0 ? -2.5f : 2.5f) * k, sy = y - 19 * k - ph * 16 * k;
+                    g.begin(); g.moveTo(sx, sy + 6 * k); g.quadTo(sx + 3 * k * (float) Math.sin(t * 3 + i), sy + 3 * k, sx, sy); g.strokePath(1.3f * k);
                 }
                 break;
             }

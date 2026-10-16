@@ -24,6 +24,8 @@ public final class Film {
     public final List<Shot> shots = new ArrayList<Shot>();
     /** The director's shot list and quality check, in the training guide's format. */
     public String shotList = "";
+    /** v47.3: the story serves its tea in kulhads (clay cups): every cup of tea drawn is one. */
+    public boolean kulhad;
     /** Shots the user asked to calm down after checking them (Human QC): {t0, t1}; motion there is cut by 80%. */
     public final List<float[]> calm = new ArrayList<float[]>();
 

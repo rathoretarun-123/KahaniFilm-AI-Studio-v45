@@ -436,6 +436,7 @@ public final class Director {
         film.shotList = qualityCheck();
         groundInFrame();
         facesInFrame();      // (v47.3: a shot with two or more in it holds every head and every face)
+        film.kulhad = Txt.has(allText(), "कुल्हड़", "कुल्हड", "कुल्लड़", "kulhad", "kulhar", "kullad");
         // v47.3: the reader's ledger of rigid and soft things — what the technical director rigs and renders by
         String rl = Rigidity.ledger(story);
         if (rl.length() > 0) film.notes.add(rl);     // (v47.3: after the technical director and the quality check have framed the shots at standing height)
@@ -5927,6 +5928,15 @@ public final class Director {
         }
     }
 
+    /** v47.3: every word of the script, for story-wide facts (the kind of cup it serves tea in). */
+    private String allText() {
+        StringBuilder sb = new StringBuilder();
+        if (story == null) return "";
+        for (Story.CharacterDef c : story.characters) sb.append(' ').append(c.description == null ? "" : c.description);
+        for (Story.Scene sc : story.scenes) { sb.append(' ').append(sc.setting == null ? "" : sc.setting); for (Story.Beat b : sc.beats) sb.append(' ').append(b.text == null ? "" : b.text); }
+        return sb.toString();
+    }
+
     public int facesKept;
 
     /**
@@ -6725,7 +6735,8 @@ public final class Director {
     /** v44: the glass or cup a drink comes in, from the words. */
     static int drinkItem(String s) {
         return Txt.has(s, WINE) ? Pose.I_WINE : Txt.has(s, BEER) ? Pose.I_BEER : Txt.has(s, WHISKY) ? Pose.I_WHISKY
-                : Txt.has(s, "बोतल", "bottle") ? Pose.I_BOTTLE : Txt.has(s, "चाय", "tea", "coffee", "कॉफ़ी", "कॉफी") ? Pose.I_TEA
+                : Txt.has(s, "बोतल", "bottle") ? Pose.I_BOTTLE : Txt.has(s, "कुल्हड़", "कुल्हड", "kulhad", "kulhar") ? Pose.I_KULHAD
+                : Txt.has(s, "चाय", "tea", "coffee", "कॉफ़ी", "कॉफी") ? Pose.I_TEA
                 : Txt.has(s, "कप", "प्याला", "प्याली", "cup", "mug") ? Pose.I_CUP : Pose.I_GLASS;
     }
 

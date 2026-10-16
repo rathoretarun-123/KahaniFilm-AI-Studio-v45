@@ -1486,6 +1486,10 @@ public final class Renderer {
         p.sweat = k.sweat;
         p.holdR = k.holdR;
         p.holdL = k.holdL;
+        if (film != null && film.kulhad) {      // v47.3: a tea stall's cups are its kulhads
+            if (p.holdR == Pose.I_TEA || p.holdR == Pose.I_CUP) p.holdR = Pose.I_KULHAD;
+            if (p.holdL == Pose.I_TEA || p.holdL == Pose.I_CUP) p.holdL = Pose.I_KULHAD;
+        }
         p.eyesClosed = k.eyesShut;
         p.blink = blink(tp, a.order);
         // the eyes look (not behind dark glasses, a blindfold or an eye patch: nothing there to move)
@@ -2228,6 +2232,7 @@ public final class Renderer {
                     float dur = act.t1 - act.t0;
                     float up = Rig.smooth(0, 0.5f, u) * (1 - Rig.smooth(dur - 0.6f, dur, u));
                     int item = act.item == Pose.I_NONE ? Pose.I_GLASS : act.item;
+                    if (film != null && film.kulhad && (item == Pose.I_TEA || item == Pose.I_CUP)) item = Pose.I_KULHAD;
                     p.holdR = item;
                     if (picture) { p.armR = 12 + up * 12; p.toMouth = up; p.toMouthItem = item; }
                     else { p.armR = 24 + up * 62; p.elbowR = 28 + up * 128; }
@@ -3317,10 +3322,30 @@ public final class Renderer {
         return Math.abs(Director.xAt(a, t) - camX) < hw + 0.12f * h;
     }
 
+    /** v47.3: a forearm from the elbow (ex, ey) to the hand (hx, hy): a tapered band of skin with a shaded edge. */
+    private static void forearm(Gfx g, float ex, float ey, float hx, float hy, float wd, int skin, float a) {
+        g.save();
+        g.setAlpha(Math.min(1, a));
+        g.color(Puppet.shade(skin, 0.78f)); g.line(ex, ey, hx, hy, wd * 1.25f);
+        g.color(skin); g.line(ex, ey, hx, hy, wd);
+        g.color(Puppet.shade(skin, 1.08f)); g.line(ex + (hx - ex) * 0.2f, ey + (hy - ey) * 0.2f - wd * 0.22f, ex + (hx - ex) * 0.85f, ey + (hy - ey) * 0.85f - wd * 0.22f, wd * 0.22f);
+        g.restore();
+    }
+
     private static void spriteUmbrella(Gfx g, Look look, Pose p, float h) {
+        int skin = p.skinHint != 0 ? p.skinHint : look.skin;
         float top = p.sit > 0.5f || p.body == Pose.SIT ? -h * 0.86f : -h * 1.1f;
         if (p.umbrellaOver > 0) top = Math.min(top, -h * (p.umbrellaOver * 1.02f + 0.1f));     // v47.3: over the taller neighbour's head
-        Puppet.drawUmbrella(g, p.facing * h * 0.03f, top, h * 0.3f, p.facing * h * 0.15f, top + h * 0.5f, Puppet.umbrellaColor(look), p.facing, p.time, p.wind, p.umbrellaAmt);
+        // v47.3: held — the shaft comes down to a hand at chest height, and a forearm comes up to it from the elbow at
+        // the side (the dome used to float over the head with the shaft ending in the air beside the shoulder)
+        float gx = p.facing * h * 0.13f, gy = -h * 0.58f;
+        Puppet.drawUmbrella(g, p.facing * h * 0.03f, top, h * 0.3f, gx, gy, Puppet.umbrellaColor(look), p.facing, p.time, p.wind, p.umbrellaAmt);
+        if (p.umbrellaAmt > 0.3f) {
+            float ex = Float.isNaN(p.umbHandX) ? p.facing * h * 0.2f : p.umbHandX, ey = Float.isNaN(p.umbHandY) ? -h * 0.5f : p.umbHandY - h * 0.08f;
+            forearm(g, ex, ey, gx, gy + h * 0.015f, h * 0.05f, skin, 1);
+            g.color(skin); g.roundRect(gx - h * 0.03f, gy - h * 0.025f, h * 0.06f, h * 0.05f, h * 0.015f);
+            g.color(Puppet.shade(skin, 0.86f)); g.line(gx - h * 0.012f, gy - h * 0.02f, gx - h * 0.012f, gy + h * 0.02f, h * 0.005f); g.line(gx + h * 0.012f, gy - h * 0.02f, gx + h * 0.012f, gy + h * 0.02f, h * 0.005f);
+        }
     }
 
     private static final int SH_C = 10, SH_R = 16;
@@ -4212,6 +4237,12 @@ public final class Renderer {
                 System.err.printf(java.util.Locale.US, "MESH %s rows=%d cols=%d top=%.1f bottom=%.1f (picture top %.1f bottom %.1f) rise=%.1f h=%.1f%n",
                         actor == null || actor.c == null ? "?" : actor.c.displayName, rf.rows, rf.cols, rf.body[mid * 2 + 1], rf.body[(rf.rows * stride + mid) * 2 + 1], top, top + h, rise, h);
             }
+            // v47.3: the picture's skin and the rest of its hand on the umbrella side, for the hand drawn on the shaft
+            p.skinHint = sp.skin;
+            if (p.umbrellaOpen) {
+                rig.handAt(rf, st, p.facing * mirror >= 0 ? 1 : 0, hand);
+                p.umbHandX = hand[0] * mirror * mo.sx; p.umbHandY = hand[1] * mo.sy + rise;
+            }
             // v35: the copy of the picture nearest its size on the screen (a large picture drawn small shimmers)
             float shrink = sp.h / Math.max(1f, h * pxPerUnit);
             Object bodyImg = bare ? sp.bareImg : Art.mip(sp.img, sp.imgHalf, sp.imgQuarter, shrink);
@@ -4434,6 +4465,8 @@ public final class Renderer {
                     }
                 }
                 float ix = hx + (tx - hx) * u, iy = hy + (ty - hy) * u;
+                // v47.3: the forearm comes up with it from the elbow at the side — the hand at the lips used to float alone
+                if (u > 0.02f) forearm(g, hx + p.facing * w * 0.1f, hy - h * 0.12f, ix - p.facing * mw * 0.3f, iy + mw * 0.55f, h * 0.042f, sp.skin, u);
                 drawToLips(g, p.toMouthItem, ix, iy, mw, p.facing, u, sp.skin, p.time);
                 if (p.toMouthItem == -1) { if (p.holdR == Pose.I_PLATE) drawItem(g, p.holdR, hx, hy, h, p); return; }
                 return;
@@ -4516,18 +4549,21 @@ public final class Renderer {
             g.restore();
             return;
         }
-        float k = mw / 4.8f;
-        g.rotate(-facing * 32 * u * (item == Pose.I_BOTTLE ? 1.5f : 1f));       // tipped towards the lips
+        float k = mw / (item == Pose.I_KULHAD ? 3.9f : 4.8f);
+        // v47.3: tipped only a little (a cup at the lips tilts 15°, not 32°: it read as spilling), and the hand round its
+        // lower half so the rim, the tea and the steam show above the fingers (the hand used to cover the cup whole)
+        g.rotate(-facing * 15 * u * (item == Pose.I_BOTTLE ? 2.5f : 1f));
         if (item == Pose.I_BOTTLE) {
             g.color(0xFF6D4C41); g.roundRect(-7 * k, -16 * k, 14 * k, 24 * k, 5 * k);
             g.color(0xFF90CAF9); g.rect(-4 * k, -20 * k, 8 * k, 5 * k);
         } else if (Pose.grownUpDrink(item)) ActionProps.drink(g, item, 0, 0, k);
         else Puppet.drawVessel(g, item, 0, 0, k, time);
-        // the hand round it: four fingers in front, the thumb on top
-        g.color(skin); g.roundRect(-8 * k, -10 * k, 16 * k, 9 * k, 4 * k);
+        // the hand round it: four fingers in front of its lower half, the thumb up its side
+        g.color(Puppet.shade(skin, 0.8f)); g.roundRect(-8.4f * k, -7.4f * k, 16.8f * k, 8.8f * k, 4 * k);
+        g.color(skin); g.roundRect(-8 * k, -7 * k, 16 * k, 8 * k, 4 * k);
         g.color(Puppet.shade(skin, 0.86f));
-        for (int i = 0; i < 3; i++) g.line(-6 * k + i * 4.5f * k, -9 * k, -6 * k + i * 4.5f * k, -2 * k, 0.8f * k);
-        g.color(skin); g.oval(-facing * 7 * k, -11 * k, 3 * k, 2.2f * k);
+        for (int i = 0; i < 3; i++) g.line(-5.5f * k + i * 4.2f * k, -6.5f * k, -5.5f * k + i * 4.2f * k, 0, 0.8f * k);
+        g.color(skin); g.oval(-facing * 7.5f * k, -9.5f * k, 2.6f * k, 3.4f * k);
         g.restore();
     }
 
@@ -4567,7 +4603,7 @@ public final class Renderer {
                 g.color(0xFF6D4C41); g.roundRect(-7, -16, 14, 24, 5);
                 g.color(0xFF90CAF9); g.rect(-4, -20, 8, 5);
                 break;
-            case Pose.I_CUP: case Pose.I_TEA: case Pose.I_GLASS: case Pose.I_PLATE:
+            case Pose.I_CUP: case Pose.I_TEA: case Pose.I_GLASS: case Pose.I_PLATE: case Pose.I_KULHAD:
                 Puppet.drawVessel(g, item, 0, 0, 1f, p.time);
                 break;
             // v44: the bow (its string drawn, an arrow on it), a shield on the arm, a spear, glasses of wine, beer, whisky, a snowball
