@@ -3521,9 +3521,11 @@ public final class Director {
     private static String[] spaced(String[] ws) { String[] o = new String[ws.length]; for (int i = 0; i < ws.length; i++) o[i] = " " + ws[i] + " "; return o; }
 
     /** Stages the user's thing pictures this sentence speaks of (see above). */
+    private String lastSentence = "";
     private void thingsIn(String s, float t) {
         if (seg == null || art == null || art.shots.isEmpty()) return;
         String n = Txt.norm(s);
+        String before = lastSentence; lastSentence = n;
         List<Object[]> found = objectShots(n, t);
         if (found.isEmpty()) return;
         Film.Actor who = lastSubject != null ? actor(lastSubject) : null;
@@ -3581,9 +3583,11 @@ public final class Director {
                 if (otherBox != null) { src = 4; endHold(otherBox.a, otherBox.pic, t + 0.4f, true); }                    // (set down at their feet once it is empty)
                 else if (boxBeside) src = 3;
                 if (src == 0) src = seated && (k.seat == Film.SEAT_FLOOR || Txt.has(win, "बक्स", "डिब्बे", "box", "trunk", "chest")) ? 2 : 1;
+                // their own bag, the one in their picture ("गुलाबी बैग खोलती है … पत्र निकालती है"): nothing drawn for it, the thing comes up from the hip
+                if (src == 1 && Txt.has(n + " " + before, "बैग", "बस्त", "थैल", "झोल", "जेब", "bag", "pocket", "satchel")) src = 5;
                 if (who.bagFrom < 0 || src >= 3) { who.bagFrom = src >= 3 ? t : seg.t0; who.bagKind = src; }
                 who.acts.add(new Film.Act(t, t + 1.4f, Film.G_REACH));
-                film.notes.add("  ↳ " + key + ": taken out of " + (src == 4 ? "the box held out to " : src == 3 ? "the box beside " : src == 2 ? "the box on the floor beside " : "the bag of ") + who.c.shown() + String.format(java.util.Locale.US, ", in the hand from %.1f s on", t));
+                film.notes.add("  ↳ " + key + ": taken out of " + (src == 4 ? "the box held out to " : src == 3 ? "the box beside " : src == 2 ? "the box on the floor beside " : src == 5 ? "their own bag by " : "the bag of ") + who.c.shown() + String.format(java.util.Locale.US, ", in the hand from %.1f s on", t));
             } else film.notes.add("  ↳ " + key + ": " + (kind == Film.THING_GIVE ? "held out by " : "in the hand of ") + who.c.shown() + String.format(java.util.Locale.US, " from %.1f s", t));
         }
     }
@@ -3609,7 +3613,7 @@ public final class Director {
                     if (a.c != f.a.c || a.look == null) continue;
                     Film.Fx g = fx(Film.FX_HELD, seg.t0, 1e6f, 0, 0, a, null);
                     g.pic = f.pic; g.kind = Film.THING_HOLD; g.size = f.size; g.what = f.what; g.t2 = seg.t0;
-                    if (f.a.bagKind == 1 || f.a.bagKind == 2) { a.bagFrom = seg.t0; a.bagKind = f.a.bagKind; }
+                    if (f.a.bagKind == 1 || f.a.bagKind == 2 || f.a.bagKind == 5) { a.bagFrom = seg.t0; a.bagKind = f.a.bagKind; }
                     thingSaid.put(f.pic, seg.t0);
                 }
             }

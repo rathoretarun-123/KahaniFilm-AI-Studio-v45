@@ -92,7 +92,7 @@ public class ThingsInHandsTest {
         assertTrue("the bench and the stick are the place's and the studio's, never pictures of their own", held(film, bench.pic).isEmpty() && held(film, stick.pic).isEmpty());
         List<Film.Fx> lt = held(film, letter.pic);
         assertTrue("the letter is staged: " + lt.size(), lt.size() >= 3);
-        assertTrue("taken out of her bag by the girl (\"पत्र निकालती है\" names it by another word)", lt.get(0).kind == Film.THING_TAKE && who(lt.get(0)).equals("बच्ची") && lt.get(0).a.bagKind == 1);
+        assertTrue("taken out of her bag by the girl (\"पत्र निकालती है\" names it by another word)", lt.get(0).kind == Film.THING_TAKE && who(lt.get(0)).equals("बच्ची") && (lt.get(0).a.bagKind == 1 || lt.get(0).a.bagKind == 5));
         assertTrue("her bag is there from the start of her part", lt.get(0).a.bagFrom <= lt.get(0).t0 - 1);
         boolean given = false, taken = false;
         for (Film.Fx f : lt) { if (f.kind == Film.THING_GIVE && who(f).equals("बच्ची")) given = true; if (f.kind == Film.THING_HOLD && who(f).equals("बाबू")) taken = true; }

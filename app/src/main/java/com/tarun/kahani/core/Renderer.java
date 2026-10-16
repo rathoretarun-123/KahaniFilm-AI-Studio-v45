@@ -1882,6 +1882,7 @@ public final class Renderer {
             // v35: sitting on the floor — indoors on a woven mat (a durrie), outdoors on the ground; the lap is in
             // front of the hips, so it rests a little lower on the screen than the feet line, on the mat
             float mu = Math.min(1, p.sit / 0.6f), ms = h * seatScale(a);
+            if (HELD_DEBUG) System.err.printf(java.util.Locale.US, "MAT t=%.2f %s set=%d outdoor=%b ms=%.0f mu=%.2f%n", t, a.c.displayName, s.set, Sets.outdoorSet(s.set), ms, mu);
             if (!Sets.outdoorSet(s.set) && a.look.isHumanoid()) {
                 g.save(); g.setAlpha(mu);
                 g.color(0xFF8D3B2E); g.roundRect(-ms * 0.48f, -ms * 0.035f, ms * 0.96f, ms * 0.11f, ms * 0.012f);
@@ -4585,10 +4586,11 @@ public final class Renderer {
         float cx = hx + fc * tw * 0.42f, cy = hy - th * 0.12f;
         if (p.heldKind == Film.THING_GIVE) { cx = hx + fc * (tw * 0.5f + h * 0.1f); cy = hy - h * 0.08f; }
         if (lap) { cx = fc * w * 0.1f; cy = -h * 0.36f; if (p.heldKind == Film.THING_GIVE) { cx = fc * w * 0.3f; cy = -h * 0.42f; } }
+        if (lap && h < w * 1.25f) { cx = fc * w * 0.16f; cy = -h * 0.14f; }     // a face-and-shoulders panel: the hands are below it; the thing shows at its lower edge, held low
         // where it comes out: the bag's mouth at the hip, the box's top edge on the ground beside, the box picture lying
         // beside (3), or the box the other holds out at chest height (4)
-        float mx = p.bagKind == 2 ? fc * h * 0.36f : p.bagKind == 3 ? fc * H * 0.45f : p.bagKind == 4 ? fc * (w * 0.5f + h * 0.12f) : fc * h * 0.17f;
-        float my = p.bagKind == 2 ? -h * 0.19f : p.bagKind == 3 ? -H * 0.24f : p.bagKind == 4 ? -h * 0.5f : -h * 0.42f;
+        float mx = p.bagKind == 2 ? fc * h * 0.36f : p.bagKind == 3 ? fc * H * 0.45f : p.bagKind == 4 ? fc * (w * 0.5f + h * 0.12f) : p.bagKind == 5 ? hx : fc * h * 0.17f;
+        float my = p.bagKind == 2 ? -h * 0.19f : p.bagKind == 3 ? -H * 0.24f : p.bagKind == 4 ? -h * 0.5f : p.bagKind == 5 ? hy + h * 0.02f : -h * 0.42f;
         float u = p.heldU, vis = 1, tx = cx, ty = cy;
         if (u < 0.3f) vis = 0;                                                   // the hand goes down into it
         else if (u < 1) {
@@ -4622,7 +4624,8 @@ public final class Renderer {
         float aspect = f.pic.w / (float) Math.max(1, f.pic.h);
         float tw = aspect >= 1 ? sz : sz * aspect, th = aspect >= 1 ? sz / aspect : sz;
         float y = s.ground + f.y;
-        g.color(Puppet.alpha(0xFF000000, 0.22f)); g.oval(f.x, y + 2, tw * 0.5f, th * 0.08f + 3);
+        if (HELD_DEBUG) System.err.printf(java.util.Locale.US, "PLACED t=%.2f %s x=%.0f y=%.0f %.0fx%.0f pic=%dx%d%n", t, f.what, f.x, y, tw, th, f.pic.w, f.pic.h);
+        g.save(); g.setAlpha(0.22f); g.color(0xFF000000); g.oval(f.x, y + 2, tw * 0.5f, th * 0.08f + 3); g.restore();
         g.image(f.pic.img, f.x - tw / 2, y - th, tw, th);
     }
 

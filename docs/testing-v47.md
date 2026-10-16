@@ -373,3 +373,10 @@ cooking, exercising, reading, watching TV, a fire, rain on a street; the sun ove
 waves, a volcano, dusk, snowfall, a desert, a meteor, an autumn valley) are kept as small MP4s with six-frame sheets in
 `docs/reference/daily_activities/` and `docs/reference/nature/`.
 
+Second pass (10:00 IST): the magenta/purple band under the squatting cobbler was the painted floor patch of his own seated
+panels (27 rows of purple under his feet that the cut-out kept) — `Art.trimGroundPatch` removes, at the bottom 12% of a
+cut-out, a wide band's hue family that the rows above do not have (the sandals' brown is above too; the floor's purple is
+not). The keying of thing pictures floods from every border colour (the frame, the ground, a sliver of the next panel). A
+character whose own picture carries a bag (the girl's pink backpack) takes the letter out of that, with nothing drawn for it.
+The APK is published by CI to the `apk` branch for a direct download (README).
+

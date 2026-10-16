@@ -479,6 +479,7 @@ public final class Art {
         int w = d[0], h = d[1];
         int[] px = new int[w * h];
         System.arraycopy(d, 2, px, 0, w * h);
+        trimSlivers(px, w, h);          // v47.4: the next panel's ground left along an edge by a sheet's split (a purple band under the cobbler's feet)
         // v47: humans (not animals) get hole-filling — the background between the legs would otherwise bleed through as
         // a bright strip (the user saw a white line between बाबू's legs). Animals keep hands-off because their silhouettes
         // can have real interior holes
@@ -966,12 +967,15 @@ public final class Art {
             // (in the outer band — the frame line and the blend between it and the ground — anything near either colour
             // is ground; further in only the ground's own colour, within 40 of 765)
             int band = Math.max(frame * 3, Math.round(Math.min(w, h) * 0.04f));
+            // (every border pixel seeds a region of its own colour — the black frame, the magenta ground, the green ground
+            // of the next panel left at an edge by the sheet's split — and each grows over what is near its seed)
             boolean[] key = new boolean[px.length];
+            int[] seedCol = new int[px.length];
             int[] queue = new int[px.length]; int qn = 0;
             for (int i = 0; i < px.length; i++) {
                 int x = i % w, y = i / w;
                 if (x != 0 && y != 0 && x != w - 1 && y != h - 1) continue;
-                if (Cutout.dist(px[i], bg) <= 120 || Cutout.dist(px[i], cornerBg) <= 120) { key[i] = true; queue[qn++] = i; }
+                key[i] = true; seedCol[i] = px[i]; queue[qn++] = i;
             }
             for (int qi = 0; qi < qn; qi++) {
                 int i = queue[qi], x = i % w, y = i / w;
@@ -980,8 +984,8 @@ public final class Art {
                     if (j < 0 || key[j]) continue;
                     int jx = j % w, jy = j / w;
                     boolean outer = jx < band || jy < band || jx >= w - band || jy >= h - band;
-                    int dbg = Cutout.dist(px[j], bg);
-                    if (dbg <= 40 || (outer && (dbg <= 120 || Cutout.dist(px[j], cornerBg) <= 120))) { key[j] = true; queue[qn++] = j; }
+                    int ds = Cutout.dist(px[j], seedCol[i]), dbg = Cutout.dist(px[j], bg);
+                    if (ds <= 40 || dbg <= 40 || (outer && (ds <= 120 || dbg <= 120 || Cutout.dist(px[j], cornerBg) <= 120))) { key[j] = true; seedCol[j] = ds <= dbg ? seedCol[i] : bg; queue[qn++] = j; }
                 }
             }
             // a plain sliver along an edge (the next panel's ground, left by the sheet's split) goes too
@@ -1003,10 +1007,85 @@ public final class Art {
                 if (edge) { float a = Math.max(0.35f, Math.min(1, (Cutout.dist(px[i], bg) - 40) / 60f)); px[i] = (Math.round(a * 255) << 24) | (px[i] & 0xFFFFFF); }
             }
             if (KEY_DEBUG) System.out.printf(java.util.Locale.US, "KEY %s: bg=%06x seed=%06x corner=%06x keyed=%d%% frame=%d%n", file, bg & 0xFFFFFF, seed & 0xFFFFFF, cornerBg & 0xFFFFFF, 100 * keyed / px.length, frame);
-            if (keyed < px.length / 20) return;                                // hardly any background: leave the picture whole
+            if (keyed < px.length / 20 || keyed > px.length * 0.9f) return;    // hardly any background, or nothing left: leave the picture whole
             cropToThing(L, b, px, w, h);
         } catch (RuntimeException e) {
             if (KEY_DEBUG) e.printStackTrace();
+        }
+    }
+
+    /**
+     * v47.4: a patch of painted ground under a figure's feet (the sheet's artist gave the squatting cobbler a purple floor
+     * under him, and the cut-out kept it): a band of wide rows (60% opaque) at the bottom (12%) whose colour is far from
+     * the rows just above it (the legs, the hem) is ground, not figure — its pixels near the band's colour go, the feet
+     * and the sandals (skin, leather) stay.
+     */
+    static void trimGroundPatch(int[] px, int w, int h) {
+        int deep = Math.max(4, Math.round(h * 0.12f));
+        int top = h;                                   // the first row of the band, from the bottom up
+        for (int y = h - 1; y >= h - deep; y--) {
+            int cnt = 0;
+            for (int x = 0; x < w; x++) if ((px[y * w + x] >>> 24) > 100) cnt++;
+            if (cnt < w * 0.6f) { if (top == h && y > h - 14) continue; break; }     // (the lowest rows taper before the band: the feet, the patch's rounded end)
+            top = y;
+        }
+        if (h - top < 6) return;
+        // the band's own colour family (a hue most of its coloured pixels share) that the rows above hardly have: the
+        // purple of a painted floor, not the brown of the legs or the white of the kurta
+        int[] hb = new int[12], ha = new int[12]; long bn = 0, an = 0;
+        for (int y = top; y < h; y++) for (int x = 0; x < w; x++) { int c = px[y * w + x]; if ((c >>> 24) > 100) { bn++; int b = hueBin(c); if (b >= 0) hb[b]++; } }
+        for (int y = Math.max(0, top - deep); y < top - 2; y++) for (int x = 0; x < w; x++) { int c = px[y * w + x]; if ((c >>> 24) > 100) { an++; int b = hueBin(c); if (b >= 0) ha[b]++; } }
+        if (bn == 0 || an == 0) return;
+        // the hue the band has most beyond what the rows above have (the sandals' brown is above too; the floor's purple is not)
+        int k = -1; float best = 0;
+        for (int b = 0; b < 12; b++) {
+            float sh = (hb[b] + hb[(b + 11) % 12] / 2f + hb[(b + 1) % 12] / 2f) / bn, ab = (ha[b] + ha[(b + 11) % 12] / 2f + ha[(b + 1) % 12] / 2f) / an;
+            if (sh >= 0.12f && ab <= 0.02f && sh - ab > best) { best = sh - ab; k = b; }
+        }
+        if (k < 0) return;
+        for (int y = Math.max(0, top - 6); y < h; y++) for (int x = 0; x < w; x++) {
+            int i = y * w + x, c = px[i];
+            if ((c >>> 24) <= 100) continue;
+            int b = hueBin(c);
+            if (b == k || b == (k + 11) % 12 || b == (k + 1) % 12) px[i] &= 0xFFFFFF;
+        }
+    }
+    /** The hue of a colour in twelfths of the circle, or -1 for a grey (too little colour to have a hue). */
+    static int hueBin(int c) {
+        int r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255;
+        int mx = Math.max(r, Math.max(g, b)), mn = Math.min(r, Math.min(g, b));
+        if (mx - mn < 28) return -1;
+        float hue;
+        if (mx == r) hue = 60f * (g - b) / (mx - mn); else if (mx == g) hue = 120 + 60f * (b - r) / (mx - mn); else hue = 240 + 60f * (r - g) / (mx - mn);
+        if (hue < 0) hue += 360;
+        return Math.min(11, (int) (hue / 30));
+    }
+
+    /**
+     * v47.4: a plain band along an edge of a cut-out — the next panel's ground that a sheet's split left on this one (the
+     * seated cobbler's panels carry 27 rows of purple under his feet) — is no part of the figure: a row or column that
+     * is mostly opaque (60%) and almost all one colour (90% within 36 of its mean) goes, from each edge inward, up to 12%.
+     */
+    static void trimSlivers(int[] px, int w, int h) {
+        trimGroundPatch(px, w, h);
+        for (int side = 0; side < 4; side++) {
+            int len = side < 2 ? h : w, deep = Math.max(2, Math.round((side < 2 ? w : h) * 0.12f));
+            for (int k = 0; k < deep; k++) {
+                long sr = 0, sg = 0, sb = 0; int cnt = 0;
+                int[] idx = new int[len];
+                for (int m = 0; m < len; m++) {
+                    int x = side == 0 ? k : side == 1 ? w - 1 - k : m, y = side < 2 ? m : side == 2 ? k : h - 1 - k;
+                    idx[m] = y * w + x;
+                    int c = px[idx[m]];
+                    if ((c >>> 24) > 100) { cnt++; sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; }
+                }
+                if (cnt < len * 0.6f) break;
+                int mean = 0xFF000000 | (int) (sr / cnt) << 16 | (int) (sg / cnt) << 8 | (int) (sb / cnt);
+                int near = 0;
+                for (int m = 0; m < len; m++) { int c = px[idx[m]]; if ((c >>> 24) > 100 && Cutout.dist(c, mean) <= 36) near++; }
+                if (near < cnt * 0.9f) break;
+                for (int m = 0; m < len; m++) px[idx[m]] &= 0xFFFFFF;
+            }
         }
     }
 
