@@ -383,7 +383,9 @@ public class AppTest {
         for (Object pl : ps) now.append(tf.get(pl)).append(' ');
         assertTrue("placed none: identified " + seen + "then " + now, placed >= 1);
         call(a, "applyPlacements", new Class<?>[]{List.class}, ps);
-        for (int i = 0; i < 50 && p.read("cast.txt").split("\n").length < placed; i++) { Thread.sleep(100); idle(); }
+        // (the pictures are placed on a background thread: wait for it — an empty cast.txt still splits into one line, so
+        // counting lines never waited for a single placement)
+        for (int i = 0; i < 100 && !p.read("cast.txt").contains("char|"); i++) { Thread.sleep(100); idle(); }
         String cast = p.read("cast.txt");
         System.out.println("CAST: " + cast);
         String toast = String.valueOf(org.robolectric.shadows.ShadowToast.getTextOfLatestToast());
