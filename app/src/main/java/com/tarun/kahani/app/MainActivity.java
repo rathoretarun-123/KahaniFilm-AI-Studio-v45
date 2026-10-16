@@ -882,8 +882,16 @@ public class MainActivity extends Activity {
             public void onClick(View v) { libraryMatches(false); }
         }));
         int n = 0;
+        // v47.4: grouped — characters first, then objects, then places
+        java.util.Collections.sort(miss, new java.util.Comparator<String[]>() {
+            int rank(String k) { return k.startsWith("char:") || k.startsWith("costume:") || k.startsWith("pose:") ? 0 : k.startsWith("shot:") ? 1 : k.startsWith("place:") ? 2 : 3; }
+            public int compare(String[] a, String[] b) { return rank(a[0]) - rank(b[0]); }
+        });
+        String lastGroup = "";
         for (final String[] t : miss) {
             if (t[0].equals("title") || t[0].equals("end")) continue;
+            String group = t[0].startsWith("shot:") ? "📦 Objects" : t[0].startsWith("place:") ? "🏞 Backgrounds and places" : "👤 Characters";
+            if (!group.equals(lastGroup)) { m.addView(Ui.text(this, group, 14, Ui.PRIMARY_DARK, true)); lastGroup = group; }
             String tgt = null;
             if (t[0].startsWith("char:")) tgt = "angles:char:" + t[0].substring(5) + ":" + t[1];
             else if (t[0].startsWith("costume:")) tgt = "angles:costume:" + t[0].substring(8) + ":" + t[1];     // v34: a change of clothes
@@ -932,26 +940,17 @@ public class MainActivity extends Activity {
     private void picturesCard(LinearLayout body, final Story st) {
         if (project == null || st == null) return;
         LinearLayout card = Ui.card(this);
-        card.addView(Ui.text(this, "🖼 Pictures in this film — add or replace any of them here (up to 100 pictures at once — angles, poses, expressions; a sheet is split by the director)", 15, Ui.TEXT, true));
+        card.addView(Ui.text(this, "🖼 Pictures in this film — add or replace any of them here (up to 100 pictures at once — angles, poses, expressions; a sheet is split by the director). The same rule for every kind: up to 18 pictures each.", 15, Ui.TEXT, true));
         String cast = project.read("cast.txt");
+        // v47.4 (the user): the uploads in their own sections — characters, objects, backgrounds and places; the reference frames and clips are the card below
+        card.addView(Ui.text(this, "👤 Characters", 15, Ui.PRIMARY_DARK, true));
         for (final Story.CharacterDef c : st.cast()) {
             String file = charFile(c);
             boolean real = Studio3DArt.realAngles(project, keyFor(c));
             String status = file == null ? "▫ no picture" : real ? "✅ your pictures (" + countAngles(c.shown()) + ")" : file.startsWith("3d_") ? "🧊 made in 3D" : "✅ picture";
             pictureRow(card, c.shown(), status, file, "angles:char:" + keyFor(c) + ":" + c.shown());
         }
-        for (final Story.Scene sc : st.scenes) {
-            String file = sceneFile(sc);
-            String nm = sc.title.length() > 0 ? sc.title : Bible.firstClauseOf(sc.setting);
-            int np = SheetSaver.placePictures(project, String.valueOf(sc.number));
-            String status = file == null ? "▫ no background" : file.startsWith("3d_") ? "🧊 made in 3D" : np > 1 ? "✅ your pictures (" + np + ")" : "✅ background";
-            pictureRow(card, "Part " + sc.number + ": " + nm, status, file, "angles:scene:" + sc.number + ":" + nm);
-        }
-        for (final com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
-            String line = project.manifestLine("scene", x.key);
-            String file = line == null ? null : line.split("\\|")[2];
-            pictureRow(card, "🎬 " + x.label, file == null ? "▫ none (the place itself is shown)" : "✅ picture", file, "angles:scene:" + x.key + ":" + x.label);
-        }
+        card.addView(Ui.text(this, "📦 Objects (the things of the story)", 15, Ui.PRIMARY_DARK, true));
         for (String[] o : things(st)) {
             String file = null;
             for (String l : cast.split("\n")) {
@@ -964,6 +963,19 @@ public class MainActivity extends Activity {
         card.addView(Ui.small(this, "➕ A thing of the story (name it) — its pictures", Ui.BLUE, new View.OnClickListener() {
             public void onClick(View v) { askThingName(null); }
         }));
+        card.addView(Ui.text(this, "🏞 Backgrounds and places", 15, Ui.PRIMARY_DARK, true));
+        for (final Story.Scene sc : st.scenes) {
+            String file = sceneFile(sc);
+            String nm = sc.title.length() > 0 ? sc.title : Bible.firstClauseOf(sc.setting);
+            int np = SheetSaver.placePictures(project, String.valueOf(sc.number));
+            String status = file == null ? "▫ no background" : file.startsWith("3d_") ? "🧊 made in 3D" : np > 1 ? "✅ your pictures (" + np + ")" : "✅ background";
+            pictureRow(card, "Part " + sc.number + ": " + nm, status, file, "angles:scene:" + sc.number + ":" + nm);
+        }
+        for (final com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
+            String line = project.manifestLine("scene", x.key);
+            String file = line == null ? null : line.split("\\|")[2];
+            pictureRow(card, "🎬 " + x.label, file == null ? "▫ none (the place itself is shown)" : "✅ picture", file, "angles:scene:" + x.key + ":" + x.label);
+        }
         body.addView(card);
     }
 
@@ -976,7 +988,7 @@ public class MainActivity extends Activity {
     private LinearLayout referenceCard() {
         final LinearLayout card = Ui.card(this);
         card.addView(Ui.title(this, "🎞 Reference frames and clips (for the AI team's quality check)"));
-        card.addView(Ui.text(this, "Up to " + Project.MAX_REF_FRAMES + " full frames (characters, props and background together, as you want them) and up to "
+        card.addView(Ui.text(this, "Up to " + Project.MAX_REF_FRAMES + " full sample frames (characters, props and background together, as you want them) and up to "
                 + Project.MAX_REF_VIDEOS + " short clips. They are not placed in the film: the director, the technical director and the editor use them as the look to reach, and every frame is checked against them.", 13, Ui.SUB, false));
         final List<File> frames = project.refFrames(), clips = project.refVideos();
         if (!frames.isEmpty()) {
@@ -1009,7 +1021,7 @@ public class MainActivity extends Activity {
         LinearLayout btns = Ui.row(this);
         btns.addView(Ui.small(this, "🖼 Add reference frame (" + frames.size() + "/" + Project.MAX_REF_FRAMES + ")", frames.size() < Project.MAX_REF_FRAMES ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) {
-                if (project.refFrames().size() >= Project.MAX_REF_FRAMES) { toast("Five reference frames are already here — remove one first"); return; }
+                if (project.refFrames().size() >= Project.MAX_REF_FRAMES) { toast("Four reference frames are already here — remove one first"); return; }
                 pick("image/*", REQ_REF_FRAME, true);
             }
         }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
@@ -3825,6 +3837,21 @@ public class MainActivity extends Activity {
     private void makeFilm() {
         saveScript();
         if (FilmJob.scriptOf(project).trim().length() < 10) { toast("Write or paste a story first"); return; }
+        // v47.4 (the user): the director first lists what it still has no picture for — upload now (the film waits), or make
+        // without them (made in 3D / drawn); the same list is on the progress screen with its upload buttons
+        final List<String[]> miss = new ArrayList<String[]>();
+        try { for (String[] t : AutoLibrary.missingForUser(project, loadStory())) if (!t[0].equals("title") && !t[0].equals("end") && !AutoLibrary.optional(t)) miss.add(t); } catch (Throwable ignored) { }
+        if (!miss.isEmpty()) {
+            StringBuilder sb = new StringBuilder();
+            int k = 0;
+            for (String[] t : miss) { if (++k > 12) { sb.append("… and ").append(miss.size() - 12).append(" more\n"); break; } sb.append(t[0].startsWith("shot:") ? "📦 " : t[0].startsWith("place:") ? "🏞 " : "👤 ").append(t[1]).append('\n'); }
+            new AlertDialog.Builder(this).setTitle("The director still has no picture for")
+                    .setMessage(sb.toString().trim() + "\n\nUpload them now (the film waits), or make the film without them — those are then made in 3D or drawn from the story's words.")
+                    .setPositiveButton("📷 Upload now", new DialogInterface.OnClickListener() { public void onClick(DialogInterface d, int w) { showStudio(); } })
+                    .setNegativeButton("Make without them", new DialogInterface.OnClickListener() { public void onClick(DialogInterface d, int w) { askBeforeMaking(new Runnable() { public void run() { startFilm(); } }); } })
+                    .show();
+            return;
+        }
         // the director asks before generating anything (FINAL_AR, which pictures AI may make, the shot check)
         askBeforeMaking(new Runnable() { public void run() { startFilm(); } });
     }

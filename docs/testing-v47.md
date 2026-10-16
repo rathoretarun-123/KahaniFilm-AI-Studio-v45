@@ -417,3 +417,12 @@ may describe the wind, the sky, the rain, the light, a smell, a time of day; `Bi
 English), and the director's plan never asks for them, the library search never targets them, and the staging never
 looks for a picture of them — the studio draws the weather and the light and plays the sounds.
 
+The phone (12:00 IST): "segregate the uploads — characters, objects, backgrounds and places, up to four sample frames and two
+sample clips, the 18-picture rule for all; uploading also from the film-making window; the director asks, the user uploads or
+rejects, the film waits." The studio's pictures card is in sections (👤 characters, 📦 objects, 🏞 backgrounds and places;
+the 🎞 reference card below them, four frames and two clips), the director's plan is grouped the same way, and the same
+up-to-18 rule holds for each. Before a film is made the director lists what it still has no picture for and asks:
+"Upload now" (the film waits, the studio opens on the sections) or "Make without them" (made in 3D or drawn from the
+words). The same list with its upload buttons stays on the progress screen while the film is made (used from the next
+make), with the pause button beside it.
+
