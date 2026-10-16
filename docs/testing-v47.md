@@ -394,3 +394,9 @@ notebook stays in आरव's hand through the film, the umbrella is over मी
 `docs/img/v47/jodi_v474_things.jpg`, `docs/img/v47/chai_v474_things.jpg`. A put-aside umbrella stays aside in the next part
 (`thingsCarried`); a notebook is 0.16 of its holder.
 
+The phone (11:03 IST): "Could not reach the AI … HTTP 402 FREE_LIMIT: 1 reply every 30 sec" on आखिरी चिट्ठी. The free keyless
+model allows one reply every 30 s; a long story goes to it in parts, and the second part came 2 s after the first, so the
+whole reading fell back to the built-in reader. `Cloud.retry` now waits the 30 s out on that answer and goes on, and the free
+calls are paced to 31 s apart before they are made (`pacedPollinations`); the progress text says so. A Gemini key in
+Settings has no such limit.
+

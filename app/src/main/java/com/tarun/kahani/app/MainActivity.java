@@ -1250,7 +1250,7 @@ public class MainActivity extends Activity {
         final String text = project.read("script.txt");
         if (text.trim().length() < 20) { toast("Write or paste a story first"); return; }
         if (!Prefs.online(this)) { toast("Turn on online features in Settings"); return; }
-        background("AI is reading the story… (1-2 minutes)", new Work() {
+        background("AI is reading the story… (1-2 minutes; the free model answers one part every 30 s)", new Work() {
             public Object run() { return ScriptAI.read(Prefs.cloud(MainActivity.this), text); }
         }, new Done() {
             public void done(Object r, Exception e) {

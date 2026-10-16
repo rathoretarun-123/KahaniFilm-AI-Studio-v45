@@ -126,6 +126,9 @@ public final class Cloud {
                 return c.run();
             } catch (HttpError e) {
                 last = e;
+                // v47.4: the free model allows one reply every 30 s (HTTP 402 FREE_LIMIT) — a long story in parts hit it on
+                // the second part and the whole reading fell back to the built-in reader: wait the 30 s out and go on
+                if (e.code == 402 && e.body.contains("FREE_LIMIT")) { sleep(31000); continue; }
                 if (e.code != 429 && e.code != 500 && e.code != 502 && e.code != 503 && e.code != 504) throw e;
                 // a daily quota is not worth waiting for
                 if (e.code == 429 && e.body.contains("PerDay")) throw e;
@@ -153,7 +156,18 @@ public final class Cloud {
                 // fall through to the keyless model
             }
         }
-        return retry(new Call<String>() { public String run() throws IOException { return pollinations(system, prompt, json); } }, 2);
+        return retry(new Call<String>() { public String run() throws IOException { return pacedPollinations(system, prompt, json); } }, 3);
+    }
+
+    /** v47.4: the free model's one reply every 30 s, kept to before the call rather than paid for after it. */
+    private static long lastFreeCall;
+    private String pacedPollinations(String system, String prompt, boolean json) throws IOException {
+        synchronized (Cloud.class) {
+            long wait = lastFreeCall + 31000 - System.currentTimeMillis();
+            if (wait > 0 && wait < 40000) sleep(wait);
+            lastFreeCall = System.currentTimeMillis();
+        }
+        return pollinations(system, prompt, json);
     }
 
     /** Gemini generateContent with optional pictures (JPEG bytes). */
