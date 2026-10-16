@@ -3454,7 +3454,7 @@ public final class Director {
         if (Txt.has(k, "जूत", "सैंडल", "चप्पल", "shoe", "sandal", "slipper")) return 0.17f;
         if (Txt.has(k, "खत", "पत्र", "चिट्ठी", "लिफाफ", "letter", "envelope")) return 0.13f;
         if (Txt.has(k, "रूमाल", "handkerchief", "hanky")) return 0.11f;
-        if (Txt.has(k, "नोटबुक", "कॉपी", "किताब", "डायरी", "notebook", "book", "diary", "register")) return 0.2f;
+        if (Txt.has(k, "नोटबुक", "कॉपी", "किताब", "डायरी", "notebook", "book", "diary", "register")) return 0.16f;
         if (Txt.has(k, "औजार", "tool")) return 0.34f;
         if (Txt.has(k, "डिब्ब", "बक्स", "संदूक", "box", "trunk", "chest", "carton")) return 0.24f;
         if (Txt.has(k, "अखबार", "newspaper")) return 0.3f;
@@ -3600,6 +3600,8 @@ public final class Director {
         for (int i = film.segs.size() - 2; i >= 0; i--) if (film.segs.get(i).type == Film.S_SCENE) { prev = film.segs.get(i); break; }
         if (prev == null) return;
         boolean samePlace = prev.scene == seg.scene;
+        // an umbrella put aside stays put aside (it came back open in the next part)
+        for (Film.Actor pa : prev.actors) if (pa.umbrellaUntil < 1e5f) for (Film.Actor a : seg.actors) if (a.c == pa.c) a.umbrellaUntil = seg.t0 - 1;
         for (Film.Fx f : prev.fx) {
             if (f.type != Film.FX_HELD || f.pic == null || f.t1 < prev.t1 - 0.05f) continue;
             if (f.kind == Film.THING_PLACE) {
