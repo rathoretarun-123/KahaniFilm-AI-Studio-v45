@@ -435,6 +435,7 @@ public final class Director {
         }
         film.shotList = qualityCheck();
         groundInFrame();
+        facesInFrame();      // (v47.3: a shot with two or more in it holds every head and every face)
         // v47.3: the reader's ledger of rigid and soft things — what the technical director rigs and renders by
         String rl = Rigidity.ledger(story);
         if (rl.length() > 0) film.notes.add(rl);     // (v47.3: after the technical director and the quality check have framed the shots at standing height)
@@ -5923,6 +5924,47 @@ public final class Director {
             if (c.subject != null && c.subject.stateAt(c.t + 0.1f).body == Pose.LIE) want = Math.max(want, sg.ground - 0.3f * heightOf(c.subject));
             if (System.getProperty("kahani.camDebug") != null) System.err.printf(java.util.Locale.US, "GROUND cam %.2f cy=%.0f zoom=%.2f ground=%.0f want=%.0f%n", c.t, c.cy, c.zoom, sg.ground, want);
             if (c.cy < want) { c.cy = want; groundKept++; }
+        }
+    }
+
+    public int facesKept;
+
+    /**
+     * v47.3: whoever is in the frame is framed — a shot with two or more people in it (a two-shot, an over-the-shoulder,
+     * a group) keeps the highest head under the top edge with headroom and the lowest face above the bottom fifth,
+     * widening when it cannot do both. The passes before framed the speaker alone: beside a taller man the woman's
+     * face sat in the bottom corner and his head was cut by the top edge (the user: "who is holding the camera here").
+     */
+    private void facesInFrame() {
+        float ar = TechnicalDirector.ratio(opt.aspect);
+        for (Film.Seg sg : film.segs) for (Film.Cam c : sg.cams) {
+            if (c.place || c.zoom > 3.2f) continue;
+            float fh = 720f / c.zoom, fw = fh * ar;
+            float headTop = Float.MAX_VALUE, faceLow = -Float.MAX_VALUE;
+            int n = 0;
+            for (Film.Actor a : sg.actors) {
+                if (a.look == null || !a.look.isHumanoid()) continue;
+                Film.Key k = a.stateAt(c.t + 0.1f);
+                if (!k.visible || k.anchor != Film.A_GROUND) continue;
+                float h = heightOf(a) * poseHeight(a, c.t + 0.1f), x = xAt(a, c.t + 0.1f);
+                if (Math.abs(x - c.cx) > fw / 2 + 0.15f * h) continue;      // not in this frame
+                n++;
+                headTop = Math.min(headTop, sg.ground - h);
+                faceLow = Math.max(faceLow, sg.ground - h * (k.body == Pose.STAND ? 0.82f : 0.78f));
+            }
+            if (n < 2) continue;
+            float room = 0.07f, foot = 0.2f;
+            float need = (faceLow - headTop) / (1 - room - foot);
+            if (need > fh) {
+                float z = Math.max(1f, 720f / need);
+                if (z < c.zoom) { c.zoom = z; fh = 720f / z; }
+            }
+            float cy = c.cy;
+            if (headTop < cy - fh / 2 + room * fh) cy = headTop - room * fh + fh / 2;
+            if (faceLow > cy + fh / 2 - foot * fh) cy = faceLow + foot * fh - fh / 2;
+            cy = Math.max(fh / 2, Math.min(720 - fh / 2, cy));
+            if (Math.abs(cy - c.cy) > 1 || c.zoom < 720f / fh - 0.001f) facesKept++;
+            c.cy = cy;
         }
     }
 

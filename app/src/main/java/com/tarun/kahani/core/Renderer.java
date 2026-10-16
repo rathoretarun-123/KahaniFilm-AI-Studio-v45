@@ -161,30 +161,52 @@ public final class Renderer {
      * frame's it fills the frame; otherwise the whole picture is shown, never stretched, over a soft, dark,
      * enlarged copy of itself (no black bars).
      */
-    private void contain(Gfx g, Art.Backdrop b, float zoom) {
+    private void contain(Gfx g, Art.Backdrop b, float zoom, boolean ownLettering) {
         float ar = b.w / (float) b.h, frame = vw / vh;
-        if (Math.abs(Math.log(ar / frame)) < 0.22) { cover(g, b, zoom, 0, 0); return; }
-        // the fill: the same picture, enlarged to cover the frame, darkened
-        float[] cr = coverCrop(b, frame);
-        g.save();
-        g.setAlpha(0.6f);
-        g.imageRect(b.img, cr[0] * b.w, cr[1] * b.h, (cr[2] - cr[0]) * b.w, (cr[3] - cr[1]) * b.h, -vw * 0.1f, -vh * 0.1f, vw * 1.2f, vh * 1.2f);
-        g.restore();
-        g.color(0x99000000);
-        g.rect(0, 0, vw, vh);
-        // the whole picture, fitted inside the frame with its own proportions
+        // a picture without lettering of its own that is shaped like the frame fills it (the studio writes the title over it)
+        if (!ownLettering && Math.abs(Math.log(ar / frame)) < 0.22) { cover(g, b, zoom, 0, 0); return; }
+        // v47.3: a card is never cropped (the user's end picture carried its "THE END" under the frame's lower edge):
+        // the whole picture sits between the cinema bars, its sides (or top and bottom) filled from its own edges
+        boolean bars = vw / vh >= 1.6f;
+        float safeH = bars ? vh * (1 - 2 * 0.055f) - 4 : vh, safeW = vw;
         float w, h;
-        if (ar > frame) { w = vw * 0.98f * zoom; h = w / ar; } else { h = vh * 0.98f * zoom; w = h * ar; }
-        if (w > vw) { w = vw; h = w / ar; }
-        if (h > vh) { h = vh; w = h * ar; }
-        g.image(b.img, (vw - w) / 2, (vh - h) / 2, w, h);
+        if (ar > safeW / safeH) { w = safeW * zoom; h = w / ar; } else { h = safeH * zoom; w = h * ar; }
+        if (w > safeW) { w = safeW; h = w / ar; }
+        if (h > safeH) { h = safeH; w = h * ar; }
+        float x0 = (vw - w) / 2, y0 = (vh - h) / 2;
+        // the fill (v47.3): the picture's own edge strips, smeared outwards and darkened — the enlarged copy used
+        // before showed the poster's lettering huge and cut off beside it (the user: "this is also wrong")
+        g.color(0xFF101010);
+        g.rect(0, 0, vw, vh);
+        g.save();
+        g.setAlpha(0.55f);
+        if (!ownLettering) {
+            // no lettering to show through: the same picture, enlarged to cover the frame, darkened (as before)
+            float[] cr = coverCrop(b, frame);
+            g.imageRect(b.img, cr[0] * b.w, cr[1] * b.h, (cr[2] - cr[0]) * b.w, (cr[3] - cr[1]) * b.h, -vw * 0.1f, -vh * 0.1f, vw * 1.2f, vh * 1.2f);
+        } else if (ar < frame) {
+            float strip = b.w * 0.06f;
+            if (x0 > 0) g.imageRect(b.img, 0, 0, strip, b.h, 0, y0, x0, h);
+            if (x0 + w < vw) g.imageRect(b.img, b.w - strip, 0, strip, b.h, x0 + w, y0, vw - x0 - w, h);
+        } else {
+            float strip = b.h * 0.06f;
+            if (y0 > 0) g.imageRect(b.img, 0, 0, b.w, strip, x0, 0, w, y0);
+            if (y0 + h < vh) g.imageRect(b.img, 0, b.h - strip, b.w, strip, x0, y0 + h, w, vh - y0 - h);
+        }
+        g.restore();
+        // a soft shadow where the fill meets the picture, so it reads as a card on a wall
+        if (ar < frame) {
+            g.linear(x0 - vw * 0.06f, 0, x0, 0, 0x00000000, 0x80000000); g.rect(x0 - vw * 0.06f, 0, vw * 0.06f, vh);
+            g.linear(x0 + w, 0, x0 + w + vw * 0.06f, 0, 0x80000000, 0x00000000); g.rect(x0 + w, 0, vw * 0.06f, vh);
+        }
+        g.image(b.img, x0, y0, w, h);
     }
 
     private void drawTitle(Gfx g, Film.Seg s, float t) {
         float u = (t - s.t0) / Math.max(0.1f, s.t1 - s.t0);
         boolean text = s.backdrop == null || art.titleText;      // v47: when the user gives a title picture, the studio adds no text and no sparkles over it
         if (s.backdrop != null) {
-            contain(g, s.backdrop, 1.0f + 0.05f * u);
+            contain(g, s.backdrop, 1.0f + 0.012f * u, !text);
         } else {
             g.save();
             stageView(g, 1 + 0.05f * u);
@@ -239,7 +261,7 @@ public final class Renderer {
     private void drawEnd(Gfx g, Film.Seg s, float t) {
         float u = (t - s.t0) / Math.max(0.1f, s.t1 - s.t0);
         boolean text = s.backdrop == null || art.endText;        // v47: same for the end card
-        if (s.backdrop != null) contain(g, s.backdrop, 1.0f + 0.06f * u);
+        if (s.backdrop != null) contain(g, s.backdrop, 1.0f + 0.012f * u, !text);
         else {
             g.save();
             stageView(g, 1 + 0.04f * u);
@@ -1484,6 +1506,16 @@ public final class Renderer {
                 // v43: it opens (not pops open): over 0.7 s after it is taken up, and as the rain comes on
                 float taken = a.umbrellaFrom >= 0 && !(look.umbrella) ? Rig.smooth(a.umbrellaFrom, a.umbrellaFrom + 0.7f, t) : 1;
                 p.umbrellaAmt = Math.min(taken, Rig.smooth(0.05f, 0.3f, rainNow));
+                // v47.3: under one umbrella with someone taller (a woman beside a young man), the dome is held up over
+                // the taller head — it used to cross the neighbour's face at the carrier's head height
+                float ownH = actorHeight(a.look, a.c, art, s), ax0 = Director.xAt(a, t);
+                for (Film.Actor o : s.actors) {
+                    if (o == a || o.look == null || !o.look.isHumanoid()) continue;
+                    Film.Key ok = o.stateAt(t);
+                    if (!ok.visible || ok.body != Pose.STAND || ok.anchor != Film.A_GROUND) continue;
+                    float oh = actorHeight(o.look, o.c, art, s);
+                    if (oh > ownH && Math.abs(Director.xAt(o, t) - ax0) < 0.5f * oh) p.umbrellaOver = Math.max(p.umbrellaOver, oh / Math.max(1, ownH));
+                }
                 p.wet *= 1 - 0.75f * p.umbrellaAmt;
             }
         }
@@ -1808,6 +1840,15 @@ public final class Renderer {
             }
         }
         if (bath != null || scr != null) { mo.dx = 0; mo.dy = 0; mo.rot = 0; }
+        // v47.3: on a bench shared with someone taller the shorter sitter sits at the bench's height (a child's feet
+        // dangle) — each used to get a bench of their own height: two benches side by side under the two of them
+        if (p.seat == Film.SEAT_STOOL && p.sit > 0.35f && p.body != Pose.LIE) for (Film.Fx f : s.fx) {
+            if (f.type != Film.FX_SEAT || f.a != a || f.kind != Film.SEAT_STOOL) continue;
+            float own = h * seatScale(a);
+            float[] sp2 = seatGroup(s, f, own, Film.SEAT_STOOL);
+            if (sp2 != null && sp2[4] > own + 1) mo.dy -= 0.25f * (sp2[4] - own) * Math.min(1, (p.sit - 0.35f) / 0.4f);
+            break;
+        }
         float px = x + mo.dx, py = y + mo.dy;
         if (camStill && pixelStep > 0) { px = Math.round(px / pixelStep) * pixelStep; py = Math.round(py / pixelStep) * pixelStep; }
         g.translate(px, py);
@@ -1951,7 +1992,7 @@ public final class Renderer {
                 drawSprite(g, real, look, p, hReal, 0, a);
                 g.setAlpha(1);
             } else drawSprite(g, real, look, p, hReal, 0, a);
-            if (p.umbrellaOpen) spriteUmbrella(g, look, p, hReal);
+            if (p.umbrellaOpen && umbrellaInView(a, t, hReal)) spriteUmbrella(g, look, p, hReal);
             g.restore();
             g.restore();
             return;
@@ -1979,7 +2020,7 @@ public final class Renderer {
             }
             drawSprite(g, drawn, look, p, h, mo.rot, a);
             if (turn < 0.999f) g.restore();
-            if (p.umbrellaOpen) spriteUmbrella(g, look, p, h);
+            if (p.umbrellaOpen && umbrellaInView(a, t, h)) spriteUmbrella(g, look, p, h);
         }
         else {
             // v34 (realism): a drawn character's shadow from the sun, a soft flattened oval thrown away from it
@@ -2005,9 +2046,9 @@ public final class Renderer {
             g.save();
             g.setAlpha(Math.min(1, (p.sit - 0.35f) / 0.4f));
             seatSpan = null;
-            if (seat == Film.SEAT_SOFA) for (Film.Fx f : s.fx) {
-                if (f.type != Film.FX_SEAT || f.a != a || f.kind != Film.SEAT_SOFA) continue;
-                float[] sp2 = sofaSpan(s, f, h * seatScale(a));
+            if (seat == Film.SEAT_SOFA || seat == Film.SEAT_STOOL) for (Film.Fx f : s.fx) {
+                if (f.type != Film.FX_SEAT || f.a != a || f.kind != seat) continue;
+                float[] sp2 = seatGroup(s, f, h * seatScale(a), seat);
                 if (sp2 != null) {
                     // in this character's own drawing units (it stands at x, drawn at its scale)
                     float off = f.x - Director.xAt(a, t);
@@ -3004,26 +3045,34 @@ public final class Renderer {
      * neighbour on the left to half way to the one on the right (its own end, with an armrest, where there is none).
      * {left, right, armrest left (1/0), armrest right (1/0)} relative to the seat, or null with no neighbour at all.
      */
-    private float[] sofaSpan(Film.Seg s, Film.Fx self, float hh) {
-        float sw = hh * 1.05f, left = Float.NaN, right = Float.NaN;
-        // the whole sofa is as tall as for its tallest sitter (a back stepping down behind each child read as many sofas)
+    /**
+     * v40 (sofa) / v47.3 (bench): people seated side by side share one piece of furniture — this sitter's part of it
+     * runs to the midpoints towards the neighbours (the parts meet), armrests or legs only at the free ends, and the
+     * whole of it is as tall as for its tallest sitter. Returns {left, right, armL, armR, tall} or null when alone.
+     */
+    private float[] seatGroup(Film.Seg s, Film.Fx self, float hh, int kind) {
+        float sw = kind == Film.SEAT_SOFA ? hh * 1.05f : hh * 0.52f, left = Float.NaN, right = Float.NaN;
         float tall = hh;
         float lo = self.x, hi = self.x;
         boolean grew = true;
         while (grew) {
             grew = false;
             for (Film.Fx f : s.fx) {
-                if (f.type != Film.FX_SEAT || f.kind != Film.SEAT_SOFA || f.x >= lo - 8 && f.x <= hi + 8) continue;
-                if (f.x < lo && lo - f.x <= sw * 1.25f) { lo = f.x; grew = true; }
-                else if (f.x > hi && f.x - hi <= sw * 1.25f) { hi = f.x; grew = true; }
+                if (f.type != Film.FX_SEAT || f.kind != kind || f.x >= lo - 8 && f.x <= hi + 8) continue;
+                float nh = f.a != null && art != null ? actorHeight(f.a.look, f.a.c, art, s) * seatScale(f.a) : hh;
+                float reach = (kind == Film.SEAT_SOFA ? 1.05f * 1.25f : 0.68f) * Math.max(tall, nh);
+                if (f.x < lo && lo - f.x <= reach) { lo = f.x; grew = true; }
+                else if (f.x > hi && f.x - hi <= reach) { hi = f.x; grew = true; }
                 else continue;
-                if (f.a != null && art != null) tall = Math.max(tall, actorHeight(f.a.look, f.a.c, art, s) * seatScale(f.a));
+                tall = Math.max(tall, nh);
             }
         }
         for (Film.Fx f : s.fx) {
-            if (f == self || f.type != Film.FX_SEAT || f.kind != Film.SEAT_SOFA) continue;
+            if (f == self || f.type != Film.FX_SEAT || f.kind != kind) continue;
             float d = f.x - self.x;
-            if (Math.abs(d) < 8 || Math.abs(d) > sw * 1.25f) continue;
+            float nh = f.a != null && art != null ? actorHeight(f.a.look, f.a.c, art, s) * seatScale(f.a) : hh;
+            float reach = (kind == Film.SEAT_SOFA ? 1.05f * 1.25f : 0.68f) * Math.max(hh, nh);
+            if (Math.abs(d) < 8 || Math.abs(d) > reach) continue;
             if (d < 0 && (Float.isNaN(left) || d > left)) left = d;
             if (d > 0 && (Float.isNaN(right) || d < right)) right = d;
         }
@@ -3177,14 +3226,16 @@ public final class Renderer {
                     // v47.3: a wooden bench, not a flat slab: a contact shadow on the ground, two plank legs shaded
                     // round, a cross rail between them, a thick top with a lit upper face and a darker front edge,
                     // and grain lines along the plank
-                    float pl = -w * 0.42f, pw = w * 0.84f, th = h * 0.058f, lw = h * 0.042f;
-                    g.color(0x30000000); g.oval(0, h * 0.006f, pw * 0.5f, h * 0.022f);
-                    g.linear(-w * 0.36f, 0, -w * 0.36f + lw, 0, 0xFF4E342E, 0xFF8D6E63);
-                    g.rect(-w * 0.36f, top + th * 0.8f, lw, -top - th * 0.8f);
-                    g.linear(w * 0.36f - lw, 0, w * 0.36f, 0, 0xFF8D6E63, 0xFF4E342E);
-                    g.rect(w * 0.36f - lw, top + th * 0.8f, lw, -top - th * 0.8f);
+                    // (v47.3: two or more side by side share one bench — this sitter's part runs to the midpoints towards the
+                    // neighbours, with legs only at the free ends, so the parts meet as one plank)
+                    float pl = seatSpan != null ? seatSpan[0] : -w * 0.42f, pr = seatSpan != null ? seatSpan[1] : w * 0.42f, pw = pr - pl, th = h * 0.058f, lw = h * 0.042f;
+                    boolean legL = seatSpan == null || seatSpan[2] > 0, legR = seatSpan == null || seatSpan[3] > 0;
+                    float xl = pl + h * 0.04f, xr = pr - h * 0.04f;
+                    g.color(0x30000000); g.oval((pl + pr) / 2, h * 0.006f, pw * 0.5f, h * 0.022f);
+                    if (legL) { g.linear(xl, 0, xl + lw, 0, 0xFF4E342E, 0xFF8D6E63); g.rect(xl, top + th * 0.8f, lw, -top - th * 0.8f); }
+                    if (legR) { g.linear(xr - lw, 0, xr, 0, 0xFF8D6E63, 0xFF4E342E); g.rect(xr - lw, top + th * 0.8f, lw, -top - th * 0.8f); }
                     g.linear(0, top + h * 0.13f, 0, top + h * 0.155f, 0xFF7B5A48, 0xFF4E342E);
-                    g.rect(-w * 0.36f + lw, top + h * 0.13f, w * 0.72f - 2 * lw, h * 0.025f);
+                    g.rect(legL ? xl + lw : pl, top + h * 0.13f, (legR ? xr - lw : pr) - (legL ? xl + lw : pl), h * 0.025f);
                     g.linear(0, top, 0, top + th * 0.62f, 0xFFB9937A, 0xFF8D6E63);
                     g.roundRect(pl, top, pw, th * 0.66f, h * 0.012f);
                     g.linear(0, top + th * 0.55f, 0, top + th, 0xFF6D4C41, 0xFF3E2723);
@@ -3260,8 +3311,15 @@ public final class Renderer {
      * v34: an open umbrella over a picture character in the rain — its dome above the head, the shaft down in front of
      * the shoulder (the hand that holds it is behind the picture's own arm); seated, it comes down with the head.
      */
+    /** v47.3: an umbrella whose carrier is outside the frame stays outside with them (its dome used to poke in at the edge alone). */
+    private boolean umbrellaInView(Film.Actor a, float t, float h) {
+        float hw = vw / 2 / Math.max(1f, camZ);
+        return Math.abs(Director.xAt(a, t) - camX) < hw + 0.12f * h;
+    }
+
     private static void spriteUmbrella(Gfx g, Look look, Pose p, float h) {
         float top = p.sit > 0.5f || p.body == Pose.SIT ? -h * 0.86f : -h * 1.1f;
+        if (p.umbrellaOver > 0) top = Math.min(top, -h * (p.umbrellaOver * 1.02f + 0.1f));     // v47.3: over the taller neighbour's head
         Puppet.drawUmbrella(g, p.facing * h * 0.03f, top, h * 0.3f, p.facing * h * 0.15f, top + h * 0.5f, Puppet.umbrellaColor(look), p.facing, p.time, p.wind, p.umbrellaAmt);
     }
 
@@ -4781,7 +4839,7 @@ public final class Renderer {
                 case Film.FX_SEAT: if (behind) {
                     float hh = f.a != null ? actorHeight(f.a.look, f.a.c, art, s) * seatScale(f.a) : 400;
                     float fc = f.a != null ? f.a.stateAt(t).facing : 1;
-                    seatSpan = f.kind == Film.SEAT_SOFA ? sofaSpan(s, f, hh) : null;
+                    seatSpan = f.kind == Film.SEAT_SOFA || f.kind == Film.SEAT_STOOL ? seatGroup(s, f, hh, f.kind) : null;
                     float ps = perspective(s, f.y);
                     g.save(); g.translate(f.x, s.ground + f.y); if (ps != 1f) g.scale(ps, ps); drawSeat(g, f.kind, seatSpan != null ? seatSpan[4] : hh, false, fc); drawSeat(g, f.kind, hh, true, fc); g.restore();
                     seatSpan = null;

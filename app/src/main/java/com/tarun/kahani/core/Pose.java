@@ -65,6 +65,8 @@ public final class Pose {
     public float lie;
     /** v47.3: 0 upright .. 1 on the knees (going down and getting up move through it). */
     public float kneel;
+    /** v47.3: the umbrella is held up to clear someone taller beside its carrier: their height in the carrier's heights (0: nobody). */
+    public float umbrellaOver;
     public int seat = -1;
     public float nod;                  // + head down, - head up
     public float wave;                 // > 0 while waving: the arm swings out and back
@@ -114,7 +116,7 @@ public final class Pose {
         walk = 0; walkAmt = 0; tilt = 0; headTilt = 0; bob = 0; squash = 1; holdR = I_NONE; holdL = I_NONE;
         disguised = false; noHeadwear = false; wearsTurban = false; redFace = false; tears = false; sweat = false;
         eyesClosed = false; fist = false; glowWand = false; carrying = false; turbanBand = 0; wind = 0; wet = 0;
-        sit = 0; lie = 0; kneel = 0; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; toMouth = 0; toMouthItem = 0;
+        sit = 0; lie = 0; kneel = 0; umbrellaOver = 0; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; toMouth = 0; toMouthItem = 0;
         gazeX = 0; gazeY = 0; gazeHeld = 0; turnBody = 0; turnHead = 0;
         kajal = 0; lipstick = 0; bindi = 0; mehndi = 0; powder = 0; facePaint = 0; towel = 0; flush = 0;
         bowDraw = 0; arrowOn = false; pedal = 0; pedalAmt = 0;
