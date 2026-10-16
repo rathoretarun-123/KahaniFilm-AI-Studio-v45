@@ -349,10 +349,12 @@ public class AppTest {
         Field lf = pc.getDeclaredField("label"); lf.setAccessible(true);
         Field of = pc.getDeclaredField("options"); of.setAccessible(true);
         int placed = 0;
+        StringBuilder seen = new StringBuilder();
         for (Object pl : ps) {
             System.out.println("PLACED: " + tf.get(pl) + " (" + lf.get(pl) + ") options=" + ((List<?>) of.get(pl)).size());
+            seen.append(tf.get(pl)).append('/').append(((List<?>) of.get(pl)).size()).append(' ');
             if (tf.get(pl) != null) placed++;
-            assertTrue(((List<?>) of.get(pl)).size() > 3);
+            assertTrue("options: " + seen + " characters=" + st.characters.size(), ((List<?>) of.get(pl)).size() > 3);
         }
         // v47.4 (the user: "it is not able to identify correct pictures from library"): offline, with no name to go by,
         // a weak colour guess is no longer placed on its own — it waits for "Change"; a placed one is a likely match
@@ -377,11 +379,15 @@ public class AppTest {
                 tf.set(ps.get(0), op[0]); lf.set(ps.get(0), op[1]); charsPlaced++; break;
             }
         }
-        assertTrue(placed >= 1);
+        StringBuilder now = new StringBuilder();
+        for (Object pl : ps) now.append(tf.get(pl)).append(' ');
+        assertTrue("placed none: identified " + seen + "then " + now, placed >= 1);
         call(a, "applyPlacements", new Class<?>[]{List.class}, ps);
         for (int i = 0; i < 50 && p.read("cast.txt").split("\n").length < placed; i++) { Thread.sleep(100); idle(); }
-        System.out.println("CAST: " + p.read("cast.txt"));
-        assertTrue(p.read("cast.txt").contains("char|"));
+        String cast = p.read("cast.txt");
+        System.out.println("CAST: " + cast);
+        String toast = String.valueOf(org.robolectric.shadows.ShadowToast.getTextOfLatestToast());
+        assertTrue("no character in cast.txt [" + cast.replace('\n', ';') + "] identified " + seen + "then " + now + " toast=" + toast, cast.contains("char|"));
         ac.pause().stop().destroy();
     }
 
