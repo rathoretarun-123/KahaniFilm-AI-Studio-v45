@@ -580,3 +580,7 @@ Suite OK (40 tests).
   saved to the library and the app's vocabulary; 28 were staged already, 12 have new everyday rows, placed first in the
   table so a general row (eyes closed, a give, a sit) does not take the sentence before them.
 - 5 more descriptions (cycling, chess, a cricket shot, a football kick, the newspaper on the sofa): their zip also arrived as the download page only; all 5 were staged already.
+- Full बाबू re-render at 24 fps (v525), every frame scanned, every second viewed: the place is the clean tree panel in
+  every shot. Two more fixes: the yellow letter the girl takes out of her bag was put on the ground a second later (the
+  "set down when a cup comes to the hand" rule fired on a non-vessel item); it now yields only to a cup, glass, kulhad,
+  plate, bottle or tea. The end page also showed the two-panel picture framed small; it now fills like the title page.

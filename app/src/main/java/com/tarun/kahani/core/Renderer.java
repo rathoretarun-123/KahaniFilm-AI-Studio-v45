@@ -266,7 +266,8 @@ public final class Renderer {
     private void drawEnd(Gfx g, Film.Seg s, float t) {
         float u = (t - s.t0) / Math.max(0.1f, s.t1 - s.t0);
         boolean text = s.backdrop == null || art.endText;        // v47: same for the end card
-        if (s.backdrop != null) contain(g, s.backdrop, 1.0f + 0.012f * u, !text);
+        if (s.backdrop != null && art != null && art.end != s.backdrop) cover(g, s.backdrop, 1.0f + 0.03f * u, 0, 0);     // v47.4: the last place stands in: filled through its own crop
+        else if (s.backdrop != null) contain(g, s.backdrop, 1.0f + 0.012f * u, !text);
         else {
             g.save();
             stageView(g, 1 + 0.04f * u);

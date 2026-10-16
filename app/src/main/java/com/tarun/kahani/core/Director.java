@@ -2997,6 +2997,11 @@ public final class Director {
      * item in a key, or an eating or drinking act): the notebook is set down beside them a moment before, never held
      * under the tea (the drawn item had been suppressed while the picture was in the hand, so आरव never got his चाय).
      */
+    /** v47.4: a cup, a glass, a kulhad, a plate, a bottle, a tray of tea — what takes both hands from a thing picture (not a bag strap or a key). */
+    private static boolean vessel(int item) {
+        return item == Pose.I_KULHAD || item == Pose.I_CUP || item == Pose.I_TEA || item == Pose.I_GLASS || item == Pose.I_PLATE || item == Pose.I_BOTTLE;
+    }
+
     private void thingsYield() {
         Film.Seg keep = seg;
         for (Film.Seg sg : film.segs) {
@@ -3005,7 +3010,7 @@ public final class Director {
             for (Film.Fx f : new ArrayList<Film.Fx>(sg.fx)) {
                 if (f.type != Film.FX_HELD || f.kind == Film.THING_PLACE || f.a == null || f.pic == null) continue;
                 float at = -1;
-                for (Film.Key k : f.a.keys) if (k.t > f.t0 + 0.4f && k.t < f.t1 && (k.holdR != Pose.I_NONE || k.holdL != Pose.I_NONE)) { at = k.t; break; }
+                for (Film.Key k : f.a.keys) if (k.t > f.t0 + 0.4f && k.t < f.t1 && (vessel(k.holdR) || vessel(k.holdL))) { at = k.t; break; }
                 for (Film.Act ac : f.a.acts) if ((ac.type == Film.G_DRINK || ac.type == Film.G_EAT) && ac.t0 > f.t0 + 0.4f && ac.t0 < f.t1 && (at < 0 || ac.t0 < at)) at = ac.t0;
                 if (at < 0) continue;
                 float tk = Math.max(f.t0 + 0.3f, at - 0.4f);
