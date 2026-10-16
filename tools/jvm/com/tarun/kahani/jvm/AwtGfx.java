@@ -378,7 +378,7 @@ public class AwtGfx implements Gfx {
             g = saved; paint = sp; alpha = sa; layerTarget = savedT;
             stack.clear(); stack.addAll(savedStack);
             int[] px = l.getRGB(0, 0, lw, lh, null, 0, lw);
-            com.tarun.kahani.core.Blur.gauss(px, lw, lh, Math.max(1, Math.round(lw * 0.005f)));
+            com.tarun.kahani.core.Blur.gauss(px, lw, lh, Math.max(1, Math.round(lw * 0.0022f)));
             l.setRGB(0, 0, lw, lh, px, 0, lw);
             layers.put(key, l);
         }
