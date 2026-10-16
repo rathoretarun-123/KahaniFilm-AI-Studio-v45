@@ -925,11 +925,14 @@ public final class Art {
         if (w < 8 || h < 8) return 0;
         int[] corners = {d[2], d[2 + w - 1], d[2 + (h - 1) * w], d[2 + h * w - 1]};
         int bg = corners[0];
-        for (int c : corners) if (Cutout.dist(c, bg) > 40) return 0;
+        // v47.3: a cut-out (transparent corners) is measured by its alpha alone — its transparent pixels may carry any
+        // colour, and the corner-colour test threw the measure away (इस्माइल's back read as "not as tall as the front")
+        boolean cut = (corners[0] >>> 24) < 128 && (corners[1] >>> 24) < 128 && (corners[2] >>> 24) < 128 && (corners[3] >>> 24) < 128;
+        if (!cut) for (int c : corners) if (Cutout.dist(c, bg) > 40) return 0;
         int x0 = w, x1 = -1, y0 = h, y1 = -1;
         for (int y = 0; y < h; y += 2) for (int x = 0; x < w; x += 2) {
             int c = d[2 + y * w + x];
-            if ((c >>> 24) < 128 || Cutout.dist(c, bg) < 40) continue;
+            if ((c >>> 24) < 128 || (!cut && Cutout.dist(c, bg) < 40)) continue;
             if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y;
         }
         if (x1 <= x0 + 4 || y1 <= y0 + 4) return 0;
@@ -1314,7 +1317,9 @@ public final class Art {
                 if (main == null || main.w <= 0 || main.h < main.w * 1.3f) continue;
                 float ma = main.h / (float) main.w;
                 int[] vd = L.decode(f[3], 160);
-                if (vd == null || vd[0] <= 0 || Math.abs(vd[1] / (float) vd[0] / ma - 1) <= 0.15f) continue;
+                // (v47.3: the figure's own height for its width, as the front's is — the whole canvas of इस्माइल's back, with
+                // its transparent margins, read as "not as tall as the front" and a side panel marked 180° stood in for it)
+                if (vd == null || vd[0] <= 0 || Math.abs(Math.max(vd[1] / (float) vd[0], figureAspect(vd)) / ma - 1) <= 0.3f) continue;     // (v47.3: 0.3 — a back a quarter taller for its width than the front is the same figure, measured coarsely)
                 String best = null;
                 float bestD = 0.1f;
                 for (String[] q : poses) {
@@ -1324,14 +1329,14 @@ public final class Art {
                     if (qd == null || qd[0] <= 0) continue;
                     boolean[] fr = framingOf(qd, -1);
                     if (fr != null && (fr[0] || fr[1])) continue;
-                    float dd = Math.abs(qd[1] / (float) qd[0] / ma - 1);
+                    float dd = Math.abs(Math.max(qd[1] / (float) qd[0], figureAspect(qd)) / ma - 1);
                     if (dd < bestD) { bestD = dd; best = q[2]; }
                 }
                 if (best == null) continue;
                 String[] nf = f.clone();
                 nf[3] = best;
                 views.set(i, nf);
-                art.notes.add("back picture of " + f[1] + ": " + best + ", as tall for its width as the front (" + f[3] + " was not)");
+                art.notes.add("back picture of " + f[1] + ": " + best + ", as tall for its width as the front (" + f[3] + " was not: ma=" + ma + " vd=" + vd[0] + "x" + vd[1] + " fig=" + figureAspect(vd) + " main=" + main.w + "x" + main.h + ")");
             } catch (RuntimeException ignored) { }
         }
         for (String[] f : views) {

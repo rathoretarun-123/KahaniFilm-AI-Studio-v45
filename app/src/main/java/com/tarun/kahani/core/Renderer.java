@@ -4071,7 +4071,9 @@ public final class Renderer {
     private Art.Sprite otsBack(Film.Actor fg, Film.Shot sh) {
         Art.Sprite sp = art.sprites.get(fg.c.id);
         Art.Sprite back = sp == null ? null : sp.view(2);
-        if (sp != null && sp.poses != null) {
+        // (v47.3: the user's own back picture — the view line — before a pose sheet's panel marked 180°, which for इस्माइल
+        // was a small front panel: the over-the-shoulder shots showed his blurred face instead of his back)
+        if (back == null && sp != null && sp.poses != null) {
             // v27: the user's own back picture (standing) before any made one
             Integer idx = sh.pictures.get(fg.c.id);
             Art.PoseSprite ps = idx != null && idx >= 0 && idx < sp.poses.size() ? sp.poses.get(idx) : null;
@@ -4086,6 +4088,7 @@ public final class Renderer {
         if (sh == null || sh.ots.length() == 0) return;
         Film.Actor fg = null, to = null;
         for (Film.Actor a : s.actors) { if (isNamed(a, sh.ots)) fg = a; if (isNamed(a, sh.subject)) to = a; }
+        if (POSE_DEBUG) System.err.println("OTS t=" + t + " ots=" + sh.ots + " subject=" + sh.subject + " fg=" + (fg == null ? "-" : fg.c.displayName) + " back=" + (fg == null ? "-" : otsBack(fg, sh) != null) + " back=" + (fg == null || otsBack(fg, sh) == null ? "-" : otsBack(fg, sh).w + "x" + otsBack(fg, sh).h + " userSide=" + otsBack(fg, sh).userSide) + " front=" + (fg == null || art.sprites.get(fg.c.id) == null ? "-" : art.sprites.get(fg.c.id).w + "x" + art.sprites.get(fg.c.id).h) + " notes=" + art.notes);
         if (fg == null) return;
         Art.Sprite back = otsBack(fg, sh);
         if (back == null) return;
