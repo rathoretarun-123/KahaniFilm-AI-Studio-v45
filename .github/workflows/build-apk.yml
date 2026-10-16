@@ -171,7 +171,7 @@ jobs:
           n=0
           for f in $(grep -l "<failure\|<error" tools/robotest/build/test-results/test/*.xml 2>/dev/null); do
             echo "::warning title=failing-results::$(basename "$f")"
-            sed 's/^ \{10\}//' <<'PY' | python3 - "$f" || true
+            python3 - "$f" <<'PY' || true
           import sys, xml.etree.ElementTree as ET
           try:
               t = ET.parse(sys.argv[1]).getroot()
