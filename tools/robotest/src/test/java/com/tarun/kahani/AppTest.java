@@ -3232,7 +3232,8 @@ public class AppTest {
         }
         assertTrue("the lion's eye white shows: " + white + " px", white >= 4);
         Doll3D.Result rr = Doll3D.make(ravana.look, 700, 7, 0, Pose.NEUTRAL, null);
-        assertTrue("a row of ten heads is wide: " + rr.w + "x" + rr.h, rr.w > rr.h * 1.3f);
+        // (v47.3: the row of ten heads is 1.16 of the height with the head radius the doll uses — wider than tall is the point)
+        assertTrue("a row of ten heads is wide: " + rr.w + "x" + rr.h, rr.w > rr.h * 1.1f);
         assertTrue("the face is the middle head's: eyes " + rr.eyeLX + "/" + rr.eyeRX, Math.abs(rr.eyeRX - rr.eyeLX) < 0.08f && rr.eyeLX > 0.3f && rr.eyeRX < 0.7f);
         Project p = Project.create(ctx);
         StringBuilder cast = new StringBuilder();

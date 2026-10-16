@@ -1441,7 +1441,7 @@ public final class Renderer {
         // v38: in an over-the-shoulder shot the speaker is the shoulder in the foreground — never also on the stage
         // beside the listener (the same person twice, the face half hidden behind the own shoulder)
         Film.Shot osh = shotAt(t);
-        if (osh != null && osh.ots.length() > 0 && osh.ots.equals(a.c.shown()) && otsBack(a, osh) != null) return;
+        if (osh != null && osh.ots.length() > 0 && isNamed(a, osh.ots) && otsBack(a, osh) != null) return;
         // Spider-Verse: a character animated on twos or threes holds each pose for 2-3 frames (the walk, the
         // gestures, the breathing); the place, the camera and the lip-sync stay on ones
         // (Spider-Verse: a scared run steps on twos even for an expert — the fear shows in the choppiness)
@@ -3925,7 +3925,7 @@ public final class Renderer {
 
     private boolean quarterWholeShot(Film.Actor a, Film.Seg s, Film.Shot sh) {
         float t0 = sh.t, t1 = sh.t + sh.dur;
-        if (sh.ots.length() > 0 && sh.ots.equals(a.c.shown())) return false;          // the shoulder in the foreground
+        if (sh.ots.length() > 0 && isNamed(a, sh.ots)) return false;          // the shoulder in the foreground
         for (Film.Line l : film.lines) if (l.who == a.c && l.start < t1 + 0.2f && l.start + l.dur > t0 - 0.2f) return false;
         for (Film.Act x : a.acts) if (x.t0 < t1 + 0.3f && x.t1 > t0 - 0.3f) return false;      // anything to do: the front picture does it
         float x0 = Director.xAt(a, t0);
@@ -4063,6 +4063,11 @@ public final class Renderer {
      * reaction is seen from the speaker's place in the conversation (the scene maker guide, ch. 7).
      */
     /** The back of the shoulder character of an over-the-shoulder shot: the user's own back picture, else the view made from the front; null when there is none. */
+    /** v47.3: a shot names a character by the name shown or by the script's name (इस्माइल चाचा / इस्माइल): either is them. */
+    private static boolean isNamed(Film.Actor a, String name) {
+        return a != null && a.c != null && name != null && name.length() > 0 && (name.equals(a.c.shown()) || name.equals(a.c.displayName));
+    }
+
     private Art.Sprite otsBack(Film.Actor fg, Film.Shot sh) {
         Art.Sprite sp = art.sprites.get(fg.c.id);
         Art.Sprite back = sp == null ? null : sp.view(2);
@@ -4080,7 +4085,7 @@ public final class Renderer {
         Film.Shot sh = shotAt(t);
         if (sh == null || sh.ots.length() == 0) return;
         Film.Actor fg = null, to = null;
-        for (Film.Actor a : s.actors) { if (a.c.shown().equals(sh.ots)) fg = a; if (a.c.shown().equals(sh.subject)) to = a; }
+        for (Film.Actor a : s.actors) { if (isNamed(a, sh.ots)) fg = a; if (isNamed(a, sh.subject)) to = a; }
         if (fg == null) return;
         Art.Sprite back = otsBack(fg, sh);
         if (back == null) return;
