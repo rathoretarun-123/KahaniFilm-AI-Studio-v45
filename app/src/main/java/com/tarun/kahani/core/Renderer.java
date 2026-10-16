@@ -4162,7 +4162,9 @@ public final class Renderer {
         final float cx = cx0, bottom = vh * 0.1f + h;
         final Object img = back.img;
         final float fw = w;
-        g.layerLow("ots:" + fg.c.id + ":" + (side > 0 ? "R" : "L"), vw, vh, 0.9f, new Gfx.Painter() {     // v47.3: 0.9 and a lighter blur — the foreground is soft, not smeared      // v47.2: 0.75 (was 0.60) — at 0.60 the back of the head blurred into something like a face
+        // (v47.5: one cached layer per shot — the layer is painted once and kept, so a key per side alone kept the first
+        // shot's shoulder where it was for every later one)
+        g.layerLow("ots:" + fg.c.id + ":" + (side > 0 ? "R" : "L") + ":" + Math.round(sh.t * 100), vw, vh, 0.9f, new Gfx.Painter() {     // v47.3: 0.9 and a lighter blur — the foreground is soft, not smeared      // v47.2: 0.75 (was 0.60) — at 0.60 the back of the head blurred into something like a face
             public void paint(Gfx gg) {
                 gg.image(img, cx - fw / 2, bottom - h, fw, h);
             }

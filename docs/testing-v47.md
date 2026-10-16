@@ -669,7 +669,8 @@ Rendered and read frame by frame (stand-in pictures, 24 fps), two more defects o
   standing at the knees; the profile stays.
 - **Over the shoulder**: the old man's ear and stick crossed the child's face in the over-the-shoulder shots. The
   foreground shoulder now goes further out wherever the camera has the listener near that side (a tenth of the frame
-  stays the shoulder's).
+  stays the shoulder's). Its blurred layer was cached once per side for the whole film, so every later
+  over-the-shoulder shot kept the first one's shoulder where it was; it is now painted once per shot.
 
 The other stories' staging was compared before and after (posture, seat and hands every half second, actions,
 effects): the three films and the sample story unchanged; of the older test stories, one changed for the better
