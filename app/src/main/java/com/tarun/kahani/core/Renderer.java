@@ -1435,9 +1435,16 @@ public final class Renderer {
     static final class Motion { float dx, dy, rot, sx = 1, sy = 1; }
     private final Motion mo = new Motion();
 
+    /** v47.3: an insert of the thing itself is a cut away from the people: while it is up, nobody is drawn under it. */
+    private boolean insertOn(Film.Seg s, float t) {
+        for (Film.Fx f : s.fx) if (f.type == Film.FX_SHOT && f.pic != null && f.pic.object && t >= f.t0 + 0.2f && t <= f.t1 - 0.2f) return true;
+        return false;
+    }
+
     private void drawActor(Gfx g, Film.Seg s, Film.Actor a, float t) {
         Film.Key k = a.stateAt(t);
         if (!k.visible) return;
+        if (insertOn(s, t)) return;      // v47.3: the insert shows the thing, not the people with a thing hanging between them
         // v38: in an over-the-shoulder shot the speaker is the shoulder in the foreground — never also on the stage
         // beside the listener (the same person twice, the face half hidden behind the own shoulder)
         Film.Shot osh = shotAt(t);
@@ -5329,7 +5336,7 @@ public final class Renderer {
                 if (f.pic.object) {
                     // an insert of the important object: the place darkens and the thing itself comes up in the
                     // middle, a little larger as it settles, with a soft shadow under it
-                    g.color(Puppet.alpha(0xFF000000, 0.5f));
+                    g.color(Puppet.alpha(0xFF000000, 0.62f));     // v47.3: 0.62 (was 0.5): the auto-exposure lifts a darkened frame back
                     g.rect(0, 0, vw, vh);
                     float grow = 0.92f + 0.08f * Math.min(1, u / 0.5f);
                     float ih = vh * 0.6f * grow, iw = ih * f.pic.w / Math.max(1, f.pic.h);
