@@ -11,6 +11,7 @@ push; download the **KahaniFilm-v47-apk** artifact from the latest green run und
 
 ## New in v47.4 (16 October 2026, morning)
 
+- **Direct APK link:** every CI build of this branch publishes the APK to the `apk` branch: <https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/raw/apk/KahaniFilm.apk> (the commit it was built from is named in `README.md` there). Source of the branch: <https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/archive/refs/heads/ccr-a5fc4eef-d2p2nm.zip>.
 - **Things in hands, never floating in:** a thing's picture is no longer an insert over the frame. The sentence stages it — taken out of a bag at the hip or a box beside (it rises out of it in the hand), held in the picture's own hand, held out and taken by the other, lying in its place from the start of the part, put down at the feet; carried from part to part. Prop sheets with coloured grounds and a thin frame key cleanly (the black shoe keeps its black). Details: `docs/testing-v47.md` §6.8.
 - The seated-shape rule of v47.3 asks for a real figure, not a panel (CI's two red tests). The user's reference animations for daily activities and natural phenomena are kept in `docs/reference/`.
 

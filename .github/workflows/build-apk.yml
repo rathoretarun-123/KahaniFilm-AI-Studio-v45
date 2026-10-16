@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: read
+  contents: write    # the apk branch (the direct download link)
 
 jobs:
   build:
@@ -109,6 +109,29 @@ jobs:
           name: KahaniFilm-debug-apk
           path: release/KahaniFilm.apk
           if-no-files-found: error
+
+      # The user installs from the phone: a raw file on a branch downloads directly (an artifact is a zip behind a login).
+      # https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/raw/apk/KahaniFilm.apk is always the latest build of
+      # this branch; the commit it came from is in the file name beside it and in README.md there.
+      - name: Publish the APK to the apk branch (direct download link)
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          d=$(mktemp -d)
+          cp release/KahaniFilm-v47.apk "$d/KahaniFilm.apk"
+          cp release/KahaniFilm-v47.apk "$d/KahaniFilm-${GITHUB_SHA::7}.apk"
+          cd "$d"
+          git init -q -b apk
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          printf 'KahaniFilm APK built by CI from commit %s on %s (%s).\n\nDirect download: https://github.com/%s/raw/apk/KahaniFilm.apk\nSource of this build: https://github.com/%s/archive/%s.zip\n' "$GITHUB_SHA" "$GITHUB_REF_NAME" "$(date -u +%Y-%m-%dT%H:%MZ)" "$GITHUB_REPOSITORY" "$GITHUB_REPOSITORY" "$GITHUB_SHA" > README.md
+          git add .
+          git commit -q -m "APK built from $GITHUB_SHA"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" apk:apk
+          echo "published: https://github.com/${GITHUB_REPOSITORY}/raw/apk/KahaniFilm.apk"
 
 
       - name: Set up Java 21 for production-plan regression tests
