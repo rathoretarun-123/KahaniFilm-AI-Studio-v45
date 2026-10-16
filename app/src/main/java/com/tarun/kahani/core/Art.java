@@ -926,7 +926,9 @@ public final class Art {
             int w = d[0], h = d[1];
             int[] px = new int[w * h];
             System.arraycopy(d, 2, px, 0, px.length);
-            for (int c : px) if ((c >>> 24) < 250) return;                  // already a cut-out: leave it
+            boolean cut = false;
+            for (int c : px) if ((c >>> 24) < 250) { cut = true; break; }
+            if (cut) { cropToThing(L, b, px, w, h); return; }                 // already a cut-out: only its margins go
             int[] corners = {px[0], px[w - 1], px[(h - 1) * w], px[h * w - 1]};
             int bg = corners[0];
             for (int c : corners) if (Cutout.dist(c, bg) > 40) return;      // not a plain background: not ours to key
@@ -943,10 +945,26 @@ public final class Art {
                 if (a < 1) { px[i] = (Math.round(a * 255) << 24) | (c & 0xFFFFFF); if (a == 0) keyed++; }
             }
             if (keyed < px.length / 20) return;                                // hardly any background: leave the picture whole
-            b.img = L.create(px, w, h);
-            b.w = w; b.h = h;
+            cropToThing(L, b, px, w, h);
         } catch (RuntimeException ignored) {
         }
+    }
+
+    /**
+     * v47.3: the insert shows the thing itself, so the picture is cut to the thing's own bounds (a 4% margin): a notebook
+     * in the middle of a square canvas came up at half the size the insert meant for it.
+     */
+    static void cropToThing(Loader L, Backdrop b, int[] px, int w, int h) {
+        int x0 = w, x1 = -1, y0 = h, y1 = -1;
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) if ((px[y * w + x] >>> 24) >= 24) { if (x < x0) x0 = x; if (x > x1) x1 = x; if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        if (x1 <= x0 + 8 || y1 <= y0 + 8) { b.img = L.create(px, w, h); b.w = w; b.h = h; return; }
+        int mx = Math.round((x1 - x0) * 0.04f) + 2, my = Math.round((y1 - y0) * 0.04f) + 2;
+        x0 = Math.max(0, x0 - mx); x1 = Math.min(w - 1, x1 + mx); y0 = Math.max(0, y0 - my); y1 = Math.min(h - 1, y1 + my);
+        int cw = x1 - x0 + 1, ch = y1 - y0 + 1;
+        int[] out = new int[cw * ch];
+        for (int y = 0; y < ch; y++) System.arraycopy(px, (y0 + y) * w + x0, out, y * cw, cw);
+        b.img = L.create(out, cw, ch);
+        b.w = cw; b.h = ch;
     }
 
     /**
