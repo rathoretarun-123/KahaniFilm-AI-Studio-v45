@@ -301,7 +301,9 @@ public final class Film {
         /** v47.4: from when they carry a bag at the hip (1) or have a box on the ground beside them (2) — something was taken out of it; -1: none. */
         public float bagFrom = -1;
         public int bagKind;
-        public boolean umbrellaAt(Look lk, float t) { return (lk != null && lk.umbrella) || (umbrellaFrom >= 0 && t >= umbrellaFrom - 1e-3f); }
+        /** v47.4: when it is put aside (leaned against the post, closed, hung up); 1e6: never. */
+        public float umbrellaUntil = 1e6f;
+        public boolean umbrellaAt(Look lk, float t) { return t < umbrellaUntil && ((lk != null && lk.umbrella) || (umbrellaFrom >= 0 && t >= umbrellaFrom - 1e-3f)); }
         /** Spider-Verse: the frame rate this character's poses step on (24 experts, 12 learners, 8 rebels; 0 = smooth, every frame). */
         public int stepFps;
         /**

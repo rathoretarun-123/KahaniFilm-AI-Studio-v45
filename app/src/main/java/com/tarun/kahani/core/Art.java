@@ -479,11 +479,12 @@ public final class Art {
         int w = d[0], h = d[1];
         int[] px = new int[w * h];
         System.arraycopy(d, 2, px, 0, w * h);
-        trimSlivers(px, w, h);          // v47.4: the next panel's ground left along an edge by a sheet's split (a purple band under the cobbler's feet)
+        if (Cutout.hasAlpha(px)) trimSlivers(px, w, h);     // v47.4: on a cut-out only — the next panel's ground left along an edge by a sheet's split, the painted floor under the feet (a picture with its background is cut out first; clearing its white edges made it pass for a cut-out)
         // v47: humans (not animals) get hole-filling — the background between the legs would otherwise bleed through as
         // a bright strip (the user saw a white line between बाबू's legs). Animals keep hands-off because their silhouettes
         // can have real interior holes
         Cutout.Result r = Cutout.process(px, w, h, !animal);
+        if (r != null && r.px != null && r.w > 8 && r.h > 8) trimSlivers(r.px, r.w, r.h);       // (and after the cut, for a picture that came with its background)
         r.pxRead = null;                                         // v34: the readings are done; the film draws the picture as it is
         Sprite s = new Sprite();
         s.w = r.w; s.h = r.h;

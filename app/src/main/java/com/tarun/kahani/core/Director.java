@@ -4077,8 +4077,11 @@ public final class Director {
             // "देता है" gives only to someone ("बिल्ली को दूध देता है"); "रख देता है", "दिखाई देता है" are other verbs
             if (kind == EV_GIVE && (Txt.has(w, "दिखाई", "सुनाई", "ध्यान", "जवाब", "धोखा", "रख दे", "छोड़ दे", "फेंक दे", "हटा दे", "खोल दे", "बंद कर दे", "बता दे", "दिखा दे")
                     || (!Txt.has(w, " को ", "gives", "hands", "offers", "तोहफ़ा", "तोहफा", "उपहार", "गिफ्ट", "थमा", "सौंप") && target == null))) continue;
-            // an umbrella put away is not opened
-            if (kind == EV_UMBRELLA && Txt.has(w, "बंद", "समेट", "close", "fold", "puts away", "put away")) continue;
+            // an umbrella put away is not opened — and the one carried so far goes (v47.4: leaned against the post, hung up, set down)
+            if (kind == EV_UMBRELLA && Txt.has(w, "बंद", "समेट", "टिका", "टाँग", "टांग", "रख", "close", "fold", "puts away", "put away", "leans", "hangs", "sets down", "puts down")) {
+                for (Film.Actor a : who) if (a.umbrellaAt(a.look, t) && a.umbrellaUntil > 1e5f) { a.umbrellaUntil = t + 0.3f; film.notes.add("  ↳ the umbrella is put aside by " + a.c.shown() + String.format(java.util.Locale.US, " at %.1f s", t)); }
+                continue;
+            }
             row = r;
             break;
         }

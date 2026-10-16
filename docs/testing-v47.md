@@ -380,3 +380,9 @@ not). The keying of thing pictures floods from every border colour (the frame, t
 character whose own picture carries a bag (the girl's pink backpack) takes the letter out of that, with nothing drawn for it.
 The APK is published by CI to the `apk` branch for a direct download (README).
 
+Third pass (10:45 IST): the umbrella is put aside when the script says so ("वह छाते को बाँस से टिकाती है": `Film.Actor.umbrellaUntil`,
+folded over half a second) — it had stayed open over मीरा for the rest of चाय; the dome is held over a taller neighbour only
+when they stand right under it and never more than a quarter of her height up (it floated away from her). The edge-sliver
+trim runs on cut-outs only (a picture with its white background had its edges cleared first and then passed for a cut-out:
+every चाय character came up on a white panel for one probe). CI on 98d17b7: green; the pure-JVM suite: 40 tests pass.
+
