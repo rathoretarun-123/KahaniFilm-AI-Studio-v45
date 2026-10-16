@@ -3585,7 +3585,7 @@ public final class Director {
                 if (src == 0) src = seated && (k.seat == Film.SEAT_FLOOR || Txt.has(win, "बक्स", "डिब्बे", "box", "trunk", "chest")) ? 2 : 1;
                 // their own bag, the one in their picture ("गुलाबी बैग खोलती है … पत्र निकालती है"): nothing drawn for it, the thing comes up from the hip
                 if (src == 1 && Txt.has(n + " " + before, "बैग", "बस्त", "थैल", "झोल", "जेब", "bag", "pocket", "satchel")) src = 5;
-                if (who.bagFrom < 0 || src >= 3) { who.bagFrom = src >= 3 ? t : seg.t0; who.bagKind = src; }
+                if (who.bagFrom < 0 || src >= 3) { who.bagFrom = src == 3 || src == 4 ? t : seg.t0; who.bagKind = src; }     // (their own bag and the drawn ones are there from the start)
                 who.acts.add(new Film.Act(t, t + 1.4f, Film.G_REACH));
                 film.notes.add("  ↳ " + key + ": taken out of " + (src == 4 ? "the box held out to " : src == 3 ? "the box beside " : src == 2 ? "the box on the floor beside " : src == 5 ? "their own bag by " : "the bag of ") + who.c.shown() + String.format(java.util.Locale.US, ", in the hand from %.1f s on", t));
             } else film.notes.add("  ↳ " + key + ": " + (kind == Film.THING_GIVE ? "held out by " : "in the hand of ") + who.c.shown() + String.format(java.util.Locale.US, " from %.1f s", t));
