@@ -24,7 +24,7 @@ public final class FilmLook {
         /** v47.2: how far the auto-exposure may lift a dark frame's mid tones (0.25 by day; a night keeps its dark). */
         public float maxLift = 0.25f;
         /** v47.3: the mean light (0..1, before the finish) the auto-exposure lifts a frame towards — 0.30, or the user's reference frames'. */
-        public float target = 0.30f;
+        public float target = 0.34f;
         public Params set(Params o) { warmth = o.warmth; saturation = o.saturation; contrast = o.contrast; bloom = o.bloom; green = o.green; maxLift = o.maxLift; target = o.target; return this; }
     }
 
@@ -70,7 +70,7 @@ public final class FilmLook {
         this.small = new int[sw * sh];
         this.lumRing = new int[w * 5];
         this.blurRing = new int[w * 5];
-        this.sharpen = Math.round(256 * Math.max(0.95f, Math.min(1.75f, 0.95f + h / 1080f * 0.80f)));      // v47.3: 0.95..1.75 — the user's reference clips are crisper still      // v47.1: 0.70..1.40 (was 0.45..1.00): the user said blur is still too much, push sharpening further
+        this.sharpen = Math.round(256 * Math.max(1.1f, Math.min(1.9f, 1.1f + h / 1080f * 0.80f)));      // v47.4: 1.1..1.9 — "make sharper, as the uploaded pictures"      // v47.3: 0.95..1.75 — the user's reference clips are crisper still      // v47.1: 0.70..1.40 (was 0.45..1.00): the user said blur is still too much, push sharpening further
     }
 
     /** Row y of the frame as it is now (before it is finished): its light, and its light blurred across (1 4 6 4 1). */
@@ -100,10 +100,10 @@ public final class FilmLook {
         PixarLead.colorScript(s.set, s.tod, s.mood, s.act, out);
         if (s.festive) { out.saturation += 0.04f; out.bloom += 0.05f; }
         out.warmth = Math.max(-0.5f, Math.min(0.45f, out.warmth));
-        out.maxLift = s.tod == Sets.NIGHT ? 0.06f : s.tod == Sets.EVENING ? 0.14f : 0.25f;
+        out.maxLift = s.tod == Sets.NIGHT ? 0.12f : s.tod == Sets.EVENING ? 0.2f : 0.28f;     // v47.4: the user: "why so dark" — a night lifts twice as far, an evening further
         // v47.3: the user's reference frames set the light the film is lifted towards (within reason: 0.26..0.42);
         // a night still keeps its dark through maxLift
-        out.target = referenceLuma > 0 ? Math.max(0.26f, Math.min(0.42f, referenceLuma)) : 0.30f;
+        out.target = referenceLuma > 0 ? Math.max(0.28f, Math.min(0.44f, referenceLuma)) : 0.34f;     // v47.4: 0.34 (was 0.30)
         return out;
     }
 

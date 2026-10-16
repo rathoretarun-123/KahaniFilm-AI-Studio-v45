@@ -426,3 +426,9 @@ up-to-18 rule holds for each. Before a film is made the director lists what it s
 words). The same list with its upload buttons stays on the progress screen while the film is made (used from the next
 make), with the pause button beside it.
 
+The phone (12:30 IST): "why is this picture so dark, make it sharper, as the uploaded pictures." The sheet the user saw was
+the scan's flagged frames — the fades into and out of the title and end cards, dark by design. The film itself was already
+brighter than the uploaded night lane (luma 88 against 51) but is lifted further: the auto-exposure target 0.34 (was 0.30),
+a night may lift twice as far (0.12) and an evening to 0.2, and the unsharp mask runs 1.1..1.9 (was 0.95..1.75). Measured on
+जोड़ी 34–36 s at 640 wide: luma 85–87 → 92–95, edge energy 30.6–31.6 → 32.6–33.8. 40 frames per second is the default.
+
