@@ -94,7 +94,7 @@ public final class Project {
     public File file(String name) { return new File(dir, name); }
 
     // ---- v47.3: reference frames and clips for the film (the look the user wants), apart from the story's pictures
-    public static final int MAX_REF_FRAMES = 4, MAX_REF_VIDEOS = 2;    // v47.4: four frames (the user), two clips
+    public static final int MAX_REF_FRAMES = 18, MAX_REF_VIDEOS = 2;    // v47.4: 18 frames like every other upload (the user), two clips
     /** Up to five full frames (characters, props and background together) and two clips, kept under refs/. */
     public File refsDir() { File d = new File(dir, "refs"); if (!d.exists()) d.mkdirs(); return d; }
     private List<File> refs(String prefix) {

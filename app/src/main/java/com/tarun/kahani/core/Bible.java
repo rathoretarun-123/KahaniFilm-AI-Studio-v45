@@ -238,6 +238,18 @@ public final class Bible {
     }
 
     /** Distinct places: the script's place list, then each scene's setting. */
+    /**
+     * v47.4 (the user): the places and backgrounds the script lists before the story begins — only those are asked for;
+     * a script with no such list falls back to the places its scenes are set in.
+     */
+    public static List<String[]> listedPlaces(Story st) {
+        if (st.places.isEmpty()) return places(st);
+        List<String[]> out = new ArrayList<String[]>();
+        Set<String> seen = new LinkedHashSet<String>();
+        for (Story.PlaceDef p : st.places) if (p.name.length() > 0 && !intangible(p.name) && seen.add(Txt.norm(p.name))) out.add(new String[]{p.name, p.description});
+        return out;
+    }
+
     public static List<String[]> places(Story st) {
         List<String[]> out = new ArrayList<String[]>();
         Set<String> seen = new LinkedHashSet<String>();

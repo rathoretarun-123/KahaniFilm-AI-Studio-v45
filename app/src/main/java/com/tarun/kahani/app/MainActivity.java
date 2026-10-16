@@ -982,11 +982,6 @@ public class MainActivity extends Activity {
             String status = file == null ? "▫ no background" : file.startsWith("3d_") ? "🧊 made in 3D" : np > 1 ? "✅ your pictures (" + np + ")" : "✅ background";
             pictureRow(card, "Part " + sc.number + ": " + nm, status, file, "angles:scene:" + sc.number + ":" + nm);
         }
-        for (final com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
-            String line = project.manifestLine("scene", x.key);
-            String file = line == null ? null : line.split("\\|")[2];
-            pictureRow(card, "🎬 " + x.label, file == null ? "▫ none (the place itself is shown)" : "✅ picture", file, "angles:scene:" + x.key + ":" + x.label);
-        }
         body.addView(card);
     }
 
@@ -1032,7 +1027,7 @@ public class MainActivity extends Activity {
         LinearLayout btns = Ui.row(this);
         btns.addView(Ui.small(this, "🖼 Add reference frame (" + frames.size() + "/" + Project.MAX_REF_FRAMES + ")", frames.size() < Project.MAX_REF_FRAMES ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) {
-                if (project.refFrames().size() >= Project.MAX_REF_FRAMES) { toast("Four reference frames are already here — remove one first"); return; }
+                if (project.refFrames().size() >= Project.MAX_REF_FRAMES) { toast(Project.MAX_REF_FRAMES + " reference frames are already here — remove one first"); return; }
                 pick("image/*", REQ_REF_FRAME, true);
             }
         }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
@@ -1388,15 +1383,11 @@ public class MainActivity extends Activity {
             public void onClick(View v) { showLines(); }
         }));
         body.addView(sum);
-        body.addView(referenceCard());
 
-        // ---- title and end pages
-        heading(body, "Start and end");
-        body.addView(pageCard("Title page", "title"));
-        body.addView(pageCard(st.hindi ? "End page (समाप्त)" : "End page (The End)", "end"));
-
+        // ---- v47.4 (the user): first the characters, then the objects, then the places and backgrounds, then the
+        // reference images and clips of the story — nothing else asked for
         // ---- characters
-        heading(body, "Characters (pictures and voices)");
+        heading(body, "1. Characters (pictures and voices)");
         for (Story.CharacterDef c : st.cast()) body.addView(characterCard(st, c));
         for (final Story.CharacterDef c : st.characters) {
             if (!c.voiceOnly) continue;
@@ -1418,11 +1409,17 @@ public class MainActivity extends Activity {
         if (st.hasNarrator) body.addView(narratorCard());
 
         // ---- parts of the story
-        heading(body, "Things (pictures of the story's objects)");
+        heading(body, "2. Objects (the things the script lists)");
         body.addView(objectsCard(st));
-        heading(body, "Places (backgrounds and sounds)");
+        heading(body, "3. Places and backgrounds");
         SoundLib sl = library.soundLib();
         for (Story.Scene sc : st.scenes) body.addView(sceneCard(sc, sl));
+        heading(body, "4. Reference images and videos of the story (optional)");
+        body.addView(referenceCard());
+        // (the title and end pages are made by the studio from the story; a picture of your own can still be given)
+        heading(body, "Title and end pages (optional — the studio makes them)");
+        body.addView(pageCard("Title page", "title"));
+        body.addView(pageCard(st.hindi ? "End page (समाप्त)" : "End page (The End)", "end"));
 
         // ---- director plan
         LinearLayout plan = Ui.card(this);
@@ -3313,7 +3310,7 @@ public class MainActivity extends Activity {
     private List<String[]> pictureTargets(Story st) {
         List<String[]> t = new ArrayList<String[]>();
         for (Story.CharacterDef c : st.characters) t.add(new String[]{"char:" + keyFor(c), c.shown(), c.description});
-        for (String[] p : Bible.places(st)) t.add(new String[]{"place:" + p[0], st.shown(p[0]), p[1]});
+        for (String[] p : Bible.listedPlaces(st)) t.add(new String[]{"place:" + p[0], st.shown(p[0]), p[1]});
         // v47.4: the things the script lists are targets too (a library prop picture was never placed on one)
         for (Story.PlaceDef th : st.things) if (th.name != null && th.name.trim().length() > 0 && !Bible.intangible(th.name)) t.add(new String[]{"thing:" + th.name.trim(), th.name.trim(), th.description == null ? "" : th.description});
         t.add(new String[]{"title", "Title page", "title picture / movie poster of " + st.title + ", main characters together"});
@@ -3364,7 +3361,9 @@ public class MainActivity extends Activity {
             }
         }
         library.save();
-        int[] best = com.tarun.kahani.core.PicSense.assign(score, 0.12f);
+        // v47.4 (the user: "it is not able to identify correct pictures from library"): a picture is placed only where the
+        // match is likely (its name, the AI, or a strong reading of the picture); a weak guess is left for "Change"
+        int[] best = com.tarun.kahani.core.PicSense.assign(score, 0.45f);
         for (int i = 0; i < ps.size(); i++) {
             Placement p = ps.get(i);
             if (best[i] >= 0) { p.target = targets.get(best[i])[0]; p.label = targets.get(best[i])[1]; p.score = score[i][best[i]]; }

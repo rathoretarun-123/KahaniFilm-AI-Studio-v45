@@ -80,20 +80,7 @@ final class AutoLibrary {
         try { Studio3DArt.reframe(project); } catch (Throwable ignored) { }       // v39: earlier uploads read again (seated, half-length)
         List<String[]> t = missingTargets(project, st);
         String cast = project.read("cast.txt");
-        for (Story.CharacterDef c : st.cast()) for (int i = 0; i < c.costumes.size(); i++) {
-            String key = SheetSaver.charKey(project, st, c, c.displayName) + "#" + (i + 1);
-            if (cast.contains("costume|" + key + "|") || hasCostume(cast, st, c, i + 1)) continue;
-            Story.Costume co = c.costumes.get(i);
-            t.add(new String[]{"costume:" + key, c.shown() + " — a new look (scene " + co.scene + "): " + co.label(), co.text});
-        }
-        // v35: one who sits or lies down in the story is asked (optionally) for a picture of it — a standing photo can
-        // only be lowered onto the seat; the film never waits for these
-        for (com.tarun.kahani.core.Director.PoseNeed n : com.tarun.kahani.core.Director.poseNeeds(st)) {
-            if (!hasLine(cast, st, n.c, "char") || hasPose(cast, st, n.c, n.pose)) continue;
-            String key = SheetSaver.charKey(project, st, n.c, n.c.displayName);
-            t.add(new String[]{"pose:" + key + ":" + com.tarun.kahani.core.PoseSense.poseName(n.pose),
-                    n.c.shown() + " — " + (n.pose == com.tarun.kahani.core.PoseSense.SIT ? "a picture sitting" : "a picture lying down") + " (scene " + n.scene + ")", n.c.description});
-        }
+        // v47.4 (the user): only what the script lists before the story — no change-of-clothes or sitting/lying requests
         return t;
     }
 
@@ -147,7 +134,7 @@ final class AutoLibrary {
         }
         List<String[]> t = new ArrayList<String[]>();
         for (Story.CharacterDef c : st.cast()) if (!haveChar.contains(c)) t.add(new String[]{"char:" + c.displayName, c.shown(), c.description});
-        for (String[] p : Bible.places(st)) {
+        for (String[] p : Bible.listedPlaces(st)) {
             boolean needed = false;
             for (Story.Scene sc : st.scenes) if (placeOf(sc, p[0]) && !haveScene.contains(String.valueOf(sc.number))) needed = true;
             if (needed) t.add(new String[]{"place:" + p[0], st.shown(p[0]), p[1]});
@@ -175,22 +162,8 @@ final class AutoLibrary {
             if (have) continue;
             t.add(new String[]{"shot:0:" + nm, nm + " (a thing of the story)", "the " + nm + (th.description.length() > 0 ? ": " + Bible.oneLine(th.description) : "")});
         }
-        for (Story.Scene sc : st.scenes) {
-            for (Story.Beat bt : sc.beats) {
-                if (bt.type != Story.Beat.DIRECTION) continue;          // what is done, not what is said
-                for (String o : ShotBook.OBJECTS) {
-                    // v43: the whole word only ("key" is not in "monkey", "ring" not in "bring", "फल" not in "सफल")
-                    if (!com.tarun.kahani.core.Director.term(bt.text, o) || names.contains(Txt.norm(o)) || objSeen.contains("*:" + Txt.norm(o))) continue;
-                    // (an hour, a defeat, a name — not the bell, the necklace, the lamp)
-                    if (o.equals("हार") && Txt.has(bt.text, "हार गय", "हार जा", "हार मान", "हार ग")) continue;
-                    if (o.equals("घंटा") && Txt.has(bt.text, "एक घंटा", "घंटा भर", "घंटे ", "घंटों")) continue;
-                    if (haveShot.contains(sc.number + ":" + o) || haveShot.contains(":" + o) || haveShot.contains("0:" + o) || !objSeen.add(sc.number + ":" + o)) continue;   // v34: a picture of the thing itself covers every scene
-                    t.add(new String[]{"shot:" + sc.number + ":" + o, o + " (scene " + sc.number + ")", "close-up insert shot of the " + o + ": " + Bible.oneLine(bt.text)});
-                }
-            }
-        }
-        if (!title) t.add(new String[]{"title", "Title page", "title picture / movie poster of " + st.title});
-        if (!end) t.add(new String[]{"end", "End page", "ending picture, calm landscape, sunset, the end"});
+        // v47.4 (the user): no insert shots of things the action mentions — only the things the script lists are asked for
+        // (v47.4: the title and end pages are made by the studio; they are not asked for)
         return t;
     }
 

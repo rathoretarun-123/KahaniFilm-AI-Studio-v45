@@ -2733,7 +2733,7 @@ public class AppTest {
         List<String> rows = texts(card, new ArrayList<String>());
         int more = 0;
         for (String t : rows) if (t.equals("📷 More") || t.equals("📷 Add")) more++;
-        int want = st.cast().size() + st.scenes.size() + com.tarun.kahani.core.ScenePlan.extras(st).size() + ts.size();
+        int want = st.cast().size() + st.scenes.size() + ts.size();      // v47.4 (the user): no rows for extra shots
         assertTrue("a row with its button for everything: " + more + " of " + want, more == want);
         // 7. the make-film popup lists every character, place, added scene and thing
         call(a, "makeFilm", new Class<?>[0]);
@@ -3396,18 +3396,12 @@ public class AppTest {
         assertNotNull(first); assertNotNull(after);
         assertTrue("in her own clothes first", ma.stateAt(first.start + 0.1f).costume == 0);
         assertTrue("in the red frock after the change", ma.stateAt(after.start + 0.1f).costume == 1);
-        // the user is asked for a picture of the new clothes; once given, it is the one drawn
+        // v47.4 (the user): only the characters, objects, places and backgrounds the script lists are asked for — the change
+        // of clothes is recoloured from her own picture, no picture of it is asked for; one given is still used
         List<String[]> asked = (List<String[]>) call("com.tarun.kahani.app.AutoLibrary", "missingForUser", p, cs);
-        String costumeTarget = null;
-        for (String[] t : asked) if (t[0].startsWith("costume:")) costumeTarget = t[0];
-        assertNotNull("a picture of the change of clothes is asked for", costumeTarget);
+        for (String[] t : asked) assertTrue("no change-of-clothes request: " + t[0], !t[0].startsWith("costume:"));
         com.tarun.kahani.app.Library lib = com.tarun.kahani.app.Library.get(ctx);
         File sheet = new File(userSheets()[0].getParentFile(), "sheet15.jpg");
-        List<byte[]> one = new ArrayList<byte[]>(); one.add(Files.readAllBytes(sheet.toPath()));
-        call("com.tarun.kahani.app.SheetSaver", "save", p, lib, cs, "angles:" + costumeTarget.replaceFirst("^costume:", "costume:") + ":Maya in a red frock", one, null);
-        assertTrue("the costume line is saved: " + p.read("cast.txt"), p.read("cast.txt").contains("costume|" + costumeTarget.substring(8) + "|"));
-        asked = (List<String[]>) call("com.tarun.kahani.app.AutoLibrary", "missingForUser", p, cs);
-        for (String[] t : asked) assertTrue("no longer asked: " + t[0] + " in " + p.read("cast.txt"), !t[0].equals(costumeTarget));
 
         // 4. the style of the user's uploaded pictures reaches the 3D maker even for a story with no picture yet
         Project empty = Project.create(ctx);
@@ -4080,12 +4074,9 @@ public class AppTest {
             if (t[0].contains("दादी")) dadi = true;
         }
         System.out.println("ASKED v35:\n" + all);
-        assertTrue("a picture of Anu lying, of Anu and Papa sitting is asked for:\n" + all, anuLie && anuSit && papaSit);
-        assertTrue("not for Dadi, who has no picture at all yet (her own picture is asked for first)", !dadi);
-        // once a sitting picture of Papa is given, it is no longer asked for
-        p.write("cast.txt", p.read("cast.txt") + "pose|पापा|pose_1.jpg|0|" + com.tarun.kahani.core.PoseSense.SIT + "|0|0.7|0.5|0.3|0.05|0.4|0.2|0.6|0.2|0.04\n");
-        asked = (List<String[]>) call("com.tarun.kahani.app.AutoLibrary", "missingForUser", p, st);
-        for (String[] t : asked) assertTrue("no longer asked: " + t[0], !(t[0].startsWith("pose:पापा:") && t[0].endsWith("sitting")));
+        // v47.4 (the user): only what the script lists is asked for — no sitting or lying requests (the film lowers the
+        // standing picture onto the seat, and a pose picture the user gives is still used)
+        assertTrue("no sitting or lying request:\n" + all, !anuLie && !anuSit && !papaSit && !dadi);
         // the film never waits for these (the make-film check lists characters and places only)
         for (String[] t : (List<String[]>) call("com.tarun.kahani.app.AutoLibrary", "missingTargets", p, st)) assertTrue(!t[0].startsWith("pose:"));
     }

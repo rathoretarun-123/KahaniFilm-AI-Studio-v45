@@ -598,3 +598,20 @@ Suite OK (40 tests).
   ChatGPT answered in 3 ms (had waited 4 s); a picture question went to ChatGPT the same way. The voices stay Gemini's
   (ChatGPT has none of that kind); without Gemini the built-in voices speak.
 Suite OK (40 tests); the app package compiles.
+
+### 6.15 The studio asks only for what the script lists (17:40 IST)
+
+The user: "the app is asking for photo of sky, wind, shots and object and props not even mentioned in the script; it should
+only ask for characters, objects and places and backgrounds which are mentioned before the story begins … first
+characters, then objects, then places and backgrounds and reference images and video … every upload 18 images … remove
+extra things … it is not able to identify correct pictures from library."
+- **Asked for**: the characters, the objects and the places/backgrounds of the script's own lists (Bible.listedPlaces;
+  the places its scenes are set in only when the script has no place list). No longer asked: things spotted in the
+  action (insert shots), the title and end pages, a change of clothes, sitting/lying pictures, extra shot rows. Pictures
+  the user gives for any of these are still used.
+- **The studio page** in order: 1. Characters, 2. Objects, 3. Places and backgrounds, 4. Reference images and videos of
+  the story; the title and end pages last, marked optional (the studio makes them).
+- **18 pictures** for every upload, the reference frames too (was 4); two reference clips.
+- **Library matching**: a library picture is placed only where the match is likely (its name, the AI, or a strong
+  reading of the picture: 0.45, was 0.12); a weaker guess is left unplaced for the user's "Change".
+- AppTest updated to the new rule (no costume, pose or extra-shot requests; the progress card's row count).
