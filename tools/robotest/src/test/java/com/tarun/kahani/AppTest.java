@@ -358,13 +358,23 @@ public class AppTest {
         // a weak colour guess is no longer placed on its own — it waits for "Change"; a placed one is a likely match
         Field sf = pc.getDeclaredField("score"); sf.setAccessible(true);
         for (Object pl : ps) if (tf.get(pl) != null) assertTrue("placed only when likely: " + sf.get(pl), ((Float) sf.get(pl)) >= 0.45f);
-        if (placed == 0) {
-            // the user taps Change and picks the top choice offered for each picture
+        int charsPlaced = 0;
+        for (Object pl : ps) if (tf.get(pl) != null && String.valueOf(tf.get(pl)).startsWith("char:")) charsPlaced++;
+        if (charsPlaced == 0) {
+            // the user taps Change and picks the top character offered for each picture still unplaced
+            // (a confident place, like the forest, stays where the director put it)
             java.util.Set<String> taken = new java.util.HashSet<String>();
-            for (Object pl : ps) for (Object o : (List<?>) of.get(pl)) {
+            for (Object pl : ps) if (tf.get(pl) == null) for (Object o : (List<?>) of.get(pl)) {
                 String[] op = (String[]) o;
                 if (!op[0].startsWith("char:") || !taken.add(op[0])) continue;
-                tf.set(pl, op[0]); lf.set(pl, op[1]); placed++; break;
+                tf.set(pl, op[0]); lf.set(pl, op[1]); placed++; charsPlaced++; break;
+            }
+            // (every picture placed as a place: the user changes the first to its top character)
+            if (charsPlaced == 0) for (Object o : (List<?>) of.get(ps.get(0))) {
+                String[] op = (String[]) o;
+                if (!op[0].startsWith("char:")) continue;
+                if (tf.get(ps.get(0)) == null) placed++;
+                tf.set(ps.get(0), op[0]); lf.set(ps.get(0), op[1]); charsPlaced++; break;
             }
         }
         assertTrue(placed >= 1);

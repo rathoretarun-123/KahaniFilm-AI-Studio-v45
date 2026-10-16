@@ -3737,6 +3737,9 @@ public final class Renderer {
                 if (o == a) continue;
                 Film.Key ok = o.stateAt(t);
                 if (!ok.visible || ok.body == Pose.SIT || ok.body == Pose.LIE) continue;
+                // v47.5: one walking past (behind the seated one, on the way somewhere) is no one standing at the knees: the
+                // profile stays — the swap showed the front picture unfolded, standing at the bench, for half a second
+                if (Math.abs(Director.xAt(o, t + 0.25f) - Director.xAt(o, t - 0.25f)) > 0.08f * hh) continue;
                 float dx = Director.xAt(o, t) - ax;
                 if (Math.abs(dx) < 0.32f * hh && Math.signum(dx) == Math.signum(k.facing)) { blocked = true; break; }     // (v47.3: 0.32 — whoever comes up stops beyond the knees since v47.2, so the profile stays)
             }
@@ -4147,7 +4150,16 @@ public final class Renderer {
         // the shoulder takes at most 28% of the frame's width (a narrow frame too): the listener's face stays whole (v23;
         // v38: and the picture's whole width at most 40% — a wide figure, a witch's hat, never reaches the middle)
         final float inside = Math.min(w * 0.34f, vw * 0.28f), edge = vw * 0.4f;
-        final float cx = side > 0 ? Math.max(vw - inside, vw - edge + w / 2) : Math.min(inside, edge - w / 2), bottom = vh * 0.1f + h;
+        float cx0 = side > 0 ? Math.max(vw - inside, vw - edge + w / 2) : Math.min(inside, edge - w / 2);
+        // v47.5: never over the face it looks at — where the camera has the listener near that side, the shoulder goes
+        // further out (an ear and a stick of the foreground crossed the child's face); a tenth of the frame stays its own
+        if (to != null && to.stateAt(t).visible) {
+            float sx = vw / 2 + (Director.xAt(to, t) - camX) * camZ;
+            float half = actorHeight(to.look, to.c, art, s) * 0.16f * camZ;
+            if (side > 0 && cx0 - w / 2 < sx + half) cx0 = Math.min(vw + w / 2 - vw * 0.1f, sx + half + w / 2);
+            if (side <= 0 && cx0 + w / 2 > sx - half) cx0 = Math.max(-w / 2 + vw * 0.1f, sx - half - w / 2);
+        }
+        final float cx = cx0, bottom = vh * 0.1f + h;
         final Object img = back.img;
         final float fw = w;
         g.layerLow("ots:" + fg.c.id + ":" + (side > 0 ? "R" : "L"), vw, vh, 0.9f, new Gfx.Painter() {     // v47.3: 0.9 and a lighter blur — the foreground is soft, not smeared      // v47.2: 0.75 (was 0.60) — at 0.60 the back of the head blurred into something like a face

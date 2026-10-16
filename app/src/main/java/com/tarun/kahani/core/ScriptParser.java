@@ -599,6 +599,12 @@ public final class ScriptParser {
             if (h.equals("स्थान और पृष्ठभूमि") || h.equals("स्थान")) { section = "place"; n = 0; out.append("स्थान:\n"); continue; }
             if (h.equals("कहानी")) { section = "story"; out.append("कहानी:\n"); continue; }
             if (h.equals("समाप्त") || h.equals("The End")) { out.append('\n'); continue; }      // the end card says it; it is no direction
+            if (section.equals("story") && t.startsWith("(") && t.endsWith(")") && t.length() > 80) {
+                // v47.5: a long direction of comma-joined clauses, each a sentence of its own ("…उस पर रघुवीर जी बैठे हैं, उनकी
+                // कमर झुकी हुई … टिकी है, …"): one sentence each, so each clause's subject does only its own action
+                out.append('(').append(clauseSentences(t.substring(1, t.length() - 1))).append(")\n");
+                continue;
+            }
             if (t.length() == 0 || section.equals("story") || section.length() == 0) {
                 if (section.equals("story") && t.matches("^दृश्य\\s*[0-9०-९]+\\s*$")) {
                     // the scene's place: the listed place its first direction names (most of its words), or the one before ("वही जगह")
@@ -631,6 +637,25 @@ public final class ScriptParser {
             out.append(++n).append(". ").append(name).append(section.equals("place") ? ": " : " - ").append(desc).append('\n');
         }
         return out.toString();
+    }
+
+    /** v47.5: the comma-joined clauses of a direction as sentences: a cut after each clause that ends on a finite verb. */
+    static String clauseSentences(String d) {
+        String[] parts = d.split(",\\s*", -1);
+        StringBuilder b = new StringBuilder();
+        for (int i = 0; i < parts.length; i++) {
+            String p = parts[i].trim();
+            if (p.isEmpty()) continue;
+            if (b.length() > 0) {
+                char last = b.charAt(b.length() - 1);
+                b.append(last == '।' ? " " : ", ");
+            }
+            b.append(p);
+            String[] ws = p.split("\\s+");
+            String lw = ws[ws.length - 1].replaceAll("[.!?]+$", "");
+            if (i < parts.length - 1 && lw.matches("है|हैं|था|थी|थे|थीं|गया|गई|गए|गयी|गयीं")) b.append('।');
+        }
+        return b.toString();
     }
 
     /** v39: the end of the lists before the script ("---", "स्क्रिप्ट शुरू", "Script starts"). */

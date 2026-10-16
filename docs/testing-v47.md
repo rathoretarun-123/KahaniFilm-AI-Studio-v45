@@ -629,3 +629,52 @@ tools/testdata/aakhiri_chitthi): both characters with age and full description; 
 डाकघर, नीम के पेड़ के नीचे का कोना, कच्चा रास्ता (आसमान और हवा is not asked for); all three scenes at the neem corner;
 every line clean with its manner. The other films' scripts read as before; suite OK (40 tests).
 AppTest's library test follows the confident-match rule (a weak offline guess waits for Change).
+
+### 6.17 "आखिरी चिट्ठी" staged as written (18:30 IST): the director's misreadings of the new format
+
+Directing the user's script with stand-in pictures and reading the staging every half second showed the old man standing
+instead of sitting on his bench, falling down, the child vanishing in smoke, the lights going out, the child jumping onto
+his face, a glass in his hand and his glasses on the ground. Each came from one long comma-joined direction read as one
+sentence, or from a word that names something else. Fixed:
+- **The reader** splits a long direction of the new format into its clauses wherever a clause ends on a finite verb
+  (है, हैं, था …), so each clause's subject does only its own action (ScriptParser.clauseSentences).
+- **Sitting**: blocked only by a real perch ("कंधे पर आ बैठता", "डाल पर बैठी"), not by any shoulder or nose in the
+  sentence ("चश्मा नाक पर खिसका है … बेंच पर बैठे हैं"; "कंधे पर सिर रखे बैठी" sits). The dust and leaves of an earlier
+  clause are not the ones sitting (creatureSits reads the clause that sits).
+- **Getting up**: "सिर झटके से उठता है", "धूल उठती है" — a head or the dust rises; nobody stands (risesUp).
+- **Falling**: "कंधे ऊपर उठते हैं और नीचे गिरते हैं" is one clause; shoulders, tears, eyelids, a gaze, sunlight fall,
+  nobody falls.
+- **Vanishing**: "बड़ी मुस्कान … गायब हो जाती है" — a smile, a laugh, a fear goes; the child stays.
+- **Lights out**: "होंठ बंद हो जाते हैं" closes lips; "बंद हो जाते" counts only beside a light, a lamp, a screen.
+- **On the face**: only a jump onto a face; setting one's glasses right on the nose is not.
+- **Entrances**: in a sentence of many clauses each character's own clause says whether they come in — the old man on
+  his bench does not walk in when the child runs in. In the same place he is still seated in the next scene.
+- **Subject**: "धीरे से खड़ी होती है रघुवीर जी की तरफ दो कदम बढ़ती है" — the verb before the only name: the child stands
+  and steps toward him.
+- **Things**: worn things (glasses, ribbons, a slipper, a cap, a watch) are never set on the ground or held out unless a
+  hand takes them; "निकालती है … पकड़ती है" is taken out of the bag, then held; a thing's own name ("पीली पड़ी चिट्ठी")
+  is no verb; the cart, the postbox and the brick are the place's. The carry rule reads one clause: "छड़ी पकड़े हुए, …
+  ठेला … गिलासों के साथ खड़ा है" carries no glass.
+
+- **The letter**: "परी के हाथ से चिट्ठी लेते हैं" — he takes it from her hand (92.6 s), not at the end; held again by
+  the same hand ("चिट्ठी सीने से लगाए") it stays in that hand (the second hold set the same letter at his feet too).
+- **Not asked for**: "जमीन पर बिखरे सूखे पत्ते और धूल" — dust (and the leaves on the ground the studio draws in the
+  wind) is no picture to hand in, like "आसमान और हवा".
+- **The school bag**: one in the user's own picture carries the bag in it; a drawn blue bag set down at the frame's
+  edge (while the pink one stayed on her back) is no longer added.
+
+Rendered and read frame by frame (stand-in pictures, 24 fps), two more defects of the drawing:
+- **A seated profile while someone walks past**: the child walking behind the bench swapped the old man's seated side
+  picture for his standing front one for half a second (standing at the bench). One walking past no longer counts as
+  standing at the knees; the profile stays.
+- **Over the shoulder**: the old man's ear and stick crossed the child's face in the over-the-shoulder shots. The
+  foreground shoulder now goes further out wherever the camera has the listener near that side (a tenth of the frame
+  stays the shoulder's).
+
+The other stories' staging was compared before and after (posture, seat and hands every half second, actions,
+effects): the three films and the sample story unchanged; of the older test stories, one changed for the better
+(story_04: "वनुशा की आँखें बंद हो जाती हैं" no longer turns the lights off).
+
+Staging now (every half second): scene 1 the old man seated on the bench; scene 2 still seated, the child runs in,
+kneels to her bag, stands and steps toward him; scene 3 he is seated, she sits beside him. The other three films'
+staging is unchanged (posture and actions compared every half second before and after).

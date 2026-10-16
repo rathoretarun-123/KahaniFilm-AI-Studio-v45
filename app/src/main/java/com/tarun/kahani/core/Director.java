@@ -109,7 +109,7 @@ public final class Director {
             if (b.type != Story.Beat.DIRECTION) continue;
             for (String sent : sentences(b.text)) {
                 int pose = Txt.has(sent, LIE_DOWN) || Txt.has(sent, WAKE) ? PoseSense.LIE
-                        : Txt.has(sent, SIT_DOWN) && !Txt.has(sent, "कंधे पर", "नाक पर", "सिर पर", "पीठ पर", "डाल पर", "shoulder") && !Txt.has(sent, KNEEL_WORDS) && vehicleIn(sent, false) == 0 ? PoseSense.SIT : -1;
+                        : Txt.has(sent, SIT_DOWN) && !perched(sent) && !Txt.has(sent, KNEEL_WORDS) && vehicleIn(sent, false) == 0 ? PoseSense.SIT : -1;
                 if (pose < 0) continue;
                 List<Story.CharacterDef> m = ScriptParser.mentions(story, sent);
                 if (m.isEmpty()) continue;
@@ -1201,15 +1201,20 @@ public final class Director {
                     if (ms.isEmpty() && Txt.has(sent, "चारों", "तीनों", "दोनों", "पाँचों", "पांचों", "सब ", "सभी") && isEntry(sent)) ms = sceneCast(sc, b0, b1, sent);
                     for (int k = 0; k < ms.size(); k++) {
                         Story.CharacterDef m = ms.get(k);
+                        // v47.5: a long sentence of many clauses ("परी … दौड़ती हुई आती है …, रघुवीर जी चौंक जाते हैं"): the
+                        // clause that names them says whether they come in — the old man on his bench does not walk in
+                        String mine = ms.size() > 1 ? clauseNaming(sent, m) : sent;
                         if (order.contains(m)) {
                             // "रोहन, बारिश में भीग जाओगे!" … "(रोहन बैसाखी के सहारे चलकर आता है)": called first, then he comes
-                            if (soft.remove(m) && bi > b0 && isEntry(sent) && !entryBeat.containsKey(m)) entryBeat.put(m, bi);
+                            if (soft.remove(m) && bi > b0 && isEntry(mine) && !entryBeat.containsKey(m)) entryBeat.put(m, bi);
                             continue;
                         }
                         order.add(m);
                         // v39: also in the opening description, when it is a walk or a run in ("वनुशा दौड़ती हुई कमरे में आती
                         // है", "चारों पार्क में चलते हुए आते हैं") — they come in, they are not found standing there
-                        if ((bi > b0 || walkingIn(sent)) && isEntry(sent)) entryBeat.put(m, bi);
+                        // (one who follows the one coming in comes in too: "कान्हा … दौड़ता हुआ आता है, शेरू उसके पीछे भौंकता हुआ दौड़ रहा है")
+                        boolean follows = mine != sent && isEntry(sent) && Txt.has(mine, "पीछे", "साथ-साथ", "साथ साथ", "के साथ", "दौड़", "भाग", "behind", "follows", "runs", "with him", "with her");
+                        if ((bi > b0 || walkingIn(mine) || follows && walkingIn(sent)) && (isEntry(mine) || follows)) entryBeat.put(m, bi);
                     }
                 }
             }
@@ -1545,6 +1550,27 @@ public final class Director {
                 "walks in", "walk in", "rolls in", "wheels in", "comes over", "limps in", "hobbles in");
     }
 
+    /**
+     * v47.5: a sit ON a shoulder, a nose, a head, a back or a branch (a monkey, a bird) — not any sentence that names one:
+     * "चश्मा नाक पर खिसका है ... बेंच पर बैठे हैं" and "उसके कंधे पर सिर रखे बैठी" are people sitting on a bench.
+     */
+    static final java.util.regex.Pattern PERCH = java.util.regex.Pattern.compile(
+            "(कंधे|कन्धे|कंधों|नाक|सिर|पीठ|डाल|डाली|टहनी)\\s+पर\\s+(?:(?:आ|जा|आकर|जाकर|उछल\\s*कर|कूद\\s*कर|चढ़\\s*कर|फुदक\\s*कर)\\s+)?बैठ"
+            + "|(?:sits?|sat|perch\\w*|lands?|jumps?)\\s+(?:up\\s+)?on\\s+(?:\\w+\\s+){0,2}(?:shoulder|nose|head|back|branch)",
+            java.util.regex.Pattern.CASE_INSENSITIVE);
+    static boolean perched(String s) { return s != null && PERCH.matcher(s).find(); }
+
+    /** v47.5: a feeling, a sound or a light that "गायब हो जाती है" — the one who had it stays. */
+    static final String[] ABSTRACT_GONE = {"मुस्कान", "मुस्कुराहट", "हँसी", "हंसी", "खुशी", "ख़ुशी", "चमक", "आवाज़", "आवाज", "डर", "दर्द", "गुस्सा", "ग़ुस्सा", "थकान",
+            "नींद", "भूख", "उदासी", "चिंता", "शरारत", "रौनक", "रंग उड़", "सन्नाटा", "परेशानी", "शिकन", "आँसू", "आंसू", "smile", "laugh", "fear", "pain", "anger", "sound", "voice"};
+    static boolean abstractGone(String s) {
+        int g = s.indexOf("गायब");
+        if (g < 0) g = s.toLowerCase(java.util.Locale.ROOT).indexOf("vanish");
+        if (g < 0) return false;
+        int from = Math.max(Math.max(s.lastIndexOf(',', g), s.lastIndexOf('।', g)), Math.max(s.lastIndexOf(" और ", g), 0));
+        return Txt.has(s.substring(from, g), ABSTRACT_GONE);
+    }
+
     static List<String> sentences(String text) {
         List<String> out = new ArrayList<String>();
         for (String s : text.split("[।|]|(?<=[.!?])\\s+")) {
@@ -1555,6 +1581,29 @@ public final class Director {
     }
 
     private List<Story.CharacterDef> presentWithGroups(String s) { return withGroups(s, ScriptParser.present(story, s)); }
+
+    /** v47.5: the comma clause of a sentence that names this character, up to the next clause that names another (or the whole sentence). */
+    private String clauseNaming(String sent, Story.CharacterDef m) {
+        // (cut only where a clause ends on its verb: "सिम्बा, सिंघम, रोहू और रतनलाल गुफा में घुसते हैं" is one clause of four names)
+        List<String> parts = new ArrayList<String>();
+        StringBuilder cur = new StringBuilder();
+        for (String p : sent.split("[,،;]")) {
+            if (cur.length() > 0) cur.append(',');
+            cur.append(p);
+            if (verbEnd(p)) { parts.add(cur.toString()); cur.setLength(0); }
+        }
+        if (cur.length() > 0) parts.add(cur.toString());
+        String[] cl = parts.toArray(new String[0]);
+        if (cl.length < 2) return sent;
+        StringBuilder b = null;
+        for (String c : cl) {
+            List<Story.CharacterDef> here = ScriptParser.present(story, c);
+            if (b == null) { if (here.contains(m)) b = new StringBuilder(c); continue; }
+            if (!here.isEmpty() && !here.contains(m)) break;
+            b.append(',').append(c);
+        }
+        return b == null ? sent : b.toString();
+    }
 
     /** Named characters plus group words like "सिपाही", "चारों गार्ड", "तीनों लड़कियाँ". */
     private List<Story.CharacterDef> mentionsWithGroups(String s, List<Story.CharacterDef> context) {
@@ -3486,7 +3535,7 @@ public final class Director {
     static final String[] WEAR_WORDS = {"पहन", "puts on", "wears", "खा लेत", "पी लेत", "slips on"};
     /** Things of the place, not of a hand: never shown on their own (the place picture has them; the studio draws the seats, the umbrella, the stick, the school bag). */
     static final String[] SET_WORDS = {"खोख", "दुकान", "टपरी", "पेड़", "पेड", "बेंच", "स्टूल", "कुर्सी", "मेज़", "मेज", "अंगीठ", "चूल्ह", "बर्तन", "केतली", "मर्तबान", "दीवार", "दरवाज़", "दरवाज", "खिड़क", "बाल्टी", "बांस", "बाँस",
-            "छात", "छतरी", "छड़ी", "छडी", "लाठी", "बैग", "थैल", "झोल", "बस्त", "shop", "stall", "hut", "tree", "bench", "stool", "chair", "table", "stove", "kettle", "jar", "wall", "door", "window", "bucket", "counter", "umbrella", "stick", "cane", "bag", "backpack", "satchel"};
+            "छात", "छतरी", "छड़ी", "छडी", "लाठी", "बैग", "थैल", "झोल", "बस्त", "ठेल", "डाक-बक्स", "डाकबक्स", "लेटरबॉक्स", "ईंट", "shop", "stall", "hut", "cart", "postbox", "mailbox", "brick", "tree", "bench", "stool", "chair", "table", "stove", "kettle", "jar", "wall", "door", "window", "bucket", "counter", "umbrella", "stick", "cane", "bag", "backpack", "satchel"};
     static final String[] CONTAINER_WORDS = {"डिब्ब", "बक्स", "संदूक", "box", "trunk", "chest", "carton"};
     static final String[] THING_STOP = {"का", "की", "के", "को", "से", "में", "पर", "वाला", "वाली", "वाले", "हुआ", "हुई", "हुए", "एक", "सा", "सी", "ये", "यह", "वो", "वह", "और", "the", "a", "an", "of", "his", "her", "its", "with", "old", "new"};
     private static final int TK_NONE = -1, TK_DOWN = 4, TK_WEAR = 5;
@@ -3529,7 +3578,22 @@ public final class Director {
                 {idxOf(win, HOLD_WORDS), Film.THING_HOLD}, {idxOf(win, PLACE_WORDS), Film.THING_PLACE}};
         int best = TK_NONE, bi = Integer.MAX_VALUE;
         for (int[] x : c) if (x[0] >= 0 && x[0] < bi) { bi = x[0]; best = x[1]; }
+        // v47.5: "परी के हाथ से चिट्ठी लेते हैं" — taken from the other's hand: in this one's hand from now
+        if (best == TK_NONE && Txt.has(win, "हाथ से", "हाथों से", "from her hand", "from his hand") && Txt.has(win, " लेते", " लेता", " लेती", " ले लेत", " ले ली", " ले लिय", "takes"))
+            best = Film.THING_HOLD;
+        // v47.5: "बहुत संभाल कर … चिट्ठी निकालती है दोनों हाथों से पकड़ती है" — it is taken out first, then held
+        if (best == Film.THING_HOLD && c[2][0] >= 0) best = Film.THING_TAKE;
         return best;
+    }
+    /** v47.5: things worn on the body (glasses on the nose, ribbons in the plaits, a slipper on one foot) — never set on the ground, never held out, unless a hand takes them off. */
+    static final String[] WORN_KINDS = {"चश्म", "ऐनक", "रिबन", "चप्पल", "टोपी", "पगड़ी", "पगडी", "घड़ी", "घडी", "अंगूठी", "माला", "चूड़ि", "चूडि", "कंगन", "बिंदी", "झुमके", "पायल", "दुपट्टा",
+            "glasses", "spectacles", "ribbon", "slipper", "flip-flop", "cap", "turban", "watch", "ring", "necklace", "bangle", "anklet", "earring"};
+    static final String[] WORN_AT = {"पैर में", "पैरों में", "पहने", "पहनी", "पहना", "बंधे", "बंधा", "बंधी", "बँधे", "बँधा", "बँधी", "चोटियों में", "चोटी में", "नाक पर", "आँखों पर", "आंखों पर",
+            "कान पर", "कलाई पर", "गले में", "सिर पर", "wearing", "on his nose", "on her nose", "on her feet", "on his feet", "in her hair", "tied"};
+    static final String[] HAND_TAKES = {"उतार", "हाथ में", "हाथों में", "पकड़", "पकड", "उठा", "थमा", "सौंप", "takes off", "took off", "picks up", "holds", "hands over"};
+    static boolean wornThing(String key, String win) {
+        if (Txt.has(win, HAND_TAKES)) return false;
+        return Txt.has(Txt.norm(key), WORN_KINDS) || Txt.has(win, WORN_AT);
     }
     /** A thing's natural size, as a share of the height of the one holding it. */
     static float thingSize(String key) {
@@ -3626,7 +3690,14 @@ public final class Director {
             for (Object[] q : found) { int j = (Integer) q[1]; if (j > at && j < end) end = j; if (j < at && j > from) from = j + 1; }
             for (String cut : new String[]{" और ", ",", ";", "।", " and "}) { int j = n.lastIndexOf(cut, at); if (j >= 0 && j + cut.length() > from) from = j + cut.length(); int e = n.indexOf(cut, at); if (e >= 0 && e < end && !cut.equals(",")) end = e; }
             String win = n.substring(from, Math.max(from, end));
+            // v47.5: the thing's own name is not a verb ("पीली पड़ी चिट्ठी" lies nowhere for its "पड़ी")
+            String nk = Txt.norm(key).trim();
+            if (nk.length() > 2 && win.contains(nk)) win = win.replace(nk, " ");
             int kind = thingKind(win);
+            if (kind != TK_DOWN && kind != TK_WEAR && kind != TK_NONE && wornThing(key, win)) {
+                if (THING_DEBUG) System.out.println("THING " + key + " worn, kind " + kind + " ignored <- " + s);
+                continue;
+            }
             if (kind == TK_NONE && thingKind(n) == Film.THING_PLACE && idxOf(n, HOLD_WORDS) < 0 && idxOf(n, TAKE_WORDS) < 0 && idxOf(n, GIVE_WORDS) < 0 && !n.contains(" और ") && !n.contains(";")) kind = Film.THING_PLACE;
             if (kind == Film.THING_PLACE && heldNow(sh.pic, t) != null) continue;          // in someone's hand: it lies nowhere
             if (THING_DEBUG) System.out.println("THING " + key + " kind=" + kind + " who=" + (who == null ? "-" : who.c.shown()) + " win=[" + win + "] <- " + s);
@@ -3653,6 +3724,9 @@ public final class Director {
                 continue;
             }
             if (who == null || who.look == null) continue;
+            // v47.5: already in this one's hand ("चिट्ठी सीने से लगाए बैठा है" after he took it): it stays there — the hand
+            // that took it anew set the same letter down at his feet and held a second one
+            if ((kind == Film.THING_HOLD || kind == Film.THING_TAKE) && heldNow(sh.pic, t) != null && heldNow(sh.pic, t).a == who) continue;
             if (kind == Film.THING_HOLD && heldNow(sh.pic, t) != null && heldNow(sh.pic, t).a != who && Txt.has(win, "उनके हाथ", "उसके हाथ", "in his hand", "in her hand", "in their hand")) continue;   // "पत्र उनके हाथों में है": the other keeps it
             // into the hand: what it held goes down at the feet; the same thing from another's hand changes hands; a box
             // or a bag another held, now opened into, leaves their hands
@@ -4091,7 +4165,7 @@ public final class Director {
             for (String j : joins) {
                 int i = rest.indexOf(j);
                 while (i > 0) {
-                    if (verbEnd(rest.substring(0, i)) && rest.length() - i - j.length() > 3) { if (best < 0 || i < best) { best = i; bj = j; } break; }
+                    if (verbEnd(rest.substring(0, i)) && rest.length() - i - j.length() > 3 && !bodyGoesOn(rest.substring(0, i), rest.substring(i + j.length()))) { if (best < 0 || i < best) { best = i; bj = j; } break; }
                     i = rest.indexOf(j, i + 1);
                 }
             }
@@ -4103,6 +4177,57 @@ public final class Director {
         }
         out.add(rest);
         return out;
+    }
+
+    /** v47.5: what rises that is not the one sitting — the head, the face, the eyes, the shoulders, dust, smoke, a wave, the sun. */
+    static final String[] RISES_NOT_ONE = {"सिर", "चेहरा", "चेहरे", "नज़र", "नजर", "निगाह", "आँखें", "आंखें", "पलकें", "भौंहें", "कंधे", "कन्धे", "हाथ", "उंगली", "उँगली", "छाती", "सीना",
+            "धूल", "धुआँ", "धुआं", "भाप", "लहर", "लहरें", "सूरज", "चाँद", "चांद", "पतंग", "पत्ते", "आवाज़", "आवाज", "शोर", "हूक", "दर्द", "सवाल", "head", "face", "eyes", "dust", "smoke", "steam", "sun"};
+    /** v47.5: every "उठता / उठती / उठते / rises" of the text has a head, a face, dust … before it: nobody gets up. */
+    static boolean onlyPartsRise(String s) {
+        String low = s.toLowerCase(java.util.Locale.ROOT);
+        boolean any = false;
+        for (String w : new String[]{"उठता", "उठती", "उठते", "rises"}) {
+            for (int i = low.indexOf(w); i >= 0; i = low.indexOf(w, i + 1)) {
+                any = true;
+                int from = 0;
+                for (char ch : new char[]{',', '،', ';', '।'}) from = Math.max(from, low.lastIndexOf(ch, i) + 1);
+                String[] ws = low.substring(from, i).trim().split("\\s+");
+                String near = ws.length >= 3 ? ws[ws.length - 3] + " " + ws[ws.length - 2] + " " + ws[ws.length - 1] : low.substring(from, i);
+                if (!Txt.has(" " + near + " ", RISES_NOT_ONE)) return false;
+            }
+        }
+        return any;
+    }
+
+    /** v47.5: the subject gets up (STAND_UP), not just a part of them or something near them ("सिर झटके से उठता है"). */
+    static boolean risesUp(String s) {
+        if (!Txt.has(s, STAND_UP)) return false;
+        String low = s.toLowerCase(java.util.Locale.ROOT);
+        for (String w : STAND_UP) {
+            String lw = w.toLowerCase(java.util.Locale.ROOT);
+            for (int i = low.indexOf(lw); i >= 0; i = low.indexOf(lw, i + 1)) {
+                int from = 0;
+                for (char ch : new char[]{',', '،', ';', '।'}) from = Math.max(from, low.lastIndexOf(ch, i) + 1);
+                int j = low.lastIndexOf(" और ", i);
+                if (j >= from) from = j + 4;
+                String before = low.substring(from, i);
+                String[] ws = before.trim().split("\\s+");
+                // the two words before the verb ("सिर झटके से उठता है", "धूल उठती है"): a part of the body or a thing rising
+                String near = ws.length >= 3 ? ws[ws.length - 3] + " " + ws[ws.length - 2] + " " + ws[ws.length - 1] : before;
+                if (!Txt.has(" " + near + " ", RISES_NOT_ONE)) return true;
+            }
+        }
+        return false;
+    }
+
+    /** v47.5: a body part's own motion goes on ("कंधे ऊपर उठते हैं और नीचे गिरते हैं"): the shoulders fall, not the one they belong to. */
+    static final String[] BODY_PARTS = {"कंधे", "कन्धे", "कंधा", "हाथ", "आँखें", "आंखें", "पलकें", "होंठ", "भौंहें", "भौहें", "सिर", "छाती", "सीना", "गर्दन", "उंगलियां", "उँगलियाँ",
+            "shoulders", "hands", "eyes", "eyelids", "lips", "brows", "chest", "head"};
+    static boolean bodyGoesOn(String left, String right) {
+        int c = Math.max(left.lastIndexOf(','), left.lastIndexOf('،'));
+        String l = c >= 0 ? left.substring(c + 1) : left;
+        String r = right.trim();
+        return Txt.has(l, BODY_PARTS) && (r.startsWith("नीचे") || r.startsWith("ऊपर") || r.startsWith("वापस") || r.startsWith("फिर नीचे") || r.startsWith("down") || r.startsWith("back down"));
     }
 
     /** v43: the text ends on a verb (Hindi: ...ता / ती / ते / है / हैं / था / गया …; English: a word in -s or -ed after a subject). */
@@ -4191,7 +4316,11 @@ public final class Director {
         boolean groupWord = Txt.has(s, "सब ", "सभी", "चारों", "तीनों", "दोनों", "everyone", "all of them", "both of them", "together");
         List<Film.Actor> who = new ArrayList<Film.Actor>();
         Film.Actor target = null;
-        if (!ms.isEmpty()) {
+        // v47.5: the verb before the only name ("धीरे से खड़ी होती है रघुवीर जी की तरफ…"): the one before does it, toward the one named
+        Film.Actor implied = ms.size() == 1 && verbBeforeName(s, ms.get(0)) ? (fallback != null ? fallback : lastSubject != null ? actor(lastSubject) : null) : null;
+        if (implied != null && implied.c == ms.get(0)) implied = null;
+        if (implied != null) { who.add(implied); target = actor(ms.get(0)); }
+        else if (!ms.isEmpty()) {
             int si = subjectIndex(s, ms);
             Film.Actor first = actor(ms.get(si));
             if (first != null) who.add(first);
@@ -4231,7 +4360,11 @@ public final class Director {
             int kind = (Integer) r[4];
             // a fall of something else (a leaf, the rain, a thing dropped), not of the one named
             if (kind == EV_FALL && Txt.has(w, "हाथ से", "छूट", "पत्ते", "पत्ता", "बूँद", "बूंद", "बारिश", "बर्फ", "ओले", "गिरा दे", "गिरा दि", "गिरा दी",
+                    "कंधे", "कन्धे", "आँसू", "आंसू", "पलक", "नज़र", "नजर", "निगाह", "धूप", "रोशनी", "छाया", "परछाई", "धब्बों", "बाल ", "हाथ नीचे", "सिर नीचे", "आवाज़", "आवाज",
+                    "shoulders", "tears", "gaze", "sunlight",
                     "drops the", "leaves fall", "rain falls", "snow falls", "night falls", "silence falls", "falls asleep")) continue;
+            // v47.5: "सिर झटके से उठता है", "धूल उठती है": the head, the dust rise — nobody gets up
+            if (kind == EV_STAND && !Txt.has(w, "उठ खड़", "खड़ा हो", "खड़ी हो", "खड़े हो", "stands up", "gets up") && onlyPartsRise(w)) continue;
             // v47.4: the wind, a storm, a train or a clock "चलने लगती है" walks nobody
             if (kind == EV_WALK && Txt.has(w, "हवा चल", "हवाएँ चल", "हवाएं चल", "आँधी चल", "आंधी चल", "तूफ़ान चल", "तूफान चल", "लू चल", "ट्रेन चल", "रेल चल", "गाड़ी चल", "बस चल", "घड़ी चल", "पंखा चल", "काम चल", "बात चल",
                     "wind picks", "wind starts", "wind blows", "storm", "train", "clock", "engine")) continue;
@@ -4485,6 +4618,21 @@ public final class Director {
         return up < 0 || bad < up;
     }
 
+    static final java.util.regex.Pattern FINITE = java.util.regex.Pattern.compile("(?:^|\\s)(?:है|हैं|था|थी|थे|थीं)(?=\\s|$|[,।])");
+    /** v47.5: a finite verb comes before the first time this character is named. */
+    static boolean verbBeforeName(String s, Story.CharacterDef c) {
+        int at = -1;
+        List<String> names = new ArrayList<String>(c.aliases);
+        if (c.displayName != null) names.add(c.displayName);
+        for (String n : names) { if (n == null || n.length() < 2) continue; int i = s.indexOf(n); if (i >= 0 && (at < 0 || i < at)) at = i; }
+        if (at <= 0) return false;
+        // (in the name's own clause: "तितलियाँ उड़ती हैं और वनुशा उनके पीछे दौड़ती है" — वनुशा runs)
+        String before = s.substring(0, at);
+        int from = 0;
+        for (String j : new String[]{",", "،", ";", " और ", " फिर ", " तो ", " तभी ", " जब ", " and ", " then "}) { int i = before.lastIndexOf(j); if (i >= 0) from = Math.max(from, i + j.length()); }
+        return FINITE.matcher(before.substring(from)).find();
+    }
+
     /** Stages one sentence of a stage direction; returns its duration. */
     private float sentence(String s, float t, boolean establishing) {
         rode = false;
@@ -4493,6 +4641,9 @@ public final class Director {
         boolean pronoun = Txt.has(s.length() > 6 ? s.substring(0, Math.min(s.length(), 8)) : s, "वह ", "वो ", "उसने", "उसकी", "उसके", "उसे ", "तीनों", "दोनों");
         Story.CharacterDef subjC = (!ms.isEmpty() && !(pronoun && lastSubject != null && !Txt.has(s, "तीनों", "दोनों"))) ? ms.get(subjectIndex(s, ms)) : lastSubject;
         if (Txt.has(s, "तीनों", "दोनों") && ms.isEmpty() && !lastGroup.isEmpty()) subjC = lastGroup.get(0);
+        // v47.5: "धीरे से खड़ी होती है रघुवीर जी की तरफ दो कदम बढ़ती है" — the verb comes before the only name: the one
+        // the last sentence was about does it, the one named is where it goes
+        if (ms.size() == 1 && subjC == ms.get(0) && lastSubject != null && lastSubject != subjC && actor(lastSubject) != null && verbBeforeName(s, subjC)) subjC = lastSubject;
         Film.Actor subj = actor(subjC);
         List<Film.Actor> others = new ArrayList<Film.Actor>();
         for (Story.CharacterDef c : ms) { Film.Actor a = actor(c); if (a != null && a != subj) others.add(a); }
@@ -4771,7 +4922,7 @@ public final class Director {
                 d = Math.max(d, 2.2f);
             }
         }
-        if (Txt.has(s, "गायब") && subj != null) {
+        if (Txt.has(s, "गायब") && subj != null && !abstractGone(s)) {
             float tv = t + (Txt.has(s, "कंधे") ? 2.4f : 0.6f);
             fx(Film.FX_SMOKE, tv - 0.3f, tv + 2.2f, xAt(subj, tv), ground - 220, subj, null).color = 0xFF2E7D32;
             film.sfx.add(new Film.Sfx(Film.SFX_WHOOSH, tv - 0.3f, 1.4f, 0.9f));
@@ -4844,7 +4995,9 @@ public final class Director {
             if (victim != null) { Film.Key kv = victim.at(t + 1f); kv.emotion = Pose.PAIN; victim.acts.add(new Film.Act(t + 1f, t + 4f, Film.G_RUB_EYES)); }
             d = Math.max(d, 3.2f);
         }
-        if (Txt.has(s, "नाक पर", "चेहरे पर", "सिर पर बैठ", "पीठ पर")) {
+        boolean glassesOn = Txt.has(s, "चश्म", "ऐनक", "glasses", "spectacles");          // v47.5: one's own glasses set right on the nose
+        boolean onFace = !glassesOn && (perched(s) || Txt.has(s, "नाक पर", "चेहरे पर") && Txt.has(s, "कूद", "उछल", "छलाँग", "छलांग", "झपट", "जा बैठ", "आ बैठ", "चिपक", "jumps", "leaps"));
+        if (!glassesOn && Txt.has(s, "नाक पर", "चेहरे पर", "सिर पर बैठ", "पीठ पर")) {
             // "X की नाक पर जा बैठता" -> X is the target, the other character jumps
             Film.Actor owner = possessorBefore(s, new String[]{"नाक पर", "चेहरे पर", "सिर पर", "पीठ पर"});
             if (owner != null) {
@@ -4853,7 +5006,7 @@ public final class Director {
                 if (jumper != null) { subj = jumper; target = owner; }
             }
         }
-        if (Txt.has(s, "नाक पर") && subj != null && target != null) {
+        if (onFace && Txt.has(s, "नाक पर") && subj != null && target != null) {
             Film.Key k = subj.at(t + 0.3f); k.anchor = Film.A_ON_FACE; k.anchorActor = target;
             subj.acts.add(new Film.Act(t, t + 0.5f, Film.G_JUMP));
             subj.acts.add(new Film.Act(t + 0.5f, t + 6f, Film.G_SCRATCH));
@@ -4998,6 +5151,9 @@ public final class Director {
         if (subj != null && Txt.has(s, "बैग", "बस्ता", "school bag", "schoolbag", "backpack", "rucksack") && Txt.has(s, "पड़ा", "पड़ी", "रखा", "फेंक", "lies", "lying", "dropped", "drops", "throws", "tossed")) {
             boolean have = false;
             for (Film.Fx f : seg.fx) if (f.type == Film.FX_THING && f.kind == 1) have = true;
+            // v47.5: one in the user's own picture carries their bag in it ("गुलाबी बैग पीठ पर"): a drawn bag set down
+            // beside them would be a second bag from nowhere (a blue one at the frame's edge, the pink one still on her back)
+            if (art != null && art.sprites.containsKey(subj.c.id)) have = true;
             if (!have) {
                 float x = xAt(subj, t), off = 0.9f * heightOf(subj);
                 Film.Fx bag = fx(Film.FX_THING, t, 1e6f, x < 640 ? Math.max(130, x - off) : Math.min(1150, x + off), 0, subj, null);
@@ -6600,13 +6756,18 @@ public final class Director {
      * v43: a thing carried in the direction ("ट्रे में चाय लेकर आता है", "फूलों की टोकरी लेकर आता है", "हाथ में किताब लिए
      * खड़ा है", "carries a basket"): it is in their hand from now on, until it is given, put down or eaten up.
      */
+    static final String[] CARRY_VERBS = {"लेकर", "ले कर", "लिए", "लिये", "हाथ में", "थामे", "पकड़े हुए", "पकड़े", "पकड़ता", "पकड़ती", "पकड़ते", "थामता", "थामती", "थामते", "हाथों से", "takes the", "holds the", "grips the", "clutches the", "आगे बढ़ा", "सीने से लगा", "निकालती है", "निकालता है", "carries", "carrying", "holding", "holds a", "brings", "bringing", "with a tray", "pulls out", "takes out", "clutches"};
     private float carryFrom(String s, float t, List<Film.Actor> who) {
         if (seg == null || negated(s)) return 0;
-        if (!Txt.has(s, "लेकर", "ले कर", "लिए", "लिये", "हाथ में", "थामे", "पकड़े हुए", "पकड़े", "पकड़ता", "पकड़ती", "पकड़ते", "थामता", "थामती", "थामते", "हाथों से", "takes the", "holds the", "grips the", "clutches the", "आगे बढ़ा", "सीने से लगा", "निकालती है", "निकालता है", "carries", "carrying", "holding", "holds a", "holds the", "brings", "bringing", "with a tray", "pulls out", "takes out", "clutches"))
-            return 0;
+        if (!Txt.has(s, CARRY_VERBS)) return 0;
         if (Txt.has(s, "छाता", "छतरी", "umbrella")) return 0;
         int item = Pose.I_NONE;
-        for (Object[] r : CARRIED) if (Txt.has(s, (String[]) r[0])) { item = (Integer) r[1]; break; }
+        // v47.5: in one clause — "दोनों हाथों से छड़ी पकड़े हुए, … ठेला केतली और उल्टे गिलासों के साथ खड़ा है" carries no glass
+        for (String cl : s.split("[,;،]")) {
+            if (!Txt.has(cl, CARRY_VERBS) || Txt.has(cl, "रखे हैं", "रखा है", "रखी है", "रखे हुए", "उल्टे", "के साथ खड़ा", "ठेले", "ठेला", "पड़े हैं")) continue;
+            for (Object[] r : CARRIED) if (Txt.has(cl, (String[]) r[0])) { item = (Integer) r[1]; break; }
+            if (item != Pose.I_NONE) break;
+        }
         if (item == Pose.I_NONE) return 0;
         for (Film.Actor a : who) {
             if (a.look == null || !a.look.isHumanoid() || !a.stateAt(t).visible) continue;
@@ -6824,7 +6985,23 @@ public final class Director {
      */
     public static boolean creatureSits(String s, Story.CharacterDef c) {
         int creature = -1;
-        String low = s.toLowerCase(java.util.Locale.ROOT);
+        // v47.5: only the clause that sits — "धूल के कण हवा में उड़ रहे हैं, टूटी बेंच … उस पर रघुवीर जी बैठे हैं": he sits, not the dust
+        String sc = s;
+        int sit = -1;
+        for (String w : SIT_DOWN) { int i = s.lastIndexOf(w); if (i > sit) sit = i; }
+        if (sit < 0) sit = s.lastIndexOf("बैठ");
+        if (sit > 0) {
+            int from = 0;
+            for (char ch : new char[]{',', '،', ';', '।'}) from = Math.max(from, s.lastIndexOf(ch, sit) + 1);
+            int to = s.length();
+            for (char ch : new char[]{',', '،', ';', '।'}) { int j = s.indexOf(ch, sit); if (j >= 0 && j < to) to = j; }
+            sc = s.substring(from, to);
+            // (only when that clause names the one sitting: "तितली उड़कर एक सूखी, मुरझाई हुई कली पर बैठ जाती है" — the butterfly's)
+            boolean namesThem = false;
+            if (c != null) for (String nm : new String[]{c.displayName, c.label, c.shown()}) if (nm != null && nm.length() > 0 && sc.contains(nm)) namesThem = true;
+            if (!namesThem) sc = s;
+        }
+        String low = sc.toLowerCase(java.util.Locale.ROOT);
         for (String w : SETTLERS) { int i = low.indexOf(w); if (i >= 0 && (creature < 0 || i < creature)) creature = i; }
         if (creature < 0) return false;
         if (c == null) return true;
@@ -6986,7 +7163,7 @@ public final class Director {
         }
         if (playSentence != 0) {
             // v41: on the swing or the slide: the seat, the getting up and the lying down are the play's (playFrom)
-        } else if (Txt.has(s, STAND_UP) && !Txt.has(s, "उठकर बैठ", "उठ कर बैठ", "उठ बैठ", "sits up", "sat up")) {
+        } else if (risesUp(s) && !Txt.has(s, "उठकर बैठ", "उठ कर बैठ", "उठ बैठ", "sits up", "sat up")) {
             for (Film.Actor a : who) {
                 // v35: one lying sits up first (0.9 s), then stands; from the floor, a sofa or a bed the rise takes a second.
                 // When the same sentence woke them, they stand after sitting up and stretching on the bed
@@ -7005,7 +7182,7 @@ public final class Director {
                 d = Math.max(d, tt - t + 1.0f);
             }
             d = Math.max(d, 1.0f);
-        } else if (Txt.has(s, SIT_DOWN) && !birdLike && !Txt.has(s, "कंधे पर", "नाक पर", "सिर पर", "पीठ पर", "डाल पर", "shoulder") && vehicleIn(s, false) == 0
+        } else if (Txt.has(s, SIT_DOWN) && !birdLike && !perched(s) && vehicleIn(s, false) == 0
                 && !creatureSits(s, subj.c) && !Txt.has(s, KNEEL_WORDS)) {
             int seat = Txt.has(s, THRONE) ? Film.SEAT_THRONE : Txt.has(s, SOFA) ? Film.SEAT_SOFA : Txt.has(s, BED) ? Film.SEAT_BED : Txt.has(s, CHAIR) ? Film.SEAT_CHAIR
                     : Txt.has(s, STOOL) ? Film.SEAT_STOOL : Txt.has(s, ROCK) ? Film.SEAT_ROCK : Txt.has(s, FLOOR) ? Film.SEAT_FLOOR : -2;

@@ -38,7 +38,12 @@ public final class Cues {
     static final String[] TWINKLE = {"झिलमिल", "टिमटिम", "टिम-टिम", "जगमग", "twinkle", "twinkling", "glitter", "sparkl", "shimmer", "blink"};
     static final String[] LIGHT_OFF = {"लाइट बंद", "लाइट बुझ", "बुझ ", "बुझ जा", "फुस्स", "बत्ती गुल", "अंधेरा हो", "अँधेरा हो", "lights go out", "light goes out", "goes dark",
             "अँधेरा छा", "अंधेरा छा", "घुप्प अँधेरा", "घुप्प अंधेरा", "darkness falls", "plunged into darkness", "pitch dark",
-            "go dark", "blackout", "switch off", "switched off", "power cut", "बिजली चली", "बिजली गुल", "turn off", "turned off", "बंद हो जाती", "बंद हो जाते", "shut down", "down हो"};
+            "go dark", "blackout", "power cut", "बिजली चली", "बिजली गुल"};
+    // "बंद हो जाते" also closes lips, eyes, doors and shops: these count as lights going out only beside a light word.
+    static final String[] LIGHT_OFF_LOOSE = {"switch off", "switched off", "turn off", "turned off", "बंद हो जाती", "बंद हो जाते", "बंद हो जाता", "shut down", "down हो"};
+    static final String[] LIGHT_WORDS = {"लाइट", "बत्ती", "बत्तियाँ", "बत्तियां", "बल्ब", "दीया", "दिया बुझ", "दीये", "लालटेन", "रोशनी", "बिजली", "स्क्रीन", "टीवी", "light", "lamp", "bulb",
+            "screen", "power", "tv", "torch", "टॉर्च"};
+    static boolean lightOff(String s) { return Txt.has(s, LIGHT_OFF) || Txt.has(s, LIGHT_OFF_LOOSE) && Txt.has(s, LIGHT_WORDS); }
     static final String[] FLICKER = {"टिमटिमाती", "टिमटिमाता", "flicker", "flickers", "flickering", "फड़फड़ाती लाइट", "झपकती"};
     static final String[] GLITCH = {"hack", "हैक", "virus", "वायरस", "glitch", "ग्लिच", "freeze", "फ्रीज़", "हैंग", "hang हो", "error", "एरर", "crash", "क्रैश", "static", "jam हो", "corrupt"};
     static final String[] DATA = {"data", "डेटा", "डाटा", "download", "upload", "signal", "सिग्नल", "transfer", "leak", "चोरी होकर", "stream", "file", "फ़ाइल"};
@@ -68,9 +73,9 @@ public final class Cues {
         List<Cue> out = new ArrayList<Cue>();
         if (s == null || s.length() == 0) return out;
         // ---- things done to light and to machines
-        if (Txt.has(s, LIGHT_OFF) && !Txt.has(s, "फिर से", "again", "वापस")) out.add(new Cue(V_OFF, Film.SFX_POWER_DOWN, 1.6f, 0.45f, "lights off"));
+        if (lightOff(s) && !Txt.has(s, "फिर से", "again", "वापस")) out.add(new Cue(V_OFF, Film.SFX_POWER_DOWN, 1.6f, 0.45f, "lights off"));
         else if (Txt.has(s, FLICKER)) out.add(new Cue(V_FLICKER, Film.SFX_HUM, 2.5f, 0.2f, "flicker"));
-        else if (Txt.has(s, TWINKLE) && !Txt.has(s, LIGHT_OFF)) out.add(new Cue(V_TWINKLE, Film.SFX_TWINKLE, 3f, 0.3f, "twinkle"));
+        else if (Txt.has(s, TWINKLE) && !lightOff(s)) out.add(new Cue(V_TWINKLE, Film.SFX_TWINKLE, 3f, 0.3f, "twinkle"));
         else if (Txt.has(s, LIGHT_ON) && !Txt.has(s, "आँखें चमक", "आंखें चमक", "eyes shine", "eyes glow", "eyes light")) out.add(new Cue(V_GLOW, Film.SFX_TWINKLE, 2.6f, 0.35f, "light on"));
         // (v43: waves crashing on the shore are the sea, not a machine crashing)
         if (Txt.has(s, GLITCH) && !Txt.has(s, "waves", "wave crash", "लहर", "sea", "shore", "ocean", "beach", "समुद्र", "सागर")) out.add(new Cue(V_GLITCH, Film.SFX_GLITCH, 1.2f, 0.4f, "glitch"));
