@@ -33,7 +33,7 @@ public final class Prefs {
     /** Smooth motion: the film at 30 frames per second instead of 24 (a quarter more drawing). */
     public static boolean fps30(Context c) { return !"0".equals(get(c, "fps30", "1")); }
     /** v47: 40 fps — smoother than 30, lighter than 60; off by default (the renderer uses it when the user turns it on). */
-    public static boolean fps40(Context c) { return "1".equals(get(c, "fps40", "0")); }
+    public static boolean fps40(Context c) { return !"0".equals(get(c, "fps40", "1")); }     // v47.4: on by default (the user: 40 frames per second)
     /** v47: real-time dictionary lookup for words the Reader does not know (Wikipedia summary; off by default to stay offline-safe). */
     public static boolean looksUpUnknownWords(Context c) { return c == null ? false : "1".equals(get(c, "lookUp", "0")); }
     /** Optional 60 fps output; substantially more drawing, memory traffic, battery use, and render time. */
