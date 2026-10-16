@@ -3856,6 +3856,20 @@ public final class Director {
      * words give), the gesture (-1: none), how long, and what else it does. The first row that fits is the action.
      */
     private static final Object[][] EVERYDAY = {
+        // v47.4: the user's 40 activity GIFs (docs/reference/daily_activities/gif_descriptions_40_hi.txt) — first, so a
+        // more general row (eyes closed, a give, a sit) does not take the sentence before them
+        {new String[]{"पद्मासन", "पालथी मारकर ध्यान", "padmasana", "lotus position", "cross-legged meditat"}, Pose.RELIEVED, -1, 2.8f, EV_FLOOR},
+        {new String[]{"लेटा और उठ", "लेटी और उठ", "लेटे और उठ", "लेटे-लेटे उठ", "बिस्तर से उठकर खड़", "lying down and gets up", "gets up from the bed"}, -1, Film.G_RUB_EYES, 2.4f, EV_STAND},
+        {new String[]{"पालथी मारकर बैठता और उठ", "पालथी मारकर बैठती और उठ", "बैठता और उठता", "बैठती और उठती", "sits down and gets up", "sits and stands"}, -1, -1, 2.6f, EV_FLOOR},
+        {new String[]{"शीशा साफ", "खिड़की साफ", "खिड़की का शीशा", "शीशा पोंछ", "पोंछता", "पोंछती", "wipes the window", "cleans the window", "wipes the glass"}, -1, Film.G_REACH, 2.6f, EV_SWEEP},
+        {new String[]{"कपड़े तह", "तह करता", "तह करती", "तह कर", "फोल्ड कर", "folds the clothes", "folding clothes", "folds the shirt", "folds a"}, Pose.CURIOUS, Film.G_REACH, 2.6f, EV_NONE},
+        {new String[]{"फावड़े से", "मिट्टी खोद", "खोदता", "खोदती", "गड्ढा खोद", "बागवानी", "निराई", "digs", "digging", "gardening", "shovels"}, Pose.DETERMINED, Film.G_PUSH, 2.8f, EV_NONE},
+        {new String[]{"बिस्तर बना", "बिस्तर लगा", "चादर बिछा", "चादर फैला", "तकिए सजा", "makes the bed", "spreads the sheet"}, -1, Film.G_REACH, 2.6f, EV_NONE},
+        {new String[]{"कचरे की थैली", "कचरा बाहर", "कूड़ा बाहर", "कचरा फेंक", "कूड़ा फेंक", "takes out the trash", "takes out the garbage", "takes the rubbish out"}, -1, -1, 2.6f, EV_WALK},
+        {new String[]{"360", "गोल घूम", "चक्कर लगाकर घूम", "जगह पर घूम", "पूरा घूम", "spins round", "turns all the way round", "twirls"}, Pose.HAPPY, Film.G_TURN, 2.0f, EV_LOOK_ROUND},
+        {new String[]{"कैन से पानी", "पौधों को पानी", "पौधों में पानी", "पेड़ को पानी", "waters the plants", "watering can", "waters the garden"}, Pose.HAPPY, -1, 2.6f, EV_WASH},
+        {new String[]{"रिमोट से", "चैनल बदल", "remote", "changes the channel"}, Pose.CURIOUS, Film.G_REACH, 2.0f, EV_NONE},
+        {new String[]{"स्विच", "बत्ती जला", "बत्ती बुझा", "लाइट जला", "लाइट बंद", "पंखा चला", "पंखा बंद", "switches on", "switches off", "turns on the light", "turns off the light"}, -1, Film.G_REACH, 1.4f, EV_NONE},
         {new String[]{"पैर छू", "पाँव छू", "पांव छू", "चरण छू", "चरण स्पर्श", "touches the feet", "touches her feet", "touches his feet"}, Pose.HAPPY, Film.G_BOW, 2.2f, EV_NEAR},
         // v45: jostled in a crowd, nearly down — a stagger caught, not a fall (before the push and the fall)
         {new String[]{"धक्का खा", "धक्का लग", "धक्के से", "धक्के में", "गिरते-गिरते बच", "गिरते गिरते बच", "is pushed", "gets pushed", "is jostled", "gets jostled", "nearly falls",

@@ -576,3 +576,7 @@ Suite OK (40 tests).
   user's, the first place now fills the frame through its own crop; and a filled frame (cover) now stays inside the
   picture's crop window (it had used the whole picture's width, bringing the left border back).
 Suite OK (40 tests).
+- **The user's 40 + 5 activity descriptions** (the GIF zip itself did not come through — the file was the download page):
+  saved to the library and the app's vocabulary; 28 were staged already, 12 have new everyday rows, placed first in the
+  table so a general row (eyes closed, a give, a sit) does not take the sentence before them.
+- 5 more descriptions (cycling, chess, a cricket shot, a football kick, the newspaper on the sofa): their zip also arrived as the download page only; all 5 were staged already.

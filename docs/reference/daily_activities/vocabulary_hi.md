@@ -79,3 +79,11 @@ Pictures not tied to one phrase: none — every picture is the still of one phra
 - `umbrella_open_close.gif` (+ frames sheet): how an umbrella is lifted, opened, held over the head and folded.
 - `book_hold_open_close_put_down.gif` (+ frames sheet): how a book is held at the chest, opened, closed and set down.
 What the studio does with them is listed in the app's guide, section 20 of `director_reference_emotion_activity_guide.md`.
+
+## 40 activity descriptions (16 October, evening)
+The user's descriptions of 40 activity GIFs are in `gif_descriptions_40_hi.txt` (also shipped as
+`vocab/daily_activities_40_hi.txt`). The GIFs themselves did not arrive: the uploaded file was a saved web page of the
+zip's download screen, with no pictures in it. Every description was staged through the director's probe; 12 had no
+rule and have one now: getting up from lying down, sitting cross-legged and getting up, wiping a window, folding
+clothes, digging with a spade, making the bed, padmasana meditation, taking out the rubbish, a full turn on the spot,
+watering with a can (it had read as "giving"), the TV remote, the light switch.
