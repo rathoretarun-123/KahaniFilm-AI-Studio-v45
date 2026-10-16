@@ -294,3 +294,25 @@ also failed on b3af94e before any v47.2/v47.3 staging change, so it comes from t
 readable from the session (job logs live on a storage host the container cannot reach); the workflow now names failing tests as
 annotations so the next run shows which assertion it is. The 45-minute timeout that cancelled the runs between 15:15 and 16:33 UTC is
 fixed (CI-sized soaks, 70 minutes).
+
+
+### 6.6 The morning pass (16 October 2026, 06:30–08:00 IST): the user's frames, every still of the three films again
+
+The user reviewed frames and sent two Gemini reference clips (`docs/reference/`). Every still of the three films (one a second
+for बाबू, one every two seconds for the others) was put on contact sheets and read; what was wrong and what changed:
+
+| Film, frame | Defect | Change |
+|---|---|---|
+| बाबू 20–26, 44–45, 83–86, 99–107 s | The seated man drawn with the front picture (its folded thighs) in close singles and beside the girl: he read as standing before the bench | `Renderer.viewOf`: the side picture stays while he is silent at any zoom; the standing-neighbour block narrows to 0.32 of the height |
+| बाबू 84 s (user's frame) | Two benches, one under each sitter | `seatGroup` (the sofa's sharing, for the bench too): one plank from midpoint to midpoint, legs at the free ends; the shorter sitter is lifted to the taller one's bench, feet dangling |
+| जोड़ी 2–6 s (user's frame) | The title card's side fill was the poster enlarged: its lettering huge and cut | `contain()`: a card with its own lettering is never cropped, its sides are filled from its edge strips; the end picture's "THE END" is whole again |
+| चाय 104–108 s (user's frame: "who is holding the camera") | The woman's face in the bottom corner, the taller man's head cut | `Director.facesInFrame()`: every head under the top edge with headroom and every face above the bottom fifth, head first, widening when needed; close singles slide away from a neighbour's face at the edge; a seated picture counts 0.86 of its height |
+| चाय 104–108, 46, 66, 80 s | The umbrella's dome across the taller man's face; the dome poking in from outside the frame | Held over the taller neighbour's head (`Pose.umbrellaOver`); drawn only while its carrier is in view |
+| चाय 50, 107 s (user: "no one is holding the umbrella, neither the tea cup") | The umbrella floated over the head; the cup floated at the mouth | A fist on the shaft at chest height with a forearm from the picture's own hand; the cup rises from the chest (both hands) to the lips with a hand round its lower half and a forearm from the elbow, tilted 15°, the eyes closing on the sip (`docs/reference/gemini_tea_kulhad_thali.mp4`) |
+| चाय (user: "it must be a kullhad") | A white cup | `Pose.I_KULHAD`: unglazed clay, flared rim, the tea's surface and steam; `Film.kulhad` from the script's words makes every cup of tea one |
+| जोड़ी 36, 84, 90 s | The over-the-shoulder foreground was his blurred *face* | `Art.figureAspect` measures a cut-out by alpha and the back-as-tall-as-the-front rule allows 30%: the user's own back picture had been swapped for a side panel marked 180°; `otsBack` prefers the view line; the foreground is softer (0.9 of the frame, a lighter blur — the user: "the old man is getting blurred") |
+| बाबू 39, 41 s | A neighbour's face sliced in at the edge of a close single; an over-the-shoulder head cut by the top | The faces pass above |
+| CI | `AppTest.godsDemonsAndVanarasAreStagedWell`: "a row of ten heads is wide: 700x602" | The doll's row of ten heads is 1.16 of its height with the head radius Doll3D uses; the check asks for wider than tall (1.1) |
+
+References kept with the source: `docs/reference/gemini_tea_kulhad_thali.mp4` (tea from a cup and a kulhad, eating from a thali) and
+`docs/reference/gemini_daily_activities.mp4` (tea, kulhad, thali, brushing teeth, a door, a phone), each with a sheet of eight frames.

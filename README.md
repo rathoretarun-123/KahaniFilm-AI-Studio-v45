@@ -11,7 +11,9 @@ push; download the **KahaniFilm-v47-apk** artifact from the latest green run und
 
 ## New in v47.3 (16 October 2026, before dawn)
 
-**Where the APK is (16 Oct 2026, 05:15 IST):** Actions → "Build KahaniFilm APK" → the newest run on branch `ccr-a5fc4eef-d2p2nm`
+- **The morning pass (user frames + every still of the three films):** one bench for two (the child lifted to it), the seated profile kept in close singles, every head and face framed (`facesInFrame`), the umbrella held in a hand and over the taller head, the cup held (kulhad where the story says so) and raised from the chest with the eyes closing on the sip, the user's back picture kept for over-the-shoulder shots with a softer foreground, cards never cropped. Reference clips in `docs/reference/`. Details: `docs/testing-v47.md` §6.6.
+
+**Where the APK is:** Actions → "Build KahaniFilm APK" → the newest run on branch `ccr-a5fc4eef-d2p2nm`
 (https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/actions?query=branch%3Accr-a5fc4eef-d2p2nm) → artifact **KahaniFilm-v47-apk**
 (also `KahaniFilm-debug-apk`). The APK is built, verified and uploaded by every run before the tests run, so it is there whether the
 test job is green or red. **Honest state of CI:** the build and the APK verification pass; the test job is red on exactly one of its
