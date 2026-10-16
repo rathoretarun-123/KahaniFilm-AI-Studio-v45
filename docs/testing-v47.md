@@ -406,3 +406,9 @@ a different signature, Android refused to install one over the other, and the un
 The keystore is committed now (a debug key, password `android`); every build from here is signed the same and updates in
 place with the settings kept. One last uninstall is needed to move from a build signed before this to the first build after.
 
+The phone (11:40 IST): "pictures in the library are not matched to a story." Two gaps: the library pass ran only from the
+"Find pictures in my library" button, and the story's things were not among its targets, so a prop picture saved from an
+earlier film was never placed. Now the studio searches the library on its own the first time it opens on a story (and
+again when the story changes; `libscan.txt` remembers), the things of the script are targets like the characters and
+places, and a matched thing is placed as its own object picture for every scene (`shot||name|file|object`).
+

@@ -1295,6 +1295,14 @@ public class MainActivity extends Activity {
             body.addView(Ui.text(this, "Could not read the story: " + e.getMessage(), 16, Ui.RED, true));
             return;
         }
+        // v47.4 (the user: "this is not happening"): the library is searched for this story on its own the first time the
+        // studio opens on it (and again when the story changes), not only from the button
+        try {
+            String stamp = Integer.toHexString(st.title.hashCode() ^ project.read("script.txt").hashCode());
+            boolean any = false;
+            for (Library.Item it : library.find(Library.PIC, null, null)) if (!it.builtIn) { any = true; break; }
+            if (any && !stamp.equals(project.read("libscan.txt").trim())) { project.write("libscan.txt", stamp); libraryMatches(true); }
+        } catch (Throwable ignored) { }
         // ---- summary and what is missing
         int noPic = 0, noVoice = 0, noBg = 0;
         for (Story.CharacterDef c : st.cast()) {
@@ -3283,6 +3291,8 @@ public class MainActivity extends Activity {
         List<String[]> t = new ArrayList<String[]>();
         for (Story.CharacterDef c : st.characters) t.add(new String[]{"char:" + keyFor(c), c.shown(), c.description});
         for (String[] p : Bible.places(st)) t.add(new String[]{"place:" + p[0], st.shown(p[0]), p[1]});
+        // v47.4: the things the script lists are targets too (a library prop picture was never placed on one)
+        for (Story.PlaceDef th : st.things) if (th.name != null && th.name.trim().length() > 0) t.add(new String[]{"thing:" + th.name.trim(), th.name.trim(), th.description == null ? "" : th.description});
         t.add(new String[]{"title", "Title page", "title picture / movie poster of " + st.title + ", main characters together"});
         t.add(new String[]{"end", "End page", "ending picture, calm landscape, sunset, the end"});
         return t;
@@ -3427,6 +3437,10 @@ public class MainActivity extends Activity {
                         project.setManifest("char", key, "char|" + key + "|" + f);
                     } else if (p.target.equals("title") || p.target.equals("end")) {
                         project.setManifest(p.target, p.target, p.target + "|" + f + "|1");
+                    } else if (p.target.startsWith("thing:")) {
+                        // v47.4: a thing's own picture, for every scene (as AutoLibrary writes it)
+                        String name = p.target.substring(6);
+                        project.setManifest("shot", ":" + name, "shot||" + name + "|" + f + "|object");
                     } else if (p.target.startsWith("place:")) {
                         String place = p.target.substring(6);
                         for (Story.Scene sc : st.scenes) {
