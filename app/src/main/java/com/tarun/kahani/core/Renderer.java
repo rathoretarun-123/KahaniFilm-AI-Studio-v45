@@ -4547,7 +4547,7 @@ public final class Renderer {
         if (a.bagFrom >= 0 && t >= a.bagFrom) p.bagKind = a.bagKind;
         for (Film.Fx f : s.fx) {
             if (f.type != Film.FX_HELD || f.a != a || f.kind == Film.THING_PLACE || t < f.t0 || t >= f.t1 || f.pic == null || f.pic.img == null) continue;
-            p.heldPic = f.pic.img; p.heldAspect = f.pic.w / (float) Math.max(1, f.pic.h); p.heldSize = f.size > 0 ? f.size : 0.18f; p.heldKind = f.kind;
+            p.heldPic = f.pic.img; p.heldAspect = f.pic.w / (float) Math.max(1, f.pic.h); p.heldSize = f.size > 0 ? f.size : 0.18f; p.heldKind = f.kind; p.heldSoft = Rigidity.isSoft(f.what);
             p.heldH = actorHeight(a.look, a.c, art, s);
             p.heldU = f.t2 > f.t0 ? Math.min(1, (t - f.t0) / (f.t2 - f.t0)) : 1;
         }
@@ -4603,7 +4603,10 @@ public final class Renderer {
         } else ty = cy + (float) Math.sin(p.time * 1.7f) * h * 0.004f;
         if (vis > 0.01f) {
             int pw = g.imageWidth(p.heldPic), ph = g.imageHeight(p.heldPic);
-            if (pw > 0 && ph > 0) g.imageRect(p.heldPic, 0, 0, pw, ph * vis, tx - tw / 2, ty - th / 2, tw, th * vis);
+            if (pw > 0 && ph > 0) {
+                if (p.heldSoft && u >= 1) softPicture(g, p.heldPic, pw, ph, tx - tw / 2, ty - th / 2, tw, th, p.wind, p.time, h);
+                else g.imageRect(p.heldPic, 0, 0, pw, ph * vis, tx - tw / 2, ty - th / 2, tw, th * vis);
+            }
         }
         if (vis <= 0.01f) return;
         // the fingers over the near edge (and, held against the chest, the other hand under the far side)
@@ -4614,6 +4617,27 @@ public final class Renderer {
             float ox = tx + fc * tw * 0.4f, oy = ty + th * 0.38f;
             g.color(Puppet.shade(skin, 0.82f)); g.roundRect(ox - h * 0.022f, oy - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
             g.color(skin); g.roundRect(ox - h * 0.02f, oy - h * 0.014f, h * 0.04f, h * 0.028f, h * 0.011f);
+        }
+    }
+
+    /**
+     * v47.4: a soft thing's picture (a cloth, a bag, a rope, a flag: Rigidity.SOFT) held at its top edge — it hangs from
+     * the hand and the lower it goes the more the wind carries it sideways and the more it ripples, in the same gusts
+     * as the hair and the clothes; a rigid thing is drawn as it comes. Drawn in horizontal strips, each displaced by
+     * the wind and a travelling wave, so the picture itself bends.
+     */
+    static void softPicture(Gfx g, Object pic, int pw, int ph, float x, float y, float w, float h, float wind, float time, float bodyH) {
+        int n = Math.max(8, Math.min(24, (int) (h / 5)));   // finer strips on a bigger picture: no steps along the edge
+        float sway = wind * Math.min(h * 0.6f, bodyH * 0.14f);                    // the bottom edge goes this far with the wind
+        float ripple = (0.012f + 0.03f * Math.min(1, Math.abs(wind))) * h;       // the wave on the cloth, stronger in a gust
+        float ph1 = ph / (float) n, sh = h / n;
+        for (int i = 0; i < n; i++) {
+            float f0 = i / (float) n, f1 = (i + 1) / (float) n;
+            float d0 = sway * f0 * f0 + ripple * f0 * (float) Math.sin(time * 5.2f - f0 * 6.3f + wind * 2);
+            float d1 = sway * f1 * f1 + ripple * f1 * (float) Math.sin(time * 5.2f - f1 * 6.3f + wind * 2);
+            // a strip is drawn straight; its offset is the mean of its two edges, overlapping the next by a hair so no seam shows
+            float dx = (d0 + d1) * 0.5f;
+            g.imageRect(pic, 0, i * ph1, pw, ph1 + 0.5f, x + dx, y + i * sh, w, sh + 0.75f);
         }
     }
 
@@ -4628,7 +4652,12 @@ public final class Renderer {
         float y = s.ground + f.y;
         if (HELD_DEBUG) System.err.printf(java.util.Locale.US, "PLACED t=%.2f %s x=%.0f y=%.0f %.0fx%.0f pic=%dx%d%n", t, f.what, f.x, y, tw, th, f.pic.w, f.pic.h);
         g.save(); g.setAlpha(0.22f); g.color(0xFF000000); g.oval(f.x, y + 2, tw * 0.5f, th * 0.08f + 3); g.restore();
-        g.image(f.pic.img, f.x - tw / 2, y - th, tw, th);
+        if (Rigidity.isSoft(f.what) && film != null && Sets.outdoorSet(s.set)) {
+            // a cloth or a bag left on the ground outdoors: its loose edge lifts and stirs in the gusts (the ground holds the rest)
+            float wnd = film.wind(t), dir = wnd >= 0 ? 1 : -1;
+            float wind = wnd * (0.5f + 0.5f * Nature.gustField(f.x / 1280f, t, dir)) * 0.35f;
+            softPicture(g, f.pic.img, f.pic.w, f.pic.h, f.x - tw / 2, y - th, tw, th, wind, t, hh);
+        } else g.image(f.pic.img, f.x - tw / 2, y - th, tw, th);
     }
 
     /**

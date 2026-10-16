@@ -77,6 +77,7 @@ public final class Pose {
     public Object heldPic;
     public float heldAspect = 1, heldSize, heldU = 1, heldH;
     public int heldKind, bagKind;
+    public boolean heldSoft;           // v47.4: a cloth, a bag, a rope, a flag in the hand — it hangs and flutters in the wind (Rigidity)
     public int seat = -1;
     public float nod;                  // + head down, - head up
     public float wave;                 // > 0 while waving: the arm swings out and back
@@ -126,7 +127,7 @@ public final class Pose {
         walk = 0; walkAmt = 0; tilt = 0; headTilt = 0; bob = 0; squash = 1; holdR = I_NONE; holdL = I_NONE;
         disguised = false; noHeadwear = false; wearsTurban = false; redFace = false; tears = false; sweat = false;
         eyesClosed = false; fist = false; glowWand = false; carrying = false; turbanBand = 0; wind = 0; wet = 0;
-        sit = 0; lie = 0; kneel = 0; umbrellaOver = 0; umbHandX = umbHandY = Float.NaN; skinHint = 0; heldPic = null; heldAspect = 1; heldSize = 0; heldU = 1; heldH = 0; heldKind = 0; bagKind = 0; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; toMouth = 0; toMouthItem = 0;
+        sit = 0; lie = 0; kneel = 0; umbrellaOver = 0; umbHandX = umbHandY = Float.NaN; skinHint = 0; heldPic = null; heldAspect = 1; heldSize = 0; heldU = 1; heldH = 0; heldKind = 0; bagKind = 0; heldSoft = false; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; toMouth = 0; toMouthItem = 0;
         gazeX = 0; gazeY = 0; gazeHeld = 0; turnBody = 0; turnHead = 0;
         kajal = 0; lipstick = 0; bindi = 0; mehndi = 0; powder = 0; facePaint = 0; towel = 0; flush = 0;
         bowDraw = 0; arrowOn = false; pedal = 0; pedalAmt = 0;

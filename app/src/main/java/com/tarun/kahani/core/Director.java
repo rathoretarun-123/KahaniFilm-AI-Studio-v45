@@ -3844,6 +3844,9 @@ public final class Director {
         {new String[]{"खिड़की से", "खिड़की के बाहर", "बाहर देख", "out of the window", "looks out"}, Pose.CURIOUS, Film.G_TURN, 1.6f, EV_NONE},
         {new String[]{"कपड़े बदल", "ड्रेस बदल", "changes clothes", "changes his clothes", "changes her clothes"}, -1, Film.G_TURN, 1.4f, EV_NONE},
         {new String[]{"धीरे-धीरे चल", "धीरे धीरे चल", "टहल", "चहलकदमी", "लंगड़ा", "walks slowly", "strolls", "paces", "limps"}, -1, -1, 2.6f, EV_WALK},
+        // v47.4: plain walking — with a stick, on foot, setting off ("छड़ी लेकर चलता है", "चल पड़ती है"); the wind "चलती है" names no one, so it never fires
+        {new String[]{"लेकर चलता", "लेकर चलती", "लेकर चलते", "पैदल चल", "पैदल जा", "चलने लगता", "चलने लगती", "चलने लगते", "चल पड़ता", "चल पड़ती", "चल पड़ते", "चल देता", "चल देती", "चल देते",
+                "starts walking", "sets off", "walks on", "walks ahead", "walks with a stick", "walks with his stick", "walks with her stick", "on foot"}, -1, -1, 2.6f, EV_WALK},
         {new String[]{"सहला", "पुचकार", "थपथपा", " pats", " pets", "strokes"}, Pose.HAPPY, Film.G_PAT, 1.8f, EV_NEAR},
         {new String[]{"दाना डाल", "दाना खिला", "scatters", "feeds the birds"}, Pose.HAPPY, Film.G_THROW, 1.6f, EV_NONE},
         // v43: food served, a thing shown, a thing taken from someone

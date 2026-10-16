@@ -432,3 +432,27 @@ brighter than the uploaded night lane (luma 88 against 51) but is lifted further
 a night may lift twice as far (0.12) and an evening to 0.2, and the unsharp mask runs 1.1..1.9 (was 0.95..1.75). Measured on
 जोड़ी 34–36 s at 640 wide: luma 85–87 → 92–95, edge energy 30.6–31.6 → 32.6–33.8. 40 frames per second is the default.
 
+
+### 6.9 The recheck the user asked for (14:00 IST): posture, tangible and intangible things, rigid and soft, daily activity, weather
+
+A staging probe (31 sentences in Hindi: postures, chores, weather, things in hands, feelings) run through the Director,
+printing each character's posture, acts, movement and the weather at the end of each sentence. Right already: floor sit,
+kneel, lie, chair sit, sweep, wash, water the plants, read, cut vegetables, watch TV (sits, laughs), exercise, drink, eat,
+wind + dupatta (W_WIND 1.0, wind 0.7), rain (look up, cover the head), snow (shiver), lightning (flash + shake), sunset
+(sky), fog, hang clothes (reach), fly a kite (pull the string), hug (walks over), cry, laugh, shout (fist). Found and fixed:
+
+- **A squat** ("उकड़ूँ बैठ जाता है", squats) was a floor sit. It is a crouch now (postureFrom: SQUAT_WORDS).
+- **Walking the dog, filling water, warming the hands at the fire** had no row: a walk; a reach down; a reach, relieved.
+- **Plain walking** ("छड़ी लेकर चलता है", "चल पड़ती है", "sets off", "on foot") was not a walk at all (only walks *to* somewhere
+  were). A new everyday row walks them. "तेज़ हवा चलती है" names nobody who walks and stays still (verified).
+- **Soft things in the hand** (Rigidity.SOFT: a saree, a dupatta, a bag, a rope, a flag, a sheet) were drawn as stiff
+  boards like a box. Renderer.softPicture now draws the user's picture of such a thing in horizontal strips held at the
+  hand: the lower it hangs the more the wind carries it sideways (up to 0.14 of the body height in a full gust) and the
+  more it ripples, in the same travelling gusts as the hair and the clothes (Nature.gustField). A soft thing lying on the
+  ground outdoors stirs the same way at a third of the strength; a rigid thing (a box, a glass, a letter, an umbrella) is
+  drawn as it comes. Probe: a checked cloth at wind 0, 0.3, 0.7, 1.0 and −0.7 — the top edge stays in the fingers, the
+  hem swings with the wind, no seam between strips (8..24 strips by the picture's height).
+- Rigidity.kind checked on the films' own things: साड़ी, कपड़े का थैला → soft; लकड़ी का बक्सा, छाता → rigid; जूते → as it comes.
+
+Pure-JVM suite on the patched core: OK (40 tests). The three films carry no soft held thing (a box, shoes, a glass, a
+letter), so their frames are unchanged by the flutter; it is there for the next story with a dupatta or a bag in hand.
