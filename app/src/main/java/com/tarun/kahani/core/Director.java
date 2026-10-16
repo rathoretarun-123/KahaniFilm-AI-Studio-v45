@@ -3803,7 +3803,9 @@ public final class Director {
         // v43: shaving at the mirror, ironing a shirt, hanging the washing out
         {new String[]{"दाढ़ी बना", "शेव", "रेज़र", "रेजर", "shave", "razor"}, -1, Film.G_MIRROR, 2.4f, EV_NONE},
         {new String[]{"इस्त्री", "प्रेस करता", "प्रेस करती", "irons", "ironing"}, -1, Film.G_PAT, 2.4f, EV_NONE},
-        {new String[]{"कपड़े टाँग", "कपड़े टांग", "रस्सी पर", "hangs the", "hangs up", "hangs out"}, -1, Film.G_REACH, 1.6f, EV_NONE},
+        {new String[]{"कपड़े टाँग", "कपड़े टांग", "रस्सी पर", "टाँगता", "टाँगती", "टाँगते", "टांगता", "टांगती", "टांगते", "लटकाता", "लटकाती", "लटकाते", "hangs the", "hangs up", "hangs out", "hangs a"}, -1, Film.G_REACH, 1.6f, EV_NONE},
+        // v47.4: a hand into the pocket (a coin, a key, a handkerchief comes out of it)
+        {new String[]{"जेब से", "जेब में हाथ", "जेब टटोल", "from his pocket", "from her pocket", "into his pocket", "into her pocket", "in his pocket", "in her pocket"}, -1, Film.G_REACH, 1.4f, EV_NONE},
         // v43: in the blazing sun — a hand over the eyes; sweat
         {new String[]{"आँखों पर हाथ", "आंखों पर हाथ", "shields his eyes", "shields her eyes", "shades his eyes", "shades her eyes"}, -1, Film.G_SHIELD_EYES, 1.8f, EV_NONE},
         // v45: the sweat wiped off the brow
@@ -3899,6 +3901,8 @@ public final class Director {
         {new String[]{"सोच", "विचार", "ponders", "thinks", "wonders", "thoughtful"}, Pose.CURIOUS, Film.G_HEAD_SCRATCH, 2.0f},
         {new String[]{"गर्व", "proud"}, Pose.PROUD, Film.G_PROUD, 1.8f},
         {new String[]{"राहत", "चैन की", "सुकून", "relieved", "relief"}, Pose.RELIEVED, -1, 1.6f},
+        // v47.4: hope and longing (an intangible the user asked to be read, never a picture): a lift of the face, a hand to the chest
+        {new String[]{"उम्मीद", "आशा", "आस ", "तमन्ना", "ख़्वाहिश", "ख्वाहिश", "hopeful", "hopes", "hoping", "longs for", "yearns"}, Pose.HAPPY, Film.G_LOOK_UP, 1.6f},
         {new String[]{"दर्द", "चोट", "कराह", "hurts", "in pain", "winces"}, Pose.PAIN, Film.G_CLUTCH, 1.8f},
         {new String[]{"थक", "हाँफ", "हांफ", "tired", "exhausted", "panting"}, Pose.SAD, Film.G_WEIGHT_SHIFT, 1.8f},
         {new String[]{"शक कर", "शक से", "शक हो", "संदेह", "जलन हो", "जलन से", "ईर्ष्या", "suspicious", "jealous"}, Pose.SUSPICIOUS, -1, 1.6f},

@@ -456,3 +456,8 @@ wind + dupatta (W_WIND 1.0, wind 0.7), rain (look up, cover the head), snow (shi
 
 Pure-JVM suite on the patched core: OK (40 tests). The three films carry no soft held thing (a box, shoes, a glass, a
 letter), so their frames are unchanged by the flutter; it is there for the next story with a dupatta or a bag in hand.
+- Second probe (things and intangibles): "बैग से किताब निकालता" → the book in the hand; "थैले से साड़ी निकालकर देती" → walks
+  over, gives; "रस्सी खींचती" → pulls; "साइकिल चलाता" → rides across; "मन में डर" → trembles; "यादें", "सपना", "उम्मीद" → never a
+  picture (Bible.intangible). Fixed: **hanging a thing** ("झंडा टाँगता", "hangs a") and **a hand into the pocket** ("जेब से
+  सिक्का") staged nothing, both are a reach now; **hope** ("उम्मीद", "आशा", "hopes") had no feeling, it lifts the face.
+  Suite OK (40 tests) again.
