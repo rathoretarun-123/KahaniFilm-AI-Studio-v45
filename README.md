@@ -11,6 +11,7 @@ push; download the **KahaniFilm-v47-apk** artifact from the latest green run und
 
 ## New in v47.3 (16 October 2026, before dawn)
 
+- **The second morning pass:** the user's own seated pictures play a sit on the ground (the squatting cobbler, the girl crying on the floor), inserts are cutaways with nobody under them, the umbrella stays open in rain, the side picture's facing reads the same at the phone's picture size, crisper output. Details: `docs/testing-v47.md` §6.7.
 - **The morning pass (user frames + every still of the three films):** one bench for two (the child lifted to it), the seated profile kept in close singles, every head and face framed (`facesInFrame`), the umbrella held in a hand and over the taller head, the cup held (kulhad where the story says so) and raised from the chest with the eyes closing on the sip, the user's back picture kept for over-the-shoulder shots with a softer foreground, cards never cropped. Reference clips in `docs/reference/`. Details: `docs/testing-v47.md` §6.6.
 
 **Where the APK is:** Actions → "Build KahaniFilm APK" → the newest run on branch `ccr-a5fc4eef-d2p2nm`

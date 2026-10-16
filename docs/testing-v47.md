@@ -316,3 +316,16 @@ for बाबू, one every two seconds for the others) was put on contact sheet
 
 References kept with the source: `docs/reference/gemini_tea_kulhad_thali.mp4` (tea from a cup and a kulhad, eating from a thali) and
 `docs/reference/gemini_daily_activities.mp4` (tea, kulhad, thali, brushing teeth, a door, a phone), each with a sheet of eight frames.
+
+### 6.7 The second morning pass (08:00–08:45 IST): the user's frames again, the phone's picture size, the user's seated pictures
+
+| Finding | Change |
+|---|---|
+| On the phone (pictures read at 1280 wide) बाबू's side picture read as "facing unknown", so his *front* picture sat on the bench there — the desktop renders at 640 never showed it | `Art.turnedFacing` reads the facing again at halved sizes until it answers; verified at 1280 wide |
+| "Some object appeared in between" — the notebook/handkerchief insert hung over the people | An insert of the thing itself is a cutaway: nobody is drawn under it, the place is darkened 0.62, and the picture is cut to the thing's own bounds (`cropToThing`) so it fills the insert |
+| The umbrella half-folded in light rain, its dome on the carrier's head | Open while it rains at all |
+| जोड़ी's over-the-shoulder shots showed इस्माइल's blurred face | His proper back picture had been swapped for a side panel marked 180° (`figureAspect` measured the whole canvas, not the cut-out); the foreground is softer, not smeared |
+| "What about sitting on the floor?" — the rig's folded legs read as a short person standing (इस्माइल squatting, नन्ही crying on the ground) | `PoseSense.framing` reads a seated shape from the silhouette (not much taller than wide, the lower two fifths one solid mass as wide as the figure: the six seated panels of the 43 pass, every running/jumping/holding panel fails); `Casting.choose` lets a seated picture of the user's own play a sit for a rigged front picture — the squatting cobbler with the shoe and the girl crying with her hands over her face are now their own panels |
+| Crisper output | Unsharp mask 0.95..1.75 (0.70..1.40), 34-level cap; no halos at 1280 wide |
+
+The user's two Gemini reference clips sit in `docs/reference/` with frame sheets; the cup, the kulhad and the thali follow the first.
