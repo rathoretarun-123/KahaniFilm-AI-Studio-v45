@@ -3775,6 +3775,10 @@ public final class Director {
         {new String[]{"झाँक", "झांक", "peeks", "peeps", "peeking", "peers"}, Pose.CURIOUS, Film.G_TURN, 1.6f, EV_NONE},
         {new String[]{"घुटनों के बल", "घुटने के बल", "घुटने टेक", "kneels", "on his knees", "on her knees"}, -1, -1, 1.6f, EV_KNEEL},
         {new String[]{"पालथी", "cross-legged", "cross legged"}, -1, -1, 1.4f, EV_FLOOR},
+        // v47.4: the daily activities the user's reference clips show — walking the dog, filling water, warming the hands at the fire
+        {new String[]{"कुत्ते को टहला", "कुत्ते को घुमा", "कुत्ते को सैर", "walks the dog", "walking the dog", "takes the dog for a walk", "takes the dog out"}, Pose.HAPPY, -1, 2.8f, EV_WALK},
+        {new String[]{"पानी भर", "बाल्टी भर", "घड़ा भर", "मटका भर", "fills the bucket", "fills water", "fetches water", "draws water", "fills the pot"}, -1, Film.G_REACH, 2.4f, EV_NONE},
+        {new String[]{"हाथ सेंक", "हाथ ताप", "आग ताप", "आग सेंक", "warms his hands", "warms her hands", "warms their hands", "warms himself", "warms herself"}, Pose.RELIEVED, Film.G_REACH, 2.6f, EV_NONE},
         // v44: unsteady after drinking (a sway, a stumble caught) — before the fall's words
         {new String[]{"नशे में", "डगमगा", "staggers", "staggering", "drunkenly", "totters", "tipsy", "sways on"}, Pose.DIZZY, Film.G_STAGGER, 3.2f, EV_NONE},
         {new String[]{"गिर", "फिसल", "ठोकर", "लड़खड़ा", "falls", "trips", "slips", "stumbles", "tumbles"}, Pose.PAIN, Film.G_FLAIL, 2.8f, EV_FALL},
@@ -4167,6 +4171,8 @@ public final class Director {
                     break;
                 }
                 case EV_FLOOR:
+                    // v47.4: a squat (उकड़ूँ, haunches) is a crouch — the legs folded under, not a sit on the ground
+                    if (human && Txt.has(w, "उकड़ूँ", "उकड़ू", "उकडू", "squat", "on his haunches", "on her haunches", "haunches")) { Film.Key k = keyAt(a, t0); k.body = Pose.CROUCH; k.seat = -1; break; }
                     if (human && now.body != Pose.SIT) { Film.Key k = keyAt(a, t0); k.body = Pose.SIT; k.seat = Film.SEAT_FLOOR; }
                     else if (human && now.seat != Film.SEAT_FLOOR) {
                         // v44: from the sofa (or a chair) down onto the floor: up first, then down cross-legged
@@ -5766,6 +5772,7 @@ public final class Director {
     // ================================================================== postures and gestures
 
     public int kneels;
+    static final String[] SQUAT_WORDS = {"उकड़ूँ", "उकड़ू", "उकडू", "squats", "squat ", "squatting", "on his haunches", "on her haunches", "on their haunches"};
     static final String[] KNEEL_WORDS = {"घुटनों के बल", "घुटने के बल", "घुटने टेक", "kneels", "kneel", "kneeling", "on his knees", "on her knees", "on their knees"};
     static final java.util.regex.Pattern COME_THEN_SIT = java.util.regex.Pattern.compile("(आकर|आ कर|जाकर|जा कर|comes in|enters|walks in|walks to)[^।.]*(बैठ|sits|sat)");
     static final String[] SIT_DOWN = {"बैठ गया", "बैठ गई", "बैठ गए", "बैठ गयी", "बैठ जाता", "बैठ जाती", "बैठ जाते", "बैठते हैं", "बैठा है", "बैठी है",
@@ -6773,6 +6780,20 @@ public final class Director {
                 kneels++;
             }
             d = Math.max(d, 1.2f);
+        }
+        // v47.4: a squat ("उकड़ूँ बैठ", "squats", on the haunches) is a crouch — the legs folded under, the body low — not
+        // a sit on the ground (the cobbler at his work, a child by the gutter); they rise at a later "उठ" / "rises"
+        if (Txt.has(s, SQUAT_WORDS) && !negated(s) && !birdLike && !Txt.has(s, "गिर", "falls", "collapses")) {
+            for (Film.Actor a : who) {
+                if (a.look == null || !a.look.isHumanoid() || a.look.aid == Look.AID_WHEELCHAIR) continue;
+                Film.Key now = a.stateAt(t);
+                if (now.body == Pose.CROUCH) continue;
+                float tk = t;
+                if (now.body == Pose.SIT || now.body == Pose.LIE) { Film.Key up = a.at(t); up.body = Pose.STAND; up.seat = -1; tk = t + 0.6f; }
+                Film.Key k = a.at(tk); k.body = Pose.CROUCH; k.seat = -1;
+            }
+            d = Math.max(d, 1.2f);
+            return d;
         }
         // v44: the hands over the head (from the hail, the rain, a falling thing) — said outright
         if (Txt.has(s, "सिर ढक", "सिर को ढक", "सिर छुपा", "सिर छिपा", "हाथों से सिर", "सिर पर हाथ रख", "covers his head", "covers her head", "covers their heads",
