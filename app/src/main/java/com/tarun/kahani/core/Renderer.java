@@ -2056,7 +2056,8 @@ public final class Renderer {
             if (chosen.emotion != PoseSense.NEUTRAL) { p.emotion = Pose.NEUTRAL; p.tears = false; p.redFace = false; p.flush = 0; }
             if (chosen.pose != PoseSense.STAND && (real.rig == null || !real.rig.face)) p.blink = 0;     // v39: a face rig blinks in any pose
             if (Math.abs(chosen.angle) > 170 || chosen.emotion == PoseSense.NO_FACE) { p.mouth = 0; p.blink = 0; p.eyesClosed = false; }   // v34: a back never talks or blinks
-            mo.sy = 1 + (float) Math.sin(tp * 2.1f + a.order) * 0.004f; mo.sx = 1;
+            float spin = spinAt(a, tp);                           // v47.8: a picture turned on the spot narrows through the turn
+            mo.sy = 1 + (float) Math.sin(tp * 2.1f + a.order) * 0.004f; mo.sx = Math.abs(spin);
             float facing = p.facing;
             p.ownSeat = chosen.ownSeat > 0 ? chosen.ownSeat : 0;
             if (chosen.ownSeat > 0) p.facing = 1;                // v47.7: the sitter on their own bench as the user drew it (its bricks under the broken leg stay on that side)
@@ -2119,6 +2120,8 @@ public final class Renderer {
             int boil = (int) (t * 12) * 31 + a.order * 17;
             float wx = ((boil * 1103515245 + 12345) >>> 16 & 255) / 255f - 0.5f, wy = ((boil * 22695477 + 1) >>> 16 & 255) / 255f - 0.5f;
             g.translate(wx * 0.9f, wy * 0.9f);
+            float spun = Math.abs(spinAt(a, tp));               // v47.8: a drawn figure turned on the spot narrows through the turn
+            if (spun < 1) g.scale(spun, 1);
             Puppet.draw(g, look, p, h);
         }
         // v35: asleep in a bed — a quilt over them from the chest to past the feet, rising and falling with the slow breath
@@ -2795,6 +2798,8 @@ public final class Renderer {
                     mo.dx += (float) Math.sin(t * 30) * 2;
                     break;
                 case Film.G_REACH:
+                    // v47.8: item 1 — down at the feet, the hands working the laces (slowly, both together)
+                    if (act.item == 1) { p.armR = 34 + s * 4; p.armL = 30 - s * 4; p.elbowR = 45; p.elbowL = 45; break; }
                     p.armR = 100; p.armL = 80; p.elbowR = 0; p.elbowL = 0;
                     break;
                 case Film.G_FIST:
@@ -2843,6 +2848,14 @@ public final class Renderer {
                 case Film.G_TURN: {
                     float k2 = Math.min(1, u / (act.t1 - act.t0));
                     mo.sx *= Math.max(0.15f, Math.abs((float) Math.cos(Math.PI * k2)));
+                    break;
+                }
+                case Film.G_SPIN: {
+                    // v47.8: a whole turn on the spot — the figure narrows to its edge, shows its other side, narrows again
+                    // and is back, eased in and out; the side changes only at its narrowest (where a flip shows least)
+                    float w = spinAt(a, t);
+                    mo.sx *= Math.abs(w);
+                    if (w < 0) p.facing = -p.facing;
                     break;
                 }
                 case Film.G_LISTEN: {
@@ -4312,6 +4325,19 @@ public final class Renderer {
 
     /** Smoothstep: no snap at either end of a fade. */
     static float ease01(float u) { u = Math.max(0, Math.min(1, u)); return u * u * (3 - 2 * u); }
+
+    /**
+     * v47.8: how wide one turning on the spot is drawn at t (1: no turn) — its edge at a quarter and at three quarters
+     * of the turn, eased in and out; negative while its other side shows.
+     */
+    public static float spinAt(Film.Actor a, float t) {
+        for (Film.Act x : a.acts) if (x.type == Film.G_SPIN && t >= x.t0 && t < x.t1) {
+            float k = ease01((t - x.t0) / Math.max(0.1f, x.t1 - x.t0));
+            float w = Math.max(0.38f, Math.abs((float) Math.cos(2 * Math.PI * k)));      // (edge-on a body is about 0.4 of its width)
+            return k > 0.25f && k < 0.75f ? -w : w;
+        }
+        return 1;
+    }
 
     /** v33: while the character steps through its pictures, the picture before the current one in the cycle (for the cross-fade), or null. */
     private Art.PoseSprite previousStep(Art.Sprite sp, Film.Actor a, float t, Pose p) {
