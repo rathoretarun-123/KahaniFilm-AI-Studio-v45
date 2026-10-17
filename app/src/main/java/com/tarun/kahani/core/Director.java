@@ -1570,7 +1570,9 @@ public final class Director {
     /** v39: a walk or a run into the place ("दौड़ती हुई … आती है", "चलते हुए आते हैं", "walks in"). */
     static boolean walkingIn(String s) {
         return Txt.has(s, "चलते हुए आ", "चलती हुई आ", "चलता हुआ आ", "चलकर आ", "चल कर आ", "दौड़ते हुए आ", "दौड़ती हुई", "दौड़ता हुआ", "भागते हुए आ",
-                "भागती हुई आ", "भागता हुआ आ", "दौड़कर आ", "भागकर आ", "walks in", "runs in", "comes in", "enters", "rushes in", "hurries in");
+                "भागती हुई आ", "भागता हुआ आ", "दौड़कर आ", "भागकर आ", "walks in", "runs in", "comes in", "enters", "rushes in", "hurries in",
+                // v47.6: "दौड़ता आता है", "दौड़ती आती है"; and "तभी मीरा आती है" — "just then": later in the scene, not there from its start
+                "दौड़ता आ", "दौड़ती आ", "दौड़ते आ", "भागता आ", "भागती आ", "तभी", "just then", "at that moment");
     }
 
     /** v39: the people of a part (who speak or are named in it), at most as many as the group word says. */
@@ -4116,6 +4118,8 @@ public final class Director {
         return n;
     }
 
+    /** v47.6: someone falling into water, tea, mud ("पानी में गिर", "falls into the water"). */
+    private static final java.util.regex.Pattern LIQUID_INTO = java.util.regex.Pattern.compile("(?:पानी|चाय|दूध|कीचड़|नाले|नदी|तालाब)\\s+में\\s+(?:\\S+\\s+)?गिर|falls? into the|fell into the");
     private static final int EV_NONE = 0, EV_NEAR = 1, EV_FALL = 2, EV_HIDE = 3, EV_KNEEL = 4, EV_FLOOR = 5, EV_STAND = 6,
             EV_EYES = 7, EV_WAKE = 8, EV_UMBRELLA = 9, EV_WALK = 10, EV_READ = 12, EV_SWEEP = 13, EV_WASH = 14,
             EV_COOK = 15, EV_LOOK_ROUND = 16, EV_THUD = 17, EV_DOOR = 18, EV_GIVE = 19, EV_RUN = 20, EV_KNOCK = 21,
@@ -4553,6 +4557,10 @@ public final class Director {
                     "कंधे", "कन्धे", "आँसू", "आंसू", "पलक", "नज़र", "नजर", "निगाह", "धूप", "रोशनी", "छाया", "परछाई", "धब्बों", "बाल ", "हाथ नीचे", "सिर नीचे", "आवाज़", "आवाज",
                     "shoulders", "tears", "gaze", "sunlight",
                     "drops the", "leaves fall", "rain falls", "snow falls", "night falls", "silence falls", "falls asleep")) continue;
+            // v47.6: water, tea or milk that falls ("पानी बाल्टी में गिरता है", "चाय की धार कुल्हड़ों में गिर रही"): nobody falls —
+            // unless someone falls into it ("वह पानी में गिर जाता है")
+            if (kind == EV_FALL && Txt.has(w, "पानी", "चाय", "दूध", "धार", "छलक", "water", "tea", "milk", "spills", "pours")
+                    && !LIQUID_INTO.matcher(w).find()) continue;
             // v47.5: "सिर झटके से उठता है", "धूल उठती है": the head, the dust rise — nobody gets up
             if (kind == EV_STAND && !Txt.has(w, "उठ खड़", "खड़ा हो", "खड़ी हो", "खड़े हो", "stands up", "gets up") && onlyPartsRise(w)) continue;
             // v47.4: the wind, a storm, a train or a clock "चलने लगती है" walks nobody
@@ -6313,7 +6321,8 @@ public final class Director {
     /** v47.6: the wind said another way: "हवा अब भी चल रही है", "गर्म हवा से धूल उड़ रही है", "कुर्ता हवा में हल्का हिल रहा है". */
     static final java.util.regex.Pattern WIND_SAID = java.util.regex.Pattern.compile("हवा\\s+(?:अब\\s+भी\\s+|भी\\s+|अभी\\s+भी\\s+|धीरे-धीरे\\s+|लगातार\\s+)(?:चल|बह)|हवा\\s+से\\s+(?:\\S+\\s+){0,3}?(?:उड़|उड|हिल|सरक|लहर)|हवा\\s+में\\s+(?:\\S+\\s+){0,2}?(?:हिल|लहरा|फड़फड़)");
     static final String[] WIND_STOP = {"हवा रुक", "हवा थम", "wind stopped", "wind died", "wind dropped"};
-    static final String[] THUNDER = {"बिजली कड़क", "बिजली चमक", "बिजली गिर", "बादल गरज", "गड़गड़ाहट", "कड़कड़ाहट", "thunder", "lightning", "bijli"};
+    static final String[] THUNDER = {"बिजली कड़क", "बिजली चमक", "बिजली गिर", "बादल गरज", "गड़गड़ाहट", "कड़कड़ाहट", "thunder", "lightning", "bijli",
+            "जोरदार बिजली", "ज़ोरदार बिजली", "बिजली कौंध", "बिजली की चमक"};
     /** v43: the clouds rumble with words between ("बादल ज़ोर से गरजते हैं") — never a lion's or a tiger's roar. */
     static final String[] RUMBLE = {"गरजते", "गरजता", "गरजती", "गरजने", "गरज रह", "गरज उठ", "rumble"};
     static final String[] SNOW = {"बर्फ़ गिर", "बर्फ गिर", "बर्फबारी", "बर्फ़बारी", "हिमपात",
@@ -6424,7 +6433,7 @@ public final class Director {
     static final String[] KNEEL_WORDS = {"घुटनों के बल", "घुटने के बल", "घुटने टेक", "kneels", "kneel", "kneeling", "on his knees", "on her knees", "on their knees"};
     static final java.util.regex.Pattern COME_THEN_SIT = java.util.regex.Pattern.compile("(आकर|आ कर|जाकर|जा कर|comes in|enters|walks in|walks to)[^।.]*(बैठ|sits|sat)");
     static final String[] SIT_DOWN = {"बैठ गया", "बैठ गई", "बैठ गए", "बैठ गयी", "बैठ जाता", "बैठ जाती", "बैठ जाते", "बैठते हैं", "बैठा है", "बैठी है",
-            "बैठे हैं", "बैठा हुआ", "बैठी हुई", "बैठे हुए", "पर बैठा", "पर बैठी", "पर बैठे", "बैठकर", "बैठ कर", "sat down", "sits down", "sat on", "sits on",
+            "बैठे हैं", "बैठा हुआ", "बैठी हुई", "बैठे हुए", "पर बैठा", "पर बैठी", "पर बैठे", "पास बैठा", "पास बैठी", "पास बैठे", "बैठकर", "बैठ कर", "sat down", "sits down", "sat on", "sits on",
             "is sitting", "are sitting", "was sitting", "were sitting", "seated", "took a seat", "baith gaya", "baith gayi",
             // v39: the present of the user's directions — "उसके पास आकर बैठती है"
             "बैठती है", "बैठता है", "बैठती हैं", "बैठते है", "sits next", "sits beside",
@@ -10499,7 +10508,7 @@ public final class Director {
                 && !negatedNear(s, "धूप", "sunlight", "sun "))
             open(Film.W_DAPPLE, t, 1f);
         // v47.6: the sounds a description names: a bicycle bell now and then, leaves rustling in the wind, running steps far off
-        if (Txt.has(s, "साइकिल की घंटी", "ट्रिंग", "cycle bell", "bicycle bell")) {
+        if (Txt.has(s, "साइकिल की घंटी", "रिक्शे की घंटी", "रिक्शा की घंटी", "ट्रिंग", "cycle bell", "bicycle bell", "rickshaw bell")) {
             film.sfx.add(new Film.Sfx(Film.SFX_CYCLE_BELL, t + 1.5f, 0.8f, 0.16f));
             if (Txt.has(s, "कभी-कभी", "कभी कभी", "now and then", "every now")) film.sfx.add(new Film.Sfx(Film.SFX_CYCLE_BELL, t + 9f, 0.8f, 0.14f));
         }
@@ -10508,6 +10517,13 @@ public final class Director {
             film.sfx.add(new Film.Sfx(Film.SFX_RUSTLE, t + 0.3f, 3f, 0.22f));
         if (Txt.has(s, "दौड़ने की आवाज", "दौड़ने की आहट", "भागने की आवाज", "sound of running", "running footsteps", "footsteps running"))
             film.sfx.add(new Film.Sfx(Film.SFX_STEPS_RUN, t + 0.2f, 2f, Txt.has(s, "दूर से", "from afar", "far off", "distant") ? 0.18f : 0.35f));
+        // (steps splashing through water, walking heard from the street, horns far off, a bulb's hum — "बंद": it stops)
+        if (Txt.has(s, "छप-छप", "चलने की आवाज", "कदमों की आवाज", "splashing steps", "footsteps"))
+            film.sfx.add(new Film.Sfx(Film.SFX_STEPS, t + 0.3f, 2f, Txt.has(s, "दूर से", "from afar", "far off", "distant") ? 0.15f : 0.3f));
+        if (Txt.has(s, "हॉर्न", "honking", "horns") && !negatedNear(s, "हॉर्न", "horn"))
+            film.sfx.add(new Film.Sfx(Film.SFX_HORN, t + 1.2f, 0.6f, Txt.has(s, "दूर", "far", "distant") ? 0.12f : 0.25f));
+        if (Txt.has(s, "भिनभिना", "hum of the", "humming bulb", "buzzing bulb") && !Txt.has(s, "बंद", "stops", "goes off"))
+            film.sfx.add(new Film.Sfx(Film.SFX_HUM, t, 20f, 0.1f));
         String ws = s.replace("window", " ").replace("Window", " ").replace("rewind", " ").replace("unwind", " ").replace("winding", " ");
         if (Txt.has(s, WIND_STOP)) closeWeather(Film.W_WIND, t);
         else if ((Txt.has(ws, WIND) || WIND_SAID.matcher(s).find()) && !negatedNear(s, "हवा", "wind", "breeze", "gust")) {
@@ -10583,7 +10599,7 @@ public final class Director {
         boolean rumble = Txt.has(s, "बादल", "आसमान", "आकाश", "cloud", "sky") && Txt.has(s, RUMBLE) && !Txt.has(s, "शेर", "बाघ", "lion", "tiger");
         if (!place && (Txt.has(s, THUNDER) || rumble) && !negated(s)) { lightning(t + 0.2f, film.weather.size() + (int) t); d = Math.max(d, 1.8f); }
         if (Txt.has(seaWords(s), SEA)) open(Film.W_SEA, t, Txt.has(s, "ऊँची लहर", "ऊंची लहर", "big waves", "high waves", "rough sea") ? 1.3f : 0.8f);
-        if (wOpen[Film.W_SEA] < 0 && Txt.has(s, "पानी बह", "नदी बह", "धारा बह", "नाला बह", "झरना", "झरने", "पानी की धार", "water flows", "river flows", "stream flows", "flowing water", "waterfall") && !negated(s)) open(Film.W_SEA, t, 0.45f);   // v47.4: flowing water moves
+        if (wOpen[Film.W_SEA] < 0 && Txt.has(s, "पानी उफन", "नाली का पानी", "पानी बह", "नदी बह", "धारा बह", "नाला बह", "झरना", "झरने", "पानी की धार", "water flows", "river flows", "stream flows", "flowing water", "waterfall") && !negated(s)) open(Film.W_SEA, t, 0.45f);   // v47.4: flowing water moves
         if (Txt.has(s, "छपाक", "छप से", "पानी में कूद", "पानी में गिर", "splash", "jumps into the water", "falls into the water")) { Film.Actor jw = lastSubject != null ? actor(lastSubject) : null; Film.Fx sp = fx(Film.FX_WATER_HIT, t + 0.5f, t + 2.5f, jw != null ? xAt(jw, t + 0.5f) : 640, 0, jw, null); sp.color = 2; film.sfx.add(new Film.Sfx(Film.SFX_SPLASH, t + 0.5f, 1.2f, 0.8f)); }   // v47.4: the splash
         if (boatIn(s)) { open(Film.W_BOAT, t, 1f); if (wOpen[Film.W_SEA] < 0 && !Txt.has(s, "नदी", "river", "तालाब", "lake", "झील")) open(Film.W_SEA, t, 0.6f); }
         if (Txt.has(s, CANDLE) && !negated(s)) { open(Film.W_CANDLES, t, 1f); candleKind = 0; }

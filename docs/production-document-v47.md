@@ -208,3 +208,89 @@ The production document for the film now reports:
   - no multi-agent conference runs offline (the cloud conference in `ScriptAI` is unchanged and needs the user's own key);
   - no 3D rigging, lip-sync or physics simulation was added;
   - nothing here should be read as a claim of studio-level output.
+
+## 6. Second round (17 October, later): the two new scripts, the standard format, the editor
+
+### The user's scripts in the fixed format
+
+Both are saved verbatim as fixtures; no existing screenplay was overwritten:
+
+- आखिरी जोड़ी: `tools/testdata/aakhiri_jodi/aakhiri_jodi_numbered.txt`
+- आखिरी चाय: `tools/testdata/aakhiri_chai/aakhiri_chai_numbered.txt`
+
+Reader fixes found by these scripts (in `ScriptParser`, for every story):
+
+- **Endings.** "समाप्त - समय: शाम 6:30 बजे" and "END." are the end. The first had been read as a seventh line spoken by "समाप्त - समय".
+- **Names with a dash.** A numbered name with a dash and its description on the next line ("एक नई लाल जूतों की जोड़ी - आखिरी जोड़ी") no longer switches the whole list to the older one-line reading. That reading had dropped "मोची का औजारों वाला बक्सा".
+- **Note before the words.** `name: (note) "words"` no longer leaves a stray comma in the note.
+- **Headings in parentheses.** A scene heading in parentheses ("(दृश्य 1 — …)") is read as a heading. A direction such as "(दृश्य बदलता है)" stays a direction.
+
+The production document:
+
+- **Dialogue notes.** The notes with each line are now read as the speaker's own steps: "(दौड़ती हुई आती है …)" is नन्ही running in.
+- **Owner in brackets.** "काला छाता (मीरा का)" gives an explicit owner.
+- **Scene times.** A scene heading's time ("[शाम 7:15]") and times with minutes ("6:30 बजे") are read.
+- **New steps.** GIVE, OPEN (with "बक्सा नहीं खोलते" read as a negated step), DRINK, POUR and ARRIVE.
+- **Shared environment table.** The environment is read by one shared table for every story (`ENV_RULES`): rain, rain stopping, lightning, clouds, fog, snow, steam, smoke, fire, embers, lights, flicker, reflections, shadows, drips, puddle rings, flowing or receding water, a fluttering prop, smells and the street's sounds. Each requirement is either carried out (and checked in the plan), said to be unsupported, or said not to be filmable. The matrix is in `docs/engineering/animation-renderer-research-2026-10-17.md`.
+
+Director fixes found by आखिरी चाय (in `Director`, for every story):
+
+- **Nobody falls because water or tea falls.** "पानी बाल्टी में गिरता है" had thrown मीरा to the ground, and "चाय की धार … गिर रही" had thrown रघु काका. Someone falling *into* water still falls.
+- **Sitting near something is sitting.** "भट्टी के पास बैठा" is seated.
+- **Late entrances.** "तभी आरव दौड़ता आता है" and "तभी मीरा आती है" are entrances: they are not on the stage from the scene's start.
+- **More lightning words.** "जोरदार बिजली" is lightning.
+- **More sounds.** A rickshaw's bell, splashing steps, horns far off and a bulb's hum are heard. "पानी उफन" is moving water.
+
+The plan digest of all 2,100 test stories, compared before and after these changes: 4 stories change, all from the added sounds.
+
+### The standard screenplay format (`core/ScreenplayFormat`)
+
+`format(Story)` writes the script from the reader's own reading, never by replacing characters:
+
+- a plain title;
+- the numbered lists;
+- "(दृश्य N — …)" headings;
+- descriptions in parentheses;
+- `name: "words" (how it is said)`;
+- a plain "समाप्त" or "THE END".
+
+`validateFormattedText` checks those rules line by line and names each line. `validate(Story)` checks the story itself: a title, non-empty scenes, and every speaker in the list. `formatScript` refuses to format, and returns nothing, when the formatted script would read back with a different scene, speaker or word.
+
+| Check on all 2,100 test stories | Result |
+|---|---|
+| Same scenes, speakers and words after formatting | 2,100 of 2,100 |
+| Formatted text passes the rules | 2,100 |
+| Formatting a formatted script changes nothing | 2,099 (the exception is an emoticon ":-(" inside a description, which the reader itself rewrites) |
+
+The Studio has a "📝 Script format" card with the format notes for the script as written. "Show it in the standard format" opens the formatted script. "Use this script" replaces it only on the user's tap, and keeps the earlier one as `script_before_format.txt`.
+
+On the user's own scripts as written, the rules note:
+
+- the bare "दृश्य 1" headings (the standard puts them in parentheses);
+- the note before the words (the standard puts it after);
+- the `[CAMERA …]` block in square brackets;
+- "समाप्त - समय: …" (the ending is the word alone).
+
+The film is made either way.
+
+### The editor (`ProductionDocument.editorReview`)
+
+The editor runs offline, the same for every story. It notes what a script leaves open and never settles it; the notes are WARNING-level and never block. On आखिरी चिट्ठी it flags the five questions the protocol names:
+
+- how the letter came to lie behind the postbox (told, not shown);
+- why it lay unfound through "पंद्रह साल";
+- whether "बापू के लिए" is the outside or all of the letter;
+- that "बेटे" / "मुन्ना" and his handwriting exist only in the lines;
+- "तुम सच में परी हो" as wordplay on her name.
+
+The line is kept as written.
+
+### Tests (all plain JVM, all passing locally)
+
+New this round:
+
+- `NewFormatScriptsTest` (3)
+- `ScreenplayFormatTest` (7)
+- `AakhiriChitthiAcceptanceTest` (+1, the editor)
+
+These were added to the CI test list locally; nothing was pushed.

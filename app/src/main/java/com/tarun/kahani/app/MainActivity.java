@@ -1491,6 +1491,57 @@ public class MainActivity extends Activity {
             public void onClick(View v) { makeFilm(); }
         }));
         body.addView(plan);
+
+        // ---- v47.6: the script's format — the standard format's rules checked on the script as written, and the script in
+        // the standard format offered; it replaces the script only on the user's word (the old one is kept beside it), and
+        // never when it would change a line's words, its speaker or the scenes
+        LinearLayout fmt = Ui.card(this);
+        fmt.addView(Ui.title(this, "📝 Script format"));
+        try {
+            final String raw = project.read("script.txt");
+            List<String> notes = new ArrayList<String>(com.tarun.kahani.core.ScreenplayFormat.validate(st));
+            notes.addAll(com.tarun.kahani.core.ScreenplayFormat.validateFormattedText(raw));
+            StringBuilder fb = new StringBuilder();
+            if (notes.isEmpty()) fb.append("The script is in the standard format: a plain title, scene headings and descriptions in ( ), every spoken line in \" \", a plain ending.");
+            else {
+                fb.append(notes.size()).append(notes.size() == 1 ? " note" : " notes").append(" on the format (the film is made either way):");
+                for (int i = 0; i < notes.size() && i < 12; i++) fb.append("\n• ").append(notes.get(i));
+                if (notes.size() > 12) fb.append("\n… and ").append(notes.size() - 12).append(" more");
+            }
+            fmt.addView(Ui.text(this, fb.toString(), 13, Ui.TEXT, false));
+            if (!notes.isEmpty()) fmt.addView(Ui.button(this, "📝  Show it in the standard format", Ui.BLUE, new View.OnClickListener() {
+                public void onClick(View v) { offerFormatted(raw); }
+            }));
+        } catch (Throwable fe) {
+            fmt.addView(Ui.text(this, "The format could not be checked: " + fe, 13, Ui.RED, false));
+        }
+        body.addView(fmt);
+    }
+
+    /** v47.6: the script in the standard format, to read and to take (the old script kept as script_before_format.txt). */
+    private void offerFormatted(final String raw) {
+        final String formatted;
+        try { formatted = com.tarun.kahani.core.ScreenplayFormat.formatScript(raw); }
+        catch (Throwable e) { toast("The script could not be formatted: " + e.getMessage()); return; }
+        if (formatted == null) { toast("Not formatted: it would have changed a line, a speaker or a scene. The script stays as you wrote it."); return; }
+        ScrollView sv = new ScrollView(this);
+        TextView tv = Ui.text(this, formatted, 13, Ui.TEXT, false);
+        tv.setTextIsSelectable(true);
+        int pad = Ui.dp(this, 12);
+        tv.setPadding(pad, pad, pad, pad);
+        sv.addView(tv);
+        new AlertDialog.Builder(this).setTitle("The script in the standard format").setView(sv)
+                .setPositiveButton("Use this script", new android.content.DialogInterface.OnClickListener() {
+                    public void onClick(android.content.DialogInterface d, int w) {
+                        if (project == null) return;
+                        project.write("script_before_format.txt", raw);
+                        project.write("script.txt", formatted);
+                        project.setSetting("useAi", "0");
+                        toast("The script is now in the standard format (your earlier one is kept as script_before_format.txt).");
+                        showStudio();
+                    }
+                })
+                .setNegativeButton("Close", null).show();
     }
 
     private String charFile(Story.CharacterDef c) {

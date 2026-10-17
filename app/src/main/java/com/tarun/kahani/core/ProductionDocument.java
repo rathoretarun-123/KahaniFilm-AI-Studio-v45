@@ -40,7 +40,9 @@ public final class ProductionDocument {
             NOT_REQUIRED = "NOT_REQUIRED";
     /** How the film carries out an effect (capability categories — only the ones named here are used by this app). */
     public static final String KEYFRAMED = "KEYFRAMED", PROCEDURAL = "PROCEDURAL_ANIMATION", PARTICLES = "PARTICLE_SYSTEM",
-            SOUND = "SOUND_EFFECT", BACKDROP = "IN_BACKDROP_PICTURE", UNSUPPORTED = "UNSUPPORTED";
+            SOUND = "SOUND_EFFECT", BACKDROP = "IN_BACKDROP_PICTURE", UNSUPPORTED = "UNSUPPORTED",
+            /** a smell, a taste: said by the script for the mood, never seen or heard — the shot can only suggest it */
+            NOT_FILMABLE = "NOT_FILMABLE";
     public static final String READER = "READER", EDITOR = "EDITOR", DIRECTOR = "DIRECTOR", TECHNICAL_DIRECTOR = "TECHNICAL_DIRECTOR", QC = "QC";
 
     // ------------------------------------------------------------------ records
@@ -106,6 +108,8 @@ public final class ProductionDocument {
 
     public static final class Issue {
         public String id, severity, stage, sceneId, requirement, evidence, proposal;
+        /** What kind of finding it is (the editor's: NARRATED_ORIGIN, TIME_GAP, INSCRIPTION_SCOPE, OFFSCREEN_PERSON, FIGURATIVE_NAME). */
+        public String category = "";
         public final List<String> entityIds = new ArrayList<String>();
         public boolean resolved;
     }
@@ -212,6 +216,9 @@ public final class ProductionDocument {
             if (place != null && !place.sceneIds.contains(s.id)) place.sceneIds.add(s.id);
             d.scenes.add(s);
             int envN = 0;
+            // the time a scene heading gives ("दृश्य 1 - भीगा हुआ लेखक [शाम 7:15]")
+            Matcher ht = m("(सुबह|दोपहर|शाम|रात|morning|afternoon|evening|night)?\\s*([0-9]{1,2}):([0-9]{2})", Txt.digitsToAscii(sc.heading + " " + sc.title));
+            if (ht.find()) envN = d.eff(s, envN, "TIME", null, "ENV", ht.group(2) + ":" + ht.group(3) + (ht.group(1) != null ? " (" + dayPart(ht.group(1)) + ")" : ""), EXPLICIT, (sc.heading + " " + sc.title).trim(), BACKDROP);
             String lastActor = null;
             for (Story.Beat b : sc.beats) {
                 if (b.type == Story.Beat.DIALOGUE) {
@@ -228,13 +235,17 @@ public final class ProductionDocument {
                     d.lines.add(l);
                     s.lineIds.add(l.id);
                     if (sp != null) lastActor = sp.id;
+                    // the note with the line is the speaker's own action too ("(दौड़ती हुई आती है, एक हाथ में टूटा जूता …)"),
+                    // never spoken; its steps are the speaker's unless it names another
+                    if (sp != null && l.delivery.length() > 0)
+                        for (String clause : clauses(l.delivery)) { Action a = d.action(st, s, clause, sp.id, true); if (a != null) lastActor = a.actorId; }
                     continue;
                 }
                 String text = b.text == null ? "" : b.text;
                 envN = d.environment(s, text, envN);
                 for (String sent : Director.sentences(text)) {
                     for (String clause : clauses(sent)) {
-                        Action a = d.action(st, s, clause, lastActor);
+                        Action a = d.action(st, s, clause, lastActor, false);
                         if (a != null) lastActor = a.actorId;
                         else {
                             // a clause with no step still says whom the next is about ("परी का चेहरा … बदल जाता है")
@@ -291,7 +302,7 @@ public final class ProductionDocument {
 
     /** The head noun of a name: its last word ("दादाजी की लकड़ी की छड़ी" is a छड़ी), stemmed. */
     static String head(String name) {
-        String[] ws = Txt.norm(name == null ? "" : name).trim().split("[\\s,]+");
+        String[] ws = Txt.norm(Txt.withoutParens(name == null ? "" : name)).trim().split("[\\s,]+");
         return ws.length == 0 ? "" : Director.stemHi(ws[ws.length - 1]);
     }
 
@@ -340,7 +351,14 @@ public final class ProductionDocument {
         if (!col.isEmpty()) fact(e, "colour", join(col), EXPLICIT, "", 1, "the colours written");
         // the owner: "परी का गुलाबी स्कूल बैग" — a character named before का/की/के; a relation word ("दादाजी की छड़ी") is the
         // one the dialogue calls so (INFERRED, said why), else unknown
-        Matcher om = m("^(.+?)\\s+(का|की|के)\\s", e.name + " ");
+        // "काला छाता (मीरा का)": whose it is, in brackets after the name
+        Matcher pm = m("\\(\\s*([^()]+?)\\s+(का|की|के)\\s*\\)", e.name);
+        if (pm.find()) {
+            Story.CharacterDef c = ScriptParser.resolve(st, pm.group(1).trim());
+            Entity ce = c != null ? find(characters, c.displayName) : null;
+            if (ce != null) fact(e, "owner", ce.id, EXPLICIT, pm.group(), 1, "the name says whose");
+        }
+        Matcher om = m("^(.+?)\\s+(का|की|के)\\s", Txt.withoutParens(e.name) + " ");
         if (om.find()) {
             String who = om.group(1).trim();
             Story.CharacterDef c = ScriptParser.resolve(st, who);
@@ -370,8 +388,14 @@ public final class ProductionDocument {
         if (bf.find()) fact(e, "otherFoot", (bf.group(1).startsWith("बा") || bf.group(1).equalsIgnoreCase("left") ? "left" : "right") + " foot bare", EXPLICIT, bf.group(), 1, "the bare foot written");
         if (Txt.has(all, "घाव", "wound", "cut on")) fact(e, "wound", "a small wound on the bare foot's sole", EXPLICIT, "घाव", 1, "the wound written");
         if (Txt.has(all, "लिखा है", "written", "लिखावट")) {
+            // after "लिखा है" ("… अक्षरों में लिखा है बापू के लिए"), or before it when a clause follows ("… अक्षरों में पत्र पेटी
+            // लिखा है जो लगभग मिट चुका है")
             Matcher wr = m("लिखा है\\s*([^,।]+)$", all.trim());
-            if (wr.find()) fact(e, "writing", wr.group(1).trim(), EXPLICIT, wr.group(), 1, "the words written on it");
+            Matcher wb = m("(?:अक्षरों में|शब्दों में|स्याही से)\\s+([^,।]{2,40}?)\\s+लिखा है", all);
+            boolean clauseAfter = wr.find() && Txt.has(" " + wr.group(1).trim() + " ", " जो ", " जिस", " और ", " पर ");
+            wr.reset();
+            if (wr.find() && !clauseAfter) fact(e, "writing", wr.group(1).trim(), EXPLICIT, wr.group(), 1, "the words written on it");
+            else if (wb.find()) fact(e, "writing", wb.group(1).trim(), EXPLICIT, wb.group(), 1, "the words written on it");
         }
     }
 
@@ -438,16 +462,23 @@ public final class ProductionDocument {
     /** Verbs a step is read by, most particular first: {verb, words…}. */
     static final String[][] VERBS = {
             {"HEAD_ON_SHOULDER", "कंधे पर सिर", "head on his shoulder", "head on her shoulder"}, {"HAND_ON_HAND", "हाथ पर रख", "हाथ के ऊपर रख", "hand on his hand", "hand on her hand"},
-            {"KNEEL", "घुटनों के बल", "kneel"}, {"SIT_BESIDE", "बगल में बैठ", "पास बैठ", "sits beside"}, {"SIT", "बैठ जात", "बैठ गए", "बैठ गई", "बैठे हैं", "बैठा है", "बैठी है", "बैठते", "sits", "sat"},
+            {"KNEEL", "घुटनों के बल", "kneel"}, {"SIT_BESIDE", "बगल में बैठ", "पास बैठ", "sits beside"}, {"SIT", "बैठ जात", "बैठ गए", "बैठ गई", "बैठे हैं", "बैठा है", "बैठी है", "बैठते", "बैठता", "बैठती", "sits", "sat"},
             {"STAND_UP", "खड़ी होती", "खड़ा होता", "खड़े होते", "उठ खड़", "stands up", "gets up"}, {"RUN", "दौड़", "भाग", "runs", "running"},
             {"STEP_TOWARD", "कदम बढ़", "की तरफ बढ़", "steps toward", "walks toward"}, {"GO_TO", "के पास जाकर", "के पास जा", "goes to", "walks to"},
             {"PLACE", "जमीन पर रख", "नीचे रख", "पर रख देती", "पर रख देता", "puts down", "sets down", "places"}, {"REACH_INTO", "में छोटा हाथ डाल", "में हाथ डाल", "reaches into"},
             {"TAKE_OUT", "निकाल", "takes out", "pulls out"}, {"TAKE_FROM", "के हाथ से", "takes it from", "takes the"}, {"PICK_UP", "उठाती", "उठाता", "उठाते", "उठा लेत", "picks up", "lifts"}, {"CLUTCH", "सीने से लगा", "clutches"},
-            {"HOLD", "पकड़", "थाम", "holds", "grips"}, {"REACH", "हाथ आगे बढ़", "हाथ बढ़", "reaches"}, {"ADJUST", "ठीक कर", "adjusts"}, {"WIPE", "पोंछ", "wipes"},
+            {"HOLD", "पकड़", "थाम", "holds", "grips"}, {"REACH", "हाथ आगे बढ़", "हाथ बढ़", "reaches"}, {"GIVE", "बढ़ाती है", "बढ़ाता है", "बढ़ाते", "आगे बढ़ा", "दे देत", "देती है", "देता है", "hands", "gives", "holds out"},
+            {"OPEN", "खोलते", "खोलती", "खोलता", "खोल कर", "खोलने", "opens"}, {"DRINK", "चुस्की", "पीते हैं", "पीती है", "पीता है", "पी रहे", "sips", "drinks"},
+            {"POUR", "छान", "उड़ेल", "pours", "strains"}, {"ADJUST", "ठीक कर", "adjusts"}, {"WIPE", "पोंछ", "wipes"},
             {"LOOK", "की तरफ देख", "को देख", "देखती", "देखते", "looks at"}, {"STARTLE", "चौंक", "startled"}, {"LOWER_HEAD", "सिर झुका", "सिर नीचे", "झुका", "lowers her head", "lowers his head"}, {"SMILE", "मुस्कान", "मुस्कुरा", "smile"},
-            {"CRY", "आंसू", "आँसू", "रो", "sob", "tears"}, {"FREEZE", "रुक जाते", "स्थिर हो", "freeze"}, {"BREATHE", "सांस", "breath"}};
+            {"CRY", "आंसू", "आँसू", "रो", "sob", "tears"}, {"FREEZE", "रुक जाते", "स्थिर हो", "freeze"}, {"BREATHE", "सांस", "breath"},
+            {"ARRIVE", "आती है", "आता है", "आते हैं", "घुसते", "घुसता", "घुसती", "arrives", "comes in", "walks in"}};
 
-    Action action(Story st, Scene s, String clause, String lastActor) {
+    static String dayPart(String w) {
+        switch (w) { case "सुबह": return "morning"; case "दोपहर": return "afternoon"; case "शाम": return "evening"; case "रात": return "night"; default: return w; }
+    }
+
+    Action action(Story st, Scene s, String clause, String lastActor, boolean speakersNote) {
         String c = Txt.norm(clause);
         String verb = null;
         for (String[] v : VERBS) {
@@ -457,6 +488,8 @@ public final class ProductionDocument {
         // "सिर झटके से उठता है", "चेहरा आसमान की तरफ उठाते हैं": the head comes up (no thing is picked up)
         if (Txt.has(c, "सिर", "चेहरा", "नज़र", "नजर", "head", "face") && Txt.has(c, "उठ", "raises", "lifts", "looks up")) verb = "RAISE_HEAD";
         if (verb == null) return null;
+        // "भट्टी के पास बैठा": beside a thing is a sit; beside someone is a sit beside them
+        if (verb.equals("SIT_BESIDE") && ScriptParser.mentions(st, clause).size() < 2 && !Txt.has(c, "उसके पास", "उनके पास", "बगल में", "beside him", "beside her")) verb = "SIT";
         // "दूर से दौड़ने की आवाज आती है" is a sound the environment hears, not a step anyone takes
         if (Txt.has(c, "की आवाज", "की आहट", "sound of", "the noise of")) return null;
         // "बड़ी मुस्कान एक सेकंड में गायब हो जाती है": the smile goes
@@ -465,6 +498,7 @@ public final class ProductionDocument {
         String actor = null;
         if (!ms.isEmpty()) { Entity e = find(characters, ms.get(0).displayName); if (e != null) actor = e.id; }
         if (actor == null && Txt.has(" " + clause, " वह ", " वो ", " उसके ", " उसका ", " she ", " he ")) actor = lastActor;
+        if (actor == null && speakersNote) actor = lastActor;
         if (actor == null && (verb.equals("LOWER_HEAD") || verb.equals("RAISE_HEAD") || verb.equals("SMILE") || verb.equals("SMILE_FADES") || verb.equals("CRY") || verb.equals("BREATHE"))) actor = lastActor;
         // the verb's gender names the doer: "धीरे से खड़ी होती है रघुवीर जी की तरफ…" is परी's step, not रघुवीर जी's; "परी के हाथ
         // से चिट्ठी लेते हैं" is रघुवीर जी's; "एक छोटी बच्ची … बैठी है" is परी
@@ -473,7 +507,7 @@ public final class ProductionDocument {
         // whose it is — the one the sentence was about keeps it)
         int named = Txt.has(c, "बच्ची", "लड़की", "लडकी", "औरत", "महिला", "girl", "woman") ? 1 : Txt.has(c, "आदमी", "लड़का", "लडका", "बूढ़ा", "बूढा", "बुजुर्ग", " man", "boy") ? -1 : 0;
         if (named != 0) g = named;
-        else if (ms.isEmpty() && Txt.has(c, "आँख", "आंख", "मुस्कान", "चेहर", "हाथ", "आंसू", "आँसू", "होंठ", "पलक", "कंधे", "smile", "eyes", "tears")) g = 0;
+        else if ((ms.isEmpty() || speakersNote) && Txt.has(c, "आँख", "आंख", "मुस्कान", "चेहर", "हाथ", "उंगल", "उँगल", "आंसू", "आँसू", "होंठ", "पलक", "कंधे", "पैर", "बाल", "smile", "eyes", "tears", "fingers")) g = 0;
         Entity cur = actor != null ? byId(actor) : null;
         if (g != 0 && (cur == null || cur.gender == -g)) {
             String agree = null;
@@ -493,7 +527,7 @@ public final class ProductionDocument {
         a.hypothetical = Txt.has(" " + c + " ", " अगर ", " यदि ", " मानो ", " जैसे कि ", " if ", " would ", " as if ");
         // the target: the listed thing (by its head noun) named first in the clause, or another character named in it —
         // only for steps done to something (kneeling or running has none); the ground's own cover is never a target
-        boolean toThing = !Txt.has(verb, "KNEEL", "RUN", "STARTLE", "BREATHE", "SMILE", "CRY", "FREEZE", "LOWER_HEAD", "RAISE_HEAD", "STAND_UP", "HEAD_ON_SHOULDER", "HAND_ON_HAND");
+        boolean toThing = !Txt.has(verb, "KNEEL", "RUN", "STARTLE", "BREATHE", "SMILE", "CRY", "FREEZE", "LOWER_HEAD", "RAISE_HEAD", "STAND_UP", "HEAD_ON_SHOULDER", "HAND_ON_HAND", "ARRIVE");
         int best = Integer.MAX_VALUE;
         if (toThing) for (Entity p : props) {
             String h = head(p.name);
@@ -546,6 +580,11 @@ public final class ProductionDocument {
             case "HEAD_ON_SHOULDER": return "the head rests on the other's shoulder";
             case "HAND_ON_HAND": return "the hand rests on the other's hand";
             case "SMILE_FADES": return "the smile is gone";
+            case "GIVE": return "the thing is held out to the other";
+            case "OPEN": return "the thing is open";
+            case "DRINK": return "the actor drinks";
+            case "POUR": return "the tea (the drink) is poured";
+            case "ARRIVE": return "the actor is in the place";
             default: return "performed";
         }
     }
@@ -559,8 +598,8 @@ public final class ProductionDocument {
             for (String raw : clauseParts(sentence)) {
                 String p = raw.trim(), np = Txt.norm(p);
                 if (p.isEmpty()) continue;
-                Matcher tm = m("([0-9]+)\\s*बजे", Txt.digitsToAscii(p));
-                if (tm.find()) n = eff(s, n, "TIME", null, "ENV", tm.group(1) + ":00" + (Txt.has(p, "दोपहर") ? " (afternoon)" : Txt.has(p, "सुबह") ? " (morning)" : Txt.has(p, "शाम") ? " (evening)" : Txt.has(p, "रात") ? " (night)" : ""), EXPLICIT, p, BACKDROP);
+                Matcher tm = m("([0-9]{1,2})(?::([0-9]{2}))?\\s*बजे", Txt.digitsToAscii(p));
+                if (tm.find()) n = eff(s, n, "TIME", null, "ENV", tm.group(1) + ":" + (tm.group(2) != null ? tm.group(2) : "00") + (Txt.has(p, "दोपहर") ? " (afternoon)" : Txt.has(p, "सुबह") ? " (morning)" : Txt.has(p, "शाम") ? " (evening)" : Txt.has(p, "रात") ? " (night)" : ""), EXPLICIT, p, BACKDROP);
                 if (Txt.has(np, "आसमान", "sky") && Txt.has(np, "साफ", "नीला", "clear", "blue")) n = eff(s, n, "SKY", null, "ENV", "clear blue sky", EXPLICIT, p, BACKDROP);
                 if (Txt.has(np, "बादल नहीं", "no cloud")) n = eff(s, n, "SKY", null, "ENV", "no clouds (must not appear)", EXPLICIT, p, BACKDROP);
                 if (Txt.has(np, "धूप", "sunlight", "sun ") && Txt.has(np, "तेज", "कड़क", "कडक", "strong", "harsh")) n = eff(s, n, "SUN", null, "ENV", "strong sunlight", EXPLICIT, p, BACKDROP);
@@ -588,10 +627,15 @@ public final class ProductionDocument {
                     if (Txt.has(np, "कुर्त", "कपड", "दुपट्ट", "साड़ी", "आस्तीन", "clothes", "kurta")) n = eff(s, n, "CLOTH", "WIND", characterIn(p), "clothes stir in the wind", ev, p, PROCEDURAL);
                     if (!explicitCause) for (int i = before; i < effects.size(); i++) effects.get(i).explanation = "the same sentence has the wind; these words do not say it moves this";
                 } else if (Txt.has(np, "धूल के कण", "dust motes", "dust particles")) n = eff(s, n, "DUST", windHere ? "WIND" : null, "ENV", "dust motes in the air", EXPLICIT, p, PARTICLES);
-                if (Txt.has(np, "चिड़ि", "चिडि", "पक्षी", "birds")) n = eff(s, n, "SOUND_BIRDS", null, "ENV", Txt.has(np, "तेज") ? "birds, louder" : "birds", EXPLICIT, p, SOUND);
-                if (Txt.has(np, "घंटी", "bell")) n = eff(s, n, "SOUND_BELL", null, "ENV", "a bicycle bell now and then", EXPLICIT, p, SOUND);
-                if (Txt.has(np, "सर-सर", "सरसर", "rustle")) n = eff(s, n, "SOUND_RUSTLE", "WIND", "ENV", "leaves rustle", EXPLICIT, p, SOUND);
-                if (Txt.has(np, "दौड़ने की आवाज", "footsteps")) n = eff(s, n, "SOUND_STEPS", null, "ENV", "running footsteps from afar", EXPLICIT, p, SOUND);
+                // everything else the description asks of the world, by the shared table (any story, any language)
+                boolean neg = Txt.has(" " + np + " ", " नहीं ", " ना ", " बिना ", " no ", " not ", " without ");
+                for (EnvRule r : ENV_RULES) {
+                    if (!Txt.has(np, r.words) || (r.not.length > 0 && Txt.has(np, r.not)) || neg) continue;
+                    String method = r.method;
+                    // (the characters' own shadows long on the wet ground: the renderer gives them only a contact shadow)
+                    if (r.kind.equals("SHADOW") && (Txt.has(np, "तीनों", "दोनों", "उनकी", "उसकी", "their", "his", "her") || characterNamedIn(p) != null)) method = UNSUPPORTED;
+                    n = eff(s, n, r.kind, r.cause, "ENV", r.behaviour(np), EXPLICIT, p, method);
+                }
             }
             // the bench that rocks as she sits on it (the whole sentence: the reason follows in its own part)
             String ns = Txt.norm(sentence);
@@ -615,6 +659,80 @@ public final class ProductionDocument {
         }
         return out;
     }
+
+    /**
+     * One kind of thing a description can ask of the world, the words that ask for it (Hindi and English), what it
+     * comes from, how the film carries it out, and what in the director's plan shows that it is carried out (a kind
+     * of weather, a sound, an effect, an ambience) — shared by every story, nothing of one story in it.
+     */
+    static final class EnvRule {
+        final String kind, cause, method, behaviour, explanation, amb;
+        final String[] words, not;
+        final int[] weather, sfx, fx;
+        EnvRule(String kind, String cause, String method, String behaviour, String explanation, int[] weather, int[] sfx, int[] fx, String amb, String[] words, String... not) {
+            this.kind = kind; this.cause = cause; this.method = method; this.behaviour = behaviour; this.explanation = explanation;
+            this.weather = weather; this.sfx = sfx; this.fx = fx; this.amb = amb; this.words = words; this.not = not;
+        }
+        String behaviour(String np) {
+            if (kind.equals("RAIN")) return Txt.has(np, "मूसलाधार", "तेज", "जोरदार", "heavy", "downpour", "pouring") ? "heavy rain" : Txt.has(np, "हल्की", "धीमी", "बूंदाबांदी", "बूँदाबाँदी", "light", "drizzl") ? "light rain" : "rain";
+            if (kind.equals("SOUND_BIRDS") && Txt.has(np, "तेज", "louder")) return "birds, louder";
+            return behaviour;
+        }
+    }
+    static int[] ints(int... v) { return v; }
+    static String[] ws(String... v) { return v; }
+    static final int[] NONE = new int[0];
+    static final EnvRule[] ENV_RULES = {
+            new EnvRule("RAIN", null, PARTICLES, "rain", "", ints(Film.W_RAIN, Film.W_STORM), NONE, NONE, null,
+                    ws("बारिश", "बरसात", "बूंदाबांदी", "बूँदाबाँदी", "rain", "drizzl", "downpour"), "बारिश का पानी", "बारिश के बाद", "बारिश रुक", "बारिश थम", "बारिश लगभग रुक", "rainbow", "rainwater", "rain stop", "बारिश के छल्ले",
+                    "की आवाज", "पट-पट", "टप-टप", "आखिरी बूंद", "sound of"),
+            new EnvRule("RAIN_STOPS", "RAIN", PROCEDURAL, "the rain stops", "", NONE, NONE, NONE, null, ws("बारिश रुक", "बारिश लगभग रुक", "बारिश थम", "rain stops", "rain has stopped", "the rain eases")),
+            new EnvRule("LIGHTNING", null, PROCEDURAL, "lightning flashes", "a flash over the frame and a bolt in the sky (procedural)", NONE, ints(Film.SFX_THUNDER), ints(Film.FX_LIGHTNING), null,
+                    ws("बिजली कड़क", "बिजली चमक", "बिजली गिर", "बिजली से", "lightning"), "बिजली का", "बिजली गई", "बिजली नहीं"),
+            new EnvRule("CLOUDS", null, PROCEDURAL, "clouds", "", ints(Film.W_CLOUDS, Film.W_STORM), NONE, NONE, null, ws("बादल", "clouds"), "बादल नहीं", "एक भी बादल", "no cloud", "बादलों के बीच से"),
+            new EnvRule("FOG", null, PROCEDURAL, "fog", "", ints(Film.W_FOG), NONE, NONE, null, ws("कोहरा", "कोहरे", "धुंध", "fog", "mist")),
+            new EnvRule("SNOW", null, PARTICLES, "snow falling", "", ints(Film.W_SNOW), NONE, NONE, null, ws("बर्फ गिर", "बर्फ़ गिर", "बर्फबारी", "बर्फ़बारी", "snowfall", "snowing", "snow falls")),
+            new EnvRule("STEAM", null, PARTICLES, "steam rises", "", NONE, NONE, ints(Film.FX_STEAM), null, ws("भाप", "steam")),
+            new EnvRule("SMOKE", null, PARTICLES, "smoke rises", "", NONE, NONE, ints(Film.FX_SMOKE, Film.FX_STEAM), null, ws("धुआं", "धुंआ", "धुआँ", "धुएं", "धुएँ", "smoke")),
+            new EnvRule("FIRE", null, PARTICLES, "a fire burns", "", ints(Film.W_FIRE), NONE, NONE, null, ws("आग जल", "आग लग", "जलती आग", "लपटें", "अलाव", "flames", "bonfire", "fire burns")),
+            new EnvRule("EMBERS", null, BACKDROP, "coals glowing in the stove", "as the picture of the place or the stove shows it; no glow is animated", NONE, NONE, NONE, null,
+                    ws("कोयले दहक", "दहकते कोयले", "अंगारे", "आंच तेज", "embers", "glowing coals")),
+            new EnvRule("LIGHT_SOURCE", null, BACKDROP, "a lamp or a bulb lights the place", "the light as the pictures show it; no light source is simulated", NONE, NONE, NONE, null,
+                    ws("बल्ब", "स्ट्रीट लाइट", "लालटेन", "लैंप", "ट्यूबलाइट", "bulb", "street light", "streetlight", "lamp", "lantern"), "भिनभिना", "अक्स", "परछाई", "रिफ्लेक्शन"),
+            new EnvRule("LIGHT_FLICKER", null, UNSUPPORTED, "the light flickers or sways", "the light of the picture does not flicker or sway (no light simulation)", NONE, NONE, NONE, null,
+                    ws("टिमटिमा", "रोशनी हिल", "रोशनी कांप", "flicker", "light sways")),
+            new EnvRule("REFLECTION", null, UNSUPPORTED, "a reflection in the water", "no reflections are drawn on water", NONE, NONE, NONE, null,
+                    ws("अक्स", "रिफ्लेक्शन", "reflection", "पानी में बल्ब", "पानी में परछाई", "पानी में रिफ्ले")),
+            new EnvRule("SHADOW", "LIGHT", BACKDROP, "shadows", "as the place's picture shows them", NONE, NONE, NONE, null, ws("परछाई", "परछाइयां", "परछाइयाँ", "shadows"), "पानी में बल्ब की परछाई"),
+            new EnvRule("DRIP", null, UNSUPPORTED, "water drips from the roof", "water dripping from an edge is not drawn (the rain's own drops are)", NONE, NONE, NONE, null,
+                    ws("टपक", "पानी की धार", "धार गिर", "धार सीधे", "कोनों से टिप", "dripping", "drips")),
+            new EnvRule("PUDDLE_RINGS", "RAIN", PARTICLES, "raindrop rings on the puddles", "the rain's splashes on the ground (procedural); no rings spread on the water", ints(Film.W_RAIN, Film.W_STORM), NONE, NONE, null,
+                    ws("छल्ले", "ripples")),
+            new EnvRule("WATER_FLOW", null, PROCEDURAL, "water flows", "the water of the place's picture moves (procedural)", ints(Film.W_SEA), NONE, NONE, null,
+                    ws("पानी उफन", "पानी बह", "बह रहे", "नाली का पानी", "water flows", "flooding")),
+            new EnvRule("WATER_RECEDES", null, UNSUPPORTED, "the water goes down", "the water of a picture does not rise or fall", NONE, NONE, NONE, null, ws("पानी उतर", "water recedes", "water goes down")),
+            new EnvRule("FLUTTER", "WIND", UNSUPPORTED, "a thing flutters in the wind", "a prop's picture does not move in the wind (only the characters' clothes and the place's plants do)", NONE, NONE, NONE, null,
+                    ws("फड़फड़", "फडफड", "flutter", "flapping")),
+            new EnvRule("SMELL", null, NOT_FILMABLE, "a smell", "a smell is neither seen nor heard; the shot can only suggest it (steam, faces)", NONE, NONE, NONE, null,
+                    ws("गंध", "खुशबू", "सुगंध", "महक", "smell", "aroma", "scent")),
+            new EnvRule("SOUND_RAIN", "RAIN", SOUND, "the patter of the rain", "the rain recording of the sound library, when there is one", NONE, ints(Film.SFX_UMBRELLA_RAIN), NONE, "rain",
+                    ws("टप-टप", "पट-पट", "टिप-टिप", "बारिश की आवाज", "बारिश की पट", "rain patter", "sound of rain")),
+            new EnvRule("SOUND_BIRDS", null, SOUND, "birds", "", ints(Film.W_BIRDS), ints(Film.SFX_BIRDS), NONE, null, ws("चिड़ि", "चिडि", "पक्षी", "चहचहा", "birds")),
+            new EnvRule("SOUND_BELL", null, SOUND, "a bell now and then", "", NONE, ints(Film.SFX_CYCLE_BELL, Film.SFX_BELL), NONE, null, ws("घंटी", "bell")),
+            new EnvRule("SOUND_RUSTLE", "WIND", SOUND, "leaves rustle", "", NONE, ints(Film.SFX_RUSTLE, Film.SFX_WIND), NONE, null, ws("सर-सर", "सरसर", "rustle")),
+            new EnvRule("SOUND_STEPS", null, SOUND, "footsteps", "", NONE, ints(Film.SFX_STEPS, Film.SFX_STEPS_RUN, Film.SFX_STEPS_HARD, Film.SFX_STEPS_LIMP, Film.SFX_STICK), NONE, null,
+                    ws("दौड़ने की आवाज", "चलने की आवाज", "कदमों की आवाज", "छप-छप", "footsteps")),
+            new EnvRule("SOUND_HORN", null, SOUND, "horns far off", "", NONE, ints(Film.SFX_HORN, Film.SFX_TRAFFIC), NONE, null, ws("हॉर्न", "horn", "honk")),
+            new EnvRule("SOUND_HUM", null, SOUND, "an electric hum", "", NONE, ints(Film.SFX_HUM, Film.SFX_BUZZ), NONE, null, ws("भिनभिना", "hum", "buzz"), "बंद", "stops"),
+            new EnvRule("SOUND_THUNDER", "LIGHTNING", SOUND, "thunder", "", NONE, ints(Film.SFX_THUNDER), NONE, null, ws("गरज", "गड़गड़ाहट", "thunder"), "शेर", "बाघ"),
+            new EnvRule("SOUND_SIP", null, SOUND, "sips", "", NONE, ints(Film.SFX_SIP), NONE, null, ws("चुस्की", "sip")),
+            new EnvRule("SOUND_DOG", null, UNSUPPORTED, "a dog barks far off", "the sound library has no dog's bark for a dog that is not in the story", NONE, NONE, NONE, null, ws("भौंक", "barking", "a dog barks")),
+            new EnvRule("SOUND_AZAAN", null, UNSUPPORTED, "the call to prayer from far off", "there is no recording of the azaan in the studio's sounds", NONE, NONE, NONE, null, ws("अजान", "अज़ान", "azaan", "azan", "adhan")),
+    };
+    static EnvRule rule(String kind) { for (EnvRule r : ENV_RULES) if (r.kind.equals(kind)) return r; return null; }
+
+    /** The character a description names, or null. */
+    String characterNamedIn(String text) { for (Entity c : characters) if (Txt.has(text, c.name)) return c.id; return null; }
 
     int eff(Scene s, int n, String kind, String cause, String affected, String behaviour, String evidence, String span, String method) {
         // (said twice in a scene — "छाया" in the opening and again by the bench — it is one requirement)
@@ -709,7 +827,19 @@ public final class ProductionDocument {
             int w = weatherOf(e.kind), sfx = sfxOf(e.kind);
             if (w >= 0) for (Film.Weather fw : film.weather) if (fw.type == w && fw.t0 < s.t1 && fw.t1 > s.t0 && fw.strength > 0) e.scheduled = true;
             if (sfx >= 0) for (Film.Sfx fs : film.sfx) if (fs.type == sfx && fs.t >= s.t0 - 0.5f && fs.t < s.t1) e.scheduled = true;
-            if (e.method.equals(BACKDROP)) e.scheduled = true;          // the place's picture carries it
+            EnvRule rr = rule(e.kind);
+            if (rr != null && !e.method.equals(UNSUPPORTED) && !e.method.equals(NOT_FILMABLE)) {
+                for (int wt : rr.weather) for (Film.Weather fw : film.weather) if (fw.type == wt && fw.t0 < s.t1 && fw.t1 > s.t0 && fw.strength > 0) e.scheduled = true;
+                for (int st : rr.sfx) for (Film.Sfx fs : film.sfx) if (fs.type == st && fs.t >= s.t0 - 0.5f && fs.t < s.t1) e.scheduled = true;
+                Film.Seg sgx = segOf(segs, s);
+                if (sgx != null) for (int ft : rr.fx) for (Film.Fx f : sgx.fx) if (f.type == ft) e.scheduled = true;
+                if (rr.amb != null) for (Film.Amb a : film.ambience) if (a.t0 < s.t1 && a.t1 > s.t0 && a.words != null && a.words.contains(rr.amb)) e.scheduled = true;
+                // the rain stopping: a rain that ends inside the scene
+                if (e.kind.equals("RAIN_STOPS")) for (Film.Weather fw : film.weather) if ((fw.type == Film.W_RAIN || fw.type == Film.W_STORM) && fw.t1 > s.t0 && fw.t1 < s.t1 + 0.5f) e.scheduled = true;
+                if (e.scheduled && rr.explanation.length() > 0) e.explanation = rr.explanation;
+            }
+            if (rr != null && (e.method.equals(UNSUPPORTED) || e.method.equals(NOT_FILMABLE))) e.explanation = rr.explanation;
+            if (e.method.equals(BACKDROP)) { e.scheduled = true; if (rr != null && rr.explanation.length() > 0) e.explanation = rr.explanation; }          // the place's picture carries it
             if (e.kind.equals("DAPPLED_LIGHT") && e.method.equals(PROCEDURAL) && e.scheduled) e.explanation = "soft light patches swaying over the frame (screen-space, procedural; not cast by the tree)";
             if (e.kind.equals("BENCH_WOBBLE")) for (Film.Seg sg : segs) for (Film.Fx f : sg.fx) if (f.type == Film.FX_WOBBLE && f.t0 >= s.t0 && f.t0 < s.t1) e.scheduled = true;
             if (e.kind.equals("CLOTH")) e.scheduled = anyWind(film, s);
@@ -721,12 +851,16 @@ public final class ProductionDocument {
             }
             if (e.kind.equals("DUST") && !e.scheduled) for (Film.Weather fw : film.weather) if (fw.type == Film.W_MOTES && fw.t0 < s.t1 && fw.t1 > s.t0 && fw.strength > 0) e.scheduled = true;
         }
-        // each step's evidence in the plan
+        // each step's evidence in the plan (again in validate(), once the pictures are known)
+        this.film = film; this.sceneSegs = segs;
         for (Action a : actions) a.status = evidenceOf(film, segs, a);
         history.add("r" + revision + ": the director's plan attached (" + shots.size() + " shots)");
     }
 
     static Film.Seg segOf(List<Film.Seg> segs, Scene s) { for (Film.Seg sg : segs) if (Math.abs(sg.t0 - s.t0) < 0.01f) return sg; return null; }
+
+    private Film film;
+    private List<Film.Seg> sceneSegs;
 
     static boolean anyWind(Film film, Scene s) { for (Film.Weather w : film.weather) if (w.type == Film.W_WIND && w.t0 < s.t1 && w.t1 > s.t0) return true; return false; }
 
@@ -735,16 +869,11 @@ public final class ProductionDocument {
         if (kind.equals("DUST")) return Film.W_DUST;
         if (kind.equals("LEAVES_LIFT")) return Film.W_LEAVES;
         if (kind.equals("DAPPLED_LIGHT")) return Film.W_DAPPLE;
-        if (kind.equals("SOUND_BIRDS")) return Film.W_BIRDS;
         return -1;
     }
 
     static int sfxOf(String kind) {
-        if (kind.equals("SOUND_BIRDS")) return Film.SFX_BIRDS;
-        if (kind.equals("SOUND_BELL")) return Film.SFX_CYCLE_BELL;
-        if (kind.equals("SOUND_RUSTLE")) return Film.SFX_RUSTLE;
         if (kind.equals("WIND")) return Film.SFX_WIND;
-        if (kind.equals("SOUND_STEPS")) return Film.SFX_STEPS_RUN;
         return -1;
     }
 
@@ -768,13 +897,18 @@ public final class ProductionDocument {
             case "STAND_UP":
                 for (Film.Key k : fa.keys) if (k.body == Pose.STAND && k.t > s.t0 + 0.5f) return "IN_PLAN";
                 return "NOT_IN_PLAN";
-            case "RUN": case "GO_TO": case "STEP_TOWARD":
+            case "RUN": case "GO_TO": case "STEP_TOWARD": case "ARRIVE": {
                 for (Film.Key k : fa.keys) if (k.moveDur > 0) return "IN_PLAN";
+                // (coming in: off the stage at the scene's start, on it later)
+                if (a.verb.equals("ARRIVE") && !fa.stateAt(s.t0 + 0.05f).visible) for (Film.Key k : fa.keys) if (k.visible && k.t > s.t0 + 0.3f) return "IN_PLAN";
                 return "NOT_IN_PLAN";
-            case "TAKE_OUT": case "TAKE_FROM": case "HOLD": case "CLUTCH": case "PICK_UP": {
+            }
+            case "TAKE_OUT": case "TAKE_FROM": case "HOLD": case "CLUTCH": case "PICK_UP": case "GIVE": {
                 if (a.targetId == null) return "NOT_CHECKABLE";
                 Entity p = byId(a.targetId);
                 if (p == null || !p.kind.equals("PROP")) return "NOT_CHECKABLE";
+                // (no picture of the thing: the director stages a drawn everyday one where it has one, which this does not check)
+                if (!MATCHED.equals(p.assetState)) { a.reason = "no picture of " + p.name + " to follow through the plan"; return "NOT_CHECKABLE"; }
                 for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.a == fa && f.what != null && find(props, f.what) == p) return "IN_PLAN";
                 return Rigidity.groundCover(p.name) ? "NOT_CHECKABLE" : "NOT_IN_PLAN";
             }
@@ -784,6 +918,7 @@ public final class ProductionDocument {
             case "PLACE": {
                 if (a.targetId == null) return "NOT_CHECKABLE";
                 Entity p = byId(a.targetId);
+                if (p != null && !MATCHED.equals(p.assetState)) { a.reason = "no picture of " + p.name + " to follow through the plan"; return "NOT_CHECKABLE"; }
                 if (p != null) for (String n : film.notes) if (n.contains(p.name + ": stays on")) { a.reason = n.trim().replace("↳ ", ""); return "UNSUPPORTED"; }
                 for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.what != null && find(props, f.what) == p) return "IN_PLAN";
                 return "NOT_IN_PLAN";
@@ -840,18 +975,21 @@ public final class ProductionDocument {
      * The issues found are added to the register (earlier ones of the technical director are replaced).
      */
     public void validate() {
+        if (film != null) for (Action a : actions) { a.reason = ""; a.status = evidenceOf(film, sceneSegs, a); }
         // (the checks below are the reader's and the technical director's: theirs are found anew; a later stage's — the QC of
         // the rendered film — stay until resolved)
-        for (int i = issues.size() - 1; i >= 0; i--) if (issues.get(i).stage.equals(READER) || issues.get(i).stage.equals(TECHNICAL_DIRECTOR)) issues.remove(i);
+        for (int i = issues.size() - 1; i >= 0; i--) if (issues.get(i).stage.equals(READER) || issues.get(i).stage.equals(TECHNICAL_DIRECTOR) || issues.get(i).stage.equals(EDITOR)) issues.remove(i);
+        editorReview();
         for (Line l : lines) if (l.speakerId == null) issue(BLOCKER, READER, l.sceneId, "every line has a listed speaker", "no character for \"" + l.speakerName + "\"", "list the speaker under पात्र, or fix the name");
         for (Effect e : effects) {
             if (e.method.equals(UNSUPPORTED)) issue(e.evidence.equals(EXPLICIT) ? MAJOR : WARNING, TECHNICAL_DIRECTOR, e.sceneId, e.kind + ": " + e.behaviour, "\"" + e.span + "\"", "not carried out by this renderer; "
-                    + (e.kind.equals("DAPPLED_LIGHT") ? "the place's picture keeps its sun patches still" : e.kind.equals("LEAVES_SLIDE") ? "leaves lying on the ground stay still" : "no approximation yet"), e.affectedId);
+                    + (e.kind.equals("DAPPLED_LIGHT") ? "the place's picture keeps its sun patches still" : e.kind.equals("LEAVES_SLIDE") ? "leaves lying on the ground stay still" : e.explanation.length() > 0 ? e.explanation : "no approximation yet"), e.affectedId);
+            else if (e.method.equals(NOT_FILMABLE)) continue;
             else if (e.evidence.equals(EXPLICIT) && !e.scheduled && !e.method.equals(BACKDROP)) issue(e.kind.startsWith("SOUND") ? MINOR : MAJOR, TECHNICAL_DIRECTOR, e.sceneId, e.kind + ": " + e.behaviour, "\"" + e.span + "\" — not in the director's plan", "schedule it in the scene", e.affectedId);
         }
         for (Action a : actions) if ("NOT_IN_PLAN".equals(a.status)) issue(MAJOR, TECHNICAL_DIRECTOR, a.sceneId, a.verb + " (" + a.completion + ")", "\"" + a.span + "\"", "stage this step", a.actorId, a.targetId);
         for (Action a : actions) if ("UNSUPPORTED".equals(a.status)) issue(MAJOR, TECHNICAL_DIRECTOR, a.sceneId, a.verb + " (" + a.completion + ")", "\"" + a.span + "\"", "not carried out: " + a.reason, a.actorId, a.targetId);
-        for (Effect e : effects) if (e.evidence.equals(INFERRED) && !e.scheduled && !e.method.equals(BACKDROP) && !e.method.equals(UNSUPPORTED))
+        for (Effect e : effects) if (e.evidence.equals(INFERRED) && !e.scheduled && !e.method.equals(BACKDROP) && !e.method.equals(UNSUPPORTED) && !e.method.equals(NOT_FILMABLE))
             issue(WARNING, TECHNICAL_DIRECTOR, e.sceneId, e.kind + ": " + e.behaviour, "\"" + e.span + "\" (inferred: " + e.explanation + ")", "schedule it if the story means it", e.affectedId);
         if (assetsChecked) for (Entity l : locations) if (l.assetState.equals(MISSING)) issue(MAJOR, TECHNICAL_DIRECTOR, null, "a picture of " + l.name, "a scene happens here and has no place picture", "upload one", l.id);
         for (Shot sh : shots) if (sh.dur < 0.5f) issue(MINOR, TECHNICAL_DIRECTOR, sh.sceneId, "every shot holds long enough to read", sh.id + " lasts " + String.format(java.util.Locale.ROOT, "%.2f", sh.dur) + " s", "merge it with its neighbour");
@@ -876,6 +1014,65 @@ public final class ProductionDocument {
         r.status = blockers > 0 ? "BLOCKED" : "VALIDATED";
         r.rationale = blockers + " blocker(s), " + (r.issueIds.size() - blockers) + " other open issue(s)";
         reviews.put(TECHNICAL_DIRECTOR, r);
+    }
+
+    static final Pattern SPAN_OF_TIME = Pattern.compile("([0-9०-९]+|एक|दो|तीन|चार|पांच|पाँच|छह|सात|आठ|नौ|दस|बारह|पंद्रह|पन्द्रह|बीस|पच्चीस|तीस|चालीस|पचास|कई|बहुत|one|two|three|five|ten|fifteen|twenty|thirty|fifty|many)\\s+(साल|सालों|बरस|वर्ष|वर्षों|महीने|years|months)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
+    static final String[] RELATIONS = {"बेटा", "बेटे", "बेटी", "मुन्ना", "मुन्नी", "पति", "पत्नी", "पोता", "पोती", "son", "daughter", "husband", "wife", "grandson", "granddaughter"};
+
+    /**
+     * The editor's reading, offline and the same for every story: what the script leaves open, said and never settled for
+     * it — a thing whose arrival is only told, a long time a thing lay unfound, words on a thing that may be only its
+     * address, a person who is only named in the lines, a character's name said as a word. Notes (WARNING), never blocks.
+     */
+    void editorReview() {
+        String longest = null;
+        for (Line l : lines) { Matcher t = SPAN_OF_TIME.matcher(l.text); if (t.find()) { longest = t.group().trim(); break; } }
+        for (StateChange c : states) {
+            if (c.onScreen) continue;
+            Entity p = byId(c.entityId);
+            if (p == null) continue;
+            editorNote("NARRATED_ORIGIN", c.sceneId, "how " + p.name + " came to be " + c.state.toLowerCase(java.util.Locale.ROOT).replace('_', ' ') + " is only told, not shown",
+                    "\"" + c.span + "\"", "keep it told (the line carries it), or show it in a short shot; the story itself does not say how it got there", p.id);
+            if (longest != null) editorNote("TIME_GAP", c.sceneId, "why " + p.name + " lay unfound through \"" + longest + "\"",
+                    "the lines give the time (" + longest + ") and where it was found; nothing says why no one found it", "leave it to the audience, or let a line say it", p.id);
+        }
+        for (Entity p : props) {
+            String w = p.fact("writing");
+            // (a letter, a note, a card: are these the words on its outside, or all of it?)
+            boolean paper = Txt.has(Txt.norm(p.name), "चिट्ठी", "पत्र", "खत", "कागज", "लिफाफ", "कार्ड", "डायरी", "letter", "note", "card", "envelope", "diary");
+            if (w != null && w.length() > 0 && paper) editorNote("INSCRIPTION_SCOPE", null, "is \"" + w + "\" what is written on the outside of " + p.name + " or all that can be read of it",
+                    "the list gives only these words", "say which; the film shows only these words", p.id);
+        }
+        java.util.Set<String> said = new java.util.HashSet<String>();
+        for (Line l : lines) {
+            String t = Txt.norm(l.text);
+            for (String r : RELATIONS) {
+                if (said.contains(r) || !startsWord(t, Txt.norm(r))) continue;
+                boolean cast = false;
+                for (Entity c : characters) if (Txt.has(c.name + " " + c.description, r)) cast = true;
+                if (cast) continue;
+                said.add(r);
+                editorNote("OFFSCREEN_PERSON", l.sceneId, "\"" + r + "\" is named only in the lines: all the story establishes about them is what is said",
+                        "\"" + l.text + "\" (" + l.speakerName + ")", "no picture is asked for; if they matter to a shot (a photo, a letter in their hand), list them", l.speakerId);
+            }
+            for (Entity c : characters) {
+                if (c.id.equals(l.speakerId)) continue;
+                Matcher f = Pattern.compile("(?:सच में|सचमुच|सच्ची|really|truly|a real)\\s+(?:एक\\s+)?" + Pattern.quote(Txt.norm(c.name)) + "(?:\\s|$|[।!?,])", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE).matcher(t);
+                if (f.find()) editorNote("FIGURATIVE_NAME", l.sceneId, "\"" + f.group().trim() + "\" says " + c.name + "'s name as a word — wordplay, kept as written",
+                        "\"" + l.text + "\"", "keep the line (it is the author's); the voice and the face can play it either way", c.id);
+            }
+        }
+        Review r = new Review();
+        r.role = EDITOR; r.revision = revision;
+        for (Issue i : issues) if (EDITOR.equals(i.stage) && !i.resolved) r.issueIds.add(i.id);
+        r.status = "REVIEWED";
+        r.rationale = r.issueIds.size() + " note(s) on what the story leaves open; the dialogue is kept as written";
+        reviews.put(EDITOR, r);
+    }
+
+    void editorNote(String category, String sceneId, String requirement, String evidence, String proposal, String entityId) {
+        for (Issue i : issues) if (EDITOR.equals(i.stage) && category.equals(i.category) && requirement.equals(i.requirement)) return;
+        issue(WARNING, EDITOR, sceneId, requirement, evidence, proposal, entityId).category = category;
     }
 
     /** An issue found by a later stage (the QC of the rendered film, a reviewer): kept across re-validation until resolved. */
@@ -972,7 +1169,7 @@ public final class ProductionDocument {
         for (Shot s : shots) { Map<String, Object> o = obj("id", s.id, "sceneId", s.sceneId, "t", s.t, "dur", s.dur, "size", s.size, "subject", s.subject, "purpose", s.purpose, "scripted", s.scripted); o.put("lineIds", s.lineIds); sh.add(o); }
         root.put("shotPlans", sh);
         List<Object> is = new ArrayList<Object>();
-        for (Issue i : issues) { Map<String, Object> o = obj("id", i.id, "severity", i.severity, "stage", i.stage, "sceneId", i.sceneId, "requirement", i.requirement, "evidence", i.evidence, "proposal", i.proposal, "resolved", i.resolved); o.put("entityIds", i.entityIds); is.add(o); }
+        for (Issue i : issues) { Map<String, Object> o = obj("id", i.id, "severity", i.severity, "stage", i.stage, "category", i.category, "sceneId", i.sceneId, "requirement", i.requirement, "evidence", i.evidence, "proposal", i.proposal, "resolved", i.resolved); o.put("entityIds", i.entityIds); is.add(o); }
         root.put("issueRegister", is);
         List<Object> rs = new ArrayList<Object>();
         for (Review r : reviews.values()) { Map<String, Object> o = obj("role", r.role, "revision", r.revision, "status", r.status, "rationale", r.rationale); o.put("issueIds", r.issueIds); rs.add(o); }
@@ -1027,7 +1224,7 @@ public final class ProductionDocument {
         int open = 0, block = 0;
         for (Issue i : issues) if (!i.resolved) { open++; if (i.severity.equals(BLOCKER)) block++; }
         int planned = 0, seen = 0;
-        for (Effect e : effects) if (e.evidence.equals(EXPLICIT)) { planned++; if (e.scheduled) seen++; }
+        for (Effect e : effects) if (e.evidence.equals(EXPLICIT) && !e.method.equals(NOT_FILMABLE)) { planned++; if (e.scheduled) seen++; }
         return String.format(java.util.Locale.ROOT, "revision %d: %d characters, %d props, %d places, %d scenes, %d lines, %d steps, %d of %d environment requirements in the plan, %d shots, %d open issues (%d blockers)%s",
                 revision, characters.size(), props.size(), locations.size(), scenes.size(), lines.size(), actions.size(), seen, planned, shots.size(), open, block, approvedForRender() ? ", approved for rendering" : "");
     }

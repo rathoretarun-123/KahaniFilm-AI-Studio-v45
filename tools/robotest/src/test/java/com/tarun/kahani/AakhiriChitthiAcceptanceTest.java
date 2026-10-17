@@ -214,6 +214,25 @@ public class AakhiriChitthiAcceptanceTest {
         assertEquals("SCENE_03", shot.sceneId);
     }
 
+    @Test public void theEditorFlagsWhatTheStoryLeavesOpenAndChangesNoLine() throws Exception {
+        ProductionDocument d = make().doc;
+        java.util.Set<String> cats = new java.util.HashSet<String>();
+        String letter = named(d.props, "पीली पड़ी मुड़ी-तुड़ी चिट्ठी").id;
+        for (ProductionDocument.Issue i : d.issues) if (ProductionDocument.EDITOR.equals(i.stage)) {
+            cats.add(i.category);
+            assertEquals("the editor notes, never blocks", ProductionDocument.WARNING, i.severity);
+        }
+        // why the letter lay behind the box for fifteen years, how it got there, whether "बापू के लिए" is all it says,
+        // the son and his handwriting only in the lines, "तुम सच में परी हो" — flagged, not settled
+        for (String c : new String[]{"TIME_GAP", "NARRATED_ORIGIN", "INSCRIPTION_SCOPE", "OFFSCREEN_PERSON", "FIGURATIVE_NAME"}) assertTrue(c + " in " + cats, cats.contains(c));
+        boolean aboutLetter = false;
+        for (ProductionDocument.Issue i : d.issues) if ("INSCRIPTION_SCOPE".equals(i.category) && i.entityIds.contains(letter) && i.requirement.contains("बापू के लिए")) aboutLetter = true;
+        assertTrue(aboutLetter);
+        assertEquals("REVIEWED", d.reviews.get(ProductionDocument.EDITOR).status);
+        assertEquals("the line stays as written", "तुम सच में परी हो।", d.lines.get(6).text.trim());
+        assertEquals("the editor's notes never stop the director's sign-off", "APPROVED", d.review(ProductionDocument.DIRECTOR, "APPROVED", "ok").status);
+    }
+
     @Test public void aMissingPictureIsSaidAndAFailedRenderIsNeverDone() throws Exception {
         ProductionDocument d = make().doc;
         for (ProductionDocument.Entity c : d.characters) {

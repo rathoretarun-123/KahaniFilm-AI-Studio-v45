@@ -125,6 +125,15 @@ public final class ScriptParser {
      */
     static String[] canonicalHeadings(String[] lines) {
         String[] out = lines.clone();
+        // v47.6: a heading in parentheses, as the standard format writes it: "(दृश्य 1 — भीगा हुआ लेखक)" (never a direction
+        // that only names a scene: "(दृश्य बदलता है)" stays a direction)
+        for (int i = 0; i < out.length; i++) {
+            String l = Txt.clean(out[i]);
+            if (l.length() < 4 || l.length() > 160 || !l.startsWith("(") || !l.endsWith(")")) continue;
+            String in = l.substring(1, l.length() - 1).trim();
+            Matcher a = SCENE.matcher(in), b = SCENE_X.matcher(in);
+            if ((a.matches() && !bigPart(a.group(1))) || (b.matches() && !bigPart(b.group(1)) && numberWord(b.group(2)) > 0)) out[i] = in;
+        }
         boolean anyHeading = false;
         // does the script head its scenes as scenes ("दृश्य", "सीन", "Scene")? then an act or chapter line is no scene
         boolean sceneLevel = false;
@@ -756,8 +765,11 @@ public final class ScriptParser {
             if (!m.matches()) continue;
             heads++;
             String name = m.group(1).trim(), bare = Txt.withoutParens(name).trim();
-            if (colonOutsideParens(name) > 0 || bare.length() > 70 || bare.contains("।") || (!sec.equals("place") && bare.matches(".*\\s[-–—]\\s.*"))) { wordy++; continue; }
             String nx = i + 1 < lines.length ? lines[i + 1].trim() : "";
+            // ("4. एक नई लाल जूतों की जोड़ी - आखिरी जोड़ी" with its description on the line under it: the dash is part of the
+            // name; only a numbered "name - description" with nothing under it is the older one-line form)
+            boolean described = nx.length() > 0 && !ENTRY_NO.matcher(nx).matches() && userHeading(nx) == null;
+            if (colonOutsideParens(name) > 0 || bare.length() > 70 || bare.contains("।") || (!sec.equals("place") && !described && bare.matches(".*\\s[-–—]\\s.*"))) { wordy++; continue; }
             if (name.indexOf('(') > 0 || (nx.length() > 0 && !ENTRY_NO.matcher(nx).matches() && userHeading(nx) == null)) named++;
         }
         if (kinds.size() < 3 || heads < 2 || wordy > 0 || named * 10 < heads * 8) return lines;
@@ -805,6 +817,8 @@ public final class ScriptParser {
         if (h.matches("कहानी|कथा|पटकथा|story|the story|script|screenplay|(?:कहानी|कथा|पटकथा|स्क्रिप्ट) (?:शुरू|शुरु|आरंभ|आरम्भ|प्रारंभ|प्रारम्भ)"
                 + "|(?:the )?(?:story|script|screenplay) (?:begins|starts)")) return "story";
         if (h.matches("समाप्त|समाप्ति|अंत|the end|end|द एंड")) return "end";
+        // v47.6: "समाप्त - समय: शाम 6:30 बजे", "END. (fade out)": the end with a note after it is the end all the same
+        if (h.matches("(?:समाप्त|समाप्ति|the end|end|द एंड)\\s*[-–—:.,।|]\\s*\\S.*")) return "end";
         return null;
     }
 
@@ -1351,7 +1365,9 @@ public final class ScriptParser {
                     if (b.text.startsWith("(")) {
                         int zz = b.text.indexOf(')');
                         if (zz > 0) {
-                            b.manner = (b.manner + ", " + b.text.substring(1, zz)).trim();
+                            // ("नन्ही: (दौड़ती हुई आती है, …) "चाचा…"": the note before the words, never with a stray comma)
+                            String note = b.text.substring(1, zz).trim();
+                            b.manner = b.manner == null || b.manner.trim().isEmpty() ? note : (b.manner.trim() + ", " + note);
                             b.text = Txt.stripQuotes(b.text.substring(zz + 1));
                         }
                     }
