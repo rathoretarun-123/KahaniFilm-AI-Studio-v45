@@ -887,6 +887,20 @@ public class MainActivity extends Activity {
      * The pictures the director has none for, with the ten-angle upload right here (the phone guide §1.1 and item
      * 1: at the point of need, without going back). They are used from the next make.
      */
+    /** v47.8: the upload target of one missing picture {key, label} (as the missing pictures card makes it), or null. */
+    private String uploadTarget(String[] t, Story st) {
+        if (t[0].startsWith("char:")) return "angles:char:" + t[0].substring(5) + ":" + t[1];
+        if (t[0].startsWith("costume:")) return "angles:costume:" + t[0].substring(8) + ":" + t[1];
+        if (t[0].startsWith("pose:")) { String[] pk = t[0].split(":", 3); return pk.length == 3 ? "angles:char:" + pk[1] + ":" + t[1] : null; }
+        if (t[0].startsWith("place:")) {
+            String place = t[0].substring(6);
+            for (Story.Scene sc : st.scenes) if (AutoLibrary.placeOf(sc, place)) return "angles:scene:" + sc.number + ":" + t[1];
+            return null;
+        }
+        if (t[0].startsWith("shot:")) { String[] sk = t[0].split(":", 3); return sk.length == 3 ? "angles:obj:" + sk[2] + ":" + t[1] : null; }
+        return null;
+    }
+
     private void missingCard(LinearLayout body) {
         if (project == null) return;
         final Story st = loadStory();
@@ -4575,6 +4589,22 @@ public class MainActivity extends Activity {
             LinearLayout ask = Ui.card(this);
             ask.addView(Ui.text(this, "📷 The director needs your pictures of: " + cur.picturesNeeded, 16, Ui.PRIMARY_DARK, true));
             ask.addView(Ui.text(this, "Add them with the buttons below (up to 100 each; a sheet of several angles is split). The film continues when you finish adding pictures, or you can continue with free AI illustrations.", 14, Ui.SUB, false));
+            // v47.8 (the user: "the film making window is asking for more pictures but no place to upload them"): a button
+            // for every picture the film waits on, here on its card — the list below leaves out things it counts optional
+            try {
+                final Story wst = loadStory();
+                if (wst != null) for (final String[] t : AutoLibrary.missingTargets(project, wst)) {
+                    if (!(t[0].startsWith("char:") || t[0].startsWith("place:") || t[0].startsWith("shot:"))) continue;
+                    final String ft = uploadTarget(t, wst);
+                    if (ft == null) continue;
+                    ask.addView(Ui.small(this, "📷 Add a picture of " + t[1], Ui.PRIMARY, new View.OnClickListener() {
+                        public void onClick(View v) { anglesFor(ft, t[1]); }
+                    }));
+                }
+            } catch (Throwable ignored) { /* the buttons below still offer every picture */ }
+            ask.addView(Ui.small(this, "▶ Continue — the studio draws what has no picture", Ui.GREEN, new View.OnClickListener() {
+                public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(3); }
+            }));
             ask.addView(Ui.small(this, "Continue with free AI illustrations", Ui.SUB, new View.OnClickListener() {
                 public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(2); }
             }));

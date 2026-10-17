@@ -384,6 +384,7 @@ public final class FilmJob implements Runnable {
                     picturesWaiting = false;
                     check();
                     if (pictureChoice == 0) info = "Thank you — every picture is there now";
+                    else if (pictureChoice == 3) info = "Going on — the studio draws what has no picture";
                 }
             }
             // v39: pictures made with AI only after the user was asked and chose to have the rest made — never before
@@ -785,6 +786,7 @@ public final class FilmJob implements Runnable {
     public volatile boolean picturesWaiting;
     public volatile String picturesNeeded = "";
     public volatile int pictureChoice;
+    /** The user's answer to the pictures card: 1 make them with AI, 2 free AI illustrations, 3 go on — the studio draws what has no picture. */
     public void choosePictures(int choice) { pictureChoice = choice; picturesWaiting = false; }
 
     /** Missing visual references that must be offered to the user before the director invents a substitute. */
