@@ -93,6 +93,12 @@ public class MainActivity extends Activity {
             S_SETTINGS = 7, S_LINES = 8, S_LOGIN = 9, S_QC = 10, S_FILMS = 11;
 
     private final Handler ui = new Handler(Looper.getMainLooper());
+    /**
+     * v47.8: the end of a background task comes back on its own handler — a screen change clears every pending message
+     * of `ui` (its timers), and a task's ending posted just before one was dropped with them: its "please wait" dialog,
+     * which cannot be cancelled, stayed on the screen for good.
+     */
+    private final Handler doneUi = new Handler(Looper.getMainLooper());
     private FrameLayout root;
     private Project project;
     private int screen;
@@ -206,6 +212,7 @@ public class MainActivity extends Activity {
         if (previewVoices != null) previewVoices.shutdown();
         if (recorder != null) recorder.stop();
         ui.removeCallbacksAndMessages(null);
+        doneUi.removeCallbacksAndMessages(null);
     }
 
     @Override
@@ -300,7 +307,7 @@ public class MainActivity extends Activity {
                 try { r = w.run(); } catch (Exception e) { err = e; } catch (Throwable t) { err = new Exception(t.toString()); }
                 final Object fr = r;
                 final Exception fe = err;
-                ui.post(new Runnable() {
+                doneUi.post(new Runnable() {
                     public void run() {
                         try { if (dlg != null) dlg.dismiss(); } catch (Exception ignored) {}
                         if (busyDlg == dlg) busyDlg = null;
