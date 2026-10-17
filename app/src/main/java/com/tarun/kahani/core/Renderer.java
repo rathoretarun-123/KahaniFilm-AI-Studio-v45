@@ -1274,6 +1274,44 @@ public final class Renderer {
     /** v40: running (not walking) at t. */
     private boolean runningNow(Film.Actor a, float t) { Film.Key k = moving(a, t); return k != null && k.run; }
 
+    /**
+     * v47.8: the facing (-1 … 1) eased over a third of a second after a key turns someone round — what rides on their
+     * shoulder crosses over with the turn (the monkey of the sample story jumped 80% of its height when वृंदा turned).
+     */
+    static float facingEased(Film.Actor a, float t) {
+        Film.Key prev = null, cur = null;
+        for (Film.Key k : a.keys) { if (k.t <= t) { prev = cur; cur = k; } else break; }
+        if (cur == null) return a.keys.isEmpty() ? 1 : (a.keys.get(0).facing < 0 ? -1 : 1);
+        float to = cur.facing < 0 ? -1 : 1;
+        // the facing of the last key before this run of same-time keys
+        int i = a.keys.indexOf(cur);
+        while (i > 0 && a.keys.get(i - 1).t >= cur.t - 1e-4f) i--;
+        if (i <= 0) return to;
+        float from = a.keys.get(i - 1).facing < 0 ? -1 : 1;
+        float t0 = a.keys.get(i).t;
+        if (from == to || t - t0 >= 0.33f) return to;
+        return from + (to - from) * ease01((t - t0) / 0.33f);
+    }
+
+    /** v47.8: the anchors whose place is a point in the frame that another can travel from or to. */
+    private static boolean anchorBlends(int anchor) {
+        return anchor == Film.A_GROUND || anchor == Film.A_BRANCH || anchor == Film.A_SHOULDER || anchor == Film.A_CARRIED || anchor == Film.A_ON_FACE;
+    }
+
+    /** v47.8: where one held by this key's anchor is drawn at t: {x, ground y, size factor} (as the placement by anchor draws it). */
+    private float[] anchorPlace(Film.Seg s, Film.Key k, float x, float t) {
+        Film.Actor t2 = k.anchorActor;
+        float th = t2 != null ? actorHeight(t2.look, t2.c, art, s) : 0;
+        switch (k.anchor) {
+            case Film.A_BRANCH: return new float[]{x, s.ground - BRANCH_UP + (k.body != Pose.HANG ? 4 : 0), 1};
+            case Film.A_SHOULDER: if (t2 != null) return new float[]{Director.xAt(t2, t) + facingEased(t2, t) * th * 0.12f, s.ground - th * 0.74f, 0.62f}; break;
+            case Film.A_CARRIED: if (t2 != null) return new float[]{Director.xAt(t2, t), s.ground - th * 0.86f, 0.85f}; break;
+            case Film.A_ON_FACE: if (t2 != null) return new float[]{Director.xAt(t2, t), s.ground - th * 0.72f, 0.7f}; break;
+            default:
+        }
+        return new float[]{x, s.ground, 1};
+    }
+
     private Film.Key moving(Film.Actor a, float t) {
         for (Film.Key k : a.keys) if (k.moveDur > 0 && t >= k.t && t < k.t + k.moveDur) return k;
         return null;
@@ -1742,6 +1780,7 @@ public final class Renderer {
 
         // ---- placement by anchor
         g.save();
+        final float xFree = x, scaleFree = scale;
         switch (k.anchor) {
             case Film.A_BRANCH:
                 y = s.ground - BRANCH_UP;
@@ -1751,7 +1790,7 @@ public final class Renderer {
                 Film.Actor t2 = k.anchorActor;
                 if (t2 != null) {
                     float th = actorHeight(t2.look, t2.c, art, s);
-                    x = Director.xAt(t2, t) + t2.stateAt(t).facing * th * 0.12f;
+                    x = Director.xAt(t2, t) + facingEased(t2, t) * th * 0.12f;     // (v47.8: across the shoulders as they turn, not in one frame)
                     y = s.ground - th * 0.74f;
                     scale *= 0.62f;
                 }
@@ -1774,7 +1813,7 @@ public final class Renderer {
                 Film.Actor t2 = k.anchorActor;
                 if (t2 != null) {
                     float th = actorHeight(t2.look, t2.c, art, s);
-                    x = Director.xAt(t2, t) + (float) Math.sin(t * 13) * 6;
+                    x = Director.xAt(t2, t) + (float) Math.sin(t * 5) * 4;     // (v47.8: a slow cling, not a 2 Hz shake)
                     y = s.ground - th * 0.72f;
                     scale *= 0.7f;
                 }
@@ -1784,6 +1823,24 @@ public final class Renderer {
                 y = s.ground + 10;
                 break;
             default:
+        }
+        // v47.8: from one anchor to another (a leap down from a branch, a jump onto someone's shoulder or face, a climb
+        // up into a tree) the place and the size travel together, eased over the move or half a second, on a small arc —
+        // the anchor changed at the key and the monkey of the sample story dropped 467 px, or shrank 38%, in one frame
+        {
+            int ki = a.keys.indexOf(k);
+            Film.Key pk = ki > 0 ? a.keys.get(ki - 1) : null;
+            if (pk != null && pk.anchor != k.anchor && pk.visible && anchorBlends(pk.anchor) && anchorBlends(k.anchor)) {
+                float dur = k.moveDur > 0 ? k.moveDur : 0.45f;
+                if (t >= k.t && t < k.t + dur) {
+                    float u = ease01((t - k.t) / dur);
+                    float[] from = anchorPlace(s, pk, xFree, t);
+                    float toScale = scale / Math.max(1e-4f, scaleFree);
+                    x = from[0] + (x - from[0]) * u;
+                    y = from[1] + (y - from[1]) * u - (float) Math.sin(Math.PI * u) * h * 0.12f;
+                    scale = scaleFree * (from[2] + (toScale - from[2]) * u);
+                }
+            }
         }
         if (s.inBoat && k.anchor == Film.A_GROUND) {
             // in the boat: on its deck, spread along its length, moving with its bob and roll
