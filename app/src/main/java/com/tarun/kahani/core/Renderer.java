@@ -1277,7 +1277,7 @@ public final class Renderer {
         return null;
     }
 
-    float mouthAt(Film.Actor a, float t) {
+    public float mouthAt(Film.Actor a, float t) {
         for (Film.Speak sp : a.speaks) {
             if (t >= sp.t0 && t < sp.t1) {
                 Film.Line l = film.lines.get(sp.line);
@@ -1517,13 +1517,15 @@ public final class Renderer {
             p.wet = film.wetness(t);
             // v34: an umbrella opens over the head while it rains (and keeps its carrier dry)
             float rainNow = Math.max(film.weather(Film.W_RAIN, t), film.weather(Film.W_STORM, t));
-            if (a.umbrellaAt(look, t) && look.isHumanoid() && rainNow > 0.05f && k.body != Pose.LIE && k.body != Pose.HANG && a.look.mount < 0) {
+            // v47.7: or opened by the words ("छाता खोलती है"), rain or shine — it spreads over 1.2 s from then
+            float byWords = a.umbrellaOpenFrom >= 0 ? Rig.smooth(a.umbrellaOpenFrom, a.umbrellaOpenFrom + 1.2f, t) : 0;
+            if (a.umbrellaAt(look, t) && look.isHumanoid() && (rainNow > 0.05f || byWords > 0) && k.body != Pose.LIE && k.body != Pose.HANG && a.look.mount < 0) {
                 p.umbrellaOpen = true;
                 if (a.umbrellaPic != null && a.umbrellaPic.img != null) { p.umbrellaPic = a.umbrellaPic.img; p.umbrellaPicAspect = a.umbrellaPic.w / (float) Math.max(1, a.umbrellaPic.h); }
                 // v43: it opens (not pops open): over 0.7 s after it is taken up, and as the rain comes on
                 float taken = a.umbrellaFrom >= 0 && !(look.umbrella) ? Rig.smooth(a.umbrellaFrom, a.umbrellaFrom + 1.2f, t) : 1;     // v47.4: 1.2 s, as the user's reference opens it
                 if (a.umbrellaUntil < 1e5f) taken = Math.min(taken, Rig.smooth(a.umbrellaUntil, a.umbrellaUntil - 1.2f, t));     // v47.4: folded as it is put aside     // v47.4: folded as it is put aside
-                p.umbrellaAmt = Math.min(taken, Rig.smooth(0.01f, 0.06f, rainNow));     // v47.3: open while it rains at all — half-folded in light rain, the dome sat on the head
+                p.umbrellaAmt = Math.min(taken, Math.max(byWords, Rig.smooth(0.01f, 0.06f, rainNow)));     // v47.3: open while it rains at all — half-folded in light rain, the dome sat on the head
                 // v47.3: under one umbrella with someone taller (a woman beside a young man), the dome is held up over
                 // the taller head — it used to cross the neighbour's face at the carrier's head height
                 float ownH = actorHeight(a.look, a.c, art, s), ax0 = Director.xAt(a, t);
@@ -1755,6 +1757,19 @@ public final class Renderer {
             y = d[0] + d[1] - 4 + along * (float) Math.sin(rollRad);
             mo.rot += d[2];
             p.walkAmt = 0;
+        }
+        // v47.7: a thing that is a character (a talking car, a toy): rigid, acting with its whole body
+        if (look.kind == Look.OBJECT) {
+            float[] om = objectMotion(a, look, tp, h);
+            if (k.dead) { om[0] = 0; om[1] = 0; om[2] = 0; om[3] = 1; om[4] = 1; }
+            if (feetLog != null && k.anchor == Film.A_GROUND) feetLog.add(new float[]{y + om[1], y, h, mv != null || om[1] < -0.5f ? 1 : 0});
+            float px = x + om[0], py = y;
+            if (camStill && pixelStep > 0) { px = Math.round(px / pixelStep) * pixelStep; py = Math.round(py / pixelStep) * pixelStep; }
+            g.translate(px, py);
+            if (scale != 1f) g.scale(scale, scale);
+            drawObjectCharacter(g, a, sp, look, p, h, om);
+            g.restore();
+            return;
         }
         // the final QC's floating check: where the feet are drawn against the ground line (FinalQc)
         if (feetLog != null && k.anchor == Film.A_GROUND)
@@ -4709,6 +4724,230 @@ public final class Renderer {
     }
 
     private static final boolean HELD_DEBUG = System.getProperty("kahani.heldDebug") != null;
+    // ================================================================== v47.7: things as characters
+
+    /**
+     * v47.7: how a thing that is a character (Look.OBJECT: a talking car, a toy) moves now, as one rigid body — every
+     * part eased, so nothing jumps between frames: {dx, dy (up is negative), tilt in degrees about its base, x scale,
+     * y scale, wheel turn (radians), spin in degrees about its middle}. It swells a hair at rest; with its words it
+     * stretches up a little as its mouth opens (the mouth averaged over a fifth of a second: a bounce, not a buzz); a
+     * nod tips it forward, a head shake rocks it side to side, a laugh shakes it; sitting settles it down (squashed a
+     * little) and standing raises it; a toy hops along (squashed as it lands), a ball rolls round, a car or a train
+     * rolls on its wheels with a slight bob on its springs, leaning back as it pulls away and dipping as it stops.
+     */
+    public float[] objectMotion(Film.Actor a, Look look, float t, float h) {
+        float dx = 0, dy = 0, rot = 0, sx = 1, sy = 1;
+        Film.Key k = a.stateAt(t);
+        float fc = k.facing >= 0 ? 1 : -1, seed = a.order * 1.7f;
+        sy *= 1 + 0.006f * (float) Math.sin(t * 1.9f + seed);
+        float m = 0;
+        for (int i = 0; i < 5; i++) m += mouthAt(a, t - 0.1f + i * 0.05f);
+        m /= 5;
+        sy *= 1 + 0.07f * m; sx *= 1 - 0.035f * m; dy -= h * 0.012f * m;
+        for (Film.Act ac : a.acts) {
+            if (t < ac.t0 || t >= ac.t1) continue;
+            float tt = t - ac.t0, u = tt / Math.max(0.05f, ac.t1 - ac.t0), env = (float) Math.sin(Math.PI * u);
+            switch (ac.type) {
+                case Film.G_NOD: rot += fc * 7 * env * (0.5f - 0.5f * (float) Math.cos(2 * Math.PI * 1.4f * tt)); break;
+                case Film.G_SHAKE_HEAD: rot += 6 * env * (float) Math.sin(2 * Math.PI * 1.8f * tt); break;
+                case Film.G_LAUGH: sy *= 1 + 0.03f * env * (float) Math.sin(2 * Math.PI * 2.5f * tt); rot += 2 * env * (float) Math.sin(2 * Math.PI * 1.25f * tt); break;
+                case Film.G_JUMP: case Film.G_BOUNCE: dy -= h * 0.18f * env; break;
+                case Film.G_DANCE: case Film.G_WIGGLE: case Film.G_TWIRL:
+                    rot += 6 * env * (float) Math.sin(2 * Math.PI * 1.5f * tt); dy -= h * 0.04f * env * Math.abs((float) Math.sin(2 * Math.PI * 1.5f * tt)); break;
+                case Film.G_TREMBLE: case Film.G_SHIVER: dx += h * 0.006f * env * (float) Math.sin(2 * Math.PI * 9 * tt); break;
+                case Film.G_BOW: rot += fc * 14 * env; break;
+                default:
+            }
+        }
+        float sit = sitAmount(a, t), lie = lieAmount(a, t);
+        sy *= 1 - 0.13f * sit; sx *= 1 + 0.05f * sit;
+        if (lie > 0) rot -= fc * 80 * ease01(lie);                       // it tips over onto its side
+        // the wheels and a ball turn with the ground covered (from where it stands, so they never jump when it stops)
+        float x = Director.xAt(a, t), wheel = x / Math.max(1, 0.11f * h), spin = 0;
+        if (look.objectType == Look.OB_BALL) spin = (float) Math.toDegrees(x / Math.max(1, 0.5f * h));
+        Film.Key mv = moving(a, t);
+        if (mv != null) {
+            float m0 = mv.t, m1 = mv.t + mv.moveDur;
+            float amt = Rig.smooth(0, 0.2f, t - m0) * Rig.smooth(0, 0.25f, m1 - t);
+            if (look.rolls()) {
+                dy -= h * 0.006f * (0.5f + 0.5f * (float) Math.sin(2 * wheel)) * amt;
+                rot -= fc * 2.5f * (float) Math.sin(Math.PI * Rig.smooth(0, 0.6f, t - m0));
+                rot += fc * 2.5f * (float) Math.sin(Math.PI * Rig.smooth(m1 - 0.6f, m1, t));
+            } else if (look.objectType != Look.OB_BALL) {
+                // (2.4 hops a second running, 1.8 walking: quicker would buzz on screen)
+                float ph = (float) Math.PI * (mv.run ? 2.4f : 1.8f) * (t - m0);
+                float hop = Math.abs((float) Math.sin(ph)), land = (float) (Math.cos(ph) * Math.cos(ph));     // squashed as it lands, stretched up in the air (both smooth)
+                dy -= h * (mv.run ? 0.05f : 0.04f) * hop * amt;
+                sy *= 1 - 0.04f * land * amt + 0.02f * hop * amt; sx *= 1 + 0.03f * land * amt;
+                rot += fc * 3 * amt;
+            }
+        }
+        return new float[]{dx, dy, rot, sx, sy, wheel, spin};
+    }
+
+    /** v47.7: how wide the studio draws a thing character, against its height. */
+    static float objectAspect(Look look) {
+        switch (look.objectType) {
+            case Look.OB_CAR: return 1.9f;
+            case Look.OB_TRAIN: return 2.2f;
+            case Look.OB_BALL: return 1f;
+            case Look.OB_TEDDY: return 0.8f;
+            case Look.OB_KETTLE: return 1.25f;
+            case Look.OB_LAMP: return 0.6f;
+            default: return 0.9f;
+        }
+    }
+
+    /**
+     * v47.7: a thing character at its base (the origin on the ground): its own picture drawn as it is (only a face found
+     * in it speaks and blinks, through the face-only rig), or the studio's drawing of it with one pair of eyes and one
+     * mouth. The shadow stays on the ground as it hops.
+     */
+    private void drawObjectCharacter(Gfx g, Film.Actor a, Art.Sprite sp, Look look, Pose p, float h, float[] om) {
+        boolean pic = sp != null && sp.img != null && sp.h > 0;
+        float w = pic ? h * sp.w / (float) sp.h : objectAspect(look) * h;
+        float up = Math.max(0, -om[1]) / Math.max(1, h);
+        g.save(); g.setAlpha(0.22f * (1 - Math.min(0.6f, up * 3))); g.color(0xFF000000); g.oval(0, 2, w * 0.45f * (1 - Math.min(0.4f, up * 2)), h * 0.035f + 2); g.restore();
+        g.save();
+        g.translate(om[0], om[1]);
+        if (om[2] != 0) g.rotate(om[2]);
+        g.scale(om[3], om[4]);
+        if (pic) {
+            if (om[6] != 0) { g.translate(0, -h / 2); g.rotate(om[6]); g.translate(0, h / 2); }
+            if (sp.rig != null) {
+                // a face was found in it: drawn through the face-only rig, the body as it is
+                p.body = Pose.STAND; p.sit = 0; p.lie = 0; p.kneel = 0; p.walkAmt = 0; p.bagKind = 0; p.heldPic = null; p.umbrellaOpen = false;
+                p.holdR = Pose.I_NONE; p.holdL = Pose.I_NONE;
+                mo.dx = 0; mo.dy = 0; mo.rot = 0; mo.sx = 1; mo.sy = 1;
+                drawSprite(g, sp, look, p, h, 0, a);
+            } else {
+                g.scale(mirrorFor(sp, p), 1);
+                g.image(sp.img, -w / 2, -h, w, h);
+            }
+        } else drawnObject(g, look, p, h, w, om[5], om[6]);
+        g.restore();
+    }
+
+    /** v47.7: the studio's drawing of a thing character (no picture of it), facing right; mirrored when it faces left. */
+    static void drawnObject(Gfx g, Look look, Pose p, float h, float w, float wheel, float spin) {
+        int c1 = look.primary, c2 = look.secondary, dark = Puppet.shade(c1, 0.7f), light = Puppet.shade(c1, 1.18f);
+        g.save();
+        if (p.facing < 0) g.scale(-1, 1);
+        switch (look.objectType) {
+            case Look.OB_CAR: {
+                g.color(dark); g.roundRect(-w / 2, -h * 0.64f, w, h * 0.44f, h * 0.13f);
+                g.color(c1); g.roundRect(-w / 2 + 2, -h * 0.66f, w - 4, h * 0.4f, h * 0.12f);
+                g.color(light); g.roundRect(-w * 0.3f, -h * 0.99f, w * 0.52f, h * 0.42f, h * 0.14f);
+                g.color(0xFFB3E5FC); g.roundRect(-w * 0.02f, -h * 0.93f, w * 0.21f, h * 0.3f, h * 0.08f);     // the windscreen: its eyes
+                objectEyes(g, w * 0.085f, -h * 0.79f, h * 0.06f, p);
+                g.color(0xFFFFF59D); g.oval(w * 0.47f, -h * 0.5f, h * 0.04f, h * 0.035f);                      // a headlight
+                objectMouth(g, w * 0.34f, -h * 0.4f, h * 0.14f, p);                                           // on the bumper, below the bonnet
+                for (int sd = -1; sd <= 1; sd += 2) objectWheel(g, sd * w * 0.3f, -h * 0.18f, h * 0.18f, wheel);
+                break;
+            }
+            case Look.OB_TRAIN: {
+                g.color(c2); g.rect(-w / 2, -h * 0.3f, w, h * 0.08f);
+                g.color(c1); g.roundRect(-w * 0.12f, -h * 0.72f, w * 0.6f, h * 0.44f, h * 0.1f);                 // the boiler
+                g.color(dark); g.roundRect(-w / 2, -h * 1.0f, w * 0.4f, h * 0.72f, h * 0.06f);                 // the cab
+                g.color(0xFFB3E5FC); g.roundRect(-w * 0.44f, -h * 0.92f, w * 0.26f, h * 0.22f, h * 0.04f);
+                g.color(0xFF424242); g.rect(w * 0.26f, -h * 0.95f, w * 0.08f, h * 0.25f);                      // the chimney
+                g.color(light); g.oval(w * 0.48f, -h * 0.5f, h * 0.2f, h * 0.22f);                              // the face at the front
+                objectEyes(g, w * 0.48f, -h * 0.56f, h * 0.045f, p);
+                objectMouth(g, w * 0.48f, -h * 0.41f, h * 0.055f, p);
+                for (int i = 0; i < 3; i++) objectWheel(g, -w * 0.36f + i * w * 0.3f, -h * 0.15f, h * 0.15f, wheel);
+                break;
+            }
+            case Look.OB_BALL: {
+                float r = h / 2;
+                g.save(); g.translate(0, -r); g.rotate(spin);
+                g.color(c1); g.oval(0, 0, r, r);
+                g.color(c2); g.rect(-r * 0.98f, -r * 0.12f, r * 1.96f, r * 0.24f);
+                g.color(Puppet.alpha(0xFFFFFFFF, 0.35f)); g.oval(-r * 0.35f, -r * 0.4f, r * 0.25f, r * 0.18f);
+                g.restore();
+                objectEyes(g, r * 0.05f, -r * 1.2f, r * 0.17f, p);                      // the face stays upright as it rolls
+                objectMouth(g, r * 0.05f, -r * 0.72f, r * 0.2f, p);
+                break;
+            }
+            case Look.OB_TEDDY: {
+                g.color(dark); g.oval(-w * 0.22f, -h * 0.08f, w * 0.17f, h * 0.09f); g.oval(w * 0.22f, -h * 0.08f, w * 0.17f, h * 0.09f);   // the feet
+                g.color(c1); g.oval(0, -h * 0.32f, w * 0.38f, h * 0.27f);                                       // the body
+                g.oval(-w * 0.4f, -h * 0.38f, w * 0.12f, h * 0.15f); g.oval(w * 0.4f, -h * 0.38f, w * 0.12f, h * 0.15f);   // the arms
+                g.oval(-w * 0.26f, -h * 0.94f, w * 0.13f, h * 0.09f); g.oval(w * 0.26f, -h * 0.94f, w * 0.13f, h * 0.09f); // the ears
+                g.oval(0, -h * 0.72f, w * 0.36f, h * 0.24f);                                                    // the head
+                g.color(light); g.oval(0, -h * 0.62f, w * 0.16f, h * 0.1f);                                     // the muzzle
+                objectEyes(g, 0, -h * 0.76f, h * 0.04f, p);
+                g.color(0xFF3E2723); g.oval(0, -h * 0.66f, w * 0.04f, h * 0.025f);
+                objectMouth(g, 0, -h * 0.58f, h * 0.045f, p);
+                break;
+            }
+            case Look.OB_KETTLE: {
+                g.color(dark); g.line(-w * 0.32f, -h * 0.65f, -w * 0.48f, -h * 0.35f, h * 0.06f);                // the handle
+                g.color(c1); g.line(w * 0.3f, -h * 0.35f, w * 0.5f, -h * 0.62f, h * 0.09f);                     // the spout
+                g.oval(0, -h * 0.4f, w * 0.36f, h * 0.38f);
+                g.color(dark); g.oval(0, -h * 0.8f, w * 0.18f, h * 0.06f); g.oval(0, -h * 0.88f, w * 0.05f, h * 0.05f);   // the lid and its knob
+                objectEyes(g, w * 0.04f, -h * 0.5f, h * 0.06f, p);
+                objectMouth(g, w * 0.04f, -h * 0.3f, h * 0.07f, p);
+                break;
+            }
+            case Look.OB_LAMP: {
+                g.color(dark); g.rect(-w * 0.45f, -h * 0.12f, w * 0.9f, h * 0.12f); g.rect(-w * 0.4f, -h * 0.88f, w * 0.8f, h * 0.08f);
+                g.color(0xFFFFE082); g.roundRect(-w * 0.36f, -h * 0.8f, w * 0.72f, h * 0.68f, w * 0.2f);         // the glass, lit
+                g.color(0xFFFFB300); g.oval(0, -h * 0.34f, w * 0.1f, h * 0.08f);                                // the flame
+                g.color(dark); g.strokeOval(0, -h * 0.98f, w * 0.22f, h * 0.1f, 2);                              // the handle
+                objectEyes(g, 0, -h * 0.6f, h * 0.05f, p);
+                objectMouth(g, 0, -h * 0.47f, h * 0.06f, p);
+                break;
+            }
+            default: {
+                g.color(dark); g.roundRect(-w / 2, -h, w, h, w * 0.18f);
+                g.color(c1); g.roundRect(-w / 2 + 3, -h + 3, w - 6, h - 6, w * 0.16f);
+                g.color(light); g.roundRect(-w * 0.3f, -h * 0.82f, w * 0.6f, h * 0.38f, w * 0.12f);
+                objectEyes(g, 0, -h * 0.68f, h * 0.07f, p);
+                objectMouth(g, 0, -h * 0.4f, h * 0.08f, p);
+            }
+        }
+        g.restore();
+    }
+
+    /** v47.7: one pair of eyes on a drawn thing (blinking, shut, looking), r the eye's half width. */
+    static void objectEyes(Gfx g, float cx, float cy, float r, Pose p) {
+        float shut = p.eyesClosed || p.dead ? 1 : Math.max(0, Math.min(1, p.blink));
+        for (int sd = -1; sd <= 1; sd += 2) {
+            float ex = cx + sd * r * 1.3f;
+            if (shut > 0.6f) { g.color(0xFF263238); g.line(ex - r * 0.8f, cy, ex + r * 0.8f, cy, Math.max(1.5f, r * 0.2f)); continue; }
+            float open = 1 - shut;
+            g.color(0xFFFFFFFF); g.oval(ex, cy, r, r * 1.15f * open);
+            g.color(0xFF263238); g.oval(ex + r * (0.2f + 0.2f * Math.max(-1, Math.min(1, p.gazeX))), cy + r * 0.1f, r * 0.45f, r * 0.5f * open);
+            g.color(0xFFFFFFFF); g.oval(ex + r * 0.08f, cy - r * 0.2f, r * 0.12f, r * 0.12f * open);
+        }
+    }
+
+    /** v47.7: one mouth on a drawn thing: open with its words, a smile (or a downturn when sad or angry) when shut. */
+    static void objectMouth(Gfx g, float cx, float cy, float r, Pose p) {
+        float open = p.dead ? 0 : Math.max(0, Math.min(1, p.mouth));
+        if (open > 0.05f) {
+            float wide = 0.5f + 0.5f * Math.max(0, Math.min(1, p.mouthWide));
+            g.color(0xFF3E2723); g.oval(cx, cy, r * wide, r * (0.18f + 0.62f * open));
+            g.color(0xFFE57373); g.oval(cx, cy + r * 0.3f * open, r * 0.4f * wide, r * 0.2f * open);
+            return;
+        }
+        boolean down = p.emotion == Pose.SAD || p.emotion == Pose.ANGRY || p.emotion == Pose.PAIN || p.emotion == Pose.SCARED;
+        g.color(0xFF3E2723);
+        g.begin(); g.moveTo(cx - r, cy); g.quadTo(cx, cy + (down ? -r * 0.55f : r * 0.55f), cx + r, cy); g.strokePath(Math.max(1.5f, r * 0.18f));
+    }
+
+    /** v47.7: a wheel turned by the ground covered (a tyre, a hub and three spokes that show it turning). */
+    static void objectWheel(Gfx g, float cx, float cy, float r, float turn) {
+        g.color(0xFF212121); g.oval(cx, cy, r, r);
+        g.color(0xFF9E9E9E); g.oval(cx, cy, r * 0.55f, r * 0.55f);
+        g.color(0xFF616161);
+        for (int i = 0; i < 3; i++) {
+            double an = turn + i * 2 * Math.PI / 3;
+            g.line(cx, cy, cx + (float) Math.cos(an) * r * 0.5f, cy + (float) Math.sin(an) * r * 0.5f, Math.max(1.5f, r * 0.1f));
+        }
+        g.color(0xFF424242); g.oval(cx, cy, r * 0.14f, r * 0.14f);
+    }
+
     /** v47.4: the thing in this character's hand right now (Film.FX_HELD), and the bag or box it came out of. */
     private void heldFor(Film.Seg s, Film.Actor a, float t, Pose p) {
         p.heldPic = null; p.bagKind = 0;
@@ -4721,6 +4960,10 @@ public final class Renderer {
             // v47.4: open in the hands between the words that open and close it (never past the hold's end), and going
             // down to its place over the last 0.6 s when it is set down
             p.heldOpen = f.openFrom < 1e5f ? Rig.smooth(f.openFrom, f.openFrom + 0.6f, t) * (1 - Rig.smooth(Math.min(f.openUntil, f.t1 - 0.5f), Math.min(f.openUntil, f.t1 - 0.5f) + 0.6f, t)) : 0;
+            // v47.7: how it opens (leaves, a lid) and the user's own picture of it open, cross-faded in as it opens
+            p.heldHinge = Rigidity.hinge(f.what);
+            Art.Backdrop op = p.heldOpen > 0 ? openPicture(f.what) : null;
+            if (op != null) { p.heldOpenPic = op.img; p.heldOpenAspect = op.w / (float) Math.max(1, op.h); }
             p.heldDown = 0;
             if (f.t1 < 1e5f && t > f.t1 - 0.6f) for (Film.Fx q : s.fx) if (q.type == Film.FX_HELD && q.kind == Film.THING_PLACE && q.pic == f.pic && Math.abs(q.t0 - f.t1) < 0.15f) { p.heldDown = Rig.smooth(f.t1 - 0.6f, f.t1, t); break; }
         }
@@ -4783,7 +5026,10 @@ public final class Renderer {
             int pw = g.imageWidth(p.heldPic), ph = g.imageHeight(p.heldPic);
             if (pw > 0 && ph > 0) {
                 float k = ease01(Math.max(0, Math.min(1, p.heldOpen)));
-                if (k > 0.001f) {
+                // v47.7: the user's own picture of it open fades in; a box opens its lid; a book spreads its leaves
+                if (k > 0.001f && p.heldOpenPic != null) openedPicture(g, p.heldPic, p.heldOpenPic, p.heldOpenAspect, tx, ty, tw, th, k);
+                else if (k > 0.001f && p.heldHinge == Rigidity.HINGE_LID) lidOpen(g, p.heldPic, pw, ph, tx - tw / 2, ty - th / 2, tw, th, k);
+                else if (k > 0.001f) {
                     // v47.4: opened like a book — two leaves of pages spread from the hinge, the cover turning edge-on at it
                     float lw = tw * 0.92f * k;
                     g.color(0xFFF3EBD8); g.rect(tx - lw, ty - th / 2, lw, th); g.rect(tx, ty - th / 2, lw, th);
@@ -4799,8 +5045,8 @@ public final class Renderer {
         }
         if (vis <= 0.01f) return;
         if (book) {
-            // both hands on an open book: a hand at each outer edge
-            float k = ease01(Math.max(0, Math.min(1, p.heldOpen))), lw = tw * 0.92f * k;
+            // both hands on an open book: a hand at each outer edge (v47.7: on a box's sides, or the open picture's)
+            float k = ease01(Math.max(0, Math.min(1, p.heldOpen))), lw = p.heldOpenPic != null || p.heldHinge == Rigidity.HINGE_LID ? 0 : tw * 0.92f * k;
             for (int sd = -1; sd <= 1; sd += 2) {
                 float hx2 = tx + sd * (lw > 4 ? lw * 0.9f : tw * 0.44f), hy2 = ty + th * 0.3f;
                 g.color(Puppet.shade(skin, 0.82f)); g.roundRect(hx2 - h * 0.022f, hy2 - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
@@ -4856,7 +5102,63 @@ public final class Renderer {
             float wnd = film.wind(t), dir = wnd >= 0 ? 1 : -1;
             float wind = wnd * (0.5f + 0.5f * Nature.gustField(f.x / 1280f, t, dir)) * 0.35f;
             softPicture(g, f.pic.img, f.pic.w, f.pic.h, f.x - tw / 2, y - th, tw, th, wind, t, hh);
-        } else g.image(f.pic.img, f.x - tw / 2, y - th, tw, th);
+        } else {
+            // v47.7: opened where it lies (a box, a trunk): the user's picture of it open fades in, else its lid turns at the back
+            float k = f.openFrom < 1e5f ? ease01(Rig.smooth(f.openFrom, f.openFrom + 0.6f, t) * (1 - Rig.smooth(f.openUntil, f.openUntil + 0.6f, t))) : 0;
+            Art.Backdrop op = k > 0.001f ? openPicture(f.what) : null;
+            if (op != null) openedPicture(g, f.pic.img, op.img, op.w / (float) Math.max(1, op.h), f.x, y - th / 2, tw, th, k);
+            else if (k > 0.001f && Rigidity.boxLike(f.what)) lidOpen(g, f.pic.img, f.pic.w, f.pic.h, f.x - tw / 2, y - th, tw, th, k);
+            else g.image(f.pic.img, f.x - tw / 2, y - th, tw, th);
+        }
+    }
+
+    /**
+     * v47.7: the user's own picture of a thing open ("खुली किताब", "box open", "open umbrella"): an object picture whose
+     * name is the thing's name with an open word — or null. Looked up once per thing.
+     */
+    Art.Backdrop openPicture(String what) {
+        if (what == null || art == null) return null;
+        if (openPics.containsKey(what)) return openPics.get(what);
+        Art.Backdrop found = null;
+        String want = Txt.norm(what).trim();
+        String[] ws = want.split("\\s+");
+        String head = ws[ws.length - 1];
+        for (Art.Shot sh : art.shots) {
+            if (found != null) break;
+            if (sh.pic == null || sh.pic.img == null || sh.keys == null) continue;
+            for (String key : sh.keys) {
+                String n = " " + Txt.norm(key).trim() + " ";
+                if (!Txt.has(n, Rigidity.OPEN_PICTURE_WORDS)) continue;
+                for (String ow : Rigidity.OPEN_PICTURE_WORDS) n = n.replace(" " + ow + " ", " ");
+                n = n.replace("(", " ").replace(")", " ").trim();
+                if (n.equals(want) || (n.length() > 0 && (want.contains(n) || n.contains(want)) && n.contains(head))) { found = sh.pic; break; }
+            }
+        }
+        openPics.put(what, found);
+        return found;
+    }
+    private final java.util.Map<String, Art.Backdrop> openPics = new java.util.HashMap<String, Art.Backdrop>();
+
+    /** v47.7: the closed picture fading into the open one over the opening (k 0..1), both centred on (cx, cy), the open one at its own shape. */
+    static void openedPicture(Gfx g, Object closed, Object open, float openAspect, float cx, float cy, float tw, float th, float k) {
+        float ow = openAspect >= tw / Math.max(1, th) ? tw * 1.15f : th * openAspect, oh = ow / Math.max(0.01f, openAspect);
+        if (k < 0.999f) { g.save(); g.setAlpha(1 - k); g.image(closed, cx - tw / 2, cy - th / 2, tw, th); g.restore(); }
+        g.save(); g.setAlpha(k); g.image(open, cx - ow / 2, cy + th / 2 - oh, ow, oh); g.restore();
+    }
+
+    /**
+     * v47.7: a box's lid opening rigidly (k 0..1): the picture's top fifth turns back about its back edge, up to past
+     * upright, and the dark inside shows under it; the rest of the box stays as it is.
+     */
+    static void lidOpen(Gfx g, Object pic, int pw, int ph, float x, float y, float w, float h, float k) {
+        float lid = 0.2f;
+        g.imageRect(pic, 0, ph * lid, pw, ph * (1 - lid), x, y + h * lid, w, h * (1 - lid));
+        g.color(Puppet.alpha(0xFF1B1209, 0.85f * k)); g.rect(x + w * 0.04f, y + h * lid - 1, w * 0.92f, Math.max(2, h * 0.06f * k));   // the inside, dark
+        g.save();
+        g.translate(x, y + h * lid);
+        g.rotate(-105 * k);
+        g.imageRect(pic, 0, 0, pw, ph * lid, 0, -h * lid, w, h * lid);
+        g.restore();
     }
 
     /**

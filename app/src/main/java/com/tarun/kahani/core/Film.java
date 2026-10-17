@@ -303,6 +303,8 @@ public final class Film {
         public int bagKind;
         /** v47.4: when it is put aside (leaned against the post, closed, hung up); 1e6: never. */
         public float umbrellaUntil = 1e6f;
+        /** v47.7: when the words open the umbrella ("छाता खोलती है") — open from then, rain or shine; -1: only the rain opens it. */
+        public float umbrellaOpenFrom = -1;
         /** v47.4: the user's own picture of this character's umbrella (an object picture named so), drawn in place of the studio's dome. */
         public Art.Backdrop umbrellaPic;
         public boolean umbrellaAt(Look lk, float t) { return t < umbrellaUntil && ((lk != null && lk.umbrella) || (umbrellaFrom >= 0 && t >= umbrellaFrom - 1e-3f)); }

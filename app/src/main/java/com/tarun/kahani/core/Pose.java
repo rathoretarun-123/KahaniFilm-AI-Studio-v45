@@ -79,6 +79,10 @@ public final class Pose {
     public int heldKind, bagKind;
     public boolean heldSoft;
     public float heldOpen, heldDown;   // v47.4: a book-like thing opened in the hands (0..1); the thing going down to its place (0..1)           // v47.4: a cloth, a bag, a rope, a flag in the hand — it hangs and flutters in the wind (Rigidity)
+    /** v47.7: how the thing in the hands opens (Rigidity.hinge: leaves, a lid), and the user's own picture of it open (or null). */
+    public int heldHinge;
+    public Object heldOpenPic;
+    public float heldOpenAspect = 1;
     public int seat = -1;
     /** v47.7: drawn with the user's picture of them on a seat of its own (the plank's height in the picture's heights; 0: not): a thing in the hands rests at the chest. */
     public float ownSeat;
@@ -131,7 +135,7 @@ public final class Pose {
         walk = 0; walkAmt = 0; tilt = 0; headTilt = 0; bob = 0; squash = 1; holdR = I_NONE; holdL = I_NONE;
         disguised = false; noHeadwear = false; wearsTurban = false; redFace = false; tears = false; sweat = false;
         eyesClosed = false; fist = false; glowWand = false; carrying = false; turbanBand = 0; wind = 0; wet = 0;
-        sit = 0; lie = 0; kneel = 0; umbrellaOver = 0; umbHandX = umbHandY = Float.NaN; skinHint = 0; heldPic = null; heldAspect = 1; heldSize = 0; heldU = 1; heldH = 0; heldKind = 0; bagKind = 0; heldSoft = false; heldOpen = 0; heldDown = 0; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; umbrellaPic = null; umbrellaPicAspect = 1; toMouth = 0; toMouthItem = 0;
+        sit = 0; lie = 0; kneel = 0; umbrellaOver = 0; umbHandX = umbHandY = Float.NaN; skinHint = 0; heldPic = null; heldAspect = 1; heldSize = 0; heldU = 1; heldH = 0; heldKind = 0; bagKind = 0; heldSoft = false; heldOpen = 0; heldDown = 0; heldHinge = 0; heldOpenPic = null; heldOpenAspect = 1; seat = -1; nod = 0; wave = 0; twirl = false; umbrellaOpen = false; umbrellaAmt = 1; umbrellaPic = null; umbrellaPicAspect = 1; toMouth = 0; toMouthItem = 0;
         gazeX = 0; gazeY = 0; gazeHeld = 0; turnBody = 0; turnHead = 0;
         kajal = 0; lipstick = 0; bindi = 0; mehndi = 0; powder = 0; facePaint = 0; towel = 0; flush = 0;
         bowDraw = 0; arrowOn = false; pedal = 0; pedalAmt = 0;

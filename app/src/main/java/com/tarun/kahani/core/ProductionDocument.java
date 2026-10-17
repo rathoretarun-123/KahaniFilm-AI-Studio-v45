@@ -1051,11 +1051,11 @@ public final class ProductionDocument {
                 framesChecked++;
                 for (Film.Actor a : sg.actors) {
                     Film.Key ka = a.stateAt(t);
-                    if (!ka.visible || ka.anchor != Film.A_GROUND || a.look == null || !a.look.isHumanoid()) continue;
+                    if (!ka.visible || ka.anchor != Film.A_GROUND || a.look == null || !(a.look.isHumanoid() || a.look.isObject())) continue;
                     float ha = Renderer.actorHeight(a.look, a.c, null, sg), xa = Director.xAt(a, t), la = Director.liftAt(a, t);
                     float speed = Math.abs(Director.xAt(a, t + 1f / FPS) - xa) * FPS;
-                    // sitting on nothing
-                    if (ka.body == Pose.SIT && ka.seat < 0 && !said.contains("seat" + a.c.displayName)) {
+                    // sitting on nothing (v47.7: a thing that is a character settles on the ground where it stands)
+                    if (ka.body == Pose.SIT && ka.seat < 0 && !a.look.isObject() && !said.contains("seat" + a.c.displayName)) {
                         said.add("seat" + a.c.displayName);
                         physicsIssue(s, f, "nobody sits on nothing", a.c.displayName + " is seated with no seat drawn under them", "seat them on the place's seat, on the floor, or stand them", a.c.displayName);
                     }

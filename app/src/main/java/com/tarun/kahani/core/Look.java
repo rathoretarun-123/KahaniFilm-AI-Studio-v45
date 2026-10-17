@@ -4,6 +4,16 @@ package com.tarun.kahani.core;
 public final class Look {
     // body kinds
     public static final int GIRL = 0, WOMAN = 1, MAN = 2, BOY = 3, WITCH = 4, MONSTER = 5, MONKEY = 6, OLD_MAN = 7, ANIMAL = 8, BIRD = 9;
+    /**
+     * v47.7 (the user: "even some animated objects like cars, toys may also … speak … like humans"): a character that is
+     * a thing — a car, a train, a ball, a teddy, a toy, a kettle, a lamp. It is drawn rigid (never bent like a person or
+     * an animal) and acts with its whole body: a talk bounce, a tilt for a nod or a head shake, settling down to sit,
+     * hopping (a toy) or rolling (wheels) along.
+     */
+    public static final int OBJECT = 10;
+    public static final int OB_THING = 0, OB_CAR = 1, OB_TRAIN = 2, OB_BALL = 3, OB_TEDDY = 4, OB_TOY = 5, OB_KETTLE = 6, OB_LAMP = 7;
+    /** v47.7: which thing an OBJECT character is (OB_*), -1 for everyone else. */
+    public int objectType = -1;
     // species for ANIMAL / BIRD
     public static final int SP_FOX = 0, SP_LION = 1, SP_BEAR = 2, SP_ELEPHANT = 3, SP_RABBIT = 4, SP_CAT = 5, SP_DOG = 6, SP_DEER = 7,
             SP_GOAT = 8, SP_COW = 9, SP_TIGER = 10, SP_WOLF = 11, SP_MOUSE = 12, SP_TORTOISE = 13, SP_HORSE = 14,
@@ -153,10 +163,15 @@ public final class Look {
         l.energy = energy; l.poise = poise; l.heads = heads; l.arms = arms; l.mount = mount;
         l.glasses = glasses; l.glowGlasses = glowGlasses; l.gadget = gadget; l.techWand = techWand; l.robot = robot;
         l.ledClip = ledClip; l.earphones = earphones; l.lightShoes = lightShoes;
+        l.objectType = objectType;
         l.aid = aid; l.skinFixed = skinFixed; l.injury = injury; l.umbrella = umbrella; l.umbrellaColor = umbrellaColor; l.condition = condition;
         return l;
     }
 
     public boolean isChild() { return kind == GIRL || kind == BOY; }
-    public boolean isHumanoid() { return kind != MONKEY && kind != ANIMAL && kind != BIRD; }
+    public boolean isHumanoid() { return kind != MONKEY && kind != ANIMAL && kind != BIRD && kind != OBJECT; }
+    /** v47.7: a thing that is a character (a talking car, a toy). */
+    public boolean isObject() { return kind == OBJECT; }
+    /** v47.7: a thing character that goes on wheels (a car, a train): it rolls, it never hops. */
+    public boolean rolls() { return kind == OBJECT && (objectType == OB_CAR || objectType == OB_TRAIN); }
 }

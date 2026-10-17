@@ -534,6 +534,74 @@ public final class LookDesigner {
         return sp;
     }
 
+    // ---------------------------------------------------------------- v47.7: things as characters
+    static final String[] OBJ_PERSON = {"लड़का", "लड़की", "आदमी", "औरत", "बच्चा", "बच्ची", "ड्राइवर", "चालक", "मालिक", "दादा", "दादी", "नाना", "नानी", "पिता",
+            "माँ", "मां", "भाई", "बहन", "दुकानदार", "वाला लड़का", "man", "woman", "boy", "girl", "driver", "owner", "child", "kid", "seller", "shopkeeper"};
+    static final String[] OBJ_DOLL = {"गुड़िया", "गुड्डा", "गुड्डी", "कठपुतली", "रोबोट", "रोबो", "doll", "puppet", "robot", "action figure"};
+    static final String[] OBJ_TEDDY = {"टेडी", "teddy"};
+    static final String[] OBJ_BALL = {"गेंद", "बॉल", "ball"};
+    static final String[] OBJ_TRAIN = {"रेलगाड़ी", "रेल", "ट्रेन", "इंजन", "train", "engine", "locomotive"};
+    static final String[] OBJ_CAR = {"कार", "गाड़ी", "मोटरगाड़ी", "जीप", "टैक्सी", "ट्रक", "ऑटो", "रिक्शा", "ट्रैक्टर", "car", "jeep", "taxi", "bus", "truck", "auto", "rickshaw", "tractor"};
+    static final String[] OBJ_KETTLE = {"केतली", "चायदानी", "kettle", "teapot"};
+    static final String[] OBJ_LAMP = {"लैंप", "लालटेन", "lamp", "lantern"};
+    static final String[] OBJ_TOY = {"खिलौना", "खिलौने", "लट्टू", "toy", "plush", "spinning top"};
+    static final String[] OBJ_ALIVE = {"बोलने वाली", "बोलने वाला", "बोलने वाले", "जादुई", "जिंदा", "ज़िंदा", "talking", "magic", "magical", "alive", "living", "animated"};
+
+    private static boolean anyWord(String t, String[] ws) { for (String w : ws) if (wordIn(t, w)) return true; return false; }
+
+    /**
+     * v47.7: the thing a character is (Look.OB_*), or -1 for a person or an animal. Read from the name and the first
+     * phrase of the description, which says what it is ("चिंटू (एक छोटी लाल खिलौना कार, …)"); a person who has or
+     * drives one ("ड्राइवर, कार चलाता है"), a doll or a robot (they have arms and legs) and a likeness ("कार जैसा तेज़")
+     * are not things.
+     */
+    static int objectOf(Story.CharacterDef c) {
+        String name = c.fullName == null ? "" : c.fullName, desc = c.description == null ? "" : c.description;
+        // the first phrase that is not the name itself (the description may begin with the name's own line)
+        String first = "";
+        for (String ph : desc.split("[,।;\\n|:]")) {
+            String q = ph.replaceAll("\\(.*?\\)", " ").trim();
+            if (q.isEmpty() || Txt.norm(q).equals(Txt.norm(name)) || Txt.norm(q).equals(Txt.norm(c.displayName))) continue;
+            first = q;
+            break;
+        }
+        String head = name + " " + first + " " + (c.role == null ? "" : c.role);
+        if (anyWord(head, OBJ_PERSON) || anyWord(head, OBJ_DOLL) || Txt.has(head, "जैसा", "जैसी", "जैसे", " like ")) return -1;
+        if (anyWord(head, OBJ_TEDDY)) return Look.OB_TEDDY;
+        if (anyWord(head, OBJ_BALL)) return Look.OB_BALL;
+        if (anyWord(head, OBJ_TRAIN)) return Look.OB_TRAIN;
+        if (anyWord(head, OBJ_CAR)) return Look.OB_CAR;
+        if (anyWord(head, OBJ_KETTLE)) return Look.OB_KETTLE;
+        if (anyWord(head, OBJ_LAMP)) return Look.OB_LAMP;
+        if (anyWord(head, OBJ_TOY)) return Look.OB_TOY;
+        // any other rigid thing the description calls alive or talking ("एक बोलने वाली पुरानी घड़ी")
+        if (Txt.has(desc, OBJ_ALIVE) && first.length() > 0) {
+            String[] ws = first.split("[\\s]+");
+            if (Rigidity.kind(ws[ws.length - 1]) == Rigidity.RIGID) return Look.OB_THING;
+        }
+        return -1;
+    }
+
+    /** v47.7: a thing character's colour (its first colour word) and size against a grown man (1). */
+    static void objectLook(Look l, String all) {
+        List<Integer> cols = colorsIn(all);
+        int[] dflt = {0xFF8D6E63, 0xFFD32F2F, 0xFF1565C0, 0xFFF4511E, 0xFFA1887F, 0xFFFFB300, 0xFF607D8B, 0xFFFFA000};
+        l.primary = !cols.isEmpty() ? cols.get(0) : dflt[Math.max(0, Math.min(dflt.length - 1, l.objectType))];
+        l.secondary = cols.size() > 1 ? cols.get(1) : 0xFF263238;
+        boolean small = Txt.has(all, "खिलौना", "खिलौने", "छोटी", "छोटा", "नन्ही", "नन्हा", "toy", "small", "little", "tiny");
+        switch (l.objectType) {
+            case Look.OB_CAR: l.height = small ? 0.3f : 0.82f; break;
+            case Look.OB_TRAIN: l.height = small ? 0.3f : 1.2f; break;
+            case Look.OB_BALL: l.height = small ? 0.16f : 0.24f; break;
+            case Look.OB_TEDDY: l.height = small ? 0.32f : 0.45f; break;
+            case Look.OB_KETTLE: l.height = 0.22f; break;
+            case Look.OB_LAMP: l.height = 0.3f; break;
+            case Look.OB_TOY: l.height = 0.3f; break;
+            default: l.height = small ? 0.3f : 0.5f;
+        }
+        l.energy = Txt.has(all, "चंचल", "शरारती", "फुर्तीला", "फुर्तीली", "नटखट", "playful", "naughty", "lively", "bouncy") ? 1.35f : 1f;
+    }
+
     public static Look design(Story.CharacterDef c, Look base) {
         String all = c.fullName + "\n" + c.description;
         String face = section(c.description, "चेहरा", "face", "शरीर", "body", "रूप");
@@ -569,6 +637,9 @@ public final class LookDesigner {
         int age = c.age;
         boolean old = Txt.has(all, "बूढ़", "बुज़ुर्ग", "old ", "elderly") || age >= 60;
 
+        // v47.7: a character that is a thing (a talking car, a toy) — before the animals: a toy dog is a toy
+        int thing = base == null ? objectOf(c) : -1;
+        if (thing >= 0) { l.kind = Look.OBJECT; l.objectType = thing; l.female = fem > mal; l.hero = !Txt.has(all, "दुष्ट", "खलनायक", "villain", "evil"); objectLook(l, all); return l; }
         if (base == null) {
             if (monster) { l.kind = Look.MONSTER; l.female = false; }
             else if (witch) { l.kind = Look.WITCH; l.female = true; }
