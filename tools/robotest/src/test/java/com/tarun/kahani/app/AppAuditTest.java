@@ -39,6 +39,21 @@ public final class AppAuditTest {
         assertEquals("settings lost when two threads wrote at once", 0, missing);
     }
 
+    /** The voices kept for the next film are read back as they were written (the WAV writer closes its file on failure now). */
+    @Test public void aVoiceWrittenIsReadBackTheSame() throws Exception {
+        File f = new File(tempDir(), "line.wav");
+        float[] pcm = new float[20000];
+        for (int i = 0; i < pcm.length; i++) pcm[i] = (float) Math.sin(i * 0.05) * 0.6f;
+        AudioIO.writeRaw(f, pcm);
+        float[] back = AudioIO.readRaw(f);
+        assertNotNull(back);
+        assertEquals(pcm.length, back.length);
+        float worst = 0;
+        for (int i = 0; i < pcm.length; i++) worst = Math.max(worst, Math.abs(pcm[i] - back[i]));
+        assertTrue("16-bit round trip: " + worst, worst < 1e-3f);
+        assertEquals("the file's own size", 44 + pcm.length * 2, f.length());
+    }
+
     @Test public void aFileIsReadWholeWhileItIsBeingWritten() throws Exception {
         final Project p = new Project(tempDir());
         StringBuilder a = new StringBuilder(), b = new StringBuilder();

@@ -129,6 +129,14 @@ public final class AudioIO {
 
     public static void writeWav(File f, float[] pcm, int sr) throws IOException {
         OutputStream o = new java.io.BufferedOutputStream(new FileOutputStream(f), 65536);
+        try {
+            writeWav(o, pcm, sr);
+        } finally {
+            o.close();          // (v47.8: closed when a write fails too)
+        }
+    }
+
+    private static void writeWav(OutputStream o, float[] pcm, int sr) throws IOException {
         int n = pcm.length;
         ByteBuffer h = ByteBuffer.allocate(44).order(ByteOrder.LITTLE_ENDIAN);
         h.put("RIFF".getBytes("US-ASCII")).putInt(36 + n * 2).put("WAVEfmt ".getBytes("US-ASCII")).putInt(16).putShort((short) 1)
@@ -144,7 +152,6 @@ public final class AudioIO {
             if (k == buf.length) { o.write(buf); k = 0; }
         }
         o.write(buf, 0, k);
-        o.close();
     }
 
     /** Stores floats as 16-bit little-endian raw (half the size of floats). */
@@ -200,7 +207,10 @@ public final class AudioIO {
                 rec.startRecording();
                 while (running) {
                     int n = rec.read(buf, 0, buf.length);
-                    if (n <= 0) continue;
+                    // (v47.8: an error code — the microphone taken by a call, a dead recorder — ends the recording; it
+                    // looped here at full speed until "stop" was pressed)
+                    if (n < 0) throw new IOException("The microphone stopped (" + n + ")");
+                    if (n == 0) continue;
                     int peak = 0;
                     for (int i = 0; i < n; i++) {
                         short s = buf[i];
@@ -221,7 +231,12 @@ public final class AudioIO {
             } catch (Throwable e) {
                 error = e.getMessage() == null ? e.toString() : e.getMessage();
             } finally {
-                try { if (rec != null) { rec.stop(); rec.release(); } } catch (Throwable ignored) {}
+                // (v47.8: released even when stop() fails — a recorder that never started throws there, and the
+                // microphone stayed held by the app)
+                if (rec != null) {
+                    try { rec.stop(); } catch (Throwable ignored) { /* never started */ }
+                    rec.release();
+                }
                 try { if (raf != null) raf.close(); } catch (IOException ignored) {}
                 running = false;
             }
@@ -233,8 +248,11 @@ public final class AudioIO {
     static byte[] readFile(File f) throws IOException {
         byte[] b = new byte[(int) f.length()];
         DataInputStream in = new DataInputStream(new FileInputStream(f));
-        in.readFully(b);
-        in.close();
+        try {
+            in.readFully(b);
+        } finally {
+            in.close();
+        }
         return b;
     }
 }
