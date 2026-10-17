@@ -87,7 +87,7 @@ public class AppTest {
         File stills = new File(ASSETS, "film_library/aakhiri_chitthi/stills");
         File[] pictures = stills.listFiles((dir, name) -> name.endsWith(".jpg"));
         assertNotNull("The reference pack is in the APK assets tree", pictures);
-        assertEquals("All 51 story references are packaged", 51, pictures.length);
+        assertEquals("All 101 story references are packaged (the 51 of the first pack and the 50 the user uploaded with 5e81c8a)", 101, pictures.length);
         com.tarun.kahani.app.Library.Item pari = com.tarun.kahani.app.Library.filmReferenceItem(
                 "film_library/aakhiri_chitthi/stills", "आखिरी चिट्ठी", "pari_profile_right.jpg", 1);
         assertEquals("person", pari.kind);
@@ -1702,16 +1702,10 @@ public class AppTest {
         Thread runner = new Thread(new Runnable() { public void run() { job.run(); } });
         runner.start();
         long wait = System.currentTimeMillis();
-        // the director asks first: the dolls the studio made for the two characters without a picture are proposals
-        // until the user decides (here: use them all)
+        // v47.6: nothing is built in 3D any more — the two characters without a picture are drawn by the studio
         boolean asked = false;
         while (!job.qcWaiting && runner.isAlive() && System.currentTimeMillis() - wait < 600000) {
-            if (job.proposalsWaiting && !asked) {
-                java.util.List<?> props = (java.util.List<?>) s3d("proposals", p);
-                assertTrue("a doll proposed for the character without a picture, with its views", props.size() >= 2);
-                s3d("decideAll", p, null, RuntimeEnvironment.getApplication(), true);
-                asked = true;
-            }
+            if (job.proposalsWaiting) asked = true;
             Thread.sleep(50);
         }
         assertTrue("the job did not stop for the shot check: " + job.error, job.qcWaiting);
@@ -1720,8 +1714,9 @@ public class AppTest {
         for (String[] it : job.qcItems) if (it[2].equals("animatic")) animatic = true;
         assertTrue("the animatic card", animatic);
         assertTrue("animatic.mp4 " + p.file("animatic.mp4").length(), p.file("animatic.mp4").length() > 1000);
-        assertTrue("the director asked before using the 3D dolls", asked);
-        assertTrue("the accepted doll is the character's picture", p.manifestLine("char", "मीना") != null);
+        assertFalse("no 3D doll is proposed", asked);
+        assertTrue("nothing built in 3D", s3d("proposals", p) == null || ((java.util.List<?>) s3d("proposals", p)).isEmpty());
+        assertFalse("no 3D picture in the cast", p.read("cast.txt").contains("3d_"));
         int shots = 0;
         for (Integer i : job.qcShotIndex) if (i >= 0) shots++;
         System.out.println("QC: " + job.qcItems.size() + " stills (" + shots + " shots)");
@@ -6522,7 +6517,7 @@ public class AppTest {
         assertEquals("the neem tree/corner/shade are one place; post office stays distinct", 2, places.size());
         List<String[]> asked = (List<String[]>) call("com.tarun.kahani.app.AutoLibrary", "missingTargets", p, st);
         Set<String> objectNames = new HashSet<String>();
-        for (String[] target : asked) if (target[0].startsWith("shot:")) objectNames.add(target[1]);
+        for (String[] target : asked) if (target[0].startsWith("shot:")) objectNames.add(target[0].substring(target[0].indexOf(':', 5) + 1));   // ("shot:0:<the listed name>"; the label adds "(a thing of the story)")
         assertEquals("only the two explicit inventory objects are photo requests", 2, objectNames.size());
         assertTrue(objectNames.contains("पुराना लाल डाक-बक्सा"));
         assertTrue(objectNames.contains("पीली चिट्ठी"));

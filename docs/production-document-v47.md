@@ -294,3 +294,126 @@ New this round:
 - `AakhiriChitthiAcceptanceTest` (+1, the editor)
 
 These were added to the CI test list locally; nothing was pushed.
+
+## 7. Third round (17 October, afternoon): physics frame by frame, the 3D maker removed, the Studio in the user's order
+
+The user's notes on the last release: the bench was floating, परी walked through the bench, two benches appeared, the
+3D maker should go, and the Studio should ask for pictures in the order the script lists them.
+
+### Physics, checked at 24 frames a second (`ProductionDocument.physicsCheck`)
+
+The technical director now steps through **every frame of every scene at 24 fps** in the plan. For each visible
+character standing on the ground, it checks three rules:
+
+| Rule | What counts as breaking it |
+|---|---|
+| Nobody sits on nothing | Seated (body SIT) with no seat under them |
+| Nobody passes through anyone | Moving faster than 20 px/s across someone standing or sitting still on the same ground line and depth |
+| Nobody passes through a thing | Moving across a set piece (a postbox, a cart, a bag set down) that stands on the same ground line |
+
+A thing set further back (a cart placed *behind* someone) is on another ground line, so the walk passes in front of it.
+
+- **How it is recorded.** Each finding is a MAJOR issue under the technical director, category `PHYSICS`, with the first
+  frame number and its time.
+- **Where it shows.** The document's summary gives the number of frames checked.
+
+**The director's fix (`Director.passInFront`).** A walk or run whose path goes over the middle of a person or a thing
+on its ground line is laid on a half-ellipse path towards the camera (`Film.Track`). The walker goes *in front of*
+them, lower and larger, and is drawn after them. The fix runs after the technical director's other passes, because
+those can lengthen a move. A move ending beside the obstacle is not changed.
+
+| Script | Frames checked at 24 fps | Physics findings |
+|---|---|---|
+| आखिरी चिट्ठी with the user's pictures | 3,087 | 0 |
+| आखिरी जोड़ी | 1,235 | 0 |
+| आखिरी चाय | 3,033 | 0 |
+
+In आखिरी चिट्ठी, परी's three crossings (30.4–32.2 s, 38.1–41.2 s and 47.1–49.8 s) pass in front of the postbox,
+रघुवीर जी and the bench. Rendered frames at 31.0, 31.3, 39.7 and 48.3 s show it, with one bench standing on the ground.
+
+**Not fixed.** This is a check of the *plan* (positions, paths, seats), not of the rendered pixels. It does not see a
+hand going into a body or a picture's own outline.
+
+### The bench
+
+- **Two benches and the floating bench.** The current build draws the user's bench picture once, standing on the ground.
+  रघुवीर जी's own pictures of himself on the bench are not used in any shot; the shot list says which picture each
+  shot uses.
+- **The likely cause.** Those pictures carry a bench of their own, and a seated picture is lifted to the seat's
+  height. Together, that would draw a second bench in the air. Using them needs two changes, and **neither is done**:
+  - the seat they carry replaces the place's bench while they play;
+  - the picture is not lifted.
+
+  Their pose tags are also misread. Five of the six were read as running, which is why they are not chosen.
+- **Still wrong.** रघुवीर जी seated front-on, through his rig, still reads somewhat like standing at the bench: the
+  thighs are hidden and the long kurta falls straight.
+
+### The 3D maker is gone
+
+- **Removed from the app.**
+  - Studio: the "build in 3D" and "make the views" buttons, the 3D doll and 3D place buttons.
+  - Film job: the 3D step.
+  - Settings: the 3D toggles (ask before using a 3D picture, free 3D models, free image-to-3D demos) and the Meshy
+    key row.
+  - The texts that said missing pictures would be "made in 3D".
+- **What happens instead.** A picture the user does not give is drawn by the studio, or made as an AI illustration if
+  they allow it.
+- **Not removed.** The 3D library classes (`Doll3D`, `Set3D`, `Figure3D`, `Studio3D`, `ImageTo3D`, `Glb`, the
+  procedural world assets) are still in the source. No screen or film step reaches them now. `AppTest` exercises them,
+  and `Studio3DArt` still holds 2D helpers the film uses: pose tags, angles, the inventory and the facial specs.
+  Deleting them is a larger refactor, not done here.
+
+### The Studio, in the user's order
+
+The Studio page now reads, in order:
+
+1. Characters.
+2. Objects.
+3. **Places and backgrounds, numbered as the script lists them.** There is one card per listed place, and every scene
+   set there shares its picture.
+4. Title and end pages.
+5. **Reference images and videos for the director's checks, up to 18 each** (`Project.MAX_REF_FRAMES`,
+   `MAX_REF_VIDEOS`).
+
+**Not done.** The reference images and videos set the film's exposure (`FilmJob.referenceLook`). They are not compared
+frame by frame with the film.
+
+### Sheets of a character with a thing
+
+- **What happens to a sheet.** It is kept whole in the library as a contact sheet, and its figures are cut out with
+  their place on the sheet recorded (`SheetSaver`, v46).
+- **A figure with a thing.** A figure that touches a thing (रघुवीर जी on the bench) stays one piece with it.
+- **Not done.** The film does not yet use such a figure as "the character and the thing together" (see the bench
+  above).
+
+### Tests (this round)
+
+**Plain JVM**
+
+- New:
+  - `AakhiriChitthiAcceptanceTest.nobodyPassesThroughAnyoneOrAnythingAtTwentyFourFramesASecond`
+  - `NewFormatScriptsTest.bothScriptsPassThePhysicsCheckFrameByFrame`
+  - `NewFormatScriptsTest.aWalkAcrossSomeoneSeatedGoesInFrontOfThem`
+- The four new test classes (28 tests) pass.
+- The whole plain-JVM suite passes on a clean copy of this tree: 80 tests.
+- The plan digest of the 2,100 test stories is identical to the last baseline (the digest records postures, acts,
+  effects, weather and sounds; it does not record the new paths).
+
+**AppTest (Robolectric) corrections**
+
+- `filmJobFinishesEndToEnd` no longer expects a 3D doll to be proposed.
+- `v47StudioRequestsOnlyListedObjectsAndDeduplicatesPlaceVariants` compares the request key, not the label. The label
+  has carried "(a thing of the story)" since before the test was written, so the test failed from the start.
+- `aakhiriChitthiReferencePackIsBrowsableInTheBuiltInLibrary` expects the 101 stills the pack holds since 5e81c8a,
+  not 51.
+
+**Network:** one AppTest failed on HTTP 429 from Maven Central while Robolectric fetched its Android jar.
+
+**The API layer**, against the local fake server (`tools/review/cloudtest`):
+
+- A retired Gemini model falls back to the current one.
+- With Gemini down, the text and vision requests go to the second provider within 10 ms.
+- No real key is in the source. A scan for key patterns found none.
+
+**APK:** built and signed locally. aapt2, zipalign, apksigner and dx come from Ubuntu's own packages; `dl.google.com`
+stays blocked.

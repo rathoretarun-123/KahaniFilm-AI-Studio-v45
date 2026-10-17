@@ -72,5 +72,7 @@ reason, in the issue register.
 | Screenplay formatter on all 2,100 stories: same scenes, speakers and words after formatting | 2,100 |
 | Formatter output passes the format rules | 2,100 |
 | Formatter idempotent | 2,099; the exception is an emoticon ":-(" inside a description |
-| APK build | BLOCKED: no aapt2 / d8 / zipalign / apksigner in this container; `dl.google.com` denied by the network policy; apt has no packages for them |
+| APK build | Built and signed locally (later the same day). The tools come from Ubuntu 24.04's own packages: `aapt` (with aapt2), `zipalign`, `apksigner`, `dalvik-exchange` (dx) and `android-sdk-platform-23`. `dl.google.com` is still denied, so there is no d8 |
+| Physics | The plan is checked frame by frame at 24 fps: nobody sits on nothing, nobody passes through anyone or through a set piece. All three user scripts: 0 findings (see `docs/production-document-v47.md` §7) |
+| 3D maker | Removed from the app's screens and from the film job. The library classes are still in the source, unreachable from any screen |
 | App compile | The whole app source tree compiles with javac against android-all-14 |

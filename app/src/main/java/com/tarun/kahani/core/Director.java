@@ -435,6 +435,8 @@ public final class Director {
             limitShotLength(TechnicalDirector.CUT_SECONDS);
             keepScriptedMoves();
         }
+        // (after the protocol's calmed moves: every move's own length is final now)
+        passInFront();
         film.shotList = qualityCheck();
         groundInFrame();
         facesInFrame();      // (v47.3: a shot with two or more in it holds every head and every face)
@@ -7187,6 +7189,70 @@ public final class Director {
      * — fading as they walk off the stage and growing as they come on; a walking stick, crutches, a wheelchair and
      * anklets the same.
      */
+    /**
+     * v47.6 (the user: "परी is able to cross the bench without any issue"): nobody walks or runs through someone standing or
+     * sitting still, through the seat they sit on, or through a thing that stands in the place (a postbox, a cart, a bag on
+     * the ground). Checked along every move of every part at the film's 24 frames a second: a move that would pass through
+     * one goes in front of it instead — down the stage towards the camera and back (lower and a little larger, drawn over
+     * it) — on a path laid over the move (Film.Track), the way a walk round a fire goes behind it. A destination beside
+     * the obstacle (going to the postbox, sitting down beside him) is no crossing.
+     */
+    private void passInFront() {
+        Film.Seg keep = seg;
+        for (Film.Seg sg : film.segs) {
+            if (sg.type != Film.S_SCENE) continue;
+            seg = sg;
+            for (Film.Actor a : sg.actors) {
+                if (a.look == null || !a.look.isHumanoid()) continue;
+                float ha = heightOf(a);
+                for (int i = 1; i < a.keys.size(); i++) {
+                    Film.Key k = a.keys.get(i);
+                    if (k.moveDur <= 0.2f || k.anchor != Film.A_GROUND) continue;
+                    float t0 = k.t, t1 = k.t + k.moveDur;
+                    if (a.trackAt(t0 + 0.01f) != null || a.trackAt(t1 - 0.01f) != null) continue;      // already on a path
+                    float x0 = xAt(a, t0), x1 = k.x;
+                    if (Math.abs(x1 - x0) < ha * 0.3f || !a.stateAt(t0 + 0.05f).visible) continue;
+                    float lo = Math.min(x0, x1), hi = Math.max(x0, x1), clear = 0;
+                    // the people standing or sitting still along the way, with the seat they sit on
+                    for (Film.Actor o : sg.actors) {
+                        if (o == a) continue;
+                        Film.Key os = o.stateAt((t0 + t1) / 2);
+                        if (!os.visible || os.anchor != Film.A_GROUND || o.trackAt((t0 + t1) / 2) != null) continue;
+                        float xo = xAt(o, (t0 + t1) / 2);
+                        if (Math.abs(xAt(o, t0) - xAt(o, t1)) > ha * 0.3f) continue;               // moving too: no solid obstacle
+                        float half = heightOf(o) * (os.body == Pose.SIT || os.body == Pose.LIE ? 0.38f : 0.16f);
+                        if (crosses(lo, hi, xo, ha)) clear = Math.max(clear, half);
+                    }
+                    // the things that stand in the place (a set piece, a bag set down, a seat left behind)
+                    for (Film.Fx f : sg.fx) {
+                        boolean standing = f.type == Film.FX_HELD && f.kind == Film.THING_PLACE || f.type == Film.FX_SEAT;
+                        if (!standing || f.t0 > t1 || f.t1 < t0 || f.y < -6) continue;                     // (one set further back is passed in front of anyway)
+                        float half = f.type == Film.FX_SEAT ? ha * 0.4f : Math.max(ha * 0.08f, f.size * ha * 0.35f);
+                        if (crosses(lo, hi, f.x, ha)) clear = Math.max(clear, half);
+                    }
+                    if (clear <= 0) continue;
+                    Film.Track r = new Film.Track();
+                    r.t0 = t0; r.t1 = t1; r.walking = true; r.run = k.run;
+                    r.cx = (x0 + x1) / 2; r.rx = Math.abs(x1 - x0) / 2; r.cy = 0;
+                    r.ry = Math.min(ha * 0.22f, 26 + clear * 0.15f);                                 // how far towards the camera
+                    // (a half ellipse below the ground line: lift = -ry·sin θ with θ through π…2π is towards the camera)
+                    if (x1 > x0) { r.th0 = (float) Math.PI; r.th1 = (float) (2 * Math.PI); } else { r.th0 = (float) (2 * Math.PI); r.th1 = (float) Math.PI; }
+                    a.track.add(r);
+                    passesInFront++;
+                }
+            }
+        }
+        seg = keep;
+        if (passesInFront > 0) film.notes.add("  ↳ " + passesInFront + (passesInFront == 1 ? " walk passes" : " walks pass") + " in front of someone or something in the way, never through it");
+    }
+
+    private int passesInFront;
+
+    /** Whether a move over [lo, hi] goes through what stands at xo: its path runs over the middle of it, wherever it ends. */
+    static boolean crosses(float lo, float hi, float xo, float h) {
+        return xo > lo + h * 0.05f && xo < hi - h * 0.05f;
+    }
+
     private void placeSteps() {
         for (Film.Sfx x : film.sfx) {
             boolean step = x.type == Film.SFX_STEPS || x.type == Film.SFX_STEPS_HARD || x.type == Film.SFX_STEPS_RUN || x.type == Film.SFX_STICK

@@ -725,7 +725,7 @@ public final class ScriptParser {
             float sc = distinct == 0 ? 0 : have / (float) distinct;
             // the whole name, word for word, where the people are ("नीम के पेड़ के नीचे का कोना, दादाजी …"): that place
             // and not the shorter one inside it ("नीम का पेड़")
-            if (distinct > 0 && have == distinct && (" " + String.join(" ", ws) + " ").contains(" " + String.join(" ", placeWords(pl, true)) + " ")) sc += 0.5f;
+            if (distinct > 0 && have == distinct && (" " + spaced(ws) + " ").contains(" " + spaced(placeWords(pl, true)) + " ")) sc += 0.5f;
             String nd = Txt.norm(desc).toLowerCase(java.util.Locale.ROOT);
             List<String> dws = placeWords(desc, true);
             for (String th : thingHeads) if (dws.contains(th) && ws.contains(th)) { sc += 0.3f; break; }
@@ -793,6 +793,13 @@ public final class ScriptParser {
             i = j - 1;
         }
         return out.toArray(new String[0]);
+    }
+
+    /** Words joined by single spaces (the app's own join: the APK's class library is compiled against without String.join). */
+    static String spaced(List<String> ws) {
+        StringBuilder b = new StringBuilder();
+        for (String w : ws) { if (b.length() > 0) b.append(' '); b.append(w); }
+        return b.toString();
     }
 
     /** v47.6: "1. name", "२) name": a numbered entry of a list, its words after the number. */

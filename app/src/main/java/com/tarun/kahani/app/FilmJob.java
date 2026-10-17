@@ -364,10 +364,9 @@ public final class FilmJob implements Runnable {
                 int n = FreeArt.fetchFor(project, story, Prefs.cloud(ctx), Library.get(ctx), 6, got);
                 if (n > 0) objectNotes = got;
             }
-            // v34: the 3D maker only when it must — whatever still has no picture after the library is asked of the
-            // user first: the film waits on this screen while they add pictures (each row has its button); it goes on
-            // the moment everything has one, or when they choose to have the rest built in 3D or drawn
-            boolean build3d = false; // native 3D doll creation is disabled; user references and optional AI illustrations remain
+            // v34: whatever still has no picture after the library is asked of the user first: the film waits on this
+            // screen while they add pictures (each row has its button); it goes on the moment everything has one, or
+            // when they choose to have the rest drawn
             if (askForPictures && !remake) {
                 java.util.List<String> needed = neededPictures(story);
                 if (!needed.isEmpty()) {
@@ -390,36 +389,7 @@ public final class FilmJob implements Runnable {
             // v39: pictures made with AI only after the user was asked and chose to have the rest made — never before
             // ("it is still creating pictures on its own"): the user's own pictures and the library come first
             if (!remake && Prefs.online(ctx) && Prefs.autoArt(ctx) && (!askForPictures || pictureChoice == 1 || pictureChoice == 2) && !neededPictures(story).isEmpty()) makeMissingPictures(story, ed);
-            // Studio 3D: whatever still has no picture (AI off, offline, or the service down) is built in three
-            // dimensions on the phone — characters with their face points, places with their floor line
-            if (build3d && !remake) {
-                check();
-                step("Reading the style of your pictures…", 0.024f);
-                final com.tarun.kahani.core.StyleCue cue = Studio3DArt.styleCue(project, story, Library.get(ctx));
-                styleNote = cue.describe();
-                boolean ask = Prefs.ask3d(ctx);
-                Studio3DArt.Progress sp = new Studio3DArt.Progress() {
-                    public void at(String what) { check(); step(what + "…", 0.025f); }
-                };
-                boolean online = Prefs.online(ctx);
-                com.tarun.kahani.core.ImageTo3D.forgetFailures();
-                int made = Studio3DArt.makeMissing(project, story, ed, Library.get(ctx), ctx, cue, ask, sp, online && Prefs.freeModels(ctx) ? Prefs.cloud(ctx) : null, online && Prefs.freeModels(ctx));
-                // every character with a picture gets its views from that picture (three-quarter, side, back)
-                made += Studio3DArt.makeAllViews(project, story, Library.get(ctx), ctx, cue, ask, Prefs.meshyKey(ctx), online ? Prefs.cloud(ctx) : null, sp, online && Prefs.freeSpaces(ctx));
-                if (made > 0) notes3d = made;
-                // the director asks: every picture the studio made is a proposal until the user accepts it (in the
-                // Studio, where pictures are chosen, or on the progress screen); a rejected one is deleted and never used
-                if (ask && !Studio3DArt.proposals(project).isEmpty()) {
-                    int n = Studio3DArt.proposals(project).size();
-                    stage = "Waiting for you: " + n + " picture(s) the studio made in 3D need your decision (✔ Use / ✖ Reject)";
-                    proposalsWaiting = true;
-                    while (proposalsWaiting && !cancelled && !Studio3DArt.proposals(project).isEmpty()) {
-                        try { Thread.sleep(300); } catch (InterruptedException e) { break; }
-                    }
-                    proposalsWaiting = false;
-                    check();
-                }
-            }
+            // (v47.6: the 3D maker is gone — no picture is built in 3D; the user's pictures, AI illustrations on request, or the studio's drawing)
             step("Preparing pictures (removing backgrounds)…", 0.03f);
             // v26: pictures are read at a size that fits the output (sharper at 1080p, lighter at 480p), within the memory left
             // v30: a phone with a large heap reads the pictures larger (sharper close-ups); a small one stays light

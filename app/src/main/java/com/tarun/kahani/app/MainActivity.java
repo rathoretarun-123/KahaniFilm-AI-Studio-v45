@@ -1039,7 +1039,7 @@ public class MainActivity extends Activity {
         }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         btns.addView(Ui.small(this, "🎥 Add reference clip (" + clips.size() + "/" + Project.MAX_REF_VIDEOS + ")", clips.size() < Project.MAX_REF_VIDEOS ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) {
-                if (project.refVideos().size() >= Project.MAX_REF_VIDEOS) { toast("Two reference clips are already here — remove one first"); return; }
+                if (project.refVideos().size() >= Project.MAX_REF_VIDEOS) { toast(Project.MAX_REF_VIDEOS + " reference clips are already here — remove one first"); return; }
                 pick("video/*", REQ_REF_VIDEO, false);
             }
         }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
@@ -1375,30 +1375,10 @@ public class MainActivity extends Activity {
                 + (st.hasNarrator ? "\nNarrator voice: yes (the story has a narrator)" : ""), 15, Ui.TEXT, false));
         String miss = "Still missing:\n• " + noPic + " character pictures  • " + noVoice + " voice samples  • " + noBg + " backgrounds"
                 + "\nUpload this film's references first. If you want to reuse an earlier asset, choose the explicit library button below."
-                + "\nAnything you don't add, the studio creates with AI in 3D style when you make the film (internet), or draws itself offline.";
+                + "\nAnything you don't add is drawn by the studio (or, if you allow it when you make the film, made as an AI illustration).";
         sum.addView(Ui.text(this, miss, 14, noPic + noVoice + noBg == 0 ? Ui.GREEN : Ui.PRIMARY_DARK, false));
-        if (noPic + noBg > 0) sum.addView(Ui.small(this, "🧊 Build all " + (noPic + noBg) + " missing pictures in 3D now (on the phone)", Ui.PRIMARY_DARK, new View.OnClickListener() {
-            public void onClick(View v) {
-                background("Studio 3D is building the missing pictures…", new Work() {
-                    public Object run() throws Exception { return Studio3DArt.makeMissing(project, st, edits(), library, MainActivity.this, Studio3DArt.styleCue(project, st, library), Prefs.ask3d(MainActivity.this), null, Prefs.online(MainActivity.this) && Prefs.freeModels(MainActivity.this) ? Prefs.cloud(MainActivity.this) : null, Prefs.freeModels(MainActivity.this)); }
-                }, new Done() {
-                    public void done(Object res, Exception e) { if (e != null) toast("Could not build them: " + e.getMessage()); else toast("Studio 3D made " + res + " picture(s)" + (Prefs.ask3d(MainActivity.this) ? " — decide on each below" : "")); showStudio(); }
-                });
-            }
-        }));
-        int noViews = 0;
-        for (Story.CharacterDef c : st.cast()) if (charFile(c) != null && !Studio3DArt.hasViews(project, keyFor(c)) && Studio3DArt.viewProposals(project, keyFor(c)).isEmpty()) noViews++;
-        if (noViews > 0) sum.addView(Ui.small(this, "📐 Make the views of " + noViews + " character(s) from their pictures (three-quarter, side, back)", Ui.PRIMARY_DARK, new View.OnClickListener() {
-            public void onClick(View v) {
-                background("Studio 3D is making the views from the pictures…", new Work() {
-                    public Object run() throws Exception {
-                        return Studio3DArt.makeAllViews(project, st, library, MainActivity.this, Studio3DArt.styleCue(project, st, library), Prefs.ask3d(MainActivity.this), Prefs.meshyKey(MainActivity.this), Prefs.cloud(MainActivity.this), null, Prefs.online(MainActivity.this) && Prefs.freeSpaces(MainActivity.this));
-                    }
-                }, new Done() {
-                    public void done(Object res, Exception e) { if (e != null) toast("Could not make them: " + e.getMessage()); else toast("Views made for " + res + " character(s)" + (Prefs.ask3d(MainActivity.this) ? " — decide on each below" : "")); showStudio(); }
-                });
-            }
-        }));
+        // v47.6 (the user: "remove 3D maker, 3D doll entirely"): nothing is built in 3D any more — the film is made from the
+        // user's own pictures (and, with the internet and the user's say, AI illustrations); the studio draws the rest
         int nProp = Studio3DArt.proposals(project).size();
         if (nProp > 0) sum.addView(Ui.text(this, "🧊 " + nProp + " picture(s) made in 3D are waiting for your ✔ Use / ✖ Reject on the cards below — the director uses none of them before you decide.", 14, Ui.PRIMARY_DARK, true));
         for (String w : st.warnings) sum.addView(Ui.text(this, "⚠ " + w, 13, Ui.RED, false));
@@ -1447,15 +1427,16 @@ public class MainActivity extends Activity {
         // ---- parts of the story
         heading(body, "2. Objects (the things the script lists)");
         body.addView(objectsCard(st));
-        heading(body, "3. Places and backgrounds");
+        heading(body, "3. Places and backgrounds (numbered as the script lists them)");
         SoundLib sl = library.soundLib();
-        for (Story.Scene sc : st.scenes) body.addView(sceneCard(sc, sl));
-        heading(body, "4. Reference images and videos of the story (optional)");
-        body.addView(referenceCard());
-        // (the title and end pages are made by the studio from the story; a picture of your own can still be given)
-        heading(body, "Title and end pages (optional — the studio makes them)");
+        placeCards(body, st, sl);
+        // the order the user gave: characters, objects, places, (the story), the title page and the end page, then the
+        // reference pictures and clips the director, the technical director and the editor check the film against
+        heading(body, "4. Title and end pages (optional — the studio makes them)");
         body.addView(pageCard("Title page", "title"));
         body.addView(pageCard(st.hindi ? "End page (समाप्त)" : "End page (The End)", "end"));
+        heading(body, "5. Reference images and videos for the director's checks (up to " + Project.MAX_REF_FRAMES + " each)");
+        body.addView(referenceCard());
 
         // ---- director plan
         LinearLayout plan = Ui.card(this);
@@ -1641,15 +1622,6 @@ public class MainActivity extends Activity {
         final String[] vfiles = Studio3DArt.viewFiles(project, key);
         final boolean views = file != null && Studio3DArt.hasViews(project, key);
         LinearLayout r3 = Ui.row(this);
-        if (file == null) r3.addView(Ui.small(this, "🧊 3D doll", Ui.PRIMARY_DARK, new View.OnClickListener() {
-            public void onClick(View v) {
-                background("Studio 3D is building " + c.shown() + " from the description…", new Work() {
-                    public Object run() throws Exception { return Studio3DArt.makeCharacter(project, st, c, library, MainActivity.this, Studio3DArt.styleCue(project, st, library), Prefs.ask3d(MainActivity.this), Prefs.online(MainActivity.this) && Prefs.freeModels(MainActivity.this) ? Prefs.cloud(MainActivity.this) : null, Prefs.freeModels(MainActivity.this)); }
-                }, new Done() {
-                    public void done(Object res, Exception e) { if (e != null) toast("Could not build it: " + e.getMessage()); showStudio(); }
-                });
-            }
-        }));
         if (false && file != null && !views && !Studio3DArt.realAngles(project, key) && Studio3DArt.viewProposals(project, key).isEmpty()) r3.addView(Ui.small(this, "📐 Views from this picture", Ui.PRIMARY_DARK, new View.OnClickListener() {
             public void onClick(View v) {
                 background("Studio 3D is making the three-quarter, side and back views of " + c.shown() + " from the picture…", new Work() {
@@ -1758,6 +1730,37 @@ public class MainActivity extends Activity {
         return card;
     }
 
+    /**
+     * v47.6 (the user: "three places are different", numbered as the script lists them): one card per listed place, in its
+     * number; the scenes set there share its picture (given once, on the first of them, and used by the others); a place
+     * no scene is set in (seen around the main one) says so, and its picture is optional. Scenes the list does not name
+     * keep their own cards after the list.
+     */
+    private void placeCards(LinearLayout body, Story st, SoundLib sl) {
+        java.util.Set<Integer> done = new java.util.HashSet<Integer>();
+        int pn = 0;
+        for (Story.PlaceDef pl : st.places) {
+            pn++;
+            List<Story.Scene> here = new ArrayList<Story.Scene>();
+            for (Story.Scene sc : st.scenes) if (!done.contains(sc.number) && com.tarun.kahani.core.ProductionDocument.placeOfScene(st, sc) == pl) here.add(sc);
+            StringBuilder nums = new StringBuilder();
+            for (Story.Scene sc : here) { nums.append(nums.length() > 0 ? ", " : "").append(sc.number); done.add(sc.number); }
+            LinearLayout head = Ui.card(this);
+            head.addView(Ui.text(this, pn + ". " + pl.name, 16, Ui.TEXT, true));
+            if (pl.description.length() > 0) head.addView(Ui.text(this, pl.description.length() > 160 ? pl.description.substring(0, 160) + "…" : pl.description, 12, Ui.SUB, false));
+            head.addView(Ui.text(this, here.isEmpty() ? "No scene is set here — it is seen around the main place (in its picture). A picture of it is optional."
+                    : "Scenes here: " + nums + (here.size() > 1 ? " — one picture for all of them" : ""), 13, here.isEmpty() ? Ui.SUB : Ui.PRIMARY_DARK, false));
+            body.addView(head);
+            if (here.isEmpty()) continue;
+            // the scenes set here share the first one's picture
+            String first = sceneFile(here.get(0));
+            if (first != null) for (int i = 1; i < here.size(); i++) if (sceneFile(here.get(i)) == null)
+                project.setManifest("scene", String.valueOf(here.get(i).number), "scene|" + here.get(i).number + "|" + first);
+            body.addView(sceneCard(here.get(0), sl));
+        }
+        for (Story.Scene sc : st.scenes) if (!done.contains(sc.number)) body.addView(sceneCard(sc, sl));
+    }
+
     private LinearLayout sceneCard(final Story.Scene sc, SoundLib sl) {
         LinearLayout card = Ui.card(this);
         final String key = String.valueOf(sc.number);
@@ -1792,15 +1795,6 @@ public class MainActivity extends Activity {
                 project.setManifest("scene", key + "r", null);
                 for (int i = 1; i <= 98; i++) project.setManifest("scene", key + "v" + i, null);      // v39: its other views too
                 showStudio();
-            }
-        }));
-        r.addView(Ui.small(this, "🧊 3D place", Ui.PRIMARY_DARK, new View.OnClickListener() {
-            public void onClick(View v) {
-                background("Studio 3D is building the place…", new Work() {
-                    public Object run() throws Exception { return Studio3DArt.makePlace(project, castStory, sc, edits(), library, MainActivity.this, Studio3DArt.styleCue(project, castStory, library), Prefs.ask3d(MainActivity.this)); }
-                }, new Done() {
-                    public void done(Object res, Exception e) { if (e != null) toast("Could not build it: " + e.getMessage()); showStudio(); }
-                });
             }
         }));
         card.addView(r);
@@ -3957,7 +3951,7 @@ public class MainActivity extends Activity {
             int k = 0;
             for (String[] t : miss) { if (++k > 12) { sb.append("… and ").append(miss.size() - 12).append(" more\n"); break; } sb.append(t[0].startsWith("shot:") ? "📦 " : t[0].startsWith("place:") ? "🏞 " : "👤 ").append(t[1]).append('\n'); }
             new AlertDialog.Builder(this).setTitle("The director still has no picture for")
-                    .setMessage(sb.toString().trim() + "\n\nUpload them now (the film waits), or make the film without them — those are then made in 3D or drawn from the story's words.")
+                    .setMessage(sb.toString().trim() + "\n\nUpload them now (the film waits), or make the film without them — those are then drawn by the studio from the story's words.")
                     .setPositiveButton("📷 Upload now", new DialogInterface.OnClickListener() { public void onClick(DialogInterface d, int w) { showStudio(); } })
                     .setNegativeButton("Make without them", new DialogInterface.OnClickListener() { public void onClick(DialogInterface d, int w) { askBeforeMaking(new Runnable() { public void run() { startFilm(); } }); } })
                     .show();
@@ -4039,8 +4033,8 @@ public class MainActivity extends Activity {
             if (xs.length() > 0) body.addView(Ui.text(this, "\n🎬 The director adds " + extras.size() + " scene(s) of its own and asks for their pictures (up to 100 each): " + xs + ". Without one it shows the place itself.", 14, Ui.PRIMARY_DARK, false));
             if (shown > 0) {
                 body.addView(Ui.text(this, "\nNo picture yet: " + m + ". Please add them — tap \"Pictures first\" below (up to 100 pictures of each). The director looks in your library first, "
-                        + "and before anything is built in 3D the film stops and asks you for the rest.", 14, Ui.PRIMARY_DARK, false));
-                ai.setText("Make the rest with free AI in 3D animated style (made natively in the film's shape)");
+                        + "and before anything is drawn for you the film stops and asks you for the rest.", 14, Ui.PRIMARY_DARK, false));
+                ai.setText("Make the rest with free AI (animated-film style, made in the film's shape)");
                 ai.setChecked(Prefs.autoArt(this) && Prefs.online(this));
                 ai.setEnabled(Prefs.online(this));
                 body.addView(ai);
@@ -4968,7 +4962,6 @@ public class MainActivity extends Activity {
                 {"freesoundKey", "Freesound recordings", "freesound.org/apiv2/apply → Create new API credentials", "key"},
                 {"pixabayKey", "Pixabay pictures", "pixabay.com/api/docs → signed in, the key is on that page", "key"},
                 {"pexelsKey", "Pexels photos", "pexels.com/api → Your API key", "key"},
-                {"meshyKey", "Meshy image-to-3D models (a 3D model from each character's picture; paid per model)", "meshy.ai → API keys", "msy_…"},
         };
         for (final String[] tl : tools) {
             final boolean have = Prefs.get(this, tl[0], "").length() > 10;
@@ -4982,7 +4975,7 @@ public class MainActivity extends Activity {
             keys.addView(row);
         }
         keys.addView(Ui.text(this, "Every picture, voice and sound you upload, photograph, find or make here is kept in the app's own library \"tarunkahani\" (with a private backup in Downloads/tarunkahani) — never in the camera or photos library. "
-                + "Built in, no key: Microsoft neural voices, Pollinations AI pictures and story reading, Openverse and Wikimedia pictures, the studio's own 3D figure model, the phone's own voice offline. "
+                + "Built in, no key: Microsoft neural voices, Pollinations AI pictures and story reading, Openverse and Wikimedia pictures, the phone's own voice offline. "
                 + "No keys come inside the app because its code is public — a key built in would be misused and switched off within days.", 12, Ui.SUB, false));
         body.addView(keys);
 
@@ -4990,16 +4983,13 @@ public class MainActivity extends Activity {
         LinearLayout dir = Ui.card(this);
         dir.addView(Ui.title(this, "🎬 The director"));
         dir.addView(toggle("Online features (AI, free pictures and sounds)", "online", true));
-        dir.addView(toggle("Make missing pictures with free AI (3D animated style, needs internet)", "autoArt", true));
-        dir.addView(toggle("Ask me for my pictures first: the film waits for them before the 3D maker makes any (the 3D maker only for what I do not give)", "askUploads", true));
-        dir.addView(toggle("Ask me before a picture made in 3D is used (✔ Use / ✖ Reject where pictures are chosen)", "ask3d", true));
+        dir.addView(toggle("Make missing pictures with free AI (animated-film style, needs internet)", "autoArt", true));
+        dir.addView(toggle("Ask me for my pictures first: the film waits for them before anything is drawn for me", "askUploads", true));
         dir.addView(toggle("Emoji stand-ins for listed objects with no picture (Fluent Emoji 3D, MIT)", "freeObjects", false));
         dir.addView(toggle("Human QC: show me every shot's first frame before the film is made", "humanQc", true));
         dir.addView(Ui.text(this, "🎞 Films are made at 24 frames per second, the animation standard.", 13, Ui.SUB, false));   // v47.4: fixed (the user)
         dir.addView(toggle("Reader looks up unknown words online (free Wikipedia summary; your cloud as a fallback) — slower first run; results cached", "lookUp", false));
         dir.addView(toggle("Faster drawing: a mesh cell of 2 pixels instead of 1 (about twice as fast, a little less smooth)", "fastMesh", false));
-        dir.addView(toggle("Free 3D models from GitHub (CC0 / CC-BY, e.g. KayKit's knight, mage, rogue, barbarian; the Khronos fox) for a character without a picture, when its description fits one — always a proposal you accept or reject; the credit goes into the production file", "freeModels", true));
-        dir.addView(toggle("Free image-to-3D demos (TripoSR, InstantMesh, Hunyuan3D-2 on Hugging Face Spaces, no key) for the views of a character's picture — slow, may be asleep or over quota; then the studio's own figure model does it", "freeSpaces", true));
         dir.addView(toggle("Natural voices (Microsoft neural, no key)", "naturalVoices", true));
         dir.addView(toggle("Expressive AI voices (needs a key; small free limit)", "aiVoices", false));
         dir.addView(toggle("Animate on twos (Spider-Verse: learners 12 fps, rebels 8 fps)", "onTwos", false));

@@ -233,6 +233,18 @@ public class AakhiriChitthiAcceptanceTest {
         assertEquals("the editor's notes never stop the director's sign-off", "APPROVED", d.review(ProductionDocument.DIRECTOR, "APPROVED", "ok").status);
     }
 
+    @Test public void nobodyPassesThroughAnyoneOrAnythingAtTwentyFourFramesASecond() throws Exception {
+        Made m = make();
+        // the technical director stepped through every frame of the plan (24 a second) and found no body through another,
+        // through the bench or through a set piece, and nobody sitting on nothing
+        assertTrue(m.doc.framesChecked > 24 * 100);
+        for (ProductionDocument.Issue i : m.doc.issues) assertFalse(i.requirement + ": " + i.evidence, "PHYSICS".equals(i.category));
+        // परी's runs across the stage go in front of the bench and of रघुवीर जी, never through them
+        int paths = 0;
+        for (Film.Seg sg : m.film.segs) for (Film.Actor a : sg.actors) if (a.c.displayName.equals("परी")) paths += a.track.size();
+        assertTrue("her crossings are laid in front", paths > 0);
+    }
+
     @Test public void aMissingPictureIsSaidAndAFailedRenderIsNeverDone() throws Exception {
         ProductionDocument d = make().doc;
         for (ProductionDocument.Entity c : d.characters) {

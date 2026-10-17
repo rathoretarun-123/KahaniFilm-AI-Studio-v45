@@ -439,6 +439,17 @@ public final class ProductionDocument {
         return null;
     }
 
+    /**
+     * The listed place a scene is set in: the longest listed name its setting (else its title) begins with, or null. The
+     * same reading the document gives every scene; the Studio shows one card per listed place by it.
+     */
+    public static Story.PlaceDef placeOfScene(Story st, Story.Scene sc) {
+        String set = Txt.norm(sc.setting.length() > 0 ? sc.setting : sc.title);
+        Story.PlaceDef best = null; int bl = 0;
+        for (Story.PlaceDef p : st.places) { String n = Txt.norm(p.name).trim(); if (n.length() > bl && set.startsWith(n)) { best = p; bl = n.length(); } }
+        return best;
+    }
+
     Entity placeOf(Story.Scene sc) {
         String set = Txt.norm(sc.setting.length() > 0 ? sc.setting : sc.title);
         Entity best = null; int bl = 0;
@@ -980,6 +991,7 @@ public final class ProductionDocument {
         // the rendered film — stay until resolved)
         for (int i = issues.size() - 1; i >= 0; i--) if (issues.get(i).stage.equals(READER) || issues.get(i).stage.equals(TECHNICAL_DIRECTOR) || issues.get(i).stage.equals(EDITOR)) issues.remove(i);
         editorReview();
+        if (film != null) physicsCheck();
         for (Line l : lines) if (l.speakerId == null) issue(BLOCKER, READER, l.sceneId, "every line has a listed speaker", "no character for \"" + l.speakerName + "\"", "list the speaker under पात्र, or fix the name");
         for (Effect e : effects) {
             if (e.method.equals(UNSUPPORTED)) issue(e.evidence.equals(EXPLICIT) ? MAJOR : WARNING, TECHNICAL_DIRECTOR, e.sceneId, e.kind + ": " + e.behaviour, "\"" + e.span + "\"", "not carried out by this renderer; "
@@ -1014,6 +1026,68 @@ public final class ProductionDocument {
         r.status = blockers > 0 ? "BLOCKED" : "VALIDATED";
         r.rationale = blockers + " blocker(s), " + (r.issueIds.size() - blockers) + " other open issue(s)";
         reviews.put(TECHNICAL_DIRECTOR, r);
+    }
+
+    /** The film's frame rate: the technical director's checks of the plan step through every frame of it. */
+    public static final int FPS = 24;
+    /** How many frames of the plan the last physics check looked at. */
+    public int framesChecked;
+
+    /**
+     * The technical director's physics check of the plan, frame by frame at 24 frames a second (the plan the renderer
+     * draws, not the pixels): nobody passes through someone standing or sitting still, or through a thing standing in
+     * the place, on the same ground line; nobody sits on nothing (seated, with no seat and not on the floor); nothing is
+     * held by two at once (above). Each finding names the scene and the first frame. A plan check: it does not see the
+     * rendered pictures (their feet on the ground, a hand round a thing — those need the frames themselves).
+     */
+    void physicsCheck() {
+        framesChecked = 0;
+        for (Scene s : scenes) {
+            Film.Seg sg = segOf(sceneSegs, s);
+            if (sg == null) continue;
+            java.util.Set<String> said = new java.util.HashSet<String>();
+            for (int f = (int) Math.ceil(s.t0 * FPS); f < s.t1 * FPS; f++) {
+                float t = f / (float) FPS;
+                framesChecked++;
+                for (Film.Actor a : sg.actors) {
+                    Film.Key ka = a.stateAt(t);
+                    if (!ka.visible || ka.anchor != Film.A_GROUND || a.look == null || !a.look.isHumanoid()) continue;
+                    float ha = Renderer.actorHeight(a.look, a.c, null, sg), xa = Director.xAt(a, t), la = Director.liftAt(a, t);
+                    float speed = Math.abs(Director.xAt(a, t + 1f / FPS) - xa) * FPS;
+                    // sitting on nothing
+                    if (ka.body == Pose.SIT && ka.seat < 0 && !said.contains("seat" + a.c.displayName)) {
+                        said.add("seat" + a.c.displayName);
+                        physicsIssue(s, f, "nobody sits on nothing", a.c.displayName + " is seated with no seat drawn under them", "seat them on the place's seat, on the floor, or stand them", a.c.displayName);
+                    }
+                    if (speed < 20) continue;                                                       // standing still
+                    for (Film.Actor o : sg.actors) {
+                        if (o == a) continue;
+                        Film.Key ko = o.stateAt(t);
+                        if (!ko.visible || ko.anchor != Film.A_GROUND) continue;
+                        if (Math.abs(Director.liftAt(o, t) - la) > 6 || ko.depth != ka.depth) continue;   // on another ground line
+                        if (Math.abs(Director.xAt(o, t + 1f / FPS) - Director.xAt(o, t)) * FPS > 20) continue;
+                        float half = Renderer.actorHeight(o.look, o.c, null, sg) * (ko.body == Pose.SIT ? 0.3f : 0.12f);
+                        if (Math.abs(Director.xAt(o, t) - xa) < half && !said.contains("through" + a.c.displayName + o.c.displayName)) {
+                            said.add("through" + a.c.displayName + o.c.displayName);
+                            physicsIssue(s, f, "nobody passes through anyone", a.c.displayName + " moves through " + o.c.displayName + (ko.body == Pose.SIT ? " and the seat" : ""), "the walk goes in front of them (the director's path) or stops beside them", a.c.displayName);
+                        }
+                    }
+                    for (Film.Fx fx : sg.fx) {
+                        if (!(fx.type == Film.FX_HELD && fx.kind == Film.THING_PLACE) || t < fx.t0 || t > fx.t1 || Math.abs(la - fx.y) > 6) continue;   // (a thing set further back stands behind the walk)
+                        float half = Math.max(ha * 0.06f, fx.size * ha * 0.25f);
+                        if (Math.abs(fx.x - xa) < half && !said.contains("thing" + a.c.displayName + fx.what)) {
+                            said.add("thing" + a.c.displayName + fx.what);
+                            physicsIssue(s, f, "nobody passes through a thing", a.c.displayName + " moves through " + fx.what, "the walk goes in front of it or stops beside it", a.c.displayName);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    void physicsIssue(Scene s, int frame, String rule, String what, String proposal, String who) {
+        Entity e = find(characters, who);
+        issue(MAJOR, TECHNICAL_DIRECTOR, s.id, rule, what + String.format(java.util.Locale.ROOT, " — first at frame %d (%.2f s, %d fps)", frame, frame / (float) FPS, FPS), proposal, e != null ? e.id : null).category = "PHYSICS";
     }
 
     static final Pattern SPAN_OF_TIME = Pattern.compile("([0-9०-९]+|एक|दो|तीन|चार|पांच|पाँच|छह|सात|आठ|नौ|दस|बारह|पंद्रह|पन्द्रह|बीस|पच्चीस|तीस|चालीस|पचास|कई|बहुत|one|two|three|five|ten|fifteen|twenty|thirty|fifty|many)\\s+(साल|सालों|बरस|वर्ष|वर्षों|महीने|years|months)", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
@@ -1225,7 +1299,9 @@ public final class ProductionDocument {
         for (Issue i : issues) if (!i.resolved) { open++; if (i.severity.equals(BLOCKER)) block++; }
         int planned = 0, seen = 0;
         for (Effect e : effects) if (e.evidence.equals(EXPLICIT) && !e.method.equals(NOT_FILMABLE)) { planned++; if (e.scheduled) seen++; }
-        return String.format(java.util.Locale.ROOT, "revision %d: %d characters, %d props, %d places, %d scenes, %d lines, %d steps, %d of %d environment requirements in the plan, %d shots, %d open issues (%d blockers)%s",
-                revision, characters.size(), props.size(), locations.size(), scenes.size(), lines.size(), actions.size(), seen, planned, shots.size(), open, block, approvedForRender() ? ", approved for rendering" : "");
+        int physics = 0;
+        for (Issue i : issues) if (!i.resolved && "PHYSICS".equals(i.category)) physics++;
+        return String.format(java.util.Locale.ROOT, "revision %d: %d characters, %d props, %d places, %d scenes, %d lines, %d steps, %d of %d environment requirements in the plan, %d shots, %d frames checked at %d fps (%d physics findings), %d open issues (%d blockers)%s",
+                revision, characters.size(), props.size(), locations.size(), scenes.size(), lines.size(), actions.size(), seen, planned, shots.size(), framesChecked, FPS, physics, open, block, approvedForRender() ? ", approved for rendering" : "");
     }
 }

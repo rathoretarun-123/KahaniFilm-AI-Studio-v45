@@ -127,6 +127,28 @@ public class NewFormatScriptsTest {
         for (ProductionDocument.Issue i : d.issues) assertFalse(i.requirement.startsWith("SMELL"));
     }
 
+    @Test public void bothScriptsPassThePhysicsCheckFrameByFrame() throws Exception {
+        for (File f : new File[]{JODI, CHAI}) {
+            ProductionDocument d = make(f).doc;
+            assertTrue(d.framesChecked > 24 * 30);
+            for (ProductionDocument.Issue i : d.issues) assertFalse(f.getName() + ": " + i.requirement + ": " + i.evidence, "PHYSICS".equals(i.category));
+        }
+    }
+
+    @Test public void aWalkAcrossSomeoneSeatedGoesInFrontOfThem() throws Exception {
+        // any story: one sits on a bench in the middle, the other walks from one side of the stage to the other
+        String s = "शीर्षक: बेंच\n\nपात्र\n\n1. दादा (70 साल)\nबूढ़ा आदमी\n\n2. मुन्नी (8 साल)\nछोटी लड़की\n\nस्थान\n\n1. पार्क\nएक छोटा पार्क\n\nकहानी\n\n"
+                + "दृश्य 1\n(पार्क में बेंच पर दादा बैठे हैं। मुन्नी बाईं ओर से दौड़ती हुई आती है और पार्क के दाईं ओर जाती है)\n\nमुन्नी: \"दादा, देखो!\"\n\nसमाप्त\n";
+        Story st = ScriptParser.parse(s);
+        ProductionDocument d = ProductionDocument.read(st, null);
+        Director dir = new Director(st, new Director.Options());
+        dir.prepare();
+        Film film = dir.direct(new Art());
+        d.attach(film);
+        d.validate();
+        for (ProductionDocument.Issue i : d.issues) assertFalse(i.requirement + ": " + i.evidence, "PHYSICS".equals(i.category));
+    }
+
     @Test public void waterThatFallsMakesNobodyFallAndTheyComeInWhenTheScriptSays() throws Exception {
         Made m = make(CHAI);
         Film.Seg first = null, second = null;
