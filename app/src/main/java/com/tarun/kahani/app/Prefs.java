@@ -27,7 +27,8 @@ public final class Prefs {
     /** Free pictures of the story's objects from GitHub (Fluent Emoji 3D, MIT) for inserts. */
     public static boolean freeObjects(Context c) { return !"0".equals(get(c, "freeObjects", "1")); }
     /** Studio 3D: whatever still has no picture is built in three dimensions on the phone (no internet needed). */
-    public static boolean studio3d(Context c) { return !"0".equals(get(c, "studio3d", "1")); }
+    /** The optional native 3D doll generator was removed; old saved toggles no longer enable it. */
+    public static boolean studio3d(Context c) { return false; }
     /** Faster drawing: a mesh cell of two pixels instead of one (about twice as fast, a little less smooth). */
     public static boolean fastMesh(Context c) { return "1".equals(get(c, "fastMesh", "0")); }
     /** Smooth motion: the film at 30 frames per second instead of 24 (a quarter more drawing). */

@@ -684,7 +684,10 @@ public final class Director {
                 public int compare(Film.Cam a, Film.Cam b) { return Float.compare(a.t, b.t); }
             });
             // every part starts readable and wide (§2)
-            if (sg.cams.isEmpty() || sg.cams.get(0).t > sg.t0 + 1.0f || sg.cams.get(0).zoom > 1.3f) {
+            // A deliberately scripted opening close shot ("cut to medium close-up") is already the scene's
+            // establishing choice. Preserve script-authored framing only; other kept close-ups (such as lip-sync)
+            // do not replace the scene's establishing wide.
+            if (sg.cams.isEmpty() || sg.cams.get(0).t > sg.t0 + 1.0f || (sg.cams.get(0).zoom > 1.3f && !sg.cams.get(0).scripted)) {
                 Film.Cam w = new Film.Cam(sg.t0, 640, 372, 1.08f, 0);
                 sg.cams.add(0, w);
                 estab++;
@@ -5305,6 +5308,7 @@ public final class Director {
         for (int i = at0; i < seg.cams.size(); i++) {
             Film.Cam c = seg.cams.get(i);
             c.keep = true;
+            c.scripted = true;
             if (cw[2] != 0) c.angle = cw[2];
             if (cut && i == at0) c.ease = 0;          // "कट टू …": a cut, not a move
         }

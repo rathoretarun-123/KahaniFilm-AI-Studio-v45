@@ -88,6 +88,7 @@ jobs:
           ls -lh release/KahaniFilm.apk
           unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/aakhiri_chai/stills/'
           unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/babu_ke_liye/stills/'
+          unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/aakhiri_chitthi/stills/pari_profile_right.jpg'
           unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/aakhiri_chai/videos/user_uploaded_reference.mp4'
           unzip -l release/KahaniFilm.apk | grep -q 'assets/film_library/babu_ke_liye/videos/user_uploaded_reference.mp4'
           unzip -p release/KahaniFilm.apk assets/film_library/aakhiri_chai/videos/user_uploaded_reference.mp4 | dd bs=1 skip=4 count=4 2>/dev/null | grep -q 'ftyp'

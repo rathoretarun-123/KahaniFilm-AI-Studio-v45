@@ -111,14 +111,20 @@ public class AwtGfx implements Gfx {
         if (base == null) {
             // CI render audits must use a real Devanagari font; logical SansSerif often draws tofu boxes.
             // Prefer installed Noto Sans Devanagari, but retain portable fallbacks for local developer machines.
-            String[] candidates = bold
+            java.util.List<java.io.File> candidates = new java.util.ArrayList<java.io.File>();
+            String packaged = bold ? "Mukta-ExtraBold.ttf" : "Mukta-SemiBold.ttf";
+            String[] roots = {"app/src/main/assets/fonts", "../app/src/main/assets/fonts", "../../app/src/main/assets/fonts"};
+            String assetRoot = System.getProperty("kahani.assets", "");
+            if (assetRoot.length() > 0) candidates.add(new java.io.File(new java.io.File(assetRoot, "fonts"), packaged));
+            for (String root : roots) candidates.add(new java.io.File(root, packaged));
+            String[] systemFonts = bold
                     ? new String[]{"/usr/share/fonts/truetype/noto/NotoSansDevanagari-Bold.ttf",
                                    "/usr/share/fonts/opentype/noto/NotoSansDevanagari-Bold.ttf"}
                     : new String[]{"/usr/share/fonts/truetype/noto/NotoSansDevanagari-Regular.ttf",
                                    "/usr/share/fonts/opentype/noto/NotoSansDevanagari-Regular.ttf"};
-            for (String candidate : candidates) {
+            for (String candidate : systemFonts) candidates.add(new java.io.File(candidate));
+            for (java.io.File file : candidates) {
                 try {
-                    java.io.File file = new java.io.File(candidate);
                     if (file.isFile()) { base = Font.createFont(Font.TRUETYPE_FONT, file); break; }
                 } catch (Exception ignored) { }
             }

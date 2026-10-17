@@ -715,3 +715,16 @@ the shot for that moment (Director.scriptCamera), kept by the later framing pass
   word (कैमरा, शॉट, दृश्य, एंगल, camera, shot, view).
 In the films: बाबू के लिए 7 of its camera notes now framed as written; आखिरी चाय's closing pull back; आखिरी चिट्ठी's close
 look at the letter and its closing pull back to the wide.
+
+### 6.20 Scripted opening cuts and mixed ground-cover lists (round in progress)
+
+Assumptions for this round: an explicit camera cut at the very start of a scene is the script's establishing choice and
+may override the director's default wide; a mixed list should still request pictures when at least one named item is
+drawable (for example, dry leaves with dust), while a list of effects alone should not.
+- Changed `Director.qualityCheck` so a kept, scripted opening close shot is not overwritten by an inserted wide shot.
+- Changed `Bible.intangible` to evaluate every coordinated item, and added Hindi/English list regression cases.
+- Added a director regression case for a scripted opening medium close-up.
+- Validation is pending. The handoff head's CI run (c6f4772, run 329) has built and published the APK and is still
+  converting image references before running its regression suite. This Windows environment currently has no Java or
+  FFmpeg on PATH; an attempted user-scope JDK install found no applicable winget installer. No render or test result
+  is claimed for this round yet.

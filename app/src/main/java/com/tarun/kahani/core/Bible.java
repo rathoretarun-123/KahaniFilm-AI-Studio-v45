@@ -246,15 +246,35 @@ public final class Bible {
         if (st.places.isEmpty()) return places(st);
         List<String[]> out = new ArrayList<String[]>();
         Set<String> seen = new LinkedHashSet<String>();
-        for (Story.PlaceDef p : st.places) if (p.name.length() > 0 && !intangible(p.name) && seen.add(Txt.norm(p.name))) out.add(new String[]{p.name, p.description});
+        for (Story.PlaceDef p : st.places) {
+            String key = placeIdentity(p.name);
+            if (p.name.length() > 0 && !intangible(p.name) && !key.isEmpty() && seen.add(key)) out.add(new String[]{p.name, p.description});
+        }
         return out;
+    }
+
+    /**
+     * Canonical identity for a location label. Scene writers often list the same place as “नीम का पेड़”,
+     * “नीम के पेड़ के नीचे का कोना” and “नीम की छाया”. Keep the first, most fully described inventory
+     * entry and collapse positional descriptions into that location, while retaining distinct anchors
+     * such as the neem tree and the post office.
+     */
+    static String placeIdentity(String place) {
+        String n = Txt.norm(place == null ? "" : place).toLowerCase(java.util.Locale.ROOT).trim();
+        n = n.replaceAll("(?:के नीचे(?: का)?|के पास|के सामने|के पीछे|की छाया में|की छाया|के किनारे|वाले? कोने में|वाले? कोना|का कोना|कोने में|कोना|छाया में|के पास वाला)", " ");
+        n = n.replaceAll("(?<=[\\p{IsDevanagari}])\\s+(?:का|की|के)\\s+", " ");
+        n = n.replaceAll("(?:पेड़|वृक्ष)", " ").replaceAll("\\btree\\b", " ");
+        n = n.replaceAll("\\b(?:the|a|an|under|below|near|beside|in front of|behind|corner|shade|shadow)\\b", " ");
+        n = n.replaceAll("[^\\p{IsDevanagari}a-z0-9]+", " ").replaceAll("\\s+", " ").trim();
+        return n;
     }
 
     public static List<String[]> places(Story st) {
         List<String[]> out = new ArrayList<String[]>();
         Set<String> seen = new LinkedHashSet<String>();
         for (Story.PlaceDef p : st.places) {
-            if (p.name.length() == 0 || !seen.add(Txt.norm(p.name))) continue;
+            String key = placeIdentity(p.name);
+            if (p.name.length() == 0 || key.isEmpty() || !seen.add(key)) continue;
             out.add(new String[]{p.name, p.description});
         }
         for (Story.Scene sc : st.scenes) {
@@ -264,9 +284,10 @@ public final class Bible {
             // v43: "समय: शाम", "Time: night" is the hour, not a place to ask a picture for
             if (timeOnly(name)) continue;
             if (name.length() > 50) name = name.substring(0, 50) + "…";
-            boolean known = false;
-            for (String[] p : out) if (similar(name, p[0])) { known = true; break; }
-            if (known || !seen.add(Txt.norm(name))) continue;
+            String key = placeIdentity(name);
+            boolean known = key.isEmpty() || seen.contains(key);
+            if (!known) for (String[] p : out) if (similar(name, p[0])) { known = true; break; }
+            if (known || !seen.add(key)) continue;
             out.add(new String[]{name, first});
         }
         return out;
@@ -320,11 +341,17 @@ public final class Bible {
         // v47.5: what the name is, is its head noun — the last word, after the last "का / की / के" ("पानी की बाल्टी" is a
         // bucket, "धूप का चश्मा" glasses, "हवा में उड़ती पतंग" a kite; "बारिश का पानी", "दोपहर की धूप", "ठंडी हवा" are
         // water, sunlight, wind); in English the word before "of" ("a bucket of water", but "the sound of rain").
-        // A list ("आसमान और हवा", "सूखे पत्ते और धूल") is drawn by the studio when its last part is.
+        // In a list, ask for pictures when any named part is tangible: "सूखे पत्ते और धूल" still includes leaves.
+        // A list of only effects such as "आसमान और हवा" stays intangible.
         String[] parts = n.split("\\s+(?:और|एवं|तथा|and|&)\\s+|\\s*[,/]\\s*");
-        String last = parts[parts.length - 1].trim();
-        if (last.isEmpty()) return false;
-        return intangibleHead(last);
+        boolean named = false;
+        for (String part : parts) {
+            String item = part.trim();
+            if (item.isEmpty()) continue;
+            named = true;
+            if (!intangibleHead(item)) return false;
+        }
+        return named;
     }
     private static boolean intangibleHead(String part) {
         String p = part;

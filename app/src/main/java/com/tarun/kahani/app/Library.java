@@ -194,6 +194,8 @@ public final class Library {
                 it.tags = it.name;
                 items.add(it);
             }
+            // Reference art for the user's Aakhiri Chitthi story is bundled in the same browsable library.
+            addFilmBuiltIns("film_library/aakhiri_chitthi/stills", "आखिरी चिट्ठी");
             String json = Project.readAsset(ctx.getAssets(), "sounds/index.json");
             Object o = Json.parseLoose(json);
             if (o instanceof List) for (Object x : (List<?>) o) {
@@ -268,21 +270,31 @@ public final class Library {
             for (String f : files) {
                 String lower = f.toLowerCase(java.util.Locale.ROOT);
                 if (!(lower.endsWith(".jpg") || lower.endsWith(".jpeg") || lower.endsWith(".png") || lower.endsWith(".webp"))) continue;
-                Item it = new Item();
-                it.id = "asset:" + assetDir + "/" + f;
-                it.type = PIC;
-                it.kind = "reference";
-                it.builtIn = true;
-                it.path = "asset:" + assetDir + "/" + f;
-                it.source = "app";
-                it.name = storyTitle + " reference " + (++sequence);
-                it.tags = storyTitle + " reference image " + f.replace('_', ' ').replace('-', ' ');
-                it.setMeta("storyReference", assetDir.substring("film_library/".length(), assetDir.indexOf("/stills")));
-                items.add(it);
+                items.add(filmReferenceItem(assetDir, storyTitle, f, ++sequence));
             }
         } catch (IOException ignored) {
             // Standard library stays usable if optional film asset packs are absent.
         }
+    }
+
+    /** Descriptive, searchable library entry for one read-only image shipped with a story. */
+    public static Item filmReferenceItem(String assetDir, String storyTitle, String fileName, int sequence) {
+        Item it = new Item();
+        String base = fileName.replaceAll("\\.(jpg|jpeg|png|webp)$", "").toLowerCase(java.util.Locale.ROOT);
+        it.id = "asset:" + assetDir + "/" + fileName;
+        it.type = PIC;
+        it.kind = base.startsWith("pari_") || base.startsWith("grandpa_") ? "person"
+                : base.startsWith("neem_") ? "place"
+                : base.contains("storyboard") ? "reference" : "object";
+        it.builtIn = true;
+        it.path = it.id;
+        it.source = "app";
+        it.name = storyTitle + " — " + base.replace('_', ' ').replace('-', ' ');
+        it.tags = storyTitle + " आखिरी चिट्ठी Pari परी Grandpa दादाजी reference image " + base.replace('_', ' ').replace('-', ' ');
+        if (assetDir.startsWith("film_library/") && assetDir.contains("/stills"))
+            it.setMeta("storyReference", assetDir.substring("film_library/".length(), assetDir.indexOf("/stills")));
+        it.setMeta("referenceSequence", String.valueOf(sequence));
+        return it;
     }
 
     public Item add(String type, String kind, String name, String tags, File src, String ext, String source) throws IOException {

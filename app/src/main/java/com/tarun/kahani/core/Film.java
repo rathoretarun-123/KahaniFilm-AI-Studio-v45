@@ -434,6 +434,8 @@ public final class Film {
         public int angle;                     // -1 high angle (vulnerable), 0 eye level, +1 low angle (power)
         public float light = -1;              // 0 soft and warm .. 1 hard and directional (-1 = from the scene's mood)
         public boolean keep;                  // a cut the protocol needs (a new group of at most six words): never dropped
+        /** A framing explicitly named by the screenplay; opening-shot quality control must preserve it. */
+        public boolean scripted;
         /** A reverse shot (the listener's face, over the speaker's shoulder): the place's reverse angle is behind it when the user gave one. */
         public boolean reverse;
         /** v41: a shot of the place itself (the empty swing swaying): the framing passes that keep a character in the frame leave it as it is. */

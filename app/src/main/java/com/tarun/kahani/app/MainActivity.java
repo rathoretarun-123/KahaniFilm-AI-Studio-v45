@@ -975,9 +975,15 @@ public class MainActivity extends Activity {
             public void onClick(View v) { askThingName(null); }
         }));
         card.addView(Ui.text(this, "🏞 Backgrounds and places", 15, Ui.PRIMARY_DARK, true));
+        Set<String> shownPlaces = new HashSet<String>();
         for (final Story.Scene sc : st.scenes) {
+            String placeName = null;
+            for (String[] place : Bible.listedPlaces(st)) if (AutoLibrary.placeOf(sc, place[0])) { placeName = place[0]; break; }
+            if (placeName == null) placeName = Bible.firstClauseOf(sc.setting);
+            String placeKey = Bible.placeIdentity(placeName);
+            if (placeKey.length() > 0 && !shownPlaces.add(placeKey)) continue;
             String file = sceneFile(sc);
-            String nm = sc.title.length() > 0 ? sc.title : Bible.firstClauseOf(sc.setting);
+            String nm = placeName.length() > 0 ? placeName : (sc.title.length() > 0 ? sc.title : "Part " + sc.number);
             int np = SheetSaver.placePictures(project, String.valueOf(sc.number));
             String status = file == null ? "▫ no background" : file.startsWith("3d_") ? "🧊 made in 3D" : np > 1 ? "✅ your pictures (" + np + ")" : "✅ background";
             pictureRow(card, "Part " + sc.number + ": " + nm, status, file, "angles:scene:" + sc.number + ":" + nm);
@@ -1082,7 +1088,10 @@ public class MainActivity extends Activity {
 
     /** Every thing of the story, {key, shown}: the insert words, the free-picture words, and the things the user named (v25). */
     private List<String[]> things(Story st) {
-        List<String[]> things = new ArrayList<String[]>(FreeArt.wanted(st));
+        // The Studio asks for pictures only for the screenplay's explicit object inventory or an object
+        // the user already added. FreeArt's broad vocabulary is for optional automatic illustrations;
+        // matching words in directions (e.g. “छड़ी”, “पत्र”, “किताब”) created unrelated photo requests.
+        List<String[]> things = new ArrayList<String[]>();
         Set<String> seenKeys = new HashSet<String>();
         for (String[] o : things) seenKeys.add(o[0]);
         for (String[] t : AutoLibrary.missingTargets(project, st)) {
@@ -3934,7 +3943,6 @@ public class MainActivity extends Activity {
         body.addView(qg);
         // pictures still missing (the library is searched first; the rest can be made with AI)
         final CheckBox ai = new CheckBox(this);
-        final CheckBox three = new CheckBox(this);
         final List<String[]> uploadable = new ArrayList<String[]>();     // {angles target, label} of what has no picture yet (v23)
         try {
             Story st = FilmJob.storyOf(project);
@@ -3972,9 +3980,6 @@ public class MainActivity extends Activity {
                 ai.setChecked(Prefs.autoArt(this) && Prefs.online(this));
                 ai.setEnabled(Prefs.online(this));
                 body.addView(ai);
-                three.setText("Only if I give no picture: Studio 3D may build the missing ones in 3D from the style of my pictures (I am asked first)");
-                three.setChecked(Prefs.studio3d(this));
-                body.addView(three);
             }
         } catch (Exception ignored) {}
         final CheckBox qc = new CheckBox(this);
@@ -4039,7 +4044,6 @@ public class MainActivity extends Activity {
                         if (q >= 0 && q < qs.length) e.height = qs[q];
                         saveEdits(e);
                         if (ai.getParent() != null) Prefs.put(MainActivity.this, "autoArt", ai.isChecked() ? "1" : "0");
-                        if (three.getParent() != null) Prefs.put(MainActivity.this, "studio3d", three.isChecked() ? "1" : "0");
                         Prefs.put(MainActivity.this, "humanQc", qc.isChecked() ? "1" : "0");
                         go.run();
                     }
@@ -4416,17 +4420,13 @@ public class MainActivity extends Activity {
         c.addView(pause);
         c.addView(stop);
         body.addView(c);
-        // v34: the film waits for the user's pictures before the 3D maker makes any: add them in the rows below, or choose
+        // v34: the film waits for the user's pictures; the user may continue with the optional AI illustration path.
         final boolean shownWaiting = cur != null && cur.picturesWaiting;
         if (shownWaiting) {
             LinearLayout ask = Ui.card(this);
             ask.addView(Ui.text(this, "📷 The director needs your pictures of: " + cur.picturesNeeded, 16, Ui.PRIMARY_DARK, true));
-            ask.addView(Ui.text(this, "Add them with the buttons below (up to 100 each; a sheet of several angles is split). The film goes on by itself once every one has a picture. "
-                    + "Only if you have none, the studio can build the rest in 3D from the style of your other pictures — or draw them.", 14, Ui.SUB, false));
-            ask.addView(Ui.button(this, "🧊 I have no pictures — build the rest in 3D", Ui.BLUE, new View.OnClickListener() {
-                public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(1); }
-            }));
-            ask.addView(Ui.small(this, "✏️ Draw them instead (no 3D)", Ui.SUB, new View.OnClickListener() {
+            ask.addView(Ui.text(this, "Add them with the buttons below (up to 100 each; a sheet of several angles is split). The film continues when you finish adding pictures, or you can continue with free AI illustrations.", 14, Ui.SUB, false));
+            ask.addView(Ui.small(this, "Continue with free AI illustrations", Ui.SUB, new View.OnClickListener() {
                 public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(2); }
             }));
             body.addView(ask);
@@ -4890,7 +4890,7 @@ public class MainActivity extends Activity {
                 + "Each key is free to make and stays only on this phone.", 13, Ui.SUB, false));
         final String[][] tools = {
                 {"geminiKey", "Google Gemini", "aistudio.google.com/apikey → Create API key", "AIza…"},
-                {"openaiKey", "OpenAI ChatGPT (used at once when Gemini fails)", "platform.openai.com/api-keys → Create new secret key", "sk-…"},
+                {"openaiKey", "OpenAI API (ChatGPT; API billing may be required)", "platform.openai.com/api-keys → Create new secret key", "sk-…"},
                 {"elevenKey", "ElevenLabs voices", "elevenlabs.io → profile → API keys → Create", "sk_…"},
                 {"freesoundKey", "Freesound recordings", "freesound.org/apiv2/apply → Create new API credentials", "key"},
                 {"pixabayKey", "Pixabay pictures", "pixabay.com/api/docs → signed in, the key is on that page", "key"},
@@ -4919,7 +4919,6 @@ public class MainActivity extends Activity {
         dir.addView(toggle("Online features (AI, free pictures and sounds)", "online", true));
         dir.addView(toggle("Make missing pictures with free AI (3D animated style, needs internet)", "autoArt", true));
         dir.addView(toggle("Ask me for my pictures first: the film waits for them before the 3D maker makes any (the 3D maker only for what I do not give)", "askUploads", true));
-        dir.addView(toggle("Studio 3D: build whatever is still missing in 3D on the phone, and the views of every character from its picture (no internet)", "studio3d", true));
         dir.addView(toggle("Ask me before a picture made in 3D is used (✔ Use / ✖ Reject where pictures are chosen)", "ask3d", true));
         dir.addView(toggle("Free pictures of the story's objects for inserts (Fluent Emoji 3D on GitHub, MIT)", "freeObjects", true));
         dir.addView(toggle("Human QC: show me every shot's first frame before the film is made", "humanQc", true));
@@ -5041,10 +5040,31 @@ public class MainActivity extends Activity {
                                 return testKey(tl[0]);
                             }
                         }, new Done() {
-                            public void done(Object r, Exception e) { toast(e == null ? "✅ The key works" : "❌ " + e.getMessage()); }
+                            public void done(Object r, Exception e) { toast(e == null ? "✅ The key works" : "❌ " + keyError(tl[0], e)); }
                         });
                     }
                 }).setNegativeButton("Cancel", null).show();
+    }
+
+    /** Give a provider-specific repair hint; this message never includes or logs the secret key. */
+    private static String keyError(String key, Exception e) {
+        String m = e == null || e.getMessage() == null ? "" : e.getMessage();
+        String low = m.toLowerCase(java.util.Locale.ROOT);
+        String provider = "openaiKey".equals(key) ? "OpenAI" : "Gemini";
+        if (low.contains("invalid_api_key") || low.contains("api_key_invalid") || low.contains("invalid api key") || low.contains("api key not valid"))
+            return provider + " rejected this key. Create a fresh API key in the provider console, then paste it here.";
+        if (low.contains("insufficient_quota") || low.contains("billing") || low.contains("quota") || low.contains("resource_exhausted"))
+            return provider + " key is recognized, but the API project has no available quota. Check API billing/quota in that account.";
+        if (low.contains("permission_denied") || low.contains("access_denied") || low.contains("http 403") || low.contains("forbidden"))
+            return provider + " denied access. Check project/API access and account restrictions in the provider console.";
+        if (low.contains("model_not_found") || low.contains("not found") || low.contains("does not exist") || low.contains("unsupported"))
+            return provider + " account cannot access the selected model. Check model access for this API project.";
+        if (low.contains("unknownhost") || low.contains("unable to resolve") || low.contains("network is unreachable"))
+            return "The phone cannot reach " + provider + ". Check internet access and retry.";
+        if (low.contains("timeout") || low.contains("timed out"))
+            return provider + " did not respond in time. Check the connection and retry.";
+        if (m.length() == 0) return provider + " test failed. Check the API key and provider account.";
+        return provider + " test failed: " + (m.length() > 180 ? m.substring(0, 180) : m);
     }
 
 }

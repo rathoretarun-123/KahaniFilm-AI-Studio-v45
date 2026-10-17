@@ -364,7 +364,7 @@ public final class FilmJob implements Runnable {
             // v34: the 3D maker only when it must — whatever still has no picture after the library is asked of the
             // user first: the film waits on this screen while they add pictures (each row has its button); it goes on
             // the moment everything has one, or when they choose to have the rest built in 3D or drawn
-            boolean build3d = Prefs.studio3d(ctx);
+            boolean build3d = false; // native 3D doll creation is disabled; user references and optional AI illustrations remain
             if (askForPictures && !remake) {
                 java.util.List<String> needed = neededPictures(story);
                 if (!needed.isEmpty()) {
@@ -381,14 +381,12 @@ public final class FilmJob implements Runnable {
                     }
                     picturesWaiting = false;
                     check();
-                    if (pictureChoice == 2) build3d = false;
-                    else if (pictureChoice == 1) build3d = true;
                     if (pictureChoice == 0) info = "Thank you — every picture is there now";
                 }
             }
             // v39: pictures made with AI only after the user was asked and chose to have the rest made — never before
             // ("it is still creating pictures on its own"): the user's own pictures and the library come first
-            if (!remake && Prefs.online(ctx) && Prefs.autoArt(ctx) && (!askForPictures || pictureChoice == 1) && build3d && !neededPictures(story).isEmpty()) makeMissingPictures(story, ed);
+            if (!remake && Prefs.online(ctx) && Prefs.autoArt(ctx) && (!askForPictures || pictureChoice == 1 || pictureChoice == 2) && !neededPictures(story).isEmpty()) makeMissingPictures(story, ed);
             // Studio 3D: whatever still has no picture (AI off, offline, or the service down) is built in three
             // dimensions on the phone — characters with their face points, places with their floor line
             if (build3d && !remake) {
