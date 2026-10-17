@@ -545,3 +545,28 @@ director's stool words had मूढ़ा, चौकी and बेंच, but n
 - **Fixed:** they sit on stools, drawn under them.
 - **Test:** `NewFormatScriptsTest.whoSitsOnAStoolSitsOnTheStool`.
 - **Digest:** none of the 2,100 test stories changes.
+
+### What the frame audit found in the three films, and what was done
+
+Each film was rendered whole at 24 fps on the desktop, with the frame audit on.
+
+| Film | First audit | Fixed | Last audit |
+|---|---|---|---|
+| आखिरी जोड़ी (1,235 frames) | 0 findings | — | 0 findings |
+| आखिरी चाय (3,033 frames) | 4 jolts (आरव, 28.8–32.2 s) | The tremble at 5 Hz | 0 findings |
+| आखिरी चिट्ठी, the user's pictures (3,087 frames) | 72 frames with two faces, 8 picture pops, 1 jolt | See below | See the final render's audit |
+
+**Two faces (आखिरी चिट्ठी).** The cross-dissolves between parts laid the old picture's रघुवीर जी and परी over the new
+one for a second: doubled eyes and lips.
+
+- Now someone in both parts fades out of the old picture over the first half of the dissolve and into the new one over
+  the second. The places still dissolve.
+- Those frames are read as a transition, like a cut.
+
+**Picture pops.** The picture pops were परी's side picture (walking) changing to her front picture as she stops.
+
+- That change happens while the figure is narrowed into its turn, two frames of squash, and is how a quick turn reads.
+  The audit now reads it as a turn.
+- One change at 1:55.9 (front to side, as she starts to walk to the bench) is still counted.
+
+**The jolt.** The jolt (परी, 1:56.1, up and down, 2.0% of her height in one frame) is at the limit, as she sits down.
