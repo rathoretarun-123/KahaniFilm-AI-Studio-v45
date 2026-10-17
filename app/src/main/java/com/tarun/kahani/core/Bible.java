@@ -320,11 +320,17 @@ public final class Bible {
         // v47.5: what the name is, is its head noun — the last word, after the last "का / की / के" ("पानी की बाल्टी" is a
         // bucket, "धूप का चश्मा" glasses, "हवा में उड़ती पतंग" a kite; "बारिश का पानी", "दोपहर की धूप", "ठंडी हवा" are
         // water, sunlight, wind); in English the word before "of" ("a bucket of water", but "the sound of rain").
-        // A list ("आसमान और हवा", "सूखे पत्ते और धूल") is drawn by the studio when its last part is.
+        // In a list, ask for pictures when any named part is tangible: "सूखे पत्ते और धूल" still includes leaves.
+        // A list of only effects such as "आसमान और हवा" stays intangible.
         String[] parts = n.split("\\s+(?:और|एवं|तथा|and|&)\\s+|\\s*[,/]\\s*");
-        String last = parts[parts.length - 1].trim();
-        if (last.isEmpty()) return false;
-        return intangibleHead(last);
+        boolean named = false;
+        for (String part : parts) {
+            String item = part.trim();
+            if (item.isEmpty()) continue;
+            named = true;
+            if (!intangibleHead(item)) return false;
+        }
+        return named;
     }
     private static boolean intangibleHead(String part) {
         String p = part;

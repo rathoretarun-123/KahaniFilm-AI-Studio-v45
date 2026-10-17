@@ -110,5 +110,17 @@ for film in aakhiri_chai babu_ke_liye; do
   test "$video_count" -ge 2 || { echo "::error::At least two MP4 references must be bundled for $film"; exit 1; }
 done
 
+# Bundle the filmmaker's additional Aakhiri Chitthi reference library. These are
+# individual uploads (not a generated contact sheet), kept in source control so
+# both the APK and the browsable in-app library receive the same 51 originals.
+chitthi_src="tools/testdata/aakhiri_chitthi/stills"
+chitthi_dest="app/src/main/assets/film_library/aakhiri_chitthi/stills"
+test -d "$chitthi_src" || { echo "::error::Missing Aakhiri Chitthi reference folder: $chitthi_src"; exit 1; }
+mkdir -p "$chitthi_dest"
+while IFS= read -r -d '' img; do cp -p "$img" "$chitthi_dest/$(basename "$img")"; done < <(find "$chitthi_src" -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) -print0)
+chitthi_count="$(find "$chitthi_dest" -maxdepth 1 -type f \( -iname '*.jpg' -o -iname '*.jpeg' -o -iname '*.png' -o -iname '*.webp' \) | wc -l)"
+test "$chitthi_count" -ge 51 || { echo "::error::Too few Aakhiri Chitthi references bundled ($chitthi_count)"; exit 1; }
+echo "aakhiri_chitthi bundled stills: $chitthi_count"
+
 echo "Bundled story asset inventory:"
 find app/src/main/assets/film_library -type f -printf '%p %s bytes\n' | sort

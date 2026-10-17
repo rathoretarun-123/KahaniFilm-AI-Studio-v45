@@ -21,6 +21,7 @@ import com.tarun.kahani.app.AndroidGfx;
 import com.tarun.kahani.app.MainActivity;
 import com.tarun.kahani.app.Project;
 import com.tarun.kahani.core.Art;
+import com.tarun.kahani.core.Bible;
 import com.tarun.kahani.core.Director;
 import com.tarun.kahani.core.Doll3D;
 import com.tarun.kahani.core.Film;
@@ -77,6 +78,23 @@ public class AppTest {
         java.lang.reflect.Field f = com.tarun.kahani.app.Library.class.getDeclaredField("shared");
         f.setAccessible(true);
         f.set(null, null);
+    }
+
+    @Test
+    public void aakhiriChitthiReferencePackIsBrowsableInTheBuiltInLibrary() throws Exception {
+        File stills = new File(ASSETS, "film_library/aakhiri_chitthi/stills");
+        File[] pictures = stills.listFiles((dir, name) -> name.endsWith(".jpg"));
+        assertNotNull("The reference pack is in the APK assets tree", pictures);
+        assertEquals("All 51 story references are packaged", 51, pictures.length);
+        com.tarun.kahani.app.Library.Item pari = com.tarun.kahani.app.Library.filmReferenceItem(
+                "film_library/aakhiri_chitthi/stills", "आखिरी चिट्ठी", "pari_profile_right.jpg", 1);
+        assertEquals("person", pari.kind);
+        assertEquals("app", pari.source);
+        assertTrue(pari.builtIn);
+        assertEquals("aakhiri_chitthi", pari.meta("storyReference"));
+        assertTrue(pari.name.contains("pari profile right"));
+        assertTrue(pari.tags.contains("परी"));
+        assertEquals("asset:film_library/aakhiri_chitthi/stills/pari_profile_right.jpg", pari.path);
     }
 
     @Test
@@ -6836,6 +6854,36 @@ public class AppTest {
         int metro = 0, office = 0, hospital = 0;
         for (Film.Seg sg : f.segs) if (sg.type == Film.S_SCENE) { if (sg.decor == Sets.D_METRO) metro++; if (sg.decor == Sets.D_OFFICE) office++; if (sg.decor == Sets.D_HOSPITAL) hospital++; }
         assertTrue("the story's three places drawn as themselves: " + metro + "/" + office + "/" + hospital, metro > 0 && office > 0 && hospital > 0);
+    }
+
+    @Test
+    public void mixedDustAndGroundCoverStillNeedsPictureButAtmosphereDoesNot() {
+        assertFalse(Bible.intangible("Dust and dry leaves on the ground"));
+        assertFalse(Bible.intangible("सूखे पत्ते और धूल"));
+        assertFalse(Bible.intangible("सूखी घास, धूल और पत्ते"));
+        assertTrue(Bible.intangible("Sky and wind"));
+        assertTrue(Bible.intangible("आसमान और हवा"));
+        assertTrue(Bible.intangible("Dust and rain"));
+    }
+
+    @Test
+    public void explicitOpeningMediumCloseUpSurvivesEstablishingShotCheck() {
+        String script = "Title: Camera check\nCharacters:\nPari (10) (A girl)\n"
+                + "Objects:\nA letter (An old letter)\nPlaces and Backgrounds:\nA garden (A quiet garden)\n"
+                + "Story\nScene 1\n(Cut to medium close-up. Pari kneels and opens her bag.)\nEND";
+        Story story = ScriptParser.parse(script);
+        Director director = new Director(story, new Director.Options());
+        director.prepare();
+        Film film = director.direct(new Art());
+        Film.Seg scene = null;
+        for (Film.Seg seg : film.segs) if (seg.type == Film.S_SCENE) { scene = seg; break; }
+        assertNotNull("the script produced a scene", scene);
+        Film.Cam opening = null;
+        for (Film.Cam cam : scene.cams) if (opening == null || cam.t < opening.t) opening = cam;
+        assertNotNull("the scene has an opening camera", opening);
+        assertTrue("the script's camera cut is marked as authored", opening.scripted);
+        assertTrue("the script's camera cut is retained", opening.keep);
+        assertTrue("the scripted medium close-up remains tighter than an establishing wide", opening.zoom > 1.3f);
     }
 
     static void deleteTree(File f) {

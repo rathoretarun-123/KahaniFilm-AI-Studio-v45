@@ -29,6 +29,7 @@ app/src/main/assets/film_library/
 app/src/main/assets/sample/*.jpg
 app/src/main/assets/sample/*.png
 tools/testdata/aakhiri_chai/reference_pack/
+tools/testdata/aakhiri_chitthi/Aakhiri_Chitthi_References*.zip
 tools/testdata/aakhiri_chai/reference_video_variants/
 tools/testdata/aakhiri_chai/reference_video/*(1).mp4*
 tools/testdata/babu_ke_liye/stills/
