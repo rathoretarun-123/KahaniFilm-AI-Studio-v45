@@ -49,6 +49,27 @@ public final class FilmJob implements Runnable {
     public volatile Bitmap preview;         // latest rendered frame (small)
     public volatile long startedAt = System.currentTimeMillis();
     public volatile float filmSeconds;
+    /** v47.9: what the team learned from earlier films (read before this one, added to after it). */
+    private com.tarun.kahani.core.Lessons lessons = new com.tarun.kahani.core.Lessons();
+
+    static String readLessons(Context ctx) {
+        try { File f = new File(ctx.getFilesDir(), "lessons.txt"); return f.exists() ? new String(AudioIO.readFile(f), "UTF-8") : ""; }
+        catch (Throwable e) { return ""; }
+    }
+
+    static void writeLessons(Context ctx, String text) throws IOException {
+        File f = new File(ctx.getFilesDir(), "lessons.txt"), tmp = new File(ctx.getFilesDir(), "lessons.txt.part");
+        java.io.FileOutputStream o = new java.io.FileOutputStream(tmp);
+        try { o.write(text.getBytes("UTF-8")); } finally { o.close(); }
+        if (!tmp.renameTo(f)) { f.delete(); if (!tmp.renameTo(f)) throw new IOException("lessons not saved"); }
+    }
+
+    static int countShots(Film film) {
+        int n = 0;
+        for (Film.Seg sg : film.segs) n += sg.cams.size();
+        return Math.max(1, n);
+    }
+
     /** v47.9: how many lines got a voice and from which engine, for the making screen. */
     public volatile String voiceNote = "";
     public volatile int voicedLines;        // lines that got a real voice (recording, sample, AI or phone)
@@ -308,7 +329,16 @@ public final class FilmJob implements Runnable {
             String sig = hash(script) + "|" + hash(project.read("cast.txt"));
             remake = sig.equals(project.setting("made.sig", ""));
             if (remake) info = "Made again with your change — the pictures and approvals of the last film kept";
-            com.tarun.kahani.core.TechnicalDirector.CUT_SECONDS = com.tarun.kahani.core.TechnicalDirector.CUT_SECONDS_DEFAULT * ed.shotLength;
+            // v47.9 (the user: "make your director, technical director, reader and editor learn things from each story
+            // creation"): what the team learned from the films made before on this phone changes this one
+            lessons = com.tarun.kahani.core.Lessons.read(readLessons(ctx));
+            com.tarun.kahani.core.TechnicalDirector.CUT_SECONDS = com.tarun.kahani.core.TechnicalDirector.CUT_SECONDS_DEFAULT * ed.shotLength * lessons.shotLengthScale();
+            com.tarun.kahani.core.Director.MOVE_SCALE = lessons.moveScale();
+            if (!lessons.notes().isEmpty()) {
+                StringBuilder lb = new StringBuilder();
+                for (String n : lessons.notes()) lb.append(lb.length() > 0 ? "\n" : "").append("🎓 ").append(n);
+                info = (info.length() > 0 ? info + "\n" : "") + lb;
+            }
             for (Story.CharacterDef c : story.cast()) {
                 Float sc = ed.charScale.get(c.displayName);
                 if (sc == null) for (java.util.Map.Entry<String, Float> e : ed.charScale.entrySet()) if (c.displayName.contains(e.getKey()) || c.aliases.contains(e.getKey())) sc = e.getValue();
@@ -775,6 +805,12 @@ public final class FilmJob implements Runnable {
             if (aiLines > 0) project.setSetting("aiLines", String.valueOf(aiLines));
             // the thumbnail and the poster, made separately in their own formats (extras: the film is done without them)
             try { stillPages(film, art, dir); } catch (CancelledException e) { throw e; } catch (Throwable e) { android.util.Log.w("Kahani", "still pages: " + e); }
+            // v47.9: the team keeps what this film taught it (the shot fixes, the frame audit, the voices) for the next one
+            try {
+                com.tarun.kahani.core.FrameAudit.Result fa = frameAudit;
+                lessons.learn(qcFixes.values(), countShots(film), fa == null ? 0 : fa.jolts + fa.jumps + fa.picturePops, fa == null ? 0 : fa.frames, voicedLines, film.lines.size());
+                writeLessons(ctx, lessons.write());
+            } catch (Throwable e) { android.util.Log.w("Kahani", "lessons: " + e); }
             step("Your film is ready!", 1f);
             etaSeconds = -1;
             done = true;

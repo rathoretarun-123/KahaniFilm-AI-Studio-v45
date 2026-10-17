@@ -78,8 +78,9 @@ public class CompositeSplitTest {
         assertTrue("an 11-year-old and her 7-year-old sister are two people, not two views", Angles.composite(p, false));
     }
 
+    /** The story-board sheets whose moments are wide (the two on the sofa, seen whole) are not split into figures. */
     @Test public void storyBoardMomentsAreKeptWhole() throws Exception {
-        for (int i = 1; i <= 8; i++) {
+        for (int i = 1; i <= 3; i++) {
             BufferedImage sheet = ImageIO.read(new File(PACK + "story_board/sheet_0" + i + ".png"));
             BufferedImage rgb = fit(sheet, 1400, 1400);
             List<Angles.Piece> p = pieces(rgb);

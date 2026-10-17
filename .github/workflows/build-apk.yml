@@ -179,6 +179,7 @@ jobs:
             --tests com.tarun.kahani.SofaStoryReaderTest \
             --tests com.tarun.kahani.RomanizeTest \
             --tests com.tarun.kahani.CompositeSplitTest \
+            --tests com.tarun.kahani.LessonsTest \
             --tests com.tarun.kahani.FrameAuditTest \
             --tests com.tarun.kahani.ObjectCharactersTest \
             --tests com.tarun.kahani.AnimalActionsTest \

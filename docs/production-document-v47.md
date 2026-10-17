@@ -829,3 +829,69 @@ on, and the next back goes home. A film that could not be made now offers "Back 
 - In medium shots of the shared bench the girl is placed in front of बाबू, so it reads as two benches.
 - 528 "passes through someone" plan findings remain, mostly at playground apparatus, car doors and cars driving past at
   the same depth.
+
+## 11. Seventh round (17 October, night): voices, six pictures per character, the sofa story, never stop
+
+The user: voices must be heard with lip sync; smooth movement and scene changes; characters face each other when
+talking; less blur; group pictures of characters (or a character with a thing) are used whole; six pictures per
+character; references up to 18; one title and one end picture; the roles learn from each film; never ask for things the
+script does not name; the director must never just stop, with a Continue the user can press.
+
+### Voices
+
+- **Desktop.** The published desktop films of earlier rounds had no voices: `espeak-ng` was not installed on the build
+  machine. `MakeFilm` now prints `VOICES: X of N lines spoken` so a silent film cannot pass unseen. The sofa story:
+  9 of 9 lines spoken.
+- **Phone.** `Voices` tries the phone's default engine, then Google's, then the others. When Hindi is not available the
+  line is spoken in Latin letters (`Txt.romanize`). The film page names the engine used. When every line fails it says so
+  and makes the film anyway. Not tested on a phone here (NOT RUN).
+- **Dialogue in quotes.** `"A" (manner) "B"` is two lines; the middle parenthesis is the manner of the first. A story
+  with no dialogue is narrated from its direction sentences instead of failing.
+
+### Reading boys and girls
+
+- "मुस्कुराते हुए" and other "ते हुए" manners no longer count as male. Kinship words count only between two people in a
+  scene, and an elder's word is never given to a child. Body and skin words are removed before counting. Ponytails,
+  plaits, hair clips, anklets and "साल की" count as a girl.
+- Corpus digest: 24 girls read rightly that were read as boys before, no new mistakes (`SofaStoryReaderTest`).
+
+### Studio
+
+- **Six pictures per character.** Front, back, two sides, two three-quarters: one tile per view, plus "All six at once".
+  A picture uploaded to a tile is that view and is never split.
+- **Group pictures kept whole.** Two characters side by side, or a character with a thing, stay one picture
+  (`Angles.composite`, `CompositeSplitTest`).
+- **Limits.** References up to 18 (things and places); characters 6.
+- **Places with no scene of their own** get their own picture button. The waiting card asks only for characters and
+  places: things the script names are drawn from the places' and library pictures and never hold the film.
+- **Continue.** A failed film shows "▶ Continue — make it again"; it presses itself after 30 seconds, at most once every
+  10 minutes. The reader only advises; it never rewrites the script. Back goes from the making page to the Studio, then
+  Home.
+
+### The sofa story (सोफ़े वाली जादू की बातें)
+
+- **The user's sofa.** `Art.findSeats` finds the sofa in the room picture by the sofa's colour (from the thing's picture,
+  or the colour word in the script). The girls sit on that sofa at its scale; the drawn sofa and the floor props are not
+  added. The cushion and the book go on the seat, "बीच में" between the sitters.
+- **Sitting together.** A second sitter on "the sofa" sits beside the first, on the side the script names. Two people
+  sitting together hug in place.
+- **Facing.** In a shot the seated view (side or front) is chosen once, not per line, so heads do not turn back and forth.
+- **Scene changes.** Title to first scene and last scene to end now dissolve.
+- **Sharper.** Encoding bitrate raised (0.16 / 0.28 / 0.40 bits per pixel).
+- **Frame audit of the full film** (1852 frames, 3508 character-frames): jolts 0, jumps 0, size pops 0, picture pops 0.
+
+### The roles learn (`core/Lessons`)
+
+After each film the phone keeps a small notebook (`lessons.txt`). It counts the director's fixes, the shots, the rough
+frames and the voices spoken. A film with many rough frames makes the next one's moves slower (down to 0.7). Many
+fixes per shot make the next one's shots longer (up to 1.5×). The notes are shown on the film page (`LessonsTest`).
+It does not learn from the story's content.
+
+### What remains (recorded, not claimed)
+
+- The sofa is found only by its colour in a picture where it is the widest patch of that colour. A sofa of the wall's
+  colour is not found; the drawn sofa is used.
+- Edge voices could not be reached from the build machine (BLOCKED, proxy 403); desktop films use espeak-ng, which is
+  robotic.
+- Lip sync is mouth shapes timed to the voice's loudness, not to the sounds.
+- This is cut-out animation of the user's pictures, not Pixar rendering.

@@ -603,28 +603,71 @@ public final class Angles {
     /**
      * v47.9 (the user: "while splitting you do not split images of combined characters, or characters with object —
      * they are created as per story"): the pieces of a picture are a group, not views of one character, when a piece is
-     * not clearly taller than wide (two people side by side, a girl on a sofa, a moment of a story board) or holds two or more
-     * separate figures of its own, or when the pieces differ in height by half or more or in colours (two people side by
-     * side). Such a picture is kept whole. An animal's side view is wide by nature, so a beast's pieces are judged by
+     * clearly wider than tall (a girl on a sofa, a moment of a story board) or holds two or more separate figures of its
+     * own side by side, or when the pieces differ both in height (by 15%) and in colours (two people side by side). Such a picture is
+     * kept whole. An animal's side view is wide by nature, so a beast's pieces are judged by
      * their figures only.
      */
     public static boolean composite(List<Piece> parts, boolean beast) {
         for (Piece p : parts) {
-            // a view of one person standing is clearly taller than wide; a moment of two on a sofa, a girl on a bench
-            // or a panel of a story board is not
-            if (!beast && p.h < p.w * 1.2f) return true;
-            if (bigBlobs(p, 1f) >= 2) return true;
+            // a moment of two on a sofa, a girl on a bench, a panel of a story board: clearly wider than tall (one
+            // person's views and poses — sitting ones too — are not)
+            if (!beast && p.w > p.h * 1.4f) return true;
+            if (sideBySide(p)) return true;
         }
         if (parts.size() < 2 || beast) return false;
-        // views of one character are about as tall as each other and wear the same colours; two people side by side
-        // (a girl of 11 and her sister of 7) differ in both
+        // two people side by side (a girl of 11 and her sister of 7) differ both in height and in colours; one
+        // character's views or expressions are as tall as each other (whatever they wear on a sheet of looks)
         int minH = Integer.MAX_VALUE, maxH = 0;
         for (Piece p : parts) { minH = Math.min(minH, p.h); maxH = Math.max(maxH, p.h); }
-        if (maxH > minH * 1.5f) return true;
+        if (maxH <= minH * 1.15f) return false;
         float[][] sig = new float[parts.size()][];
         for (int i = 0; i < parts.size(); i++) { Piece p = parts.get(i); sig[i] = StoryBoard.signature(p.px, 0, p.w, 0, 0, p.w, p.h); }
         for (int i = 0; i < sig.length; i++) for (int j = i + 1; j < sig.length; j++)
             if (sig[i] != null && sig[j] != null && StoryBoard.likeness(sig[i], sig[j]) < 0.62f) return true;
+        return false;
+    }
+
+    /**
+     * Two separate figures side by side in one cut-out piece (two people, each over 15% of its opaque area, their
+     * widths hardly overlapping) — not a head above a shirt drawn apart.
+     */
+    static boolean sideBySide(Piece p) {
+        int step = Math.max(1, Math.max(p.w, p.h) / 120);
+        int gw = (p.w + step - 1) / step, gh = (p.h + step - 1) / step;
+        boolean[] on = new boolean[gw * gh];
+        int total = 0;
+        for (int gy = 0; gy < gh; gy++) for (int gx = 0; gx < gw; gx++) {
+            int x = Math.min(p.w - 1, gx * step), y = Math.min(p.h - 1, gy * step);
+            if ((p.px[y * p.w + x] >>> 24) >= 128) { on[gy * gw + gx] = true; total++; }
+        }
+        if (total == 0) return false;
+        int[] stack = new int[gw * gh];
+        boolean[] seen = new boolean[gw * gh];
+        List<int[]> big = new ArrayList<int[]>();          // {x0, x1}
+        for (int i = 0; i < on.length; i++) {
+            if (!on[i] || seen[i]) continue;
+            int n = 0, top = 0, x0 = gw, x1 = 0;
+            stack[top++] = i; seen[i] = true;
+            while (top > 0) {
+                int c = stack[--top]; n++;
+                int cx = c % gw, cy = c / gw;
+                x0 = Math.min(x0, cx); x1 = Math.max(x1, cx);
+                for (int k = 0; k < 4; k++) {
+                    int nx = cx + (k == 0 ? 1 : k == 1 ? -1 : 0), ny = cy + (k == 2 ? 1 : k == 3 ? -1 : 0);
+                    if (nx < 0 || ny < 0 || nx >= gw || ny >= gh) continue;
+                    int j = ny * gw + nx;
+                    if (on[j] && !seen[j]) { seen[j] = true; stack[top++] = j; }
+                }
+            }
+            if (n >= total * 0.15f) big.add(new int[]{x0, x1});
+        }
+        for (int i = 0; i < big.size(); i++) for (int j = i + 1; j < big.size(); j++) {
+            int[] a = big.get(i), b = big.get(j);
+            int overlap = Math.min(a[1], b[1]) - Math.max(a[0], b[0]) + 1;
+            int narrow = Math.min(a[1] - a[0], b[1] - b[0]) + 1;
+            if (overlap < narrow * 0.3f) return true;
+        }
         return false;
     }
 

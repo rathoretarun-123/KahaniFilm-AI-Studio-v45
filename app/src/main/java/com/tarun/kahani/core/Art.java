@@ -204,6 +204,179 @@ public final class Art {
          */
         public Object fireImg;
         public float fu0, fv0, fu1, fv1;
+        /**
+         * v47.9 (the user: "the bench sitting issue"): the sofa or bench the picture itself shows, as fractions of the
+         * picture — its left and right ends, the top of its seat and the floor under its front. The script's sitters sit
+         * on it, at its size, and no second one is drawn. seatU0 < 0: none found.
+         */
+        public float seatU0 = -1, seatU1, seatV, floorV;
+        /** v47.9: how long that sofa is, in feet ("6 फुट लंबा सोफा"; a three-seater is about 6, a two-seater 4.5). */
+        public float seatFeet = 6;
+        /** v47.9: a small copy of the picture (at most 160 wide) for finding things in it; null when not read. */
+        public int[] small;
+        public int sw, sh;
+    }
+
+    /** v47.9: the sofa's length the words give ("6 फुट लंबा", "तीन सीटर"), in feet; 6 when they give none. */
+    static float sofaFeet(String words) {
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(\\d+(?:\\.\\d+)?)\\s*(?:फुट|फ़ुट|फीट|ft|feet|foot)").matcher(words);
+        if (m.find()) { float f = Float.parseFloat(m.group(1)); if (f >= 2 && f <= 12) return f; }
+        if (Txt.has(words, "दो सीटर", "2 सीटर", "two-seater", "two seater", "loveseat")) return 4.5f;
+        if (Txt.has(words, "चार सीटर", "4 सीटर", "four-seater")) return 7.5f;
+        return 6f;
+    }
+
+    /** v47.9: a sofa a script names (a sofa, a couch, a diwan). */
+    public static boolean sofaWord(String s) {
+        return Txt.has(s, "सोफ", "सोफ़", "दीवान", "काउच", "sofa", "couch", "settee");
+    }
+
+    /** v47.9: a seat a script names — a sofa, a bench, a couch, a diwan. */
+    public static boolean seatWord(String s) {
+        return Txt.has(s, "सोफ", "सोफ़", "बेंच", "दीवान", "काउच", "sofa", "couch", "bench", "settee");
+    }
+
+    /** v47.9: the colour a description gives a thing ("हल्के ग्रे कपड़े वाला"), or 0. */
+    public static int colourWord(String s) {
+        if (Txt.has(s, "ग्रे", "स्लेटी", "धूसर", "grey", "gray")) return 0xFF9A9A9E;
+        if (Txt.has(s, "क्रीम", "cream", "beige")) return 0xFFE0D2B6;
+        if (Txt.has(s, "भूरा", "भूरे", "भूरी", "लकड़ी", "brown", "wooden", "wood")) return 0xFF7E5A40;
+        if (Txt.has(s, "लाल", "red", "maroon")) return 0xFFA83A34;
+        if (Txt.has(s, "नीला", "नीले", "नीली", "blue")) return 0xFF3E5E98;
+        if (Txt.has(s, "हरा", "हरे", "हरी", "green")) return 0xFF4E7E4E;
+        if (Txt.has(s, "सफेद", "सफ़ेद", "white")) return 0xFFE4E4E0;
+        if (Txt.has(s, "काला", "काले", "काली", "black")) return 0xFF2E2E30;
+        return 0;
+    }
+
+    /**
+     * v47.9: finds the script's sofa (bench) in the pictures of the places, by its colour — the colour of its own
+     * picture when the user gave one, else the colour its description names — as the widest blob of that colour in the
+     * lower part of the picture, wider than tall. Only when the story has such a seat.
+     */
+    public void findSeats(Story story) {
+        if (story == null) return;
+        String words = null;
+        Shot own = null;
+        // (a sofa only: a bench in a park photograph is found from the sitter's own seated picture — Casting.seatOfItsOwn)
+        for (Story.PlaceDef th : story.things) if (sofaWord(th.name)) { words = th.name + " " + th.description; break; }
+        if (words == null) for (Story.PlaceDef pl : story.places) if (sofaWord(pl.description)) { words = pl.description; break; }
+        if (words == null) return;
+        for (Shot sh : shots) {
+            if (!sh.object || sh.keys == null) continue;
+            for (String k : sh.keys) if (sofaWord(k)) own = sh;
+        }
+        float[] ref = own != null && own.pic != null ? middleColour(own.pic) : null;
+        if (ref == null) {
+            int c = colourWord(words);
+            if (c != 0) ref = new float[]{((c >> 16) & 255) / 255f, ((c >> 8) & 255) / 255f, (c & 255) / 255f};
+        }
+        if (ref == null) return;
+        float feet = sofaFeet(words);
+        int found = 0;
+        for (Backdrop b : scenes.values()) if (b != null && b.seatU0 < 0 && findSeat(b, ref)) { b.seatFeet = feet; found++; }
+        if (found > 0) notes.add("the seat the script names is in " + found + " picture" + (found > 1 ? "s" : "") + " of the place: the sitters sit on it, at its size");
+    }
+
+    /**
+     * A picture's colours as seen under white light: each channel divided by the average of its brightest tenth (the
+     * wall in the sun, the white of a sheet) — a grey sofa in an orange sunset is grey again, the cream wall white.
+     */
+    static float[] whiteBalanced(int[] px, int n) {
+        int[] sums = new int[n];
+        for (int i = 0; i < n; i++) { int p = px[i]; sums[i] = ((p >> 16) & 255) + ((p >> 8) & 255) + (p & 255); }
+        int[] sorted = sums.clone();
+        java.util.Arrays.sort(sorted);
+        int thr = sorted[(int) (n * 0.9f)];
+        double r = 0, g = 0, b = 0; int k = 0;
+        for (int i = 0; i < n; i++) if (sums[i] >= thr) { int p = px[i]; r += (p >> 16) & 255; g += (p >> 8) & 255; b += p & 255; k++; }
+        if (k == 0) return new float[]{255, 255, 255};
+        return new float[]{(float) Math.max(1, r / k), (float) Math.max(1, g / k), (float) Math.max(1, b / k)};
+    }
+
+    /** The middle colour of a thing's picture (its central half), white-balanced, or null. */
+    static float[] middleColour(Backdrop b) {
+        if (b.small == null) return null;
+        float[] wb = whiteBalanced(b.small, b.small.length);
+        java.util.List<float[]> c = new java.util.ArrayList<float[]>();
+        for (int y = b.sh / 4; y < b.sh * 3 / 4; y++) for (int x = b.sw / 4; x < b.sw * 3 / 4; x++) {
+            int p = b.small[y * b.sw + x];
+            if ((p >>> 24) < 128) continue;
+            int r = (p >> 16) & 255, g = (p >> 8) & 255, bl = p & 255;
+            if (r > 235 && g > 235 && bl > 235) continue;              // a sheet's white
+            if (r > 200 && g < 60 && bl > 200) continue;               // the magenta of a cut-out sheet
+            c.add(new float[]{r / wb[0], g / wb[1], bl / wb[2], r + g + bl});
+        }
+        if (c.size() < 20) return null;
+        java.util.Collections.sort(c, new java.util.Comparator<float[]>() { public int compare(float[] x, float[] y) { return Float.compare(x[3], y[3]); } });
+        float[] m = c.get(c.size() / 2);
+        return new float[]{m[0], m[1], m[2]};
+    }
+
+    /** Finds a seat of this (white-balanced) colour in the picture; sets the backdrop's seat when one is there. */
+    public static boolean findSeat(Backdrop b, float[] ref) {
+        if (b == null || b.small == null || b.sw < 20 || b.sh < 20 || ref == null) return false;
+        int w = b.sw, h = b.sh;
+        float[] wb = whiteBalanced(b.small, w * h);
+        boolean[] on = new boolean[w * h];
+        for (int y = h / 4; y < h; y++) for (int x = 0; x < w; x++) {
+            int p = b.small[y * w + x];
+            float r = ((p >> 16) & 255) / wb[0], g = ((p >> 8) & 255) / wb[1], bl = (p & 255) / wb[2];
+            // its colour (the shares of red, green and blue under white light) — not its brightness: the same sofa is
+            // darker in the shade of a room than in its own bright picture — and neither as bright as the sunlit
+            // wall nor as dark as a shadow
+            float sum = r + g + bl + 1e-4f, rs = ref[0] + ref[1] + ref[2] + 1e-4f, lum = sum / 3;
+            float dc = Math.abs(r / sum - ref[0] / rs) + Math.abs(g / sum - ref[1] / rs) + Math.abs(bl / sum - ref[2] / rs);
+            on[y * w + x] = dc < 0.05f && lum > 0.3f && lum < 0.88f;
+        }
+        // the largest blob
+        int[] lab = new int[w * h], stack = new int[w * h];
+        int best = 0, bestN = 0, bx0 = 0, by0 = 0, bx1 = 0, by1 = 0, id = 0;
+        for (int i = 0; i < on.length; i++) {
+            if (!on[i] || lab[i] != 0) continue;
+            id++;
+            int n = 0, top = 0, x0 = w, y0 = h, x1 = 0, y1 = 0;
+            stack[top++] = i; lab[i] = id;
+            while (top > 0) {
+                int c = stack[--top]; n++;
+                int cx = c % w, cy = c / w;
+                x0 = Math.min(x0, cx); x1 = Math.max(x1, cx); y0 = Math.min(y0, cy); y1 = Math.max(y1, cy);
+                for (int k = 0; k < 4; k++) {
+                    int nx = cx + (k == 0 ? 1 : k == 1 ? -1 : 0), ny = cy + (k == 2 ? 1 : k == 3 ? -1 : 0);
+                    if (nx < 0 || ny < 0 || nx >= w || ny >= h) continue;
+                    int j = ny * w + nx;
+                    if (on[j] && lab[j] == 0) { lab[j] = id; stack[top++] = j; }
+                }
+            }
+            if (n > bestN) { bestN = n; best = id; bx0 = x0; by0 = y0; bx1 = x1; by1 = y1; }
+        }
+        if (best == 0) return false;
+        int bw = bx1 - bx0 + 1, bh = by1 - by0 + 1;
+        // a sofa or a bench: wide (over a fifth of the picture), wider than tall, a real share of its box filled
+        if (bestN < w * h * 0.04f) return false;
+        // the sofa's own rows: where the blob is wide (a shaded wall joined to it above is narrow, and left out) —
+        // from the widest row up while the rows stay a third as wide, down while a fifth
+        int[] row = new int[h];
+        for (int y = by0; y <= by1; y++) for (int x = bx0; x <= bx1; x++) if (lab[y * w + x] == best) row[y]++;
+        int ym = by0;
+        for (int y = by0; y <= by1; y++) if (row[y] > row[ym]) ym = y;
+        int top = ym, bot = ym;
+        while (top > by0 && row[top - 1] >= row[ym] / 3) top--;
+        while (bot < by1 && row[bot + 1] >= row[ym] / 5) bot++;
+        int cx0 = w, cx1 = 0;
+        for (int x = bx0; x <= bx1; x++) {
+            int n = 0;
+            for (int y = top; y <= bot; y++) if (lab[y * w + x] == best) n++;
+            if (n >= (bot - top + 1) * 0.3f) { cx0 = Math.min(cx0, x); cx1 = Math.max(cx1, x); }
+        }
+        int sw2 = cx1 - cx0 + 1, sh2 = bot - top + 1;
+        if (sw2 < w * 0.2f || sh2 < h * 0.08f || sw2 < sh2 * 1.2f) return false;
+        // the seat: a little under half way down from the top of its back to the floor (the front of a sofa is often
+        // behind a table — the picture's own floor line is the floor)
+        b.seatU0 = cx0 / (float) w; b.seatU1 = (cx1 + 1) / (float) w;
+        float topV = top / (float) h, floor = Math.max(b.ground, (bot + 1) / (float) h);
+        b.seatV = topV + 0.45f * (floor - topV); b.floorV = floor;
+        return true;
     }
 
     /**
@@ -1277,6 +1450,10 @@ public final class Art {
                 if (in != null) fitCrop(b, in[0], in[1], in[2], in[3]);
                 b.scan = Nature.scan(px, d[0], d[1]);
                 b.ground = findGround(px, d[0], d[1], b);
+                // v47.9: a small copy, for finding the script's sofa or bench in it (findSeats)
+                int sw = Math.min(160, d[0]), sh = Math.max(1, d[1] * sw / d[0]);
+                b.small = new int[sw * sh]; b.sw = sw; b.sh = sh;
+                for (int y = 0; y < sh; y++) for (int x = 0; x < sw; x++) b.small[y * sw + x] = px[(y * d[1] / sh) * d[0] + x * d[0] / sw];
                 b.avgLow = averageLow(px, d[0], d[1]);
                 if (b.scan.fireU >= 0) fireCut(L, file, b);
             }

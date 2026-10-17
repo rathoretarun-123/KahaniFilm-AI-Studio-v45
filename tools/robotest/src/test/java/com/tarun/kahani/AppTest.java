@@ -1412,13 +1412,13 @@ public class AppTest {
         call(a, "showStudio", new Class<?>[0]);
         idle();
         View root = a.findViewById(android.R.id.content);
-        View b = byText(root, "📷 Pictures (up to 100)", new int[]{0});
+        // (v47.9: a character takes six named pictures — the "All six at once" button opens the picker for them)
+        View b = byText(root, "📷 All six at once", new int[]{0});
         assertNotNull("the character's upload button", b);
         b.performClick(); idle();
         firstDialogItem();
         rep.append("studio character: ").append(pickerStarted(a)).append('\n');
-        int chars = story.cast().size();
-        View pb = byText(root, "📷 Pictures (up to 100)", new int[]{chars});
+        View pb = byText(root, "📷 Pictures (up to 100)", new int[]{0});
         assertNotNull("the place's upload button", pb);
         pb.performClick(); idle();
         firstDialogItem();
@@ -2769,7 +2769,8 @@ public class AppTest {
         View root = a.findViewById(android.R.id.content);
         List<String> tx = texts(root, new ArrayList<String>());
         int up = 0, objUp = 0;
-        for (String t : tx) { if (t.equals("📷 Pictures (up to 100)")) up++; if (t.equals("📷 Angles") || t.equals("📷 More angles")) objUp++; }
+        // (v47.9: a character's batch button is "All six at once" beside its six named pictures; a place's keeps its own)
+        for (String t : tx) { if (t.equals("📷 Pictures (up to 100)") || t.equals("📷 All six at once")) up++; if (t.equals("📷 Angles") || t.equals("📷 More angles")) objUp++; }
         assertTrue("one upload button per character and place: " + up + " for " + st.cast().size() + " + " + st.scenes.size(), up == st.cast().size() + st.scenes.size());
         assertTrue("one upload button per thing: " + objUp + " for " + ts.size(), objUp >= Math.min(20, ts.size()));
         // 6. the progress screen's card: a row for every character, place, added scene and thing

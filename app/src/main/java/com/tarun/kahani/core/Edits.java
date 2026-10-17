@@ -75,7 +75,7 @@ public final class Edits {
         return new int[]{w - w % 16, h};
     }
 
-    public float bitrateFactor() { return quality == 1 ? 0.12f : quality == 3 ? 0.32f : 0.2f; }     // v33: more bits — dark frames stayed blocky at the old rate
+    public float bitrateFactor() { return quality == 1 ? 0.16f : quality == 3 ? 0.40f : 0.28f; }     // v47.9 (the user: "blurriness is too much, make them more sharp"): 40% more bits — fine edges and hair stay crisp after encoding     // v33: more bits — dark frames stayed blocky at the old rate
 
     // ---------------------------------------------------------------- persistence
 

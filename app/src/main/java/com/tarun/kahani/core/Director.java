@@ -240,6 +240,8 @@ public final class Director {
 
     /** Call after the voices are synthesised (line.dur and line.env filled). */
     public Film direct(Art art) {
+        // v47.9 (the user: "the bench sitting issue"): the script's sofa in the user's pictures of the place
+        if (art != null && story != null) try { art.findSeats(story); } catch (RuntimeException e) { film.notes.add("seat in the picture: not read (" + e + ")"); }
         // v47: the Reader asks for a dress picture when the script changes the character's clothes and no user
         // picture ties to that costume. The warning goes into film.notes and the user sees it on the "ask" screen.
         if (art != null && story != null) {
@@ -1199,6 +1201,10 @@ public final class Director {
         // PixarLead: the act this part belongs to (its colour script) and the format's character scale lock
         seg.act = sceneActs != null && si < sceneActs.length ? sceneActs[si] : 1;
         seg.charScale = PixarLead.spec(opt.aspect).charScale;
+        // v47.9: the user's picture shows the sofa they sit on — the people are as big as that sofa says: a sofa of 6 feet
+        // is as long as a grown-up of 6 feet (Look.height 1) is tall
+        float[] sofa = photoSofa(seg);
+        if (sofa != null) seg.charScale = Math.max(0.35f, Math.min(1.1f, (sofa[1] - sofa[0]) * (6f / seg.backdrop.seatFeet) / 720f));
         film.segs.add(seg);
         lastSubject = null;
         lastGroup.clear();
@@ -1497,6 +1503,17 @@ public final class Director {
             if (d < bd) { bd = d; best = o; }
         }
         return best;
+    }
+
+    /**
+     * v47.9: the sofa the user's picture of this part shows, on the stage — {left, right, seat line, floor line} — or
+     * null (Art.findSeats).
+     */
+    static float[] photoSofa(Film.Seg s) {
+        Art.Backdrop b = s == null ? null : s.backdrop;
+        if (b == null || b.seatU0 < 0) return null;
+        float sx = Math.max(1e-3f, b.x1 - b.x0), sy = Math.max(1e-3f, b.y1 - b.y0);
+        return new float[]{(b.seatU0 - b.x0) / sx * 1280f, (b.seatU1 - b.x0) / sx * 1280f, (b.seatV - b.y0) / sy * 720f, (b.floorV - b.y0) / sy * 720f};
     }
 
     private int seatedNeighbour(Film.Actor a, float t) {
@@ -3843,11 +3860,27 @@ public final class Director {
             if (kind == TK_DOWN) { if (who != null) setDown(sh, key, who, t); continue; }
             if (kind == TK_WEAR) { if (who != null) endHold(who, sh.pic, t + 0.6f, false); continue; }
             if (kind == Film.THING_PLACE) {
+                // v47.9: the sofa itself is in the user's picture of the place — never a second, small one on the floor
+                float[] sofaP = photoSofa(seg);
+                if (sofaP != null && Art.sofaWord(key)) continue;
                 float hh = who != null && who.look != null ? Renderer.actorHeight(who.look, who.c, art, seg) : 300;
                 boolean under = Txt.has(win, "बिछ", "पर बैठ", "spread", "sits on", "sitting on");
                 boolean onFloor = who != null && who.stateAt(t).body != Pose.STAND;          // a sitter's folded legs reach further: beside means past them
                 float x = who != null ? xAt(who, t) + (under ? 0 : who.stateAt(t).facing * hh * (onFloor ? 0.45f : 0.32f)) : 640;
-                placeAt(sh.pic, thingSize(key), key, who, seg.t0, x);        // there from the start of the part: things do not appear
+                Film.Fx pf = placeAt(sh.pic, thingSize(key), key, who, seg.t0, x);        // there from the start of the part: things do not appear
+                // v47.9: by the ones sitting on that sofa ("बीच में टेडी रखा है", "लाल कुशन उसके पीछे टिका है") — on its seat,
+                // between them when the words say so, not on the floor in front
+                if (pf != null && sofaP != null) {
+                    List<Film.Actor> sitters = new ArrayList<Film.Actor>();
+                    for (Film.Actor sa : seg.actors) { Film.Key sk = sa.stateAt(t); if (sk.visible && sk.body == Pose.SIT && sk.seat == Film.SEAT_SOFA) sitters.add(sa); }
+                    if (!sitters.isEmpty()) {
+                        Film.Actor by = who != null && sitters.contains(who) ? who : sitters.get(0);
+                        float bh = Renderer.actorHeight(by.look, by.c, art, seg);
+                        if (Txt.has(win, "बीच में", "बीच का", "between") && sitters.size() >= 2) pf.x = (xAt(sitters.get(0), t) + xAt(sitters.get(1), t)) / 2;
+                        else pf.x = Math.max(sofaP[0] + 0.1f * (sofaP[1] - sofaP[0]), Math.min(sofaP[1] - 0.1f * (sofaP[1] - sofaP[0]), xAt(by, t) - by.stateAt(t).facing * bh * 0.22f));
+                        pf.y = sofaP[2] - seg.ground;          // on the seat
+                    }
+                }
                 film.notes.add("  ↳ " + key + ": lies in its place from the start of the part" + (who != null ? ", beside " + who.c.shown() : "") + String.format(java.util.Locale.US, " (named at %.1f s)", t));
                 continue;
             }
@@ -7429,13 +7462,19 @@ public final class Director {
     public static final float WALK_SPEED = 1.0f, RUN_SPEED = 1.8f;
     /** v47.8: the most a body speeds up or slows down between two frames at 24 fps, as a share of its height. */
     public static final float MOVE_ACCEL = 0.010f;
+    /**
+     * v47.9 (the user: "make your director … learn things from each story creation"): set before a film from what the
+     * team learned (Lessons.moveScale) — under 1 when earlier films jolted, so moves are gentler; 1 by default.
+     */
+    public static float MOVE_SCALE = 1f;
 
     /** v47.8: the least time a move of this length takes a body of this height, walking or running (seconds). */
     public static float leastMoveTime(float dist, float h, boolean run) {
         if (dist <= 0 || h <= 0) return 0;
-        float bySpeed = dist / ((run ? RUN_SPEED : WALK_SPEED) * h);
+        float scale = MOVE_SCALE > 0.3f && MOVE_SCALE <= 1f ? MOVE_SCALE : 1f;
+        float bySpeed = dist / ((run ? RUN_SPEED : WALK_SPEED) * scale * h);
         // (a move eases in and out — smoothstep: its sharpest change of speed is 6·d/T² a second²)
-        float byAccel = (float) Math.sqrt(6 * dist / (24f * 24f * MOVE_ACCEL * h));
+        float byAccel = (float) Math.sqrt(6 * dist / (24f * 24f * MOVE_ACCEL * scale * h));
         return Math.max(bySpeed, byAccel);
     }
 
@@ -8000,6 +8039,37 @@ public final class Director {
                 if (seat == -2 && Txt.has(s, "पास", "बगल", "साथ", "beside", "next to", "by his side", "by her side")) {
                     int ns = seatedNeighbour(a, ta);
                     if (ns >= Film.SEAT_STOOL) st = ns;
+                }
+                // v47.9: on the sofa in the user's picture: inside its ends, on the side the script says
+                float[] sofaP = st == Film.SEAT_SOFA ? photoSofa(seg) : null;
+                if (sofaP != null && a.look != null && a.look.isHumanoid() && seatedNeighbourActor(a, ta) == null) {
+                    float span = sofaP[1] - sofaP[0], m = 0.15f * span;
+                    boolean right = Txt.has(s, "दायीं", "दायें", "दाएं", "दाएँ", "दाहिन", "right"), left = Txt.has(s, "बायीं", "बायें", "बाएं", "बाएँ", "left");
+                    float want = left ? sofaP[0] + 0.33f * span : right ? sofaP[0] + 0.67f * span : Math.max(sofaP[0] + m, Math.min(sofaP[1] - m, xAt(a, ta)));
+                    if (Math.abs(want - xAt(a, ta)) > 4) {
+                        if (ta <= seg.t0 + 0.3f) { k.x = want; k.moveDur = 0; }
+                        else { k.x = want; k.moveDur = Math.max(k.moveDur, 0.8f); }
+                    }
+                }
+                // v47.9: "सोफे पर वृंदा बायीं तरफ बैठी है। वनुषा दायीं तरफ … बैठी है" — the other side of the same sofa
+                // (she was put on a chair of her own): a seat the sentence does not name, beside one seated on a sofa,
+                // is that sofa; one named by its side ("दायीं तरफ", "दूसरी ओर") is the neighbour's bench or log too
+                if (seat == -2 && st != Film.SEAT_SOFA) {
+                    int ns = seatedNeighbour(a, ta);
+                    if (ns == Film.SEAT_SOFA || (ns >= Film.SEAT_STOOL && Txt.has(s, "तरफ", "ओर", "side"))) {
+                        st = ns;
+                        // on the same sofa means beside them on it, on the side the script says ("दायीं तरफ") — not at
+                        // the far end of the room; one already sitting when the part opens is simply there
+                        Film.Actor nb = seatedNeighbourActor(a, ta);
+                        if (nb != null && a.look != null && a.look.isHumanoid()) {
+                            float hmax = Math.max(heightOf(nb), heightOf(a)), gap = 0.55f * hmax, nx = xAt(nb, ta);
+                            int side = Txt.has(s, "दायीं", "दायें", "दाएं", "दाएँ", "दाहिन", "right") ? 1 : Txt.has(s, "बायीं", "बायें", "बाएं", "बाएँ", "left") ? -1 : (xAt(a, ta) >= nx ? 1 : -1);
+                            if (Math.abs(xAt(a, ta) - (nx + side * gap)) > 0.15f * hmax) {
+                                if (ta <= seg.t0 + 0.3f) { Film.Key k0 = a.at(ta); k0.x = nx + side * gap; k0.moveDur = 0; }
+                                else moveNear(a, nb, ta, 0.9f, gap);
+                            }
+                        }
+                    }
                 }
                 k.seat = st;
                 // v35: the furniture is heard as they sit (a chair's creak, a sofa's soft thump, a bed's frame)
@@ -10788,6 +10858,19 @@ public final class Director {
         }
         if (Txt.has(s, HUG) && all.size() >= 2) {
             Film.Actor a = all.get(0), to = all.get(1);
+            // v47.9: two sitting side by side on one sofa (bench, log) hug where they sit — they were stood up and
+            // walked together ("दोनों गले लगाती हैं" on the sofa)
+            Film.Key sa = a.stateAt(t), so = to.stateAt(t);
+            boolean seatedTogether = sa.body == Pose.SIT && so.body == Pose.SIT && sa.seat == so.seat && sa.seat >= Film.SEAT_STOOL && sa.seat != Film.SEAT_WHEELCHAIR
+                    && Math.abs(xAt(a, t) - xAt(to, t)) < 0.9f * Math.max(heightOf(a), heightOf(to));
+            if (seatedTogether) {
+                Film.Act h1 = new Film.Act(t + 0.3f, t + 2.8f, Film.G_HUG); h1.target = to; a.acts.add(h1);
+                Film.Act h2 = new Film.Act(t + 0.3f, t + 2.8f, Film.G_HUG); h2.target = a; to.acts.add(h2);
+                feel(a, t + 0.3f, 2.5f, Pose.HAPPY); feel(to, t + 0.3f, 2.5f, Pose.HAPPY);
+                travelAfter = 2.9f;
+                hugs++;
+                return 3.0f;
+            }
             moveNear(a, to, t, 0.6f);
             Film.Key kt = to.at(t + 0.1f); if (kt.body == Pose.LIE || kt.body == Pose.SIT || kt.body == Pose.KNEEL) { kt.body = Pose.STAND; kt.seat = -1; }
             Film.Act h1 = new Film.Act(t + 0.7f, t + 3.0f, Film.G_HUG); h1.target = to; a.acts.add(h1);

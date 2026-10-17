@@ -61,8 +61,8 @@ public final class Renderer {
             // through black between parts, nor around the bridge plate that establishes a new place; a dip to black
             // is kept only where the script says time passes, a dip to white for magic, a dream or a memory. The
             // title and the end card still fade from and to black.
-            boolean dissolveIn = soft(prev) && soft(s) && t - s.t0 < DISSOLVE;
-            boolean dissolveOut = soft(next) && soft(s);
+            boolean dissolveIn = softPair(prev, s) && t - s.t0 < DISSOLVE;
+            boolean dissolveOut = softPair(s, next);
             if (dissolveIn && s.type == Film.S_SCENE && s.transition != 0) {
                 float u = (t - s.t0) / DISSOLVE;
                 int col = s.transition == 1 ? 0xFF000000 : 0xFFFFF8F0;
@@ -83,7 +83,7 @@ public final class Renderer {
                 drawAny(g, s, t);
             }
             float a = 1f;
-            if (s.fadeIn > 0 && !dissolveIn && !(soft(prev) && soft(s))) a = Math.min(a, (t - s.t0) / s.fadeIn);
+            if (s.fadeIn > 0 && !dissolveIn && !softPair(prev, s)) a = Math.min(a, (t - s.t0) / s.fadeIn);
             if (s.fadeOut > 0 && !dissolveOut) a = Math.min(a, (s.t1 - t) / s.fadeOut);
             if (a < 1f) { g.color(Puppet.alpha(0xFF000000, 1f - Math.max(0, a))); g.rect(0, 0, vw, vh); }
         }
@@ -94,6 +94,16 @@ public final class Renderer {
 
     /** A part of the story or a bridge plate: the segments that dissolve into one another (not the title or the end). */
     static boolean soft(Film.Seg x) { return x != null && (x.type == Film.S_SCENE || x.type == Film.S_CARD); }
+
+    /**
+     * v47.9 (the user: "scene change is also not smooth"): two segments melt into each other — two parts, and now also
+     * the title into the first part and the last part into the end (they went through black). The film still opens
+     * from black and closes to black.
+     */
+    static boolean softPair(Film.Seg a, Film.Seg b) {
+        if (a == null || b == null) return false;
+        return (soft(a) && soft(b)) || (a.type == Film.S_TITLE && soft(b)) || (soft(a) && b.type == Film.S_END);
+    }
 
     /** Draws a segment of any type at time t (the title, a card or bridge plate, the end card, a part of the story). */
     private void drawAny(Gfx g, Film.Seg s, float t) {
@@ -1558,6 +1568,9 @@ public final class Renderer {
         // carried or held by someone keeps being drawn with them
         if (k.anchor == Film.A_GROUND && Math.abs(x - camX) > vw / 2 / camZ + h * 1.5f + 200) return;
         float y = s.ground;
+        // v47.9: seated on the sofa the user's picture shows — the hips on its seat (the picture's own sofa, no drawn one)
+        float[] sofaP = k.body == Pose.SIT && k.seat == Film.SEAT_SOFA ? Director.photoSofa(s) : null;
+        if (sofaP != null) y = sofaP[2] + seatTopOf(Film.SEAT_SOFA) * h;
         float scale = 1f;
         if (k.depth > 0) { y -= 26; scale = 0.88f; }
         // v40: on a path (round a fire): behind it further up and smaller, in front lower and larger (the ground's perspective)
@@ -2195,7 +2208,7 @@ public final class Renderer {
         g.restore();
         if (chair) drawWheelchair(g, h, true, p.facing, Director.xAt(a, t) / (0.22f * h));
         // seated on a throne or a sofa: its armrests are in front of the sitter (v35: the seat itself is under them)
-        if (seat >= Film.SEAT_STOOL && seat != Film.SEAT_WHEELCHAIR && p.sit > 0.35f && p.body != Pose.LIE) {
+        if (seat >= Film.SEAT_STOOL && seat != Film.SEAT_WHEELCHAIR && p.sit > 0.35f && p.body != Pose.LIE && !(seat == Film.SEAT_SOFA && Director.photoSofa(s) != null)) {
             g.save();
             g.setAlpha(Math.min(1, (p.sit - 0.35f) / 0.4f));
             seatSpan = null;
@@ -4116,8 +4129,10 @@ public final class Renderer {
         // profile — the thighs swing forward and the shins hang (Rig.sitSide), the one pose a front picture cannot
         // show (its folded thighs read as a shorter person standing in front of the seat). A line in a close shot
         // keeps the front picture (its lips are found surely); the change comes with the cut.
+        // (v47.9: decided once for the shot — a close shot in which they speak at all keeps the front picture through it;
+        // starting and stopping a line swapped the profile and the front in mid-shot, a pop the frame audit counted)
         if (sp.views != null && sp.view(1) != null && sp.view(1).userSide && p.sit > 0.3f && k.body == Pose.SIT && p.seat > Film.SEAT_FLOOR
-                && p.seat != Film.SEAT_WHEELCHAIR && p.seat != Film.SEAT_BED && k.anchor == Film.A_GROUND && (camZ <= 1.6f || !speaking)) {
+                && p.seat != Film.SEAT_WHEELCHAIR && p.seat != Film.SEAT_BED && k.anchor == Film.A_GROUND && (camZ <= 1.6f || !speaksInShot(a, t))) {
             // in profile the knees reach forward: someone standing that close on the facing side would be drawn
             // through them, so the front picture (folded) keeps that moment
             float hh = actorHeight(a.look, a.c, art, s), ax = Director.xAt(a, t);
@@ -4515,6 +4530,14 @@ public final class Renderer {
     }
 
     /** The shot playing at t (the shots are in order; the last one found is tried first). */
+    /** v47.9: the character speaks at some moment of the shot playing at t (or right now when no shot plays). */
+    private boolean speaksInShot(Film.Actor a, float t) {
+        Film.Shot sh = shotAt(t);
+        float t0 = sh != null ? sh.t : t, t1 = sh != null ? sh.t + sh.dur : t + 0.001f;
+        for (Film.Speak sp : a.speaks) if (sp.t0 < t1 && sp.t1 > t0) return true;
+        return false;
+    }
+
     Film.Shot shotAt(float t) {
         if (film == null || film.shots.isEmpty()) return null;
         int n = film.shots.size();
@@ -5423,7 +5446,7 @@ public final class Renderer {
     private void placedThing(Gfx g, Film.Seg s, Film.Fx f, float t) {
         if (f.pic == null || f.pic.img == null) return;
         float hh = f.a != null && f.a.look != null ? actorHeight(f.a.look, f.a.c, art, s) : 300;
-        float ps = perspective(s, f.y);
+        float ps = f.y < 0 ? 1f : perspective(s, f.y);      // (v47.9: up on a seat — the sofa's — not further away)
         float sz = Math.max(50 * ps, (f.size > 0 ? f.size : 0.18f) * hh * ps);
         float aspect = f.pic.w / (float) Math.max(1, f.pic.h);
         float tw = aspect >= 1 ? sz : sz * aspect, th = aspect >= 1 ? sz / aspect : sz;
@@ -5868,6 +5891,7 @@ public final class Renderer {
                 case Film.FX_SLIDE: if (behind) drawSlideProp(g, s, f); break;
                 case Film.FX_SEAT: if (behind) {
                     if (f.a != null && seatInPicture(f.a)) break;      // v47.8: their own picture brings the seat they sit on
+                    if (f.kind == Film.SEAT_SOFA && Director.photoSofa(s) != null) break;      // v47.9: the place's picture shows the sofa
                     float hh = f.a != null ? actorHeight(f.a.look, f.a.c, art, s) * seatScale(f.a) : 400;
                     float fc = f.a != null ? f.a.stateAt(t).facing : 1;
                     seatSpan = f.kind == Film.SEAT_SOFA || f.kind == Film.SEAT_STOOL ? seatGroup(s, f, hh, f.kind) : null;

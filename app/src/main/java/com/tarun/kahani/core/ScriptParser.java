@@ -292,6 +292,7 @@ public final class ScriptParser {
         }
         resolveSpeakers(story);
         cleanDialogue(story);
+        clausesByName(story);
         placesOfScenes(story);
         timeOfScenes(story);
         genderFromVerbs(story);
@@ -643,6 +644,56 @@ public final class ScriptParser {
             sc.beats.clear();
             sc.beats.addAll(out);
         }
+    }
+
+    /**
+     * v47.9: "सोफे पर वृंदा बायीं तरफ बैठी है … गोद में खुली किताब, वनुषा दायीं तरफ पैर ऊपर करके बैठी है" — after a comma a
+     * new clause begins with another character's name and has its own verb: it is a sentence of its own, so each one
+     * does what their own clause says (वनुषा was left standing, the sitting given to वृंदा alone).
+     */
+    static void clausesByName(Story st) {
+        for (Story.Scene sc : st.scenes) for (Story.Beat b : sc.beats) {
+            if (b.type != Story.Beat.DIRECTION || b.text.indexOf(',') < 0) continue;
+            StringBuilder out = new StringBuilder();
+            for (String sent : b.text.split("(?<=।)")) {
+                String[] parts = sent.split(",");
+                StringBuilder cur = new StringBuilder(parts[0]);
+                for (int i = 1; i < parts.length; i++) {
+                    String next = parts[i];
+                    Story.CharacterDef starts = startsWithName(st, next);
+                    List<Story.CharacterDef> before = mentions(st, cur.toString());
+                    if (starts != null && !before.isEmpty() && !before.contains(starts) && hasVerb(cur.toString()) && hasVerb(next)) {
+                        out.append(cur.toString().trim()).append("। ");
+                        cur.setLength(0);
+                        cur.append(next.trim());
+                    } else cur.append(',').append(next);
+                }
+                out.append(cur);
+            }
+            b.text = out.toString().trim();
+        }
+    }
+
+    /** The character whose name (or alias) the text begins with, or null. */
+    static Story.CharacterDef startsWithName(Story st, String text) {
+        String t = Txt.norm(text).trim();
+        for (Story.CharacterDef c : st.characters) {
+            List<String> names = new ArrayList<String>();
+            names.add(c.displayName);
+            names.addAll(c.aliases);
+            for (String n : names) {
+                String k = Txt.norm(n).trim();
+                if (k.length() >= 2 && t.startsWith(k) && (t.length() == k.length() || !isWordChar(t.charAt(k.length())))) return c;
+            }
+        }
+        return null;
+    }
+
+    /** A Hindi or English finite verb in the clause ("बैठी है", "पकड़े हुए था", "sits"). */
+    static boolean hasVerb(String text) {
+        String t = " " + Txt.norm(text).replaceAll("[,।.!?]", " ") + " ";
+        return Txt.has(t, " है ", " हैं ", " था ", " थी ", " थे ", " रहा ", " रही ", " रहे ", "ता है", "ती है", "ते हैं")
+                || t.matches(".*\\b(is|are|was|were|sits|stands|holds|looks)\\b.*");
     }
 
     /** The words without quote marks; a (direction) inside them moved to the manner. */
