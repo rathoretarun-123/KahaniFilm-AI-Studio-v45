@@ -1348,7 +1348,10 @@ public final class Director {
             for (float[] sp : spots) { Film.Fx pf = fx(Film.FX_PUDDLE, seg.t0, 1e6f, sp[0], sp[1], null, null); pf.color = (int) sp[2]; pf.t2 = -1; }
             film.notes.add("  ↳ puddles on the ground (the place's description)");
         }
-        if (Sets.outdoorSet(seg.set) && (seg.tod == Sets.NIGHT || seg.tod == Sets.EVENING)) {
+        // (v47.8: never under rain or a clouded sky — आखिरी चाय had stars in pouring rain)
+        boolean overcast = wOpen[Film.W_RAIN] >= 0 || wOpen[Film.W_STORM] >= 0
+                || Txt.has(where, "बारिश", "बरसात", "मूसलाधार", "बादल", "rain", "storm", "cloud", "overcast");
+        if (Sets.outdoorSet(seg.set) && (seg.tod == Sets.NIGHT || seg.tod == Sets.EVENING) && !overcast) {
             // natural night: stars in the sky, fireflies in the woods
             if (wOpen[Film.W_STARS] < 0) open(Film.W_STARS, seg.t0, 0.9f);
             if ((seg.set == Sets.FOREST || seg.set == Sets.GARDEN) && wOpen[Film.W_FIREFLIES] < 0) open(Film.W_FIREFLIES, seg.t0, 0.6f);
