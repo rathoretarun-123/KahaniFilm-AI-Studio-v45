@@ -600,6 +600,54 @@ public final class Angles {
      * v34: a part that came loose from a figure (a raised sword with the tip of a braid, a foot in a leap) is joined
      * back to the figure it touches instead of being dropped.
      */
+    /**
+     * v47.9 (the user: "while splitting you do not split images of combined characters, or characters with object —
+     * they are created as per story"): the pieces of a picture are a group, not views of one character, when a piece is
+     * wider than it is tall (two people side by side, a girl on a sofa, a moment of a story board) or holds two or more
+     * separate figures of its own. Such a picture is kept whole. An animal's side view is wide by nature, so a beast's
+     * pieces are judged by their figures only.
+     */
+    public static boolean composite(List<Piece> parts, boolean beast) {
+        for (Piece p : parts) {
+            if (!beast && p.w > p.h * 1.15f) return true;
+            if (bigBlobs(p) >= 2) return true;
+        }
+        return false;
+    }
+
+    /** How many separate figures a cut-out piece holds: opaque regions each over 15% of its opaque area (a coarse grid). */
+    static int bigBlobs(Piece p) {
+        int step = Math.max(1, Math.max(p.w, p.h) / 120);
+        int gw = (p.w + step - 1) / step, gh = (p.h + step - 1) / step;
+        boolean[] on = new boolean[gw * gh];
+        int total = 0;
+        for (int gy = 0; gy < gh; gy++) for (int gx = 0; gx < gw; gx++) {
+            int x = Math.min(p.w - 1, gx * step), y = Math.min(p.h - 1, gy * step);
+            if ((p.px[y * p.w + x] >>> 24) >= 128) { on[gy * gw + gx] = true; total++; }
+        }
+        if (total == 0) return 0;
+        int[] stack = new int[gw * gh];
+        boolean[] seen = new boolean[gw * gh];
+        int big = 0;
+        for (int i = 0; i < on.length; i++) {
+            if (!on[i] || seen[i]) continue;
+            int n = 0, top = 0;
+            stack[top++] = i; seen[i] = true;
+            while (top > 0) {
+                int c = stack[--top]; n++;
+                int cx = c % gw, cy = c / gw;
+                for (int k = 0; k < 4; k++) {
+                    int nx = cx + (k == 0 ? 1 : k == 1 ? -1 : 0), ny = cy + (k == 2 ? 1 : k == 3 ? -1 : 0);
+                    if (nx < 0 || ny < 0 || nx >= gw || ny >= gh) continue;
+                    int j = ny * gw + nx;
+                    if (on[j] && !seen[j]) { seen[j] = true; stack[top++] = j; }
+                }
+            }
+            if (n >= total * 0.15f) big++;
+        }
+        return big;
+    }
+
     public static List<Piece> figures(List<Piece> parts, int w, int h) { return figures(parts, w, h, false); }
 
     /**
