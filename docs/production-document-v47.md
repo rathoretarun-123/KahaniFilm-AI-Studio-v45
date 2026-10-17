@@ -570,3 +570,95 @@ one for a second: doubled eyes and lips.
 - One change at 1:55.9 (front to side, as she starts to walk to the bench) is still counted.
 
 **The jolt.** The jolt (परी, 1:56.1, up and down, 2.0% of her height in one frame) is at the limit, as she sits down.
+
+## 9. Fifth round (17 October, evening): seated photographs, the girl's pictures, the forty daily activities
+
+The user's notes, in their words: "check every frame visually for every story"; "daily activities should also be
+checked properly as per the gifs and pictures I have provided for reference"; "check like this for all the stories
+frame by frame".
+
+### A photograph of someone sitting brings what they sit on (`Art.PoseSprite.withBackground`, `Casting.seatOfItsOwn`)
+
+In बाबू के लिए the old man's seated picture came with its background: a grey wall, and a small bench under him. The
+cut-out test for "a seat of its own" (`Art.ownSeat`) reads only pictures that are already cut out (with the
+background it took a stride with a stick for a bench), so this picture was treated as a bare sitter. It was lifted,
+bench and all, onto a drawn bench: one bench standing on another.
+
+- A seated picture that came with its background is now taken to show what its character sits on. It is never lifted
+  onto a drawn seat, and the drawn seat steps aside for it (`Renderer.seatInPicture`).
+- Where someone else sits on a seat within reach in the shot (`Casting.seatShared`), such a picture is not used: its
+  seat is one too many for two. The drawn seat holds both and the rig sits on it.
+- Limit: the rig, folded onto the drawn bench, still reads as half standing (the legs go straight down; there is no
+  foreshortened lap). In बाबू के लिए this is the last part, where the girl sits beside him.
+- Limit: a seated photograph of someone cross-legged on the floor is also taken to bring its own seat. Where the script
+  puts that character on a chair, the chair is not drawn.
+
+### The girl's twelve pictures were put aside (`Art.cutHairTone`)
+
+The one-look check (v47.6: a dark-haired character's pose picture with light hair is another design of them) read the
+top rows of each pose picture. For a picture with its background, the top rows are the background: the grey wall
+above the girl's head read as light hair (190 against 22), and all twelve of her pose pictures were left out. A picture
+with its background is now read from its cut-out figure. In this film, none of her pictures is put aside now.
+
+Found and not fixed: in the over-the-shoulder shot at 0:44 the foreground shows the girl's face, not her back, though
+her back picture is in the pack. This happened before this round as well.
+
+### Animals in a park
+
+The animal rule for "walks across" matched "पार" inside "पार्क", so every animal in a park walked off across the
+scene. It now needs "पार कर", "पार हो", "के पार" or "उस पार".
+
+### The forty daily activities against the user's references (`docs/reference/daily_activities/`)
+
+Each activity in `gif_descriptions_40_hi.txt` was written as a short story, planned, and rendered at the moments that
+matter. Two people worked on this in parallel, 1–20 and 21–40. Each frame was compared with the reference contact
+sheets where one exists. The code is universal: word lists and rules, nothing story-specific.
+
+What was wrong and is now staged (before → after):
+
+| # | Activity | Before | After |
+|---|---|---|---|
+| 02 | Waking up | stood, then lay down in front of us | asleep in bed from the first frame; sits up, then stands |
+| 08 | Holding hands | one got up and walked away | both seated, holding hands from their seats |
+| 09 | Walking the dog | a dog stood alone, nobody walked | he walks; the dog goes a step ahead on a lead from his hand |
+| 15 | Folding clothes | a reach | a fold task: a shirt in hand, about one fold a second |
+| 16 | Digging | a push | a dig task: a spade in hand, a stroke every 1.5 s |
+| 17 | Children playing | only the first one played | both play ("दौड़ते और खेलते हैं") |
+| 21 | Making the bed | a reach, no bed | a bed from the start of the part; she reaches over it |
+| 22 | Meditating cross-legged | "पालथी मारकर बैठते" put him on a chair | on the floor, eyes shut for 4 s |
+| 27 | TV remote | sat, no gesture | sits, then reaches |
+| 29 | Talking on the sofa | both sat, nobody talked | both talk in turn while seated |
+| 32 | Taking out the rubbish | stayed in place | walks to the room's door, it opens, she goes out |
+| 33 | Turning round on the spot | two short look-round turns | `G_SPIN`: one eased 2 s turn through the figure's edge |
+| 34 | Three watching TV | sat only | all three seated, laughing one after another |
+| 35 | Tying shoelaces | a bow | down on one knee, hands low, then up |
+| 36 | Laptop | sat, no gesture | reaches at the keys |
+| 38 | Watering | the row washed instead of watering | waters |
+
+Already right and unchanged: 01, 03, 04, 07, 10–12, 14, 19, 20, 23–26, 28, 30, 31, 37, 39, 40.
+
+Still wrong or missing, recorded rather than claimed:
+
+- Not staged: 18 (a box onto a shelf), 13 (a fireplace), 06 (stairs). For 05 (wiping a window) the sound is a broom's.
+- No rubbish bag, laptop or TV screen is drawn.
+- Making the bed is arms out, not bending over the sheet. For the laces the body stays upright.
+- Folding: the cloth is in one hand; there is no table. Digging: in a front view the body leans sideways, not forward.
+- The dog's lead runs over its back, and the walker faces the camera (the reference is a side view).
+- Holding hands: the two chairs overlap and the held hands do not read clearly.
+- Lifting the umbrella, the other arm sticks out sideways.
+- A front picture has no back view, so halfway through the spin the same front picture shows.
+- The look-round turn still does not narrow drawn characters.
+
+The plan digest over 2,100 stories changed where the new rules' words appear, and only there:
+
+- 74 stories with an opening "asleep / lying" line now begin with them lying there.
+- 3 joined plurals now have both people acting.
+- 109 stories have laces, TV, laptop, cross-legged, rubbish, watering or conversation sentences.
+
+After the two sets of rules were merged, the digest changed 181 of 2,100 stories: exactly the union of the two sets
+(77 and 109, five in both). In one of them, the plan differs from either set alone, because the rules combine: "neo
+mumbai" has two people named together with a plural verb, and both now reach at the controls.
+
+A first run with broader words for folding and digging changed 30 more stories wrongly ("folds his hands and prays"
+became folding clothes), and "आँसू पोंछता" swept a window. The words were narrowed, and those stories are back to how
+they were.
