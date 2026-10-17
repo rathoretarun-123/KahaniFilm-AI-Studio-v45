@@ -38,7 +38,7 @@ public class SeatContinuityTest {
             if (s.type != Film.S_SCENE) continue;
             sceneParts++;
             Film.Actor babu = actor(s, "बाबू");
-            if (babu == null) continue;           // scene 3 is the girl's own close shot
+            assertNotNull("बाबू is in every part (v47.8: in scene 3 his eyes rest on the letter — he is there)", babu);
             float mid = (s.t0 + s.t1) / 2;
             Film.Key k = babu.stateAt(mid);
             if (k.body == Pose.SIT && k.seat >= Film.SEAT_STOOL) seatedParts++;
@@ -46,8 +46,21 @@ public class SeatContinuityTest {
             if (s.scene >= 3 && girl != null && girl.stateAt(s.t1 - 0.5f).body == Pose.SIT) girlSeated++;
         }
         assertEquals(5, sceneParts);
-        assertEquals("बाबू is seated on the bench in every part he is in (1, 2, 4, 5)", 4, seatedParts);
+        assertEquals("बाबू is seated on the bench in every part", 5, seatedParts);
         assertTrue("the girl sits beside him in scenes 4 and 5: " + girlSeated, girlSeated >= 2);
+    }
+
+    /** v47.8: someone's eyes or gaze on a thing puts them on the stage; remembered or pictured, it does not. */
+    @Test public void eyesOnSomethingPutTheirOwnerOnStage() throws Exception {
+        File assets = new File(System.getProperty("kahani.assets", "../../app/src/main/assets"));
+        Story story = ScriptParser.parse(new String(Files.readAllBytes(new File(assets, "babu_ke_liye_screenplay.txt").toPath()), StandardCharsets.UTF_8));
+        Story.CharacterDef babu = null;
+        for (Story.CharacterDef c : story.characters) if (c.displayName.equals("बाबू")) babu = c;
+        assertNotNull(babu);
+        assertTrue(ScriptParser.present(story, "बाबू की आँखें पत्र पर टिक जाती हैं।").contains(babu));
+        assertTrue(ScriptParser.present(story, "बाबू की नज़र बैग पर है।").contains(babu));
+        assertFalse(ScriptParser.present(story, "उसे बाबू की आँखें याद आती हैं।").contains(babu));
+        assertFalse("a thing of theirs alone does not", ScriptParser.present(story, "बाबू की छड़ी पेड़ से टिकी है।").contains(babu));
     }
 
     @Test public void aSeatedSpeakersCloseUpIsFramedOnTheSeatedFace() throws Exception {

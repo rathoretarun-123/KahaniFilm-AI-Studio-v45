@@ -610,6 +610,17 @@ with its background is now read from its cut-out figure. In this film, none of h
 Found and not fixed: in the over-the-shoulder shot at 0:44 the foreground shows the girl's face, not her back, though
 her back picture is in the pack. This happened before this round as well.
 
+### Eyes on something put their owner on the stage (`ScriptParser.possessive`)
+
+In बाबू के लिए scene 3 ("बच्ची बेंच के पास घुटनों के बल बैठकर गुलाबी बैग खोलती है … बाबू की आँखें पत्र पर टिक जाती
+हैं") had only the girl on the stage, in front of the tree with no bench and no बाबू. "बाबू की …" is read as a
+possessive, and a possessive alone does not put anyone on the stage ("वानुषा का रिबन"). Now someone's eyes or gaze on
+a thing ("की आँखें", "की नज़र", "की निगाह") puts them there, unless the sentence remembers or pictures them ("याद",
+"सपने", "तस्वीर", "फोटो"). Over the 2,100 stories this changes one plan, बाबू के लिए's. He is now on his bench in all
+five scenes (`SeatContinuityTest`).
+
+Still missing: the girl's kneeling ("घुटनों के बल") is drawn standing, because her pictures have no leg rig.
+
 ### Animals in a park
 
 The animal rule for "walks across" matched "पार" inside "पार्क", so every animal in a park walked off across the

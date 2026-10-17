@@ -1827,8 +1827,14 @@ public final class ScriptParser {
         if (!(rest.startsWith("का ") || rest.startsWith("की ") || rest.startsWith("के "))) return false;
         String after = rest.substring(3).trim();
         // "X के पास/साथ/सामने" means X is there
-        return !(after.startsWith("पास") || after.startsWith("साथ") || after.startsWith("सामने") || after.startsWith("कंधे")
-                || after.startsWith("हाथ") || after.startsWith("कान") || after.startsWith("सिर"));
+        if (after.startsWith("पास") || after.startsWith("साथ") || after.startsWith("सामने") || after.startsWith("कंधे")
+                || after.startsWith("हाथ") || after.startsWith("कान") || after.startsWith("सिर")) return false;
+        // v47.8: so do X's eyes or gaze on something ("बाबू की आँखें पत्र पर टिक जाती हैं": the old man left out of the
+        // scene he watches), unless they are remembered or pictured
+        if ((after.startsWith(Txt.norm("आँख")) || after.startsWith(Txt.norm("आंख")) || after.startsWith(Txt.norm("नज़र")) || after.startsWith(Txt.norm("नजर"))
+                || after.startsWith(Txt.norm("निगाह"))) && !Txt.has(t, Txt.norm("याद"), Txt.norm("सपन"), Txt.norm("तस्वीर"), Txt.norm("फोटो"), Txt.norm("फ़ोटो"), "photo", "dream", "remember"))
+            return false;
+        return true;
     }
 
     private static List<Story.CharacterDef> mentions(Story story, String text, boolean presenceOnly) {
