@@ -165,6 +165,7 @@ jobs:
             --tests com.tarun.kahani.ThingsInHandsTest \
             --tests com.tarun.kahani.UserScreenplayFormatTest \
             --tests com.tarun.kahani.app.FreeArtTest \
+            --tests com.tarun.kahani.app.AppAuditTest \
             --tests com.tarun.kahani.MaterialsAndCutoutTest \
             --tests com.tarun.kahani.LookReadingTest \
             --tests com.tarun.kahani.ProductionDocumentTest \
