@@ -789,12 +789,28 @@ The user's 101 pictures of आखिरी चिट्ठी (tools/testdata/aa
   had been given ten arms and a tiger by a black-haired, black-eyed or black-clothed description — आखिरी चाय's रघु काका and
   आरव, the sample story's वानुषा among them — and nothing else changed (LookReadingTest).
 
-Still wrong in the आखिरी चिट्ठी render (not claimed fixed): the user's seated pictures carry their own bench and bricks, so
-रघुवीर जी sits above the bench the director draws, and in scene 3 परी sits on a bench of her own instead of beside him
-(the picture alone does not tell whether a seated picture brings its seat; to be solved next); a standing picture seated by
-the rig shows a dark slab behind him; in close two-shots his head can be out of frame; her closed eyes are drawn pale; the
-postbox and the tea cart the directions name are not yet placed in the set from the user's pictures; the closing wide
-shot of the two on the bench is not reached before the end card.
+Second round, the same day (the user's 20 storyboard frames as the look to reach):
+- One bench. Where the script lists a bench and the user gave its picture, everyone seated on a bench sits on that one
+  picture through their rigs; the user's seated pictures (which bring their own bench and bricks) are not used there.
+  रघुवीर जी no longer floats above a second bench, and in scene 3 परी sits beside him on the same bench.
+- A picture on a flat studio black is a figure on a plain background (it had been taken for a night scene and cut the
+  busy-photo way): the dark slab that stood behind रघुवीर जी's profile and three-quarter pictures is gone.
+- The set pieces the directions name and the user gave pictures of stand in the place from the start of the part:
+  the rusty red postbox in front of him ("सामने … डाक-बक्सा"), the closed tea cart behind ("पीछे … ठेला"), each as big as
+  the script says against the person's height ("3 फुट ऊंचा" against "हाइट 5 फुट 4 इंच"); they stay where they stood
+  in the next part at the same place (things lying in their place were carried only within one scene).
+- "वह सीधे लाल डाक-बक्से के पास जाकर रुकती है": she goes to the postbox and stops beside it.
+- "बैग की अंदर वाली छोटी जेब में हाथ डालती है … चिट्ठी निकालती है": from her own bag, never from the postbox beside her.
+
+- Only leaves that move fly: "जमीन पर सूखे पत्ते और धूल बिखरे हैं" lie on the ground (75 bright leaves had filled the
+  still noon of scene 1); "धीरे-धीरे", "हल्की हवा" is a few leaves on a light wind; dry leaves are yellow-brown, never red.
+- The script's camera move holds: "धीरे-धीरे पीछे जाता हुआ वाइड दृश्य, …" is one slow pull-back from the two of them to the
+  wide (the tripod rule had turned it into a cut, the four-second rule and the per-action cuts had split it in six and it
+  ended on a close-up), and the closing wide holds to the end card. The rest of that description is what the wide shows.
+
+Still wrong in the आखिरी चिट्ठी render (not claimed fixed): रघुवीर जी seated front-on through his rig reads a little
+like standing at the bench; he does not press the letter to his chest as the delivery note says, and परी's head is not
+on his shoulder; in close two-shots a head can be cut by the frame; her closed eyes are drawn pale.
 
 Tests: UserScreenplayFormatTest (+2: the numbered sample exactly as written; one-line numbered entries with "कहानी
 शुरू"), FreeArtTest, MaterialsAndCutoutTest and LookReadingTest (new); the whole plain-JVM suite, 52 tests, passes on a

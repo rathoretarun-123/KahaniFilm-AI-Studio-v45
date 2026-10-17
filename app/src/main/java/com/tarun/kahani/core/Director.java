@@ -433,6 +433,7 @@ public final class Director {
             enforceMotion();
             oneActionPerShot();
             limitShotLength(TechnicalDirector.CUT_SECONDS);
+            keepScriptedMoves();
         }
         film.shotList = qualityCheck();
         groundInFrame();
@@ -464,6 +465,9 @@ public final class Director {
             List<Film.Cam> out = new ArrayList<Film.Cam>();
             for (Film.Cam c : sg.cams) {
                 Film.Cam last = out.isEmpty() ? null : out.get(out.size() - 1);
+                // v47.6: a move the script writes ("धीरे-धीरे पीछे जाता हुआ वाइड दृश्य") stays a move: the user's words over
+                // the tripod rule
+                if (c.scripted && c.ease >= 0.5f && last != null) { out.add(c); continue; }
                 if (c.ease > 0 && last != null && c.t - last.t < 0.7f) {
                     // the move's goal is the shot: frame it so from the cut on
                     last.cx = c.cx; last.cy = c.cy; last.zoom = c.zoom; last.roll = c.roll; last.angle = c.angle;
@@ -474,11 +478,28 @@ public final class Director {
                 c.still = true;
                 out.add(c);
             }
-            for (Film.Cam c : out) c.still = true;
+            for (Film.Cam c : out) if (!(c.scripted && c.ease >= 0.5f)) c.still = true;
             sg.cams.clear();
             sg.cams.addAll(out);
         }
         for (Film.Shot sh : film.shots) sh.move = ShotPlanner.STATIC;
+    }
+
+    /** v47.6: nothing cuts into a camera move the script wrote: from its first framing to its last it is one shot. */
+    private void keepScriptedMoves() {
+        for (Film.Seg sg : film.segs) {
+            if (sg.type != Film.S_SCENE) continue;
+            for (int i = 1; i < sg.cams.size(); i++) {
+                Film.Cam end = sg.cams.get(i);
+                if (!end.scripted || end.ease < 0.5f) continue;
+                float from = end.t - end.ease / 0.95f;
+                for (int j = i - 1; j >= 0; j--) {
+                    Film.Cam c = sg.cams.get(j);
+                    if (c.t <= from + 0.05f) break;
+                    if (!c.scripted) { sg.cams.remove(j); i--; }
+                }
+            }
+        }
     }
 
     /**
@@ -493,6 +514,11 @@ public final class Director {
                 Film.Cam c = sg.cams.get(i);
                 float next = i + 1 < sg.cams.size() ? sg.cams.get(i + 1).t : sg.t1;
                 if (next - c.t <= max) continue;
+                // v47.6: the script's own camera move ("धीरे-धीरे पीछे जाता हुआ वाइड दृश्य") is one shot from its start to its
+                // end, and the script's closing wide holds to the end of the part — neither is cut in pieces
+                Film.Cam nc = i + 1 < sg.cams.size() ? sg.cams.get(i + 1) : null;
+                if (c.scripted && nc != null && nc.scripted && nc.ease >= 0.5f) continue;
+                if (c.scripted && nc == null && c.zoom <= 1.05f) continue;
                 // v41: the place's opening wide is held whole up to the cap (the manual's establishing shot), not cut
                 // in two at the editing length
                 boolean open = openingWide(sg, i);
@@ -710,6 +736,7 @@ public final class Director {
             enforceMotion();
             oneActionPerShot();
             limitShotLength(TechnicalDirector.CUT_SECONDS);
+            keepScriptedMoves();
         }
         playFrames();
         // v41: the passes above add cuts of their own (a shot cut in two, a play framed): no flash cut may come back
@@ -3476,9 +3503,18 @@ public final class Director {
             for (Story.CharacterDef c : ScriptParser.mentions(story, text)) { who = actor(c); if (who != null) break; }
             natureFrom(cue, tc, who);
         }
+        // v47.6: a move or a wide the script writes at the head of a description ("धीरे-धीरे पीछे जाता हुआ वाइड दृश्य, …") is
+        // the shot for the whole description: what follows says what it shows — the old man with the letter, the girl's
+        // head on his shoulder, the postbox, the leaves — and cuts nowhere (the closing pull-back had been cut into six
+        // shots and ended on a close-up)
+        boolean holdMove = false;
         for (String s : sents) {
+            int cams0 = seg != null ? seg.cams.size() : 0, shots0 = scriptShots;
+            scriptMove = false;
             float d = staged(s, tc, establishing);
             thingsIn(s, tc);
+            if (holdMove && seg != null) for (int i = seg.cams.size() - 1; i >= cams0; i--) if (!seg.cams.get(i).keep) seg.cams.remove(i);
+            if (scriptShots > shots0 && scriptMove && !establishing) holdMove = true;
             tc += d;
         }
         estab = false;
@@ -3732,7 +3768,21 @@ public final class Director {
             if (kind == TK_NONE && thingKind(n) == Film.THING_PLACE && idxOf(n, HOLD_WORDS) < 0 && idxOf(n, TAKE_WORDS) < 0 && idxOf(n, GIVE_WORDS) < 0 && !n.contains(" और ") && !n.contains(";")) kind = Film.THING_PLACE;
             if (kind == Film.THING_PLACE && heldNow(sh.pic, t) != null) continue;          // in someone's hand: it lies nowhere
             if (THING_DEBUG) System.out.println("THING " + key + " kind=" + kind + " who=" + (who == null ? "-" : who.c.shown()) + " win=[" + win + "] <- " + s);
-            if (Txt.has(Txt.norm(key), SET_WORDS) || Bible.intangible(key)) continue;
+            if (Bible.intangible(key)) continue;
+            if (Txt.has(Txt.norm(key), SET_WORDS)) {
+                // v47.6: a set piece the script lists and the user gave a picture of — the postbox in front of him, the tea
+                // cart behind — stands in the place from the start of the part (the user's picture of the neem corner has
+                // neither; every one of their storyboard frames has both)
+                if (Txt.has(Txt.norm(key), DRESS_WORDS)) {
+                    dress(sh, key, n, at, who, t);
+                    // "वह सीधे लाल डाक-बक्से के पास जाकर रुकती है": the one the sentence is about goes to it and stops there
+                    String after = n.substring(at, Math.min(n.length(), at + key.length() + 40));
+                    if (who != null && who.look != null && who.look.isHumanoid() && Txt.has(after, "के पास जा", "के पास आ", "के पास पहुँच", "के पास पहुंच", "तक जा", "तक आ", "तक दौड़", "तक दौड")
+                            || who != null && Txt.has(n.substring(Math.max(0, at - 30), at), "goes to the", "walks to the", "runs to the", "goes up to the", "walks up to the", "runs up to the"))
+                        goToThing(who, sh.pic, t);
+                }
+                continue;
+            }
             // v47.6: dust, soil, sand, leaves scattered over the ground: set dressing, never in a hand ("धूल लगा हाथ आगे
             // बढ़ा कर" is her dusty hand, not the ground's leaves held out)
             if (Rigidity.groundCover(key) && kind != Film.THING_PLACE) continue;
@@ -3789,8 +3839,13 @@ public final class Director {
                 int src = 0;
                 float hh = Renderer.actorHeight(who.look, who.c, art, seg);
                 Film.Fx otherBox = null; boolean boxBeside = false;
+                // v47.6: their own bag or pocket named in the sentence ("बैग की अंदर वाली छोटी जेब में हाथ डालती है … चिट्ठी
+                // निकालती है") is where it comes from, whatever stands beside them (the postbox is no box to take it from)
+                boolean ownBag = Txt.has(n + " " + before, "बैग", "बस्त", "थैल", "झोल", "जेब", "bag", "pocket", "satchel");
                 for (Film.Fx q : seg.fx) {
+                    if (ownBag) break;
                     if (q.type != Film.FX_HELD || q.what == null || q.t0 > t || q.t1 <= t || q.pic == sh.pic || !(Txt.has(Txt.norm(q.what), CONTAINER_WORDS) || Txt.has(Txt.norm(q.what), "औजार", "tool"))) continue;
+                    if (Txt.has(Txt.norm(q.what), DRESS_WORDS)) continue;
                     if (q.kind == Film.THING_PLACE && Math.abs(q.x - xAt(who, t)) < hh * 2.2f) boxBeside = true;         // the box picture lying beside them
                     else if (q.kind != Film.THING_PLACE && q.a != who) otherBox = q;                                       // the box the other holds out
                 }
@@ -3813,7 +3868,9 @@ public final class Director {
         Film.Seg prev = null;
         for (int i = film.segs.size() - 2; i >= 0; i--) if (film.segs.get(i).type == Film.S_SCENE) { prev = film.segs.get(i); break; }
         if (prev == null) return;
-        boolean samePlace = prev.scene == seg.scene;
+        // (v47.6: the same place, not only the same scene: the postbox and the tea cart stand where they stood in the part
+        // before when the story goes on under the same neem)
+        boolean samePlace = prev.scene == seg.scene || samePlaceAsLastPart();
         // an umbrella put aside stays put aside (it came back open in the next part)
         for (Film.Actor pa : prev.actors) if (pa.umbrellaUntil < 1e5f) for (Film.Actor a : seg.actors) if (a.c == pa.c) a.umbrellaUntil = seg.t0 - 1;
         for (Film.Fx f : prev.fx) {
@@ -3848,8 +3905,68 @@ public final class Director {
         for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind != Film.THING_PLACE && f.pic == pic && f.t0 <= t && f.t1 > t) return f;
         return null;
     }
-    private void placeAt(Art.Backdrop pic, float size, String what, Film.Actor who, float t, float x) {
-        for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == pic && f.t1 > t) return;
+    /** v47.6: the set pieces that stand in a place (a postbox, a handcart): the user's picture of one is set in the place. */
+    static final String[] DRESS_WORDS = {"डाक-बक्स", "डाकबक्स", "डाक बक्स", "लेटरबॉक्स", "लेटर बॉक्स", "पोस्ट बॉक्स", "ठेल", "postbox", "post box", "mailbox", "letterbox", "letter box", "handcart", "cart"};
+
+    /**
+     * v47.6: sets a listed set piece in the place from the start of the part: in front of the one the sentence is about
+     * ("सामने … डाक-बक्सा"), behind them and a little further back ("पीछे … ठेला"), else beside them; as big as the script
+     * says against that one's height ("3 फुट ऊंचा" against "हाइट 5 फुट 4 इंच"), else as big as such a thing is.
+     */
+    private void dress(Art.Shot sh, String key, String n, int at, Film.Actor who, float t) {
+        for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.pic == sh.pic && f.t1 > seg.t0) return;     // there already, or in a hand
+        Film.Actor anchor = who;
+        if (anchor == null) for (Film.Actor a : seg.actors) if (a.stateAt(seg.t0).visible) { anchor = a; break; }
+        float hh = anchor != null ? heightOf(anchor) : 300;
+        float ax = anchor != null ? xAt(anchor, seg.t0) : 640, face = anchor != null ? anchor.stateAt(seg.t0).facing : 1;
+        String pre = n.substring(Math.max(0, at - 48), Math.max(0, at));
+        int cut = Math.max(pre.lastIndexOf(','), pre.lastIndexOf('।'));
+        if (cut >= 0) pre = pre.substring(cut + 1);
+        boolean behind = Txt.has(pre, "पीछे", "दूर", "behind", "background", "far ");
+        boolean front = !behind && Txt.has(pre, "सामने", "in front", "opposite");
+        float personFt = anchor != null ? heightFeet(anchor.c.description) : 5.5f;
+        float thingFt = -1;
+        for (Story.PlaceDef th : story.things) if (Txt.norm(th.name).trim().equals(Txt.norm(key).trim())) thingFt = heightFeet(th.description);
+        boolean cart = Txt.has(Txt.norm(key), "ठेल", "cart");
+        if (thingFt <= 0) thingFt = cart ? 5f : 3.5f;          // (the larger side: a handcart's length, a postbox's height)
+        float size = Math.max(0.25f, Math.min(1.4f, thingFt / Math.max(2.5f, personFt)));
+        float x = front ? ax + face * hh * 0.8f : behind ? ax - face * hh * 0.75f : ax + face * hh * 0.7f;
+        Film.Fx f = placeAt(sh.pic, size, key, anchor, seg.t0, x);
+        if (f != null && behind) f.y = -hh * 0.1f;
+        film.notes.add("  ↳ " + key + ": stands in the place" + (front ? ", in front of " : behind ? ", behind " : ", beside ") + (anchor != null ? anchor.c.shown() : "the place")
+                + String.format(java.util.Locale.US, " (%.1f ft against %.1f ft)", thingFt, personFt));
+    }
+
+    /** v47.6: the one walks (runs, if running) to the thing standing in the place and stops beside it, facing it. */
+    private void goToThing(Film.Actor a, Art.Backdrop pic, float t) {
+        Film.Fx thing = null;
+        for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == pic && f.t1 > t) thing = f;
+        if (thing == null) return;
+        float arr = arrivalAfter(a, t);
+        float ts = Math.max(t, arr > t ? arr + 0.1f : t);
+        float ax = xAt(a, ts), hh = heightOf(a), gap = 0.32f * hh + thing.size * hh * 0.15f;
+        float dest = ax < thing.x ? thing.x - gap : thing.x + gap;
+        if (Math.abs(dest - ax) < 20) return;
+        Film.Key st = a.stateAt(ts);
+        if (st.body != Pose.STAND || st.anchor != Film.A_GROUND) return;          // one seated or lying is not walked there
+        Film.Key k = a.at(ts);
+        k.x = Math.max(80, Math.min(1200, dest)); k.moveDur = Math.max(0.6f, Math.abs(dest - ax) / 260f); k.facing = thing.x > dest ? 1 : -1;
+        film.notes.add("  ↳ " + a.c.shown() + " goes to the " + thing.what + String.format(java.util.Locale.US, " (%.1f s)", ts));
+    }
+
+    /** v47.6: a height written in feet and inches ("हाइट 5 फुट 4 इंच", "3 फुट ऊंचा", "4 feet tall"), or -1. */
+    static float heightFeet(String desc) {
+        if (desc == null) return -1;
+        String d = Txt.digitsToAscii(desc);
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("(?:हाइट|कद|लंबाई|ऊंचाई|ऊँचाई|height)\\s*[:：-]?\\s*([0-9]+(?:\\.[0-9]+)?)\\s*(?:फुट|फ़ुट|ft|feet|foot)\\s*(?:([0-9]+)\\s*(?:इंच|in|inch|inches))?", java.util.regex.Pattern.CASE_INSENSITIVE).matcher(d);
+        if (m.find()) return Float.parseFloat(m.group(1)) + (m.group(2) != null ? Integer.parseInt(m.group(2)) / 12f : 0);
+        m = java.util.regex.Pattern.compile("([0-9]+(?:\\.[0-9]+)?)\\s*(?:फुट|फ़ुट|ft|feet|foot)\\s*(?:([0-9]+)\\s*(?:इंच|inch|inches)\\s*)?(?:ऊंच|ऊँच|उंच|tall|high)", java.util.regex.Pattern.CASE_INSENSITIVE).matcher(d);
+        if (m.find()) return Float.parseFloat(m.group(1)) + (m.group(2) != null ? Integer.parseInt(m.group(2)) / 12f : 0);
+        return -1;
+    }
+
+    private Film.Fx placeAt(Art.Backdrop pic, float size, String what, Film.Actor who, float t, float x) {
+        for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == pic && f.t1 > t) return null;
         // not on top of another thing lying there: the next one a little further along
         float hh = who != null && who.look != null ? Renderer.actorHeight(who.look, who.c, art, seg) : 300, dir = who != null ? who.stateAt(t).facing : 1;
         boolean under = who != null && Math.abs(x - xAt(who, t)) < hh * 0.1f;        // spread under them: where they are, whatever else lies beside
@@ -3861,6 +3978,7 @@ public final class Director {
         }
         Film.Fx f = fx(Film.FX_HELD, t, 1e6f, Math.max(100, Math.min(1180, x)), 0, who, null);
         f.pic = pic; f.kind = Film.THING_PLACE; f.size = size; f.what = what;
+        return f;
     }
 
     // ---------------------------------------------------------------- v41: everyday words
@@ -5311,6 +5429,7 @@ public final class Director {
         float need = 0;
         Film.Cam c0 = null, c1 = null;
         int at0 = seg.cams.size();
+        scriptMove = cw[1] != 0 || cw[0] == 1;
         if (cw[1] != 0) {
             // a move: from close on them to the whole place (pull back), or from the whole place in to their face (push in)
             float dur = Math.max(d, slow ? 5.0f : 3.6f);
@@ -5354,6 +5473,8 @@ public final class Director {
     }
     /** Shots framed as the script's camera words asked. */
     public int scriptShots;
+    /** v47.6: the last scripted camera was a move or a wide (it holds over the rest of its description). */
+    private boolean scriptMove;
 
     /** A close frame: on the one it is about, else round the group. */
     private void closeFrame(Film.Actor one, List<Film.Actor> vis, float t, float zoom) {
@@ -10369,7 +10490,17 @@ public final class Director {
         else if (nightFalls && seg != null && Sets.outdoorSet(seg.set)) open(Film.W_STARS, t + 3.5f, 0.7f);
         if (Txt.has(s, STARS) && (seg == null || seg.tod == Sets.NIGHT || seg.tod == Sets.EVENING)) open(Film.W_STARS, t, 1f);
         if (Txt.has(s, RAINBOW)) rainbow(t);
-        if (Txt.has(s, LEAVES)) { open(Film.W_LEAVES, t, 1f); if (Txt.has(s, "हवा", "wind", "breeze", "उड़", "swirl", "fly")) open(Film.W_WIND, t, 0.6f); }   // v47.4: leaves that fly have a wind to fly in
+        // v47.6: only leaves that move fly — "जमीन पर सूखे पत्ते और धूल बिखरे हैं" lie on the ground (75 bright leaves had
+        // filled the air of आखिरी चिट्ठी's still noon); "धीरे-धीरे", "हल्की हवा" is a few leaves on a light wind
+        if (Txt.has(s, LEAVES)) {
+            // (the clause the leaves are in: "गर्म हवा से धूल उड़ रही है और नीम के सूखे पत्ते जमीन पर सरक रहे हैं" — the dust flies,
+            // the leaves slide along the ground)
+            String lc = s;
+            for (String part : s.split("[,।;]|\\s+और\\s+|\\s+and\\s+")) if (Txt.has(part, "पत्त", "leaves", "leaf", "पतझड़", "autumn")) { lc = part; break; }
+            boolean moving = Txt.has(lc, "उड़", "उड", "गिर", "झड़", "झड", "हवा में", "हवा से", "fly", "flew", "fall", "drift", "swirl", "blow", "in the wind", "पतझड़", "autumn");
+            boolean gentle = Txt.has(lc, "धीरे", "हल्की", "हल्के", "हल्का", "slowly", "gently", "light breeze", "a few");
+            if (moving) { open(Film.W_LEAVES, t, gentle ? 0.35f : 1f); if (Txt.has(s, "हवा", "wind", "breeze", "उड़", "swirl", "fly")) open(Film.W_WIND, t, gentle ? 0.3f : 0.6f); }   // v47.4: leaves that fly have a wind to fly in
+        }
         if (Txt.has(s, PETALS) || flowersRain) {
             if (place) open(Film.W_PETALS, t, 1f);
             else film.weather.add(new Film.Weather(Film.W_PETALS, t, t + 7, 1f));

@@ -190,6 +190,24 @@ public final class Art {
         public float fu0, fv0, fu1, fv1;
     }
 
+    /**
+     * v47.6: the user's picture of the bench the script lists (the head noun of the thing's name is the bench — "बेंच के
+     * नीचे लगी ईंट" is the brick under it), or null: the one bench everyone seated on a bench sits on.
+     */
+    public Backdrop benchPicture() {
+        if (benchChecked) return benchPic;
+        benchChecked = true;
+        for (Shot sh : shots) {
+            if (!sh.object || sh.pic == null || sh.pic.img == null || sh.pic.w <= 0 || sh.pic.h <= 0 || sh.keys == null || sh.keys.length == 0) continue;
+            String[] ws = Txt.norm(sh.keys[0]).trim().split("[\\s,]+");
+            String head = ws[ws.length - 1];
+            if (head.startsWith(Txt.norm("बेंच")) || head.startsWith(Txt.norm("बेन्च")) || head.equals("bench") || head.equals("benches")) { benchPic = sh.pic; break; }
+        }
+        return benchPic;
+    }
+    private transient Backdrop benchPic;
+    private transient boolean benchChecked;
+
     public static final class Shot {
         public String scene;          // scene number ("8") or "" for any
         public String[] keys;

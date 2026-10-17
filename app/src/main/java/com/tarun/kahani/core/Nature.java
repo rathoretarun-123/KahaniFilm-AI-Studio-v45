@@ -518,7 +518,7 @@ public final class Nature {
     public static void leaves(Gfx g, float w, float h, float t, float amount, float wind, boolean petals) {
         int n = (int) ((petals ? 120 : 75) * Math.min(1.5f, amount));
         int[] cols = petals ? new int[]{0xFFF48FB1, 0xFFE91E63, 0xFFFFD54F, 0xFFFFFFFF, 0xFFFF7043}
-                : new int[]{0xFF7CB342, 0xFF558B2F, 0xFFC0A030, 0xFFA0522D, 0xFF9CCC65};
+                : new int[]{0xFF7CB342, 0xFF558B2F, 0xFFC0A030, 0xFFB8A040, 0xFF9CCC65};      // (v47.6: dry leaves yellow-brown, never red)
         // v47.4: they go with the wind, whichever way it blows (a still day drifts them gently to its side)
         float dir = wind < 0 ? -1 : 1;
         float drift = petals ? dir * 30 + wind * 140 : dir * 60 + wind * 380;

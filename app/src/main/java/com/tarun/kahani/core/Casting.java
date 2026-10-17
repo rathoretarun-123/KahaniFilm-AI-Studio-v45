@@ -29,6 +29,12 @@ public final class Casting {
         public boolean shoulder;
         /** v39: the shot is close enough for a picture of the face and shoulders only. */
         public boolean closeOk;
+        /**
+         * v47.6: seated on the bench the script lists and the user gave a picture of: that bench is drawn under everyone
+         * on it, so the rig sits (the user's seated pictures bring their own bench and bricks — the old man sat above a
+         * second bench, the girl on a third).
+         */
+        public boolean onListedBench;
         public String toString() { return Angles.name(angle) + " " + PoseSense.poseName(pose) + " " + PoseSense.emotionName(emotion) + (speaking ? " (speaking)" : ""); }
     }
 
@@ -52,6 +58,7 @@ public final class Casting {
                 Art.Sprite sp = art.sprites.get(a.c.id);
                 if (sp == null || sp.poses == null || sp.poses.isEmpty()) continue;
                 Want w = want(film, s, sh, a, mid);
+                w.onListedBench = k.body == Pose.SIT && k.seat == Film.SEAT_STOOL && art.benchPicture() != null;
                 Integer keep = w.pose == PoseSense.SIT ? seated.get(a.c.id) : null;
                 int best = choose(sp, w, keep == null ? MAIN - 10 : keep);
                 if (w.pose != PoseSense.SIT) seated.remove(a.c.id);
@@ -176,7 +183,7 @@ public final class Casting {
             // moment — a front-ish one with its face found first (its lips and blinks still live), the feeling of the moment
             // when there is one
             if (System.getProperty("kahani.castDebug") != null) { StringBuilder sb = new StringBuilder(); for (Art.PoseSprite p : ps) sb.append(' ').append(p.pose).append('/').append((int) p.angle).append(p.closeUp ? "c" : "").append(p.beast ? "b" : ""); System.err.println("CAST want pose=" + w.pose + " closeOk=" + w.closeOk + " shoulder=" + w.shoulder + " poses:" + sb); }
-            if (w.pose == PoseSense.SIT) {
+            if (w.pose == PoseSense.SIT && !w.onListedBench) {
                 int bestSit = -1; float bestSc = -1e9f;
                 for (int i = 0; i < ps.size(); i++) {
                     Art.PoseSprite p = ps.get(i);

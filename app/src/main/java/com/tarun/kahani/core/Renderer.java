@@ -3059,22 +3059,8 @@ public final class Renderer {
     /** v40: the part of a shared sofa the seat being drawn has (see sofaSpan), or null for a sofa of its own. */
     private float[] seatSpan;
 
-    /** v47.6: the user's picture of the bench the script lists (its name's head noun is the bench), or null. */
-    private Art.Backdrop benchPic;
-    private Art benchArt;
-    private Art.Backdrop benchPicture() {
-        if (art == benchArt) return benchPic;
-        benchArt = art; benchPic = null;
-        if (art == null) return null;
-        for (Art.Shot sh : art.shots) {
-            if (!sh.object || sh.pic == null || sh.pic.img == null || sh.pic.w <= 0 || sh.pic.h <= 0 || sh.keys == null || sh.keys.length == 0) continue;
-            String[] ws = Txt.norm(sh.keys[0]).trim().split("[\\s,]+");
-            String head = ws[ws.length - 1];
-            // the bench itself — "बेंच के नीचे लगी ईंट" is the brick under it
-            if (head.startsWith(Txt.norm("बेंच")) || head.startsWith(Txt.norm("बेन्च")) || head.equals("bench") || head.equals("benches")) { benchPic = sh.pic; break; }
-        }
-        return benchPic;
-    }
+    /** v47.6: the user's picture of the bench the script lists, or null (Art.benchPicture). */
+    private Art.Backdrop benchPicture() { return art == null ? null : art.benchPicture(); }
 
     /**
      * v40: one sofa for the people seated side by side on it: this seat's part of it, from half way to the

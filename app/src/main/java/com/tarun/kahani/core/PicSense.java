@@ -187,7 +187,13 @@ public final class PicSense {
         }
         // character art sits on a light, plain background; a dark uniform border is a night or cave scene
         float bright = (mr * 0.3f + mg * 0.59f + mb * 0.11f) / 255f;
-        return close > samples.size() * 0.85f && bright > 0.55f;
+        if (close > samples.size() * 0.85f && bright > 0.55f) return true;
+        // v47.6: or on a studio black — flat all round, JPEG noise only (the user's आखिरी चिट्ठी sheets and singles). A night
+        // or a cave has its ground, its moon or its texture somewhere on the border. On "dark = a scene" the profile of
+        // रघुवीर जी was cut the busy-photo way and kept a slab of the black behind him.
+        int flat = 0;
+        for (int c : samples) if (((c >> 16) & 255) + ((c >> 8) & 255) + (c & 255) <= 24) flat++;
+        return flat >= samples.size() * 0.97f;
     }
 
     static boolean isSkin(int c) {
