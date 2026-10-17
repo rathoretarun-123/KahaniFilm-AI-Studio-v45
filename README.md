@@ -5,6 +5,10 @@ These films were rendered on the desktop (`tools/jvm/.../MakeFilm`) from branch 
 Director, Casting, Renderer and frame audit). These are the studio's own 2D renders: cut-out pictures on a mesh rig,
 with drawn effects. They are **not** Pixar-quality 3D animation.
 
+बाबू के लिए was rendered at `a815d06`. The other four were rendered from the two commits before it (`9800f25`, and for the
+two drawn films `67b6dcf`). Neither later change alters those four films' plans, which were compared line by line, or
+their pictures: the dissolve fix acts only on the user's pictures, and the drawn films have none.
+
 | Film | Pictures | Length | Frame audit (every character in every frame) |
 |---|---|---|---|
 | [आखिरी चिट्ठी](aakhiri_chitthi_user_pictures.mp4) | the user's pictures | 2:24 | 1 jolt at the limit (परी sitting down, 1:56.1, 2.0%); 1 picture change (1:55.9); 0 extra faces |
