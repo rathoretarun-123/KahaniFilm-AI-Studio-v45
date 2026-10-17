@@ -593,6 +593,13 @@ bench and all, onto a drawn bench: one bench standing on another.
 - Limit: a seated photograph of someone cross-legged on the floor is also taken to bring its own seat. Where the script
   puts that character on a chair, the chair is not drawn.
 
+### A dissolve between parts kept nobody's picture (`Renderer.pictureShotAt`)
+
+Inside the dissolve between two parts no shot plays, so every character there fell back to its rigged front picture.
+In बाबू के लिए, at 0:30, the old man left his bench photograph for the rig on a drawn bench for two seconds. The part
+being drawn now plays the pictures of its nearest shot: its last as it fades out, its first as it fades in. This was
+checked on rendered frames of that dissolve. No unit test covers it.
+
 ### The girl's twelve pictures were put aside (`Art.cutHairTone`)
 
 The one-look check (v47.6: a dark-haired character's pose picture with light hair is another design of them) read the
