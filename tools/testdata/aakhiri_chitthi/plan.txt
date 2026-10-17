@@ -23,7 +23,8 @@ figure|परी|stills/pari_profile_left.jpg
 figure|परी|stills/pari_front_single.jpg
 figsheet|परी|stills/pari_upload_14.jpg
 figsheet|परी|stills/pari_upload_16.jpg
-figsheet|परी|stills/pari_upload_17.jpg
+# (pari_upload_17 is left out: a toddler with buns on a bench of her own, a different face and build from परी's front
+# picture; its pieces were read as kneeling, so परी knelt at the postbox as that child sitting on a second bench)
 figsheet|परी|stills/pari_upload_18.jpg
 figsheet|परी|stills/pari_upload_19.jpg
 prop|दादाजी की लकड़ी की छड़ी|stills/grandpa_walking_stick.jpg

@@ -167,6 +167,8 @@ jobs:
             --tests com.tarun.kahani.app.FreeArtTest \
             --tests com.tarun.kahani.MaterialsAndCutoutTest \
             --tests com.tarun.kahani.LookReadingTest \
+            --tests com.tarun.kahani.ProductionDocumentTest \
+            --tests com.tarun.kahani.AakhiriChitthiAcceptanceTest \
             --tests com.tarun.kahani.DashboardSoakTest \
             --tests com.tarun.kahani.ThreeStoriesSoakTest 2>&1 | tee tools/robotest/build/test.log
       - name: Name the failing tests (annotations, readable through the API)

@@ -1471,6 +1471,19 @@ public class MainActivity extends Activity {
             sb.append("\nEstimated length: ").append(FilmJob.fmt((long) f.duration));
             if (f.duration > 30 * 60) sb.append("\n⚠ Longer than 30 minutes — it will take longer to make.");
             plan.addView(Ui.text(this, sb.toString(), 14, Ui.TEXT, false));
+            // v47.6: the production check of this plan — the same document the film job keeps with the film: what the
+            // script asks for (people, things, places, lines, steps, the environment as causes and effects), what the
+            // plan carries out, and what it cannot, said plainly (the pictures are checked in the cards above)
+            try {
+                com.tarun.kahani.core.ProductionDocument pd = com.tarun.kahani.core.ProductionDocument.read(st, com.tarun.kahani.core.ProductionDocument.Ids.parse(project.read("production_ids.txt")));
+                pd.attach(f);
+                pd.validate();
+                plan.addView(Ui.text(this, "Production check", 15, Ui.TEXT, true));
+                plan.addView(Ui.text(this, pd.report(12), 13, Ui.TEXT, false));
+                if (project.has("production_document.json")) plan.addView(Ui.text(this, "The last film's full check is kept with it (production_document.json).", 12, Ui.TEXT, false));
+            } catch (Throwable pe) {
+                plan.addView(Ui.text(this, "Production check could not be made: " + pe, 13, Ui.RED, false));
+            }
         } catch (Throwable e) {
             plan.addView(Ui.text(this, "Could not make the plan: " + e, 14, Ui.RED, false));
         }

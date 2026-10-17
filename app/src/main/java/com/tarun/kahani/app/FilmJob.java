@@ -12,6 +12,7 @@ import com.tarun.kahani.core.VoiceFx;
 import com.tarun.kahani.core.Director;
 import com.tarun.kahani.core.Film;
 import com.tarun.kahani.core.Mixer;
+import com.tarun.kahani.core.ProductionDocument;
 import com.tarun.kahani.core.Renderer;
 import com.tarun.kahani.core.ScriptAI;
 import com.tarun.kahani.core.ScriptParser;
@@ -43,6 +44,8 @@ public final class FilmJob implements Runnable {
     public volatile String warning = "";
     /** What the director took from the library by itself ("Vrinda ← picture …"). */
     public volatile String info = "";
+    /** v47.6: this film's production document (null until the director's plan is made, or when it could not be made). */
+    volatile ProductionDocument pdoc;
     public volatile Bitmap preview;         // latest rendered frame (small)
     public volatile long startedAt = System.currentTimeMillis();
     public volatile float filmSeconds;
@@ -656,6 +659,22 @@ public final class FilmJob implements Runnable {
                 project.write("review_ledger.json", ledger.toJson());
                 film.shotList += "\n" + ledger.summary() + "\n" + com.tarun.kahani.core.ReferenceCoverage.report(com.tarun.kahani.core.ReferenceCoverage.characters(story, castNow));
             } catch (Throwable e) { android.util.Log.w("Kahani", "review ledger: " + e); }
+            // v47.6: the production document — the reader's facts (each explicit, inferred or unknown), the director's
+            // plan as the renderer will draw it, the technical director's checks and the director's sign-off, all bound
+            // to one revision — kept with the film (production_document.json; the stable ids in production_ids.txt)
+            try {
+                pdoc = ProductionDocument.read(story, ProductionDocument.Ids.parse(project.read("production_ids.txt")));
+                pdoc.bind(story);
+                pdoc.attach(film);
+                pdoc.assets(art);
+                pdoc.validate();
+                pdoc.review(ProductionDocument.READER, "READ", pdoc.characters.size() + " characters, " + pdoc.props.size() + " props, " + pdoc.locations.size() + " places, " + pdoc.lines.size() + " lines read as written");
+                ProductionDocument.Review sign = pdoc.review(ProductionDocument.DIRECTOR, "APPROVED", "the plan follows the script; the technical director's open issues are listed");
+                if (!"APPROVED".equals(sign.status)) warning = "Production check: the director did not sign off (" + sign.rationale + "). The film is made, marked unapproved — see the production check.";
+                project.write("production_ids.txt", pdoc.ids.write());
+                project.write("production_document.json", pdoc.toJson());
+                film.shotList += "\nPRODUCTION CHECK\n" + pdoc.report(40) + "\n";
+            } catch (Throwable e) { pdoc = null; android.util.Log.w("Kahani", "production document: " + e); }
             // the mix comes before Human QC now: the animatic (the manual 3.7) plays the real voices, music and sounds
             step("Mixing music and sounds…", 0.295f);
             final File mix = new File(tmp, "mix.pcm");
@@ -726,6 +745,13 @@ public final class FilmJob implements Runnable {
             // five gates and the QA checklist from everything that was checked — never a finished claim before this
             film.shotList += "\n" + exportCheck(fin, film);
             film.shotList += "\n" + review(film);
+            // v47.6: the render recorded against the revision it made — verified only with its file there and not empty
+            if (pdoc != null) {
+                ProductionDocument.RenderRecord rr = pdoc.verifyRender(fin, "phone (MediaCodec)", film.duration);
+                project.write("production_document.json", pdoc.toJson());
+                film.shotList += "\nRENDER: " + rr.status + " — " + rr.detail + "\n";
+                info = (info.length() > 0 ? info + "\n" : "") + "Production check: " + pdoc.summary() + "; render " + rr.status.toLowerCase(java.util.Locale.ROOT);
+            }
             // the director's shot list with every check (validation, Human QC, the final QC of steps 6 and 8), kept with the film
             project.write("qc.txt", film.shotList);
             // v38 (the animated director's craft): the edit list with scene markers, beside the film (subtitles are added

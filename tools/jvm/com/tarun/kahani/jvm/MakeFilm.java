@@ -121,6 +121,15 @@ public class MakeFilm {
         System.out.println("film: " + film.duration + "s, segs=" + film.segs.size() + " lines=" + film.lines.size() + " sfx=" + film.sfx.size());
         for (String n : film.notes) System.out.println("  " + n);
         if (System.getenv("SHOTS") != null) Files.write(Paths.get(System.getenv("SHOTS")), film.shotList.getBytes("UTF-8"));
+        // PRODDOC=file.json: the production document of this film (as the phone keeps it), written now with the plan and
+        // again with the render's verification when the film is made
+        final com.tarun.kahani.core.ProductionDocument pdoc = System.getenv("PRODDOC") == null ? null : com.tarun.kahani.core.ProductionDocument.read(story, null);
+        if (pdoc != null) {
+            pdoc.bind(story); pdoc.attach(film); pdoc.assets(art); pdoc.validate();
+            pdoc.review(com.tarun.kahani.core.ProductionDocument.DIRECTOR, "APPROVED", "the plan follows the script");
+            Files.write(Paths.get(System.getenv("PRODDOC")), pdoc.toJson().getBytes("UTF-8"));
+            System.out.println("production check: " + pdoc.report(60));
+        }
         // DELIVERY=prefix: the edit list with scene markers (v38, as the app saves it)
         if (System.getenv("DELIVERY") != null) {
             Files.write(Paths.get(System.getenv("DELIVERY") + "_edit_list.txt"), com.tarun.kahani.core.FilmCraft.editList(film, fps, film.story != null ? film.story.title : "").getBytes("UTF-8"));
@@ -235,6 +244,11 @@ public class MakeFilm {
         ff.waitFor();
         long ms = System.currentTimeMillis() - tr;
         System.out.println("rendered " + frames + " frames in " + ms + "ms (" + (frames * 1000f / Math.max(1, ms)) + " fps) -> " + out);
+        if (pdoc != null) {
+            com.tarun.kahani.core.ProductionDocument.RenderRecord rr = pdoc.verifyRender(new File(out), "desktop (ffmpeg)", dur);
+            Files.write(Paths.get(System.getenv("PRODDOC")), pdoc.toJson().getBytes("UTF-8"));
+            System.out.println("render " + rr.status + ": " + rr.detail);
+        }
         System.out.println("STATS " + com.tarun.kahani.core.Renderer.stats());
         if (meter != null) { film.shotList += meter.report(); System.out.print(meter.report()); }
         if (System.getenv("SHOTS") != null) Files.write(Paths.get(System.getenv("SHOTS")), film.shotList.getBytes("UTF-8"));

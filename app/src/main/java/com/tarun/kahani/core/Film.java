@@ -392,9 +392,11 @@ public final class Film {
             FX_ANIMAL = 54,
             FX_BLOOD = 55,        // v45: a wound bleeding on actor a (kind: BLOOD_*), from t0 until t1 (bandaged, or the scene's end)
             FX_SHROUD = 56,
-            FX_HELD = 57;         // v47.4: one of the user's thing pictures in a hand (a: whose; kind THING_*: taken out of a bag, held,
+            FX_HELD = 57,         // v47.4: one of the user's thing pictures in a hand (a: whose; kind THING_*: taken out of a bag, held,
                                   //      held out; t2: when it is fully out) or lying placed at x (THING_PLACE), size: its share of a's height       // v45: a white sheet over the one lying dead (a), from t0       // v44: an animal of the place at x (kind: Look.SP_*; color: facing): grazing, then at t2
                                   //      it lifts its head and bolts off the edge of the picture (hunting), or stays
+            FX_WOBBLE = 58;       // v47.5: the listed bench rocks on its broken leg when someone sits on it at t0, a damped
+                                  //      rock that settles by t1 (a procedural approximation, not a physics simulation)
     /** v44: FX_INSERT kinds and the moves of a driver's feet and hands (FX_INSERT.color bits). */
     public static final int INS_STEER = 0, INS_PEDALS = 1, INS_CYCLE_FEET = 2, INS_ARROW = 3, INS_BOW = 4;
     public static final int INS_MOVE_GO = 1, INS_MOVE_BRAKE = 2, INS_MOVE_TURN_L = 4, INS_MOVE_TURN_R = 8, INS_MOVE_HARD = 16;
@@ -550,7 +552,10 @@ public final class Film {
     // -------------------------------------------------------------- weather and nature
     public static final int W_RAIN = 0, W_STORM = 1, W_WIND = 2, W_SNOW = 3, W_FOG = 4, W_FIRE = 5, W_FIREFLIES = 6, W_LEAVES = 7,
             W_PETALS = 8, W_DUST = 9, W_STARS = 10, W_RAINBOW = 11, W_SEA = 12, W_BOAT = 13, W_CANDLES = 14, W_CLOUDS = 15,
-            W_BIRDS = 16, W_QUAKE = 17, W_KINDS = 18;
+            W_BIRDS = 16, W_QUAKE = 17,
+            W_MOTES = 18,         // v47.6: dust motes drifting slowly in the light (not a dust storm: that is W_DUST)
+            W_DAPPLE = 19,        // v47.6: sun patches through leaves swaying over the scene (screen-space, procedural)
+            W_KINDS = 20;
 
     /** Weather from t0 to t1 (it builds up and dies away over a couple of seconds). */
     public static final class Weather {

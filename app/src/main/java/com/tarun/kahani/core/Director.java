@@ -3769,6 +3769,8 @@ public final class Director {
             if (kind == Film.THING_PLACE && heldNow(sh.pic, t) != null) continue;          // in someone's hand: it lies nowhere
             if (THING_DEBUG) System.out.println("THING " + key + " kind=" + kind + " who=" + (who == null ? "-" : who.c.shown()) + " win=[" + win + "] <- " + s);
             if (Bible.intangible(key)) continue;
+            // v47.6: a bag carried on the back and set down ("अपना फटा हुआ गुलाबी बैग जमीन पर रखती है") is no set piece
+            if (kind == TK_DOWN && who != null && Txt.has(Txt.norm(key), CARRIED_WORDS)) { setDown(sh, key, who, t); continue; }
             if (Txt.has(Txt.norm(key), SET_WORDS)) {
                 // v47.6: a set piece the script lists and the user gave a picture of — the postbox in front of him, the tea
                 // cart behind — stands in the place from the start of the part (the user's picture of the neem corner has
@@ -3796,7 +3798,7 @@ public final class Director {
                 }
             }
             if (kind == TK_NONE) continue;
-            if (kind == TK_DOWN) { if (who != null) endHold(who, sh.pic, t + 0.5f, true); continue; }
+            if (kind == TK_DOWN) { if (who != null) setDown(sh, key, who, t); continue; }
             if (kind == TK_WEAR) { if (who != null) endHold(who, sh.pic, t + 0.6f, false); continue; }
             if (kind == Film.THING_PLACE) {
                 float hh = who != null && who.look != null ? Renderer.actorHeight(who.look, who.c, art, seg) : 300;
@@ -3894,6 +3896,39 @@ public final class Director {
     }
 
     /** Ends what the actor holds (one thing, or all) at t: set down at the feet (down), or simply gone (worn, eaten). */
+    static final String[] CARRIED_WORDS = {"बैग", "थैल", "झोल", "बस्त", "bag", "backpack", "satchel"};
+
+    /**
+     * v47.6: a thing set down: out of the hand onto the ground beside them; or, worn on the back (a school bag, which has no
+     * picture there), lying beside them from this moment — so the hand that goes into it next has it there.
+     */
+    private void setDown(Art.Shot sh, String key, Film.Actor who, float t) {
+        boolean inHand = false, lying = false;
+        for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.pic == sh.pic && f.t1 > t) { if (f.kind == Film.THING_PLACE) lying = true; else if (f.a == who) inHand = true; }
+        if (inHand) { endHold(who, sh.pic, t + 0.5f, true); return; }
+        if (lying || who.look == null) return;
+        // worn in the user's own picture of them (the story puts it on their back, and their picture is theirs): it cannot
+        // come off that picture, and a second bag on the ground beside the one still on the back would be two bags
+        if (art != null && art.sprites.get(who.c.id) != null && wornInStory(key)) {
+            film.notes.add("  ↳ " + key + ": stays on " + who.c.shown() + "'s back — it is part of their picture and cannot be set down");
+            return;
+        }
+        float tt = t + 0.5f, hh = Renderer.actorHeight(who.look, who.c, art, seg);
+        placeAt(sh.pic, thingSize(key), key, who, tt, xAt(who, tt) + who.stateAt(tt).facing * hh * 0.3f);
+        who.acts.add(new Film.Act(tt - 0.6f, tt + 0.15f, Film.G_REACH));
+        film.notes.add("  ↳ " + key + ": set down beside " + who.c.shown() + String.format(java.util.Locale.US, " at %.1f s", tt));
+    }
+
+    /** v47.6: the story puts this thing on someone's back or shoulder ("उसका … स्कूल बैग पीठ पर उछल रहा है"). */
+    private boolean wornInStory(String key) {
+        String h = Txt.norm(key).trim();
+        h = h.substring(h.lastIndexOf(' ') + 1);
+        for (Story.CharacterDef c : story.characters) if (Txt.has(Txt.norm(c.description), h) && Txt.has(c.description, "पीठ पर", "कंधे पर टंग", "कंधे पर लटक", "on her back", "on his back", "on the back")) return true;
+        for (Story.Scene sc : story.scenes) for (Story.Beat b : sc.beats)
+            for (String sent : sentences(b.text == null ? "" : b.text)) if (Txt.has(Txt.norm(sent), h) && Txt.has(sent, "पीठ पर", "कंधे पर टंग", "कंधे पर लटक", "on her back", "on his back", "on the back")) return true;
+        return false;
+    }
+
     private void endHold(Film.Actor who, Art.Backdrop pic, float t, boolean down) {
         for (Film.Fx f : new ArrayList<Film.Fx>(seg.fx)) {
             if (f.type != Film.FX_HELD || f.a != who || f.kind == Film.THING_PLACE || f.t1 <= t || (pic != null && f.pic != pic)) continue;
@@ -6275,6 +6310,8 @@ public final class Director {
     /** v42: looking down on someone from above. */
     static final String[] LOOK_DOWN = {"नीचे देख", "नीचे झाँक", "नीचे झांक", "ऊपर से देख", "ऊपर से झाँक", "छत से देख", "छत से झाँक", "बालकनी से देख", "बालकनी से झाँक",
             "looks down", "look down", "looked down", "looking down", "peers down", "from the balcony", "from the roof", "from the rooftop"};
+    /** v47.6: the wind said another way: "हवा अब भी चल रही है", "गर्म हवा से धूल उड़ रही है", "कुर्ता हवा में हल्का हिल रहा है". */
+    static final java.util.regex.Pattern WIND_SAID = java.util.regex.Pattern.compile("हवा\\s+(?:अब\\s+भी\\s+|भी\\s+|अभी\\s+भी\\s+|धीरे-धीरे\\s+|लगातार\\s+)(?:चल|बह)|हवा\\s+से\\s+(?:\\S+\\s+){0,3}?(?:उड़|उड|हिल|सरक|लहर)|हवा\\s+में\\s+(?:\\S+\\s+){0,2}?(?:हिल|लहरा|फड़फड़)");
     static final String[] WIND_STOP = {"हवा रुक", "हवा थम", "wind stopped", "wind died", "wind dropped"};
     static final String[] THUNDER = {"बिजली कड़क", "बिजली चमक", "बिजली गिर", "बादल गरज", "गड़गड़ाहट", "कड़कड़ाहट", "thunder", "lightning", "bijli"};
     /** v43: the clouds rumble with words between ("बादल ज़ोर से गरजते हैं") — never a lion's or a tiger's roar. */
@@ -7526,6 +7563,11 @@ public final class Director {
                 // v35: the furniture is heard as they sit (a chair's creak, a sofa's soft thump, a bed's frame)
                 if (st == Film.SEAT_CHAIR || st == Film.SEAT_SOFA || st == Film.SEAT_BED || st == Film.SEAT_STOOL)
                     film.sfx.add(sfxAt(st == Film.SEAT_SOFA ? Film.SFX_SOFA : st == Film.SEAT_BED ? Film.SFX_BED : Film.SFX_CHAIR, ta + 0.45f, 0.7f, 0.3f, a));
+                // v47.6: "बेंच थोड़ी सी हिलती है क्योंकि उसका एक पैर टूटा है": the bench rocks as they sit and settles (FX_WOBBLE,
+                // a damped rock the renderer gives the bench's picture — a procedural approximation, not a physics simulation)
+                if (st == Film.SEAT_STOOL && Txt.has(s, "बेंच", "bench") && Txt.has(s, "हिलती", "हिलता", "हिल जा", "डगमग", "wobble", "rocks")
+                        && !Txt.has(s, "नहीं हिल", "हिलती नहीं", "हिलता नहीं", "doesn't wobble", "does not wobble"))
+                    fx(Film.FX_WOBBLE, ta + 0.45f, ta + 3f, xAt(a, ta), 0, a, null);
                 sittings++;
                 // the seat is furniture: it stays in the place after they get up
                 if (st >= Film.SEAT_STOOL) {
@@ -10409,6 +10451,16 @@ public final class Director {
         if (Txt.has(s, STARS) && (seg.tod == Sets.NIGHT || seg.tod == Sets.EVENING)) open(Film.W_STARS, t, 1f);
     }
 
+    /**
+     * v47.6: the negation of the clauses a word is in, not of the whole sentence ("एक भी बादल नहीं, … हल्की-हल्की गर्म हवा चल
+     * रही है": the clouds are not there, the wind is).
+     */
+    private static boolean negatedNear(String s, String... words) {
+        boolean any = false;
+        for (String part : s.split("[,;।]|\\s+और\\s+|\\s+लेकिन\\s+|\\s+but\\s+")) if (Txt.has(part, words)) { any = true; if (negated(part)) return true; }
+        return !any && negated(s);
+    }
+
     private static boolean negated(String s) {
         return Txt.has(s, "नहीं", "बिना", "बंद हो", "not ", "no rain", "without");
     }
@@ -10438,10 +10490,32 @@ public final class Director {
         }
         if (Txt.has(s, DUST) && !negated(s)) { open(Film.W_DUST, t, 1f); open(Film.W_WIND, t, 1f); d = 2.2f; }
         else if (Txt.has(s, STORM) && !negated(s)) { open(Film.W_STORM, t, 1f); open(Film.W_RAIN, t, 1.3f); d = 2.2f; }
+        // v47.6: dust that only drifts — "धूल के कण हवा में उड़ रहे हैं", "हवा से धूल उड़ रही है", "हवा में धूल के कण चमक रहे
+        // हैं": a few motes in the light, never the storm's brown haze
+        if (!Txt.has(s, DUST) && !Txt.has(s, STORM) && Txt.has(s, "धूल के कण", "धूल उड़", "धूल उड", "dust motes", "dust particles", "specks of dust", "dust rises", "dust drifts", "dust blows") && !negatedNear(s, "धूल", "dust"))
+            open(Film.W_MOTES, t, Txt.has(s, "हल्क", "धीरे", "light", "gentle") ? 0.7f : 1f);
+        // v47.6: sun patches through the leaves that move ("धूप के गोल धब्बे … हिल रहे हैं"); still ones are in the place's picture
+        if (Txt.has(s, "धूप", "sunlight", "sun ") && Txt.has(s, "छन", "धब्ब", "dappled", "patches of sun", "sun patches") && Txt.has(s, "हिल", "नाच", "sway", "dance", "flicker", "moving")
+                && !negatedNear(s, "धूप", "sunlight", "sun "))
+            open(Film.W_DAPPLE, t, 1f);
+        // v47.6: the sounds a description names: a bicycle bell now and then, leaves rustling in the wind, running steps far off
+        if (Txt.has(s, "साइकिल की घंटी", "ट्रिंग", "cycle bell", "bicycle bell")) {
+            film.sfx.add(new Film.Sfx(Film.SFX_CYCLE_BELL, t + 1.5f, 0.8f, 0.16f));
+            if (Txt.has(s, "कभी-कभी", "कभी कभी", "now and then", "every now")) film.sfx.add(new Film.Sfx(Film.SFX_CYCLE_BELL, t + 9f, 0.8f, 0.14f));
+        }
+        if ((Txt.has(s, "पत्ते", "पत्तों", "पत्तियों", "पत्तियां", "leaves") && Txt.has(s, "हिल", "सर-सर", "सरसर", "rustl", "sway")
+                || Txt.has(s, "सर-सर", "सरसर") && !Txt.has(s, "रेंग")) && (Txt.has(s, "हवा", "wind", "breeze") || wOpen[Film.W_WIND] >= 0) && !negatedNear(s, "पत्त", "सर-सर", "सरसर", "leaves"))
+            film.sfx.add(new Film.Sfx(Film.SFX_RUSTLE, t + 0.3f, 3f, 0.22f));
+        if (Txt.has(s, "दौड़ने की आवाज", "दौड़ने की आहट", "भागने की आवाज", "sound of running", "running footsteps", "footsteps running"))
+            film.sfx.add(new Film.Sfx(Film.SFX_STEPS_RUN, t + 0.2f, 2f, Txt.has(s, "दूर से", "from afar", "far off", "distant") ? 0.18f : 0.35f));
         String ws = s.replace("window", " ").replace("Window", " ").replace("rewind", " ").replace("unwind", " ").replace("winding", " ");
         if (Txt.has(s, WIND_STOP)) closeWeather(Film.W_WIND, t);
-        else if (Txt.has(ws, WIND) && !negated(s)) {
-            open(Film.W_WIND, t, Txt.has(s, WIND_STRONG) ? 1f : Txt.has(s, WIND_SOFT) ? 0.35f : 0.6f);
+        else if ((Txt.has(ws, WIND) || WIND_SAID.matcher(s).find()) && !negatedNear(s, "हवा", "wind", "breeze", "gust")) {
+            // (v47.6: "हल्की-हल्की गर्म हवा", "हल्की गर्म हवा अब भी चल रही है" are a light wind too)
+            boolean soft = Txt.has(s, WIND_SOFT) || Txt.has(s, "हवा") && Txt.has(s, "हल्की", "हल्का", "मंद", "धीमी", "धीरे");
+            // (a wind already blowing is only made stronger by words that say so: "धूल के कण हवा में उड़ रहे हैं" is the same
+            // light wind, not a stronger one)
+            if (wOpen[Film.W_WIND] < 0 || Txt.has(s, WIND_STRONG)) open(Film.W_WIND, t, Txt.has(s, WIND_STRONG) ? 1f : soft ? 0.35f : 0.6f);
             d = Math.max(d, 1.6f);
         }
         if (Txt.has(s, SNOW) && !negated(s)) { open(Film.W_SNOW, t, 1f); d = Math.max(d, 2f); }

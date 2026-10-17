@@ -660,6 +660,10 @@ public final class Renderer {
         if (petals > 0) Nature.leaves(g, vw, vh, t, petals, wind, true);
         float dust = film.weather(Film.W_DUST, t);
         if (dust > 0 && out) Nature.dust(g, vw, vh, t, dust, wind);
+        float motes = film.weather(Film.W_MOTES, t);
+        if (motes > 0) Nature.motes(g, vw, vh, t, motes, wind);
+        float dapple = film.weather(Film.W_DAPPLE, t);
+        if (dapple > 0 && out && s.tod != Sets.NIGHT) Nature.dapple(g, vw, vh, t, dapple, wind);
         float fog = film.weather(Film.W_FOG, t);
         if (fog > 0) Nature.fog(g, vw, vh, t, fog);
         float quake = film.weather(Film.W_QUAKE, t);
@@ -3059,6 +3063,20 @@ public final class Renderer {
     /** v40: the part of a shared sofa the seat being drawn has (see sofaSpan), or null for a sofa of its own. */
     private float[] seatSpan;
 
+    /**
+     * v47.6: how far the listed bench is tipped now, in degrees: a damped rock (2.4 rocks a second, settling within about
+     * two seconds) from an FX_WOBBLE of this part. A procedural approximation of a bench on a broken leg, not physics.
+     */
+    private float benchRock() {
+        if (curSeg == null) return 0;
+        for (Film.Fx f : curSeg.fx) {
+            if (f.type != Film.FX_WOBBLE || curT < f.t0 || curT >= f.t1) continue;
+            float u = curT - f.t0;
+            return 1.8f * (float) Math.exp(-2.0f * u) * (float) Math.sin(u * 2 * Math.PI * 2.4f);
+        }
+        return 0;
+    }
+
     /** v47.6: the user's picture of the bench the script lists, or null (Art.benchPicture). */
     private Art.Backdrop benchPicture() { return art == null ? null : art.benchPicture(); }
 
@@ -3253,7 +3271,11 @@ public final class Renderer {
                         if (bw < need) { bw = Math.min(need, bw * 1.35f); }          // a little wider, never pulled out of shape
                         float cx = (gl + gr) / 2;
                         g.color(0x30000000); g.oval(cx, h * 0.006f, bw * 0.5f, h * 0.022f);
+                        // (the broken bench rocking as someone sits — FX_WOBBLE — tips about its sound foot and settles)
+                        float rock = benchRock();
+                        if (rock != 0) { g.save(); float px = cx - bw * 0.45f; g.translate(px, 0); g.rotate(rock); g.translate(-px, 0); }
                         g.image(bp.img, cx - bw / 2, -bh, bw, bh);
+                        if (rock != 0) g.restore();
                     }
                     break;
                 }

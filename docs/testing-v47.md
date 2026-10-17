@@ -815,3 +815,23 @@ on his shoulder; in close two-shots a head can be cut by the frame; her closed e
 Tests: UserScreenplayFormatTest (+2: the numbered sample exactly as written; one-line numbered entries with "कहानी
 शुरू"), FreeArtTest, MaterialsAndCutoutTest and LookReadingTest (new); the whole plain-JVM suite, 52 tests, passes on a
 clean copy of this tree. AppTest and DashboardSoakTest (Robolectric) run on CI, which publishes the APK only when all pass.
+
+### 6.22 The production document and the environment the script asks for (17 October, later)
+
+The studio now keeps one production document per film (`core/ProductionDocument.java`; `production_document.json` and
+`production_ids.txt` with the project): the reader's facts marked explicit, inferred or unknown, the director's plan as
+the renderer draws it, the technical director's checks, and the director's sign-off bound to the revision. A render is
+recorded VERIFIED only with its file there and not empty. Details, the baseline audit and the before/after table for
+आखिरी चिट्ठी: `docs/production-document-v47.md`.
+
+Found by the document in आखिरी चिट्ठी and fixed in the director: the wind that a "बादल नहीं" in the same sentence had
+negated, the wind of scenes 2 and 3 said other ways, dust motes (a new gentle drift, not the dust storm), the cycle bell,
+the leaves' rustle, the running steps far off, the moving sun patches and the bench that rocks as परी sits (both
+procedural approximations, said so). परी's off-model sheet (a toddler on a bench of her own) is out of the cast plan.
+
+Still wrong (recorded in the document's issue register, not claimed): परी is drawn standing where she kneels (her picture
+has no leg rig); her hand on his hand and her head on his shoulder have no gesture; the bag is part of her picture and
+cannot be set down; the leaves sliding along the ground have no method; two 0.41 s cuts in her run.
+
+Tests: ProductionDocumentTest (6) and AakhiriChitthiAcceptanceTest (8), new; the plan digest of all 2,100 test
+stories compared before and after — 7 change, all intended.

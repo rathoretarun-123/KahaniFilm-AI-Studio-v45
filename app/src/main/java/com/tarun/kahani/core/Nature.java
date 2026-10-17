@@ -557,6 +557,40 @@ public final class Nature {
         }
     }
 
+    /**
+     * v47.6: dust motes — "धूल के कण हवा में चमक रहे हैं": a few specks drifting slowly with the wind and catching the
+     * light now and then. No tint over the frame (that is the dust storm above). A procedural drift, not a simulation.
+     */
+    public static void motes(Gfx g, float w, float h, float t, float amount, float wind) {
+        int n = (int) (60 * Math.min(1.5f, amount));
+        float span = w + 40, drift = 6 + Math.abs(wind) * 28, dir = wind >= 0 ? 1 : -1, s = h / 720f;
+        for (int i = 0; i < n; i++) {
+            float x = ((rnd(i, 1) * span + dir * t * drift * (0.5f + rnd(i, 2))) % span + span) % span - 20;
+            float y = h * (0.12f + 0.72f * rnd(i, 3)) + (float) Math.sin(t * (0.35f + rnd(i, 4) * 0.5f) + i) * 14 * s;
+            float glint = Math.max(0, (float) Math.sin(t * (0.9f + rnd(i, 5)) + i * 2.1f));
+            float r = (0.9f + rnd(i, 6) * 1.3f) * s;
+            g.color(alpha(0xFFFFF2D0, (0.18f + 0.42f * glint * glint) * Math.min(1, amount)));
+            g.oval(x, y, r, r);
+        }
+    }
+
+    /**
+     * v47.6: "पत्तियों से छन कर आती धूप के गोल धब्बे बेंच और दोनों के ऊपर हिल रहे हैं": soft round patches of sunlight over
+     * the lower frame, swaying as the wind moves the leaves above. A screen-space procedural approximation — the patches
+     * are not cast by the tree in the picture and do not follow the camera.
+     */
+    public static void dapple(Gfx g, float w, float h, float t, float amount, float wind) {
+        float a = Math.min(1, amount), sway = h * (0.012f + 0.03f * Math.min(1, Math.abs(wind)));
+        for (int i = 0; i < 16; i++) {
+            float x = w * (0.04f + 0.92f * rnd(i, 11)) + (float) Math.sin(t * (0.8f + rnd(i, 12) * 0.9f) + i * 1.7f) * sway;
+            float y = h * (0.42f + 0.5f * rnd(i, 13)) + (float) Math.cos(t * (0.6f + rnd(i, 14) * 0.7f) + i) * sway * 0.5f;
+            float r = h * (0.035f + 0.05f * rnd(i, 15));
+            float flick = 0.75f + 0.25f * (float) Math.sin(t * (1.3f + rnd(i, 16)) + i * 2.3f);
+            g.radial(x, y, r, alpha(0xFFFFF1C4, 0.16f * a * flick), 0x00FFF1C4);
+            g.oval(x, y, r, r * 0.62f);
+        }
+    }
+
     /** Fog: soft bands of mist drifting slowly. */
     public static void fog(Gfx g, float w, float h, float t, float amount) {
         for (int i = 0; i < 4; i++) {
