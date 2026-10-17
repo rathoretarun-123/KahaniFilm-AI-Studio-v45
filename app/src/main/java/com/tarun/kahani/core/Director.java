@@ -436,6 +436,10 @@ public final class Director {
             keepScriptedMoves();
         }
         // (after the protocol's calmed moves: every move's own length is final now)
+        noTeleports();
+        paceMoves();
+        keepPersonalSpace();
+        noTeleports();          // (pacing and spacing moved some moves: once more for what they cut short)
         passInFront();
         film.shotList = qualityCheck();
         groundInFrame();
@@ -7371,8 +7375,16 @@ public final class Director {
                     Film.Key k = a.keys.get(i);
                     if (k.moveDur <= 0.2f || k.anchor != Film.A_GROUND) continue;
                     float t0 = k.t, t1 = k.t + k.moveDur;
+                    // (v47.8: a move a later key cuts short ends there — a path laid to its planned end ran on past the
+                    // cut and snapped back when it ended: 1,030 px in one frame in the sample story)
+                    if (i + 1 < a.keys.size() && a.keys.get(i + 1).t < t1) t1 = a.keys.get(i + 1).t;
+                    if (t1 - t0 <= 0.2f) continue;
                     if (a.trackAt(t0 + 0.01f) != null || a.trackAt(t1 - 0.01f) != null) continue;      // already on a path
-                    float x0 = xAt(a, t0), x1 = k.x;
+                    // (v47.8: a vehicle keeps to its road — a car driven off was swung towards the camera round whoever stood there)
+                    boolean rides = false;
+                    for (Film.Act x : a.acts) if (x.type == Film.G_RIDE && x.t0 < t1 && x.t1 > t0) rides = true;
+                    if (rides) continue;
+                    float x0 = xAt(a, t0), x1 = t1 < k.t + k.moveDur ? xAt(a, t1 - 0.001f) : k.x;
                     if (Math.abs(x1 - x0) < ha * 0.3f || !a.stateAt(t0 + 0.05f).visible) continue;
                     float lo = Math.min(x0, x1), hi = Math.max(x0, x1), clear = 0;
                     // the people standing or sitting still along the way, with the seat they sit on
@@ -7409,6 +7421,194 @@ public final class Director {
     }
 
     private int passesInFront;
+
+    /** v47.8: how fast a body walks or runs on average over a move, in heights a second (a run's eased peak, 1.5×, stays under the frame audit's jump: 12% of the height a frame). */
+    public static final float WALK_SPEED = 1.0f, RUN_SPEED = 1.8f;
+    /** v47.8: the most a body speeds up or slows down between two frames at 24 fps, as a share of its height. */
+    public static final float MOVE_ACCEL = 0.010f;
+
+    /** v47.8: the least time a move of this length takes a body of this height, walking or running (seconds). */
+    public static float leastMoveTime(float dist, float h, boolean run) {
+        if (dist <= 0 || h <= 0) return 0;
+        float bySpeed = dist / ((run ? RUN_SPEED : WALK_SPEED) * h);
+        // (a move eases in and out — smoothstep: its sharpest change of speed is 6·d/T² a second²)
+        float byAccel = (float) Math.sqrt(6 * dist / (24f * 24f * MOVE_ACCEL * h));
+        return Math.max(bySpeed, byAccel);
+    }
+
+    /**
+     * v47.8 (the user: "no shaking or random movements"): a move never goes faster than a body walks or runs, and never
+     * starts or stops harder than a body can — the frame audit caught a 155 px step in half a second before a car ride, a
+     * jolt of 3.3% of the height in one frame. A move too short for its length starts earlier (while they stand idle) and
+     * keeps its arrival time; failing that it ends later, before their next instruction. Rides (the vehicle's own pace),
+     * paths, crashes and skids keep theirs.
+     */
+    private void paceMoves() {
+        Film.Seg keep = seg;
+        for (Film.Seg sg : film.segs) {
+            if (sg.type != Film.S_SCENE) continue;
+            seg = sg;
+            for (Film.Actor a : sg.actors) {
+                if (a.look == null || !(a.look.isHumanoid() || a.look.isObject())) continue;      // (an animal keeps its own gait: a horse gallops)
+                float h = heightOf(a);
+                for (int i = 1; i < a.keys.size(); i++) {
+                    Film.Key k = a.keys.get(i), p = a.keys.get(i - 1);
+                    if (k.moveDur <= 0 || k.hardStop || !k.visible || k.anchor != Film.A_GROUND || p.anchor != Film.A_GROUND) continue;
+                    float t1 = k.t + k.moveDur;
+                    if (a.trackAt(k.t + 0.01f) != null || a.trackAt(t1 - 0.01f) != null) continue;
+                    boolean riding = false;
+                    for (Film.Act x : a.acts) if (x.type == Film.G_RIDE && x.t0 < t1 && x.t1 > k.t) riding = true;
+                    if (riding) continue;
+                    float dist = Math.abs(k.x - prevX(a, k));
+                    float need = leastMoveTime(dist, h, k.run);
+                    if (k.moveDur >= need - 0.01f) continue;
+                    // the earliest it can set off: the move before ended, nothing that holds the body still runs, the part began
+                    float earliest = Math.max(sg.t0 + 0.05f, p.t + Math.max(0, p.moveDur) + 0.01f);
+                    for (Film.Act x : a.acts)
+                        if (x.t1 > earliest && x.t0 < k.t && x.type != Film.G_TALK && x.type != Film.G_LAUGH) earliest = Math.max(earliest, x.t1 + 0.01f);
+                    float start = Math.max(earliest, t1 - need);
+                    if (start < k.t) { k.moveDur = t1 - start; k.t = start; }
+                    // still short: arrive later, before their next instruction
+                    if (k.moveDur < need - 0.01f) {
+                        float until = i + 1 < a.keys.size() ? a.keys.get(i + 1).t - 0.01f : sg.t1 - 0.05f;
+                        for (Film.Act x : a.acts) if (x.t0 >= t1 - 0.01f && x.type != Film.G_TALK) until = Math.min(until, x.t0 - 0.01f);     // (what they do on arrival waits for nobody)
+                        k.moveDur = Math.max(k.moveDur, Math.min(need, until - k.t));
+                    }
+                    pacedMoves++;
+                }
+            }
+        }
+        seg = keep;
+        if (pacedMoves > 0) film.notes.add("  ↳ " + pacedMoves + (pacedMoves == 1 ? " move" : " moves") + " given the time a body takes to walk or run it (no jolts)");
+    }
+
+    private int pacedMoves;
+
+    /** v47.8: whether x is off the stage (an entrance or an exit point). */
+    public static boolean offStage(float x, float h) { return x < -h * 0.3f || x > 1280 + h * 0.3f; }
+
+    /**
+     * v47.8 (the frame audit on the app's own sample story: "आंटी चुड़ैल" jumped 1,096 px — 363% of her height — inside
+     * one shot): a later rule's key with no move, at a moment when the character stands somewhere else (in the middle of
+     * a walk, or put back off the stage by a second entrance rule), placed them at once — a teleport. Every such key
+     * becomes a walk from where they really are then, as long as a body takes for it. A key at the start of a part, an
+     * appearance from off the stage or out of hiding, a ride and a path keep theirs.
+     */
+    private void noTeleports() {
+        Film.Seg keep = seg;
+        for (Film.Seg sg : film.segs) {
+            if (sg.type != Film.S_SCENE) continue;
+            seg = sg;
+            for (Film.Actor a : sg.actors) {
+                if (a.look == null) continue;
+                float h = heightOf(a);
+                // (two keys at one moment: the later one holds — the earlier is never seen, but a path laid on its move
+                // and the next key's start were taken from it)
+                for (int i = a.keys.size() - 2; i >= 0; i--) if (Math.abs(a.keys.get(i + 1).t - a.keys.get(i).t) < 1e-4f) { a.keys.remove(i); teleportsMended++; }
+                for (int i = 1; i < a.keys.size(); i++) {
+                    Film.Key k = a.keys.get(i), p = a.keys.get(i - 1);
+                    if (k.moveDur > 0 || !k.visible || !p.visible || k.anchor != Film.A_GROUND || p.anchor != Film.A_GROUND || k.t <= sg.t0 + 0.05f) continue;
+                    float was = xAt(a, k.t - 0.002f);
+                    if (Math.abs(k.x - was) < h * 0.05f || offStage(was, h)) continue;
+                    if (a.trackAt(k.t - 0.002f) != null || a.trackAt(k.t + 0.002f) != null) continue;
+                    boolean riding = false;
+                    for (Film.Act x : a.acts) if (x.type == Film.G_RIDE && x.t0 < k.t + 0.5f && x.t1 > k.t - 0.5f) riding = true;
+                    if (riding) continue;
+                    // (put back off the stage by a second entrance while already on it, and walked on again at once: stay)
+                    if (offStage(k.x, h)) {
+                        boolean backOn = false;
+                        for (int j = i + 1; j < a.keys.size() && a.keys.get(j).t < k.t + 1.0f; j++) if (!offStage(a.keys.get(j).x, h)) backOn = true;
+                        if (backOn) { k.x = was; teleportsMended++; continue; }
+                    }
+                    k.moveDur = leastMoveTime(Math.abs(k.x - was), h, k.run);
+                    k.facing = k.x > was ? 1 : -1;
+                    // (a key that comes before this walk ends takes over from where they are then: prevX)
+                    teleportsMended++;
+                }
+            }
+        }
+        seg = keep;
+        if (teleportsMended > 0) film.notes.add("  ↳ " + teleportsMended + (teleportsMended == 1 ? " jump from place to place becomes a walk" : " jumps from place to place become walks"));
+    }
+
+    private int teleportsMended;
+
+    /**
+     * v47.8 (the physics check over 2,100 stories: 591 walks ended on top of someone — "Nikhil plays with his dog" sat him
+     * 43 px from his mother, a run to the swing stopped inside his father): a walk that ends where someone stands or sits
+     * still stops short beside them, on the side it came from — a body's width away (a seated one's with the seat). Not
+     * when the two touch then or just after (a hug, a hand held, a thing given), nor where the walk ends at something of
+     * the walker's own (a seat, a swing), nor where the spot beside is someone else's.
+     */
+    private void keepPersonalSpace() {
+        Film.Seg keep = seg;
+        for (Film.Seg sg : film.segs) {
+            if (sg.type != Film.S_SCENE) continue;
+            seg = sg;
+            for (Film.Actor a : sg.actors) {
+                if (a.look == null || !a.look.isHumanoid()) continue;
+                float ha = heightOf(a);
+                for (int i = 1; i < a.keys.size(); i++) {
+                    Film.Key k = a.keys.get(i);
+                    if (k.moveDur <= 0.2f || !k.visible || k.anchor != Film.A_GROUND || k.body != Pose.STAND) continue;
+                    float t1 = k.t + k.moveDur, x0 = prevX(a, k), x1 = k.x;
+                    if (Math.abs(x1 - x0) < ha * 0.3f || a.trackAt(t1 - 0.01f) != null) continue;
+                    // (they stay standing there a moment: not sitting down or lying down on arrival)
+                    Film.Key after = i + 1 < a.keys.size() ? a.keys.get(i + 1) : null;
+                    if (after != null && after.t < t1 + 0.6f && after.body != Pose.STAND) continue;
+                    boolean own = false;
+                    for (Film.Fx f : sg.fx) if (f.a == a && f.t0 < t1 + 1 && f.t1 > t1 && Math.abs(f.x - x1) < ha * 0.6f) own = true;
+                    for (Film.Act x : a.acts) if (x.t0 >= k.t - 0.05f && x.t0 < t1 + 1.5f && (x.type == Film.G_RIDE || x.type == Film.G_PLAYGROUND || x.type == Film.G_TASK)) own = true;
+                    if (own) continue;
+                    Film.Actor in = null;
+                    float need = 0, xo = 0;
+                    for (Film.Actor o : sg.actors) {
+                        if (o == a || o.look == null || !o.look.isHumanoid()) continue;
+                        Film.Key ko = o.stateAt(t1 + 0.02f);
+                        if (!ko.visible || ko.anchor != Film.A_GROUND || o.trackAt(t1) != null) continue;
+                        float xa = xAt(o, t1 + 0.02f);
+                        if (Math.abs(xAt(o, t1 + 1f) - xa) > ha * 0.1f || Math.abs(xAt(o, k.t) - xa) > ha * 0.1f) continue;      // moving: no obstacle
+                        float ho = heightOf(o);
+                        float n = ko.body == Pose.SIT || ko.body == Pose.LIE ? 0.34f * ho + 0.12f * ha : 0.1f * (ha + ho);
+                        if (Math.abs(xa - x1) >= n) continue;
+                        if (touches(a, o, k.t - 0.5f, t1 + 3f)) { in = null; break; }
+                        if (in == null || Math.abs(xa - x1) < Math.abs(xo - x1)) { in = o; xo = xa; need = n; }
+                    }
+                    if (in == null) continue;
+                    float side = Math.signum(x0 - xo);
+                    if (side == 0) side = x1 >= xo ? 1 : -1;
+                    float nx = xo + side * need;
+                    if (Math.abs(nx - x0) < ha * 0.15f && Math.abs(x1 - x0) > ha * 0.6f) continue;    // (then no walk at all: leave it)
+                    // the spot beside them must be free
+                    boolean free = true;
+                    for (Film.Actor o : sg.actors) {
+                        if (o == a || o == in || o.look == null || !o.look.isHumanoid()) continue;
+                        Film.Key ko = o.stateAt(t1 + 0.02f);
+                        if (ko.visible && ko.anchor == Film.A_GROUND && Math.abs(xAt(o, t1 + 0.02f) - nx) < 0.1f * (ha + heightOf(o))) free = false;
+                    }
+                    if (!free) continue;
+                    float old = k.x;
+                    k.x = nx;
+                    // (where they then stand, until they move on)
+                    for (int j = i + 1; j < a.keys.size(); j++) { Film.Key q = a.keys.get(j); if (Math.abs(q.x - old) > 0.5f) break; q.x = nx; }
+                    spacedArrivals++;
+                }
+            }
+        }
+        seg = keep;
+        if (spacedArrivals > 0) film.notes.add("  ↳ " + spacedArrivals + (spacedArrivals == 1 ? " walk stops" : " walks stop") + " beside someone standing or sitting still, not on top of them");
+    }
+
+    private int spacedArrivals;
+
+    /** v47.8: one of the two touches the other (a hug, a hand, a pat, a kiss, a thing given or offered) between t0 and t1. */
+    private static boolean touches(Film.Actor a, Film.Actor b, float t0, float t1) {
+        for (int s = 0; s < 2; s++) {
+            Film.Actor p = s == 0 ? a : b, q = s == 0 ? b : a;
+            for (Film.Act x : p.acts) if (x.target == q && x.t1 > t0 && x.t0 < t1) return true;
+        }
+        return false;
+    }
 
     /** Whether a move over [lo, hi] goes through what stands at xo: its path runs over the middle of it, wherever it ends. */
     static boolean crosses(float lo, float hi, float xo, float h) {
@@ -11088,17 +11288,53 @@ public final class Director {
     /** x position of an actor at time t (interpolating walks). */
     public static float xAt(Film.Actor a, float t) {
         if (!a.track.isEmpty()) { Film.Track r = a.trackAt(t); if (r != null) return r.x(t); }
-        Film.Key prev = null, cur = a.keys.get(0);
-        for (Film.Key k : a.keys) { if (k.t <= t) { prev = cur; cur = k; } else break; }
-        if (cur.moveDur > 0 && t < cur.t + cur.moveDur && prev != null) {
+        int ci = 0;
+        for (int i = 0; i < a.keys.size(); i++) { if (a.keys.get(i).t <= t) ci = i; else break; }
+        // v47.8 (the frame audit: "अनिल" jolted 4.2% as a second rule re-issued his walk to the same place half way): a
+        // key that sends them where the running walk already goes adds nothing — the walk runs on as it was
+        while (ci > 0) {
+            Film.Key c = a.keys.get(ci), p = a.keys.get(ci - 1);
+            if (c.moveDur > 0 && p.moveDur > 0 && !p.hardStop && c.t > p.t && c.t < p.t + p.moveDur && Math.abs(c.x - p.x) < 0.5f) ci--;
+            else break;
+        }
+        Film.Key cur = a.keys.get(ci);
+        if (cur.moveDur > 0 && t < cur.t + cur.moveDur && ci > 0) {
             float u = (t - cur.t) / cur.moveDur;
-            // v44: a move that ends in a crash or a skid speeds up and keeps its speed to the end (it stops dead)
-            if (cur.hardStop) u = u < 0.3f ? u * u / (0.3f * 1.7f) : (2 * u - 0.3f) / 1.7f;
-            else u = u * u * (3 - 2 * u);
             float px = prevX(a, cur);
-            return px + (cur.x - px) * u;
+            // v44: a move that ends in a crash or a skid speeds up and keeps its speed to the end (it stops dead)
+            if (cur.hardStop) { u = u < 0.3f ? u * u / (0.3f * 1.7f) : (2 * u - 0.3f) / 1.7f; return px + (cur.x - px) * u; }
+            // v47.8: a new instruction in the middle of a walk carries on from the walk's speed (it used to start
+            // again from standing still: a jolt), easing into the new place
+            float v0 = carriedSpeed(a, ci), d = cur.x - px, T = cur.moveDur;
+            float s = u * u * (3 - 2 * u), h10 = u * u * u - 2 * u * u + u;
+            return px + d * s + v0 * T * h10;
         }
         return cur.x;
+    }
+
+    /**
+     * v47.8: the speed (px a second) of the walk the key at ci takes over from, at the moment it does — when that walk is
+     * a plain eased one of its own (not itself taken over: no chains to follow); 0 otherwise. Bounded so the new move
+     * never overshoots its place by more than a step.
+     */
+    static float carriedSpeed(Film.Actor a, int ci) {
+        if (ci < 2) return 0;
+        Film.Key c = a.keys.get(ci), p = a.keys.get(ci - 1), pp = a.keys.get(ci - 2);
+        if (p.moveDur <= 0 || p.hardStop || c.t <= p.t || c.t >= p.t + p.moveDur) return 0;
+        if (pp.moveDur > 0 && p.t > pp.t && p.t < pp.t + pp.moveDur) return 0;          // (that walk took over itself)
+        float up = (c.t - p.t) / p.moveDur, v = (p.x - pp.x) * 6 * up * (1 - up) / p.moveDur;
+        float d = c.x - xAtPlain(p, pp, c.t), T = c.moveDur;
+        // (the cubic s(u) + k·h10(u) stays monotonic for 0 ≤ k ≤ 3; against the new way, the turn back is kept to a short step)
+        float k = d != 0 ? v * T / d : 0;
+        if (k > 2.5f) v = 2.5f * d / T;
+        else if (k < 0 || d == 0) { float most = 60f / T; v = Math.max(-most, Math.min(most, v)); }
+        return v;
+    }
+
+    /** Where a plain eased walk (key p from pp's place) has them at t. */
+    private static float xAtPlain(Film.Key p, Film.Key pp, float t) {
+        float u = Math.max(0, Math.min(1, (t - p.t) / p.moveDur));
+        return pp.x + (p.x - pp.x) * u * u * (3 - 2 * u);
     }
 
     static float prevX(Film.Actor a, Film.Key k) {

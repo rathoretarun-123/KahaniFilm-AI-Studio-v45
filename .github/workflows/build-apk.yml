@@ -178,6 +178,7 @@ jobs:
             --tests com.tarun.kahani.ObjectCharactersTest \
             --tests com.tarun.kahani.AnimalActionsTest \
             --tests com.tarun.kahani.DailyActivitiesBTest \
+            --tests com.tarun.kahani.DirectorAuditTest \
             --tests com.tarun.kahani.DailyActivitiesATest \
             --tests com.tarun.kahani.ReaderAuditTest \
             --tests com.tarun.kahani.DashboardSoakTest \
