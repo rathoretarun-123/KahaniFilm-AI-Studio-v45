@@ -146,6 +146,8 @@ public final class ProductionDocument {
     public RenderRecord render;
     /** The ids given to the story's people, things and places (kept with the project: a prop added later never renumbers the others). */
     public Ids ids = new Ids();
+    /** v47.8: the lines of voices the reader knows are only heard (a device, an announcer, the narrator): no speaker to picture. */
+    final java.util.Set<String> heardOnly = new java.util.HashSet<String>();
     private int factN, issueN, stateN;
 
     /**
@@ -234,6 +236,8 @@ public final class ProductionDocument {
                     l.speakerName = b.speaker != null ? b.speaker.displayName : b.speakerRaw;
                     Entity sp = b.speaker != null ? d.find(d.characters, b.speaker.displayName) : null;
                     l.speakerId = sp != null ? sp.id : null;
+                    // v47.8: a voice the reader knows is only heard (a device, an announcer, the narrator) is no missing speaker
+                    if (sp == null && (b.narrator || (b.speaker != null && b.speaker.voiceOnly))) d.heardOnly.add(l.id);
                     if (sp != null && !sp.sceneIds.contains(s.id)) sp.sceneIds.add(s.id);
                     d.lines.add(l);
                     s.lineIds.add(l.id);
@@ -576,6 +580,19 @@ public final class ProductionDocument {
 
     static boolean startsWord(String n, String stem) { return Director.startOf(n, stem) >= 0; }
 
+    /** v47.8: the word is used to call someone ("बेटा," "बेटी!" "son,"): followed at once by a comma, "!" or "?", or ending the line. */
+    static boolean addressed(String n, String word) {
+        for (int at = n.indexOf(word); at >= 0; at = n.indexOf(word, at + 1)) {
+            boolean left = at == 0 || !Character.isLetterOrDigit(n.charAt(at - 1)) && !Txt.isDevanagari(n.charAt(at - 1));
+            int e = at + word.length();
+            if (!left) continue;
+            String rest = n.substring(e).trim(), before = n.substring(0, at).trim();
+            if (rest.isEmpty() || rest.charAt(0) == ',' || rest.charAt(0) == '!' || rest.charAt(0) == '?' || rest.charAt(0) == '،') return true;
+            // "सब ठीक है, बेटा।": called at the end of the sentence, after a comma
+            if (before.endsWith(",") && (rest.charAt(0) == '।' || rest.charAt(0) == '.' || rest.charAt(0) == '"' || rest.charAt(0) == '”')) return true;
+        }
+        return false;
+    }
     private static final Pattern FEM_VERB = Pattern.compile("(?:ती|ई|यी)\\s+(?:है|हैं|थी)(?:\\s|$)|(?:बैठी|खड़ी|लेटी|रुकी|गई|आई)(?:\\s|$)|(?:जाती|देती|लेती|रहती|रखती|बढ़ती|आती|बैठती)(?:\\s|$)");
     private static final Pattern MASC_VERB = Pattern.compile("(?:ते|ता)\\s+(?:है|हैं|थे)(?:\\s|$)|(?:बैठे|खड़े|लेटे|रुके|गए|आए)(?:\\s|$)|(?:जाते|देते|लेते|रहते|रखते|बढ़ाते|आते|बैठते|जाता|देता|लेता)(?:\\s|$)");
 
@@ -1017,7 +1034,9 @@ public final class ProductionDocument {
         for (int i = issues.size() - 1; i >= 0; i--) if (issues.get(i).stage.equals(READER) || issues.get(i).stage.equals(TECHNICAL_DIRECTOR) || issues.get(i).stage.equals(EDITOR)) issues.remove(i);
         editorReview();
         if (film != null) physicsCheck();
-        for (Line l : lines) if (l.speakerId == null) issue(BLOCKER, READER, l.sceneId, "every line has a listed speaker", "no character for \"" + l.speakerName + "\"", "list the speaker under पात्र, or fix the name");
+        for (Line l : lines) if (l.speakerId == null && heardOnly.contains(l.id)) issue(WARNING, READER, l.sceneId, "a voice only heard: \"" + l.speakerName + "\"",
+                "\"" + l.text + "\"", "no picture is asked for; list it under पात्र to give it a picture");
+        for (Line l : lines) if (l.speakerId == null && !heardOnly.contains(l.id)) issue(BLOCKER, READER, l.sceneId, "every line has a listed speaker", "no character for \"" + l.speakerName + "\"", "list the speaker under पात्र, or fix the name");
         for (Effect e : effects) {
             if (e.method.equals(UNSUPPORTED)) issue(e.evidence.equals(EXPLICIT) ? MAJOR : WARNING, TECHNICAL_DIRECTOR, e.sceneId, e.kind + ": " + e.behaviour, "\"" + e.span + "\"", "not carried out by this renderer; "
                     + (e.kind.equals("DAPPLED_LIGHT") ? "the place's picture keeps its sun patches still" : e.kind.equals("LEAVES_SLIDE") ? "leaves lying on the ground stay still" : e.explanation.length() > 0 ? e.explanation : "no approximation yet"), e.affectedId);
@@ -1147,9 +1166,15 @@ public final class ProductionDocument {
             String t = Txt.norm(l.text);
             for (String r : RELATIONS) {
                 if (said.contains(r) || !startsWord(t, Txt.norm(r))) continue;
+                // (v47.8: an English word whole — "Warm songs?" named an unseen son)
+                if (r.charAt(0) < 128 && !Pattern.compile("\\b" + Pattern.quote(r) + "\\b", Pattern.CASE_INSENSITIVE).matcher(t).find()) continue;
                 boolean cast = false;
                 for (Entity c : characters) if (Txt.has(c.name + " " + c.description, r)) cast = true;
                 if (cast) continue;
+                // v47.8: said to someone ("डरो मत बेटा, यह तो बस हवा थी", "हाँ बेटा, नाश्ते के बाद") — a form of address to the
+                // one there in the scene (who may not speak in it), not a person who is only talked about (fourteen
+                // stories had the child on screen noted as an unseen son)
+                if (addressed(t, Txt.norm(r))) continue;
                 said.add(r);
                 editorNote("OFFSCREEN_PERSON", l.sceneId, "\"" + r + "\" is named only in the lines: all the story establishes about them is what is said",
                         "\"" + l.text + "\" (" + l.speakerName + ")", "no picture is asked for; if they matter to a shot (a photo, a letter in their hand), list them", l.speakerId);

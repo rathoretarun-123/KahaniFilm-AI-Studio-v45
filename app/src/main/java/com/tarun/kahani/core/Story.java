@@ -15,6 +15,8 @@ public final class Story {
     public final List<PlaceDef> things = new ArrayList<PlaceDef>();
     /** v40: the time the script states before it starts ("समय - रात 11 बजे, ठंड वाली रात"), or "". */
     public String time = "";
+    /** v47.8: the place the script states before it starts ("स्थान: उत्तर भारतीय कस्बे की पुरानी डाकघर वाली गली"), or "". */
+    public String place = "";
     public final List<Scene> scenes = new ArrayList<Scene>();
     public final List<String> warnings = new ArrayList<String>();
     /** v46: the writer's notes to the studio after the last scene ("निर्देशन और तकनीकी स्वीकृति:"), kept apart from the action. */

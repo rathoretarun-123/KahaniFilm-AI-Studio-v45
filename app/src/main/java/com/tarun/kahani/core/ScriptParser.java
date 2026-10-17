@@ -406,6 +406,14 @@ public final class ScriptParser {
      * ("नियॉन गार्डन की सुबह" → the Neon Garden), else where the last scene was (the story simply goes on there).
      */
     static void placesOfScenes(Story st) {
+        // v47.8: the place the script states above its lists is the story's place; a list entry that is only labelled
+        // "स्थान"/"जगह" ("4. स्थान: बड़ा पेड़, पुरानी लकड़ी की बेंच, लाल डाक पेटी…") describes it — one place, named by the
+        // script's own words, where every scene that names no other happens
+        Story.PlaceDef own = null;
+        if (st.place.length() > 0) {
+            for (Story.PlaceDef p : st.places) if (placeLabel(p.name)) { own = p; break; }
+            if (own == null && st.places.isEmpty()) { own = new Story.PlaceDef(); own.name = st.place; st.places.add(own); }
+        }
         String prev = "";
         for (Story.Scene sc : st.scenes) {
             if (sc.setting.length() == 0) {
@@ -413,6 +421,7 @@ public final class ScriptParser {
                 for (Story.Beat b : sc.beats) if (b.type == Story.Beat.DIRECTION) { first = b.text; break; }
                 String head = sc.title + " । " + (first.length() > 240 ? first.substring(0, 240) : first);
                 Story.PlaceDef p = placeNamedIn(st, head);
+                if (p == null && own != null && st.places.size() == 1) { sc.setting = ownSetting(st, own); prev = sc.setting; continue; }
                 // v40: the one place a story lists is where its first scene happens when the scene names none
                 if (p == null && sc == st.scenes.get(0) && st.places.size() == 1) p = st.places.get(0);
                 if (p != null) sc.setting = p.name + (p.description.length() > 0 ? "। " + p.description : "");
@@ -421,6 +430,12 @@ public final class ScriptParser {
             }
             prev = sc.setting;
         }
+    }
+
+    /** v47.8: a scene's setting at the story's own place: the script's words for it first, then the list's description. */
+    static String ownSetting(Story st, Story.PlaceDef own) {
+        String d = own.description == null ? "" : own.description.trim();
+        return st.place + (d.length() > 0 && !d.equals(st.place) ? "। " + d : "");
     }
 
     /** The place from the list whose name the text mentions (its distinctive words, whole), or null. */
@@ -498,6 +513,14 @@ public final class ScriptParser {
     }
 
     /** v40: "समय - रात 11 बजे, ठंड वाली रात" / "Time: night" before the script: the time it states, else null. */
+    /** v47.8: "स्थान: …" / "जगह - …" / "Location: …" with the place itself after it (two words or more, one line), or null. */
+    static String placeLine(String l) {
+        Matcher m = Pattern.compile("^[#*\\s]*(स्थान|जगह|लोकेशन|Location|LOCATION|location|Place|PLACE|Setting|SETTING)\\s*[-–—:：]\\s*(.+)$").matcher(l);
+        if (!m.matches()) return null;
+        String p = m.group(2).trim().replaceAll("[।.\\s]+$", "");
+        return p.length() <= 120 && p.split("\\s+").length >= 2 && !p.endsWith(":") && !p.contains("\"") && !p.contains("“") ? p : null;
+    }
+
     static String timeLine(String l) {
         Matcher m = Pattern.compile("^[#*\\s]*(समय|वक़्त|वक्त|टाइम|Time|TIME|time)\\s*[-–—:：]\\s*(.+)$").matcher(l);
         return m.matches() && m.group(2).trim().length() <= 160 ? m.group(2).trim() : null;
@@ -520,8 +543,13 @@ public final class ScriptParser {
      */
     static void timeOfScenes(Story st) {
         if (st.time.length() == 0) return;
+        // (v47.8: the story's own place, given to every scene, is no hour of the scene — a word of time in its description
+        // took the script's "समय: शाम 7:15…, मूसलाधार बारिश…" away from आखिरी चाय: no rain, stars instead)
+        String own = "";
+        if (st.place.length() > 0 && st.places.size() == 1) own = ownSetting(st, st.places.get(0));
         for (Story.Scene sc : st.scenes) {
-            if (Sets.detectTime(sc.title + " " + sc.setting, -1) >= 0) continue;
+            String mine = own.length() > 0 && sc.setting.startsWith(own) ? sc.setting.substring(own.length()) : sc.setting;
+            if (Sets.detectTime(sc.title + " " + mine, -1) >= 0) continue;
             sc.setting = sc.setting.length() == 0 ? "समय: " + st.time : sc.setting.replaceAll("[।.\\s]+$", "") + "। समय: " + st.time;
         }
     }
@@ -988,6 +1016,10 @@ public final class ScriptParser {
             // v40: "समय - रात 11 बजे, ठंड वाली रात, आसमान में तारे": the hour of the story (never a character or a place)
             String time = mode == 0 || header == null ? timeLine(l) : null;
             if (time != null) { flushEntry(story, entryMode, header, desc); header = null; mode = 0; story.time = time; continue; }
+            // v47.8: "स्थान: उत्तर भारतीय कस्बे की पुरानी डाकघर वाली गली" above the lists: the story's own place (it was taken
+            // for the heading of a list and its words were lost — scene 1 of बाबू के लिए was set in a room)
+            String place = mode == 0 && header == null && story.place.length() == 0 ? placeLine(l) : null;
+            if (place != null) { story.place = place; continue; }
             if (isThingsHeader(l)) { flushEntry(story, entryMode, header, desc); header = null; mode = 3; numbered = false; continue; }
             if (isPlaceHeader(l)) { flushEntry(story, entryMode, header, desc); header = null; mode = 2; continue; }
             if (isCharHeader(l)) { flushEntry(story, entryMode, header, desc); header = null; mode = 1; continue; }
@@ -1822,6 +1854,11 @@ public final class ScriptParser {
      */
     public static List<Story.CharacterDef> present(Story story, String text) { return mentions(story, text, true); }
 
+    /** v47.8: after "X का/की/के", the words that still put X on the stage: X's eyes or gaze, where one stands by X, X's face's parts. */
+    private static final String[] THERE_AFTER = {Txt.norm("आँख"), Txt.norm("आंख"), Txt.norm("नज़र"), Txt.norm("नजर"), Txt.norm("निगाह"),
+            Txt.norm("पीछे"), Txt.norm("आगे"), Txt.norm("बगल"), Txt.norm("करीब"), Txt.norm("क़रीब"), Txt.norm("नज़दीक"), Txt.norm("नजदीक"),
+            Txt.norm("गाल"), Txt.norm("माथे"), Txt.norm("होंठ"), Txt.norm("आँसू"), Txt.norm("आंसू")};
+
     private static boolean possessive(String t, int end) {
         String rest = t.substring(Math.min(end, t.length())).trim();
         if (!(rest.startsWith("का ") || rest.startsWith("की ") || rest.startsWith("के "))) return false;
@@ -1831,9 +1868,11 @@ public final class ScriptParser {
                 || after.startsWith("हाथ") || after.startsWith("कान") || after.startsWith("सिर")) return false;
         // v47.8: so do X's eyes or gaze on something ("बाबू की आँखें पत्र पर टिक जाती हैं": the old man left out of the
         // scene he watches), unless they are remembered or pictured
-        if ((after.startsWith(Txt.norm("आँख")) || after.startsWith(Txt.norm("आंख")) || after.startsWith(Txt.norm("नज़र")) || after.startsWith(Txt.norm("नजर"))
-                || after.startsWith(Txt.norm("निगाह"))) && !Txt.has(t, Txt.norm("याद"), Txt.norm("सपन"), Txt.norm("तस्वीर"), Txt.norm("फोटो"), Txt.norm("फ़ोटो"), "photo", "dream", "remember"))
-            return false;
+        // (v47.8: and where someone goes or stands by X — "अयान दबे पाँव माँ के पीछे जाता है" — and X's cheeks, brow, lips
+        // or tears — "वनुशा के गालों पर आटा लगा है" — the same: X is there)
+        boolean pictured = Txt.has(t, Txt.norm("याद"), Txt.norm("सपन"), Txt.norm("तस्वीर"), Txt.norm("फोटो"), Txt.norm("फ़ोटो"), "photo", "dream", "remember");
+        if (pictured) return true;
+        for (String w : THERE_AFTER) if (after.startsWith(w)) return false;
         return true;
     }
 
