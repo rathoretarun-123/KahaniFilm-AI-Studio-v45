@@ -2710,10 +2710,14 @@ public final class Renderer {
                     p.tears = true; p.emotion = Pose.SAD;
                     mo.dy += bump(u * 10) * 2;
                     break;
-                case Film.G_TREMBLE:
-                    mo.dx += (float) Math.sin(t * 70) * 2.2f;
+                case Film.G_TREMBLE: {
+                    // v47.7: a tremble at 5 Hz, eased in and out — at 11 Hz it flipped left and right every frame of a
+                    // 24 fps film (the frame audit: a jolt of 2.2% of the height a frame) and read as a shaking video
+                    float kt = Rig.smooth(0, 0.25f, u) * Rig.smooth(0, 0.3f, act.t1 - act.t0 - u);
+                    mo.dx += (float) Math.sin(t * 33) * 1.8f * kt;
                     p.emotion = p.emotion == Pose.NEUTRAL ? Pose.SCARED : p.emotion;
                     break;
+                }
                 case Film.G_CRUSH:
                     p.armR = 80; p.elbowR = 60; p.fist = true;
                     mo.rot += s * 2;
@@ -2736,7 +2740,7 @@ public final class Renderer {
                 case Film.G_RUB_EYES:
                     p.armL = 150; p.armR = 150; p.elbowL = 120 + s * 20; p.elbowR = 120 - s * 20;
                     p.eyesClosed = true; p.emotion = Pose.PAIN;
-                    mo.dx += (float) Math.sin(t * 40) * 3;
+                    mo.dx += (float) Math.sin(t * 26) * 2.4f;       // (v47.7: 4 Hz — at 6.4 Hz the frames flickered)
                     mo.rot += (float) Math.sin(u * 4) * 5;
                     break;
                 case Film.G_FLAIL:
@@ -2919,7 +2923,7 @@ public final class Renderer {
                 case Film.G_SHIVER: {
                     // v34: cold — a small fast shiver with the arms held in (no fear on the face)
                     float k2 = Rig.smooth(0, 0.2f, u) * Rig.smooth(0, 0.3f, act.t1 - act.t0 - u);
-                    mo.dx += (float) Math.sin(t * 55) * 1.2f * k2;
+                    mo.dx += (float) Math.sin(t * 34) * 1.2f * k2;     // (v47.7: 5.4 Hz, under the film's flicker)
                     if (art == null || !art.sprites.containsKey(a.c.id)) {
                         p.armL = p.armL + (22 - p.armL) * k2; p.armR = p.armR + (22 - p.armR) * k2;
                         p.elbowL = p.elbowL + (95 - p.elbowL) * k2; p.elbowR = p.elbowR + (95 - p.elbowR) * k2;
@@ -2941,7 +2945,7 @@ public final class Renderer {
                 case Film.G_ROAR:
                     mo.sx *= 1 + 0.04f * bump(u * 3);
                     mo.sy *= 1 + 0.04f * bump(u * 3);
-                    mo.dx += (float) Math.sin(t * 50) * 3;
+                    mo.dx += (float) Math.sin(t * 30) * 2.4f * Rig.smooth(0, 0.2f, u);      // (v47.7: 4.8 Hz, eased in)
                     p.armL = 110; p.armR = 110; p.fist = true;
                     p.emotion = Pose.ANGRY;
                     break;
