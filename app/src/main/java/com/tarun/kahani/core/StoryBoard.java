@@ -180,11 +180,26 @@ public final class StoryBoard {
             Art.Sprite s = art.sprites.get(c.id);
             if (s != null && s.colours != null) { ids.add(c.id); sigs.add(s.colours); }
         }
+        // (v47.8, the user: "why the director is not able to identify boy girl man woman": with two or more figures, their
+        // heights against each other are read too — a child is drawn shorter than a grown-up, so a short figure is not
+        // taken for a man or a woman, nor a tall one for a boy or a girl, whatever their clothes' colours)
+        List<Float> tall = new ArrayList<Float>();
+        if (story != null) for (Story.CharacterDef c : story.characters) {
+            Art.Sprite s = art != null ? art.sprites.get(c.id) : null;
+            if (s != null && s.colours != null) tall.add(c.look != null ? c.look.height : 1f);
+        }
+        float maxFig = 0, maxTall = 0;
+        for (int[] bx : figs) maxFig = Math.max(maxFig, bx[3] - bx[1] + 1);
+        for (float t : tall) maxTall = Math.max(maxTall, t);
         float[][] like = new float[figs.size()][ids.size()];
         for (int i = 0; i < figs.size(); i++) {
             int[] bx = figs.get(i);
             float[] sg = signature(px, 0, pw, Math.min(pw - 1, bx[0] * gs), Math.min(ph - 1, bx[1] * gs), Math.min(pw, (bx[2] + 1) * gs), Math.min(ph, (bx[3] + 1) * gs));
-            for (int j = 0; j < ids.size(); j++) like[i][j] = likeness(sg, sigs.get(j));
+            float rel = maxFig > 0 ? (bx[3] - bx[1] + 1) / maxFig : 1;
+            for (int j = 0; j < ids.size(); j++) {
+                like[i][j] = likeness(sg, sigs.get(j));
+                if (figs.size() >= 2 && maxTall > 0) like[i][j] -= 0.6f * Math.abs(rel - tall.get(j) / maxTall);
+            }
         }
         String[] got = new String[figs.size()];
         boolean[] used = new boolean[ids.size()];

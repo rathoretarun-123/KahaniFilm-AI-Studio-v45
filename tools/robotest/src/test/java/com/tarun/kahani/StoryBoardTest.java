@@ -98,6 +98,24 @@ public class StoryBoardTest {
         assertTrue("the production document carries the board's findings", reported);
     }
 
+    /** v47.8 (the user: "why the director is not able to identify boy girl man woman"): a child is known from a grown-up by height. */
+    @Test public void aChildIsToldFromAGrownUpByHeight() throws Exception {
+        Story story = ScriptParser.parse(new String(Files.readAllBytes(new File("../../tools/testdata/aakhiri_jodi/aakhiri_jodi_screenplay.txt").toPath()), StandardCharsets.UTF_8));
+        Story.CharacterDef a = story.characters.get(0), b = story.characters.get(1);
+        Story.CharacterDef tall = a.look.height >= b.look.height ? a : b, small = tall == a ? b : a;
+        assertTrue("one of them is shorter: " + a.look.height + " " + b.look.height, small.look.height < tall.look.height * 0.9f);
+        Art art = new Art();
+        int grey = 0xFF808080;
+        int[] same = picture(40, 80, new int[]{0, 0, 40, 80, grey});
+        for (Story.CharacterDef c : new Story.CharacterDef[]{a, b}) { Art.Sprite sp = new Art.Sprite(); sp.colours = StoryBoard.signature(same, 2, 40, 0, 0, 40, 80); art.sprites.put(c.id, sp); }
+        // the same colours: the short figure on the left, the tall one on the right
+        int[] sheet = picture(600, 400, new int[]{20, 110, 60, 190, grey}, new int[]{110, 40, 160, 190, grey});
+        Map<String, int[]> pics = new HashMap<String, int[]>();
+        pics.put("sheet", sheet);
+        StoryBoard board = StoryBoard.read(loader(pics), Arrays.asList("sheet"), art, story);
+        assertEquals(Arrays.asList(small.id, tall.id), board.moments.get(0).who);
+    }
+
     @Test public void aBoardOfNothingChangesNothing() {
         StoryBoard b = StoryBoard.read(loader(new HashMap<String, int[]>()), java.util.Collections.<String>emptyList(), new Art(), null);
         assertTrue(b.moments.isEmpty());

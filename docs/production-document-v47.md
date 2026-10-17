@@ -700,6 +700,13 @@ only one".
   shot with all of its characters on stage. The shot list gets a STORY BOARD section.
 - **Checking.** The production document (category STORY_BOARD) reports a moment that could not be placed, and a moment
   whose characters stand the other way round in the film.
+- **Children and grown-ups.** With two or more figures in a moment, their heights against each other are read too. A
+  short figure is not taken for a grown-up, nor a tall one for a child, whatever the colours of their clothes.
+  - The director knows each character's age and sex from the script.
+  - It knows them in a picture by comparing with that character's own uploaded pictures: their colours, and now their
+    height.
+  - There is no general "boy / girl / man / woman" image recognition on the phone. That would need a vision model,
+    which the app does not have offline.
 - **Not done.** The moments are references the film is staged and checked against. They are not pasted over the animated
   characters (lips and eyes would stop), and the film's left-to-right order is not yet changed to follow them: it is
   reported.
@@ -756,6 +763,9 @@ Checked with a board made of the user's own pictures of बाबू and the gir
 ### What remains (recorded, not claimed)
 
 - Getting into a car still cross-fades the rider into the seat (a 115 px jump of the drawn base).
+- One director change of this round was taken back: "a vehicle on a ride gets no path". Without that path the rider of
+  a car was drawn into the seat with a jump of 40% of their height (the frame audit on v44forge story 00860, caught by
+  the end-to-end sweep after the merge).
 - A jump has no crouch before take-off.
 - The girl's kneel reads as standing. The sit-down jolt of परी (2.0%, at the limit) remains.
 - In medium shots of the shared bench the girl is placed in front of बाबू, so it reads as two benches.

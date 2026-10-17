@@ -7385,10 +7385,8 @@ public final class Director {
                     if (i + 1 < a.keys.size() && a.keys.get(i + 1).t < t1) t1 = a.keys.get(i + 1).t;
                     if (t1 - t0 <= 0.2f) continue;
                     if (a.trackAt(t0 + 0.01f) != null || a.trackAt(t1 - 0.01f) != null) continue;      // already on a path
-                    // (v47.8: a vehicle keeps to its road — a car driven off was swung towards the camera round whoever stood there)
-                    boolean rides = false;
-                    for (Film.Act x : a.acts) if (x.type == Film.G_RIDE && x.t0 < t1 && x.t1 > t0) rides = true;
-                    if (rides) continue;
+                    // (v47.8: a ride keeps its path round whoever stands in the way — without it the rider of a car was drawn
+                    // into the seat with a jump of 40% of their height: the frame audit on v44forge story 00860)
                     float x0 = xAt(a, t0), x1 = t1 < k.t + k.moveDur ? xAt(a, t1 - 0.001f) : k.x;
                     if (Math.abs(x1 - x0) < ha * 0.3f || !a.stateAt(t0 + 0.05f).visible) continue;
                     float lo = Math.min(x0, x1), hi = Math.max(x0, x1), clear = 0;
