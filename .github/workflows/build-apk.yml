@@ -175,6 +175,7 @@ jobs:
             --tests com.tarun.kahani.OwnSeatPicturesTest \
             --tests com.tarun.kahani.RenderAuditTest \
             --tests com.tarun.kahani.StoryBoardTest \
+            --tests com.tarun.kahani.BackgroundViewsTest \
             --tests com.tarun.kahani.FrameAuditTest \
             --tests com.tarun.kahani.ObjectCharactersTest \
             --tests com.tarun.kahani.AnimalActionsTest \

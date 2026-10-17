@@ -269,6 +269,61 @@ public final class Bible {
         return n;
     }
 
+    /**
+     * v47.8 (the user: "ask as many pictures as possible for background … as described in script"): every background
+     * picture the script describes for one place — its wide view, the reverse angle, the views behind the close shots,
+     * a view for each other time of day its scenes are set at, and each thing of the story seen there, where it is in
+     * the place. Each entry is {kind ("view" or "thing"), what to photograph, the thing's name for a thing}. Only the
+     * script's own words are used; nothing is made up for a story.
+     */
+    public static List<String[]> backgroundViews(Story st, String place, String description, List<Story.Scene> here) {
+        List<String[]> out = new ArrayList<String[]>();
+        out.add(new String[]{"view", "The wide view — the whole of " + place + ", empty (no one in it)" + (description.length() > 0 ? ": " + oneLine(description) : ""), ""});
+        out.add(new String[]{"view", "The reverse angle — " + place + " seen the other way round (behind the over-the-shoulder shots)", ""});
+        out.add(new String[]{"view", "The close views — the walls, corners and floor of " + place + " behind the close shots", ""});
+        StringBuilder text = new StringBuilder(description);
+        Set<String> times = new LinkedHashSet<String>();
+        for (Story.Scene sc : here) {
+            text.append(' ').append(sc.setting).append(' ').append(sc.title);
+            for (Story.Beat b : sc.beats) text.append(' ').append(b.text);
+            String when = timeOfDay(sc.setting + " " + sc.title);
+            if (when != null) times.add(when);
+        }
+        if (times.size() > 1) for (String when : times) out.add(new String[]{"view", place + " in the " + when + " light (the scenes set then)", ""});
+        String all = Txt.norm(text.toString()).toLowerCase(java.util.Locale.ROOT);
+        for (Story.PlaceDef th : st.things) if (seenIn(th.name, all) && !intangible(th.name))
+            out.add(new String[]{"thing", th.name + " where it is in " + place + " — close, and a little wider", th.name.trim()});
+        return out;
+    }
+
+    /** The hour a scene is set at, in English, or null. */
+    static String timeOfDay(String s) {
+        String n = Txt.norm(s).toLowerCase(java.util.Locale.ROOT);
+        String[][] hours = {{"morning", "सुबह", "भोर", "morning", "dawn", "sunrise"}, {"afternoon", "दोपहर", "afternoon", "noon"},
+                {"evening", "शाम", "संध्या", "evening", "dusk", "sunset"}, {"night", "रात", "night", "midnight"}};
+        for (String[] h : hours) for (int i = 1; i < h.length; i++) if (n.contains(Txt.norm(h[i]).toLowerCase(java.util.Locale.ROOT))) return h[0];
+        return null;
+    }
+
+    /** The thing's name, its words in brackets, or its last word's stem ("पंखा" is seen in "पंखे") appears in the text. */
+    public static boolean seenIn(String name, String normText) {
+        String nm = name == null ? "" : name.trim();
+        if (nm.length() < 2) return false;
+        List<String> forms = new ArrayList<String>();
+        int open = nm.indexOf('(');
+        String main = open > 0 ? nm.substring(0, open).trim() : nm;
+        forms.add(main);
+        if (open > 0 && nm.indexOf(')', open) > open) forms.add(nm.substring(open + 1, nm.indexOf(')', open)).trim());
+        String[] words = main.split("\\s+");
+        String last = words[words.length - 1];
+        if (last.length() > 3) forms.add(last.substring(0, last.length() - 1));
+        for (String f : forms) {
+            String k = Txt.norm(f).toLowerCase(java.util.Locale.ROOT).trim();
+            if (k.length() >= 2 && normText.contains(k)) return true;
+        }
+        return false;
+    }
+
     public static List<String[]> places(Story st) {
         List<String[]> out = new ArrayList<String[]>();
         Set<String> seen = new LinkedHashSet<String>();

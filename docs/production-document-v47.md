@@ -720,6 +720,30 @@ Checked with a board made of the user's own pictures of बाबू and the gir
 
 `StoryBoardTest` covers this with a synthetic sheet.
 
+### Backgrounds: every view the script describes (Studio section 7, `Bible.backgroundViews`)
+
+The user asked for the Studio page to "ask as many pictures as possible for background … as described in script", in a
+new upload section like the earlier ones. Section 7 lists each place the script sets scenes in, with one button for
+every background picture its words call for:
+
+- the wide view of the place, empty, with the script's own description of it;
+- the reverse angle, the place seen the other way round, which goes behind the over-the-shoulder shots;
+- the close views, the walls, corners and floor behind the close shots;
+- the place at each time of day its scenes are set at, when there is more than one;
+- each thing of the story seen there, where it is in the place.
+
+A thing counts as seen there when its name, the words in its brackets ("Ceiling Fan"), or the stem of its last word
+("पंखा" in "पंखे") appears in the place's description or its scenes.
+
+The views are saved as that place's own pictures, the same as section 3 saves them, up to 100 a place. The things are
+saved as that thing's pictures, the same as section 2 and the film's waiting card. Nothing in the list is written for
+one story: it comes from the script's words alone.
+
+`BackgroundViewsTest` covers it with 2 tests: a place's views from a test script, and the name, bracket and stem
+matches. The user's five room pictures (the fan from below, the clock over the sofa, the spinning fan, the clock
+straight on, and a sheet of six fan and clock views) are kept in
+`docs/reference/user_uploads/sofe_wali_jadu_ki_baaten/places/`.
+
 ### What four debuggers found and fixed (each with tests; all merged)
 
 - **The app.** Nine fixes:

@@ -1524,6 +1524,8 @@ public class MainActivity extends Activity {
         body.addView(referenceCard());
         heading(body, "6. Story board (up to " + Project.MAX_BOARD + " pictures, in the story's order)");
         body.addView(boardCard());
+        heading(body, "7. Backgrounds — every view the script describes (as many pictures as you have, up to 100 a place)");
+        backgroundCards(body, st);
 
         // ---- director plan
         LinearLayout plan = Ui.card(this);
@@ -1846,6 +1848,44 @@ public class MainActivity extends Activity {
             body.addView(sceneCard(here.get(0), sl));
         }
         for (Story.Scene sc : st.scenes) if (!done.contains(sc.number)) body.addView(sceneCard(sc, sl));
+    }
+
+    /**
+     * v47.8 (the user: "let him ask as many pictures as possible for background in the studio page as described in
+     * script"): each place the script lists, with one button for every background picture its words call for — the
+     * wide view, the reverse angle, the close views, each time of day, and each thing of the story where it is in the
+     * place. The pictures are the place's own (its views behind each shot) or the thing's, as the other sections save them.
+     */
+    private void backgroundCards(LinearLayout body, Story st) {
+        int pn = 0;
+        for (String[] pl : Bible.listedPlaces(st)) {
+            List<Story.Scene> here = new ArrayList<Story.Scene>();
+            for (Story.Scene sc : st.scenes) if (AutoLibrary.placeOf(sc, pl[0])) here.add(sc);
+            if (here.isEmpty()) continue;
+            pn++;
+            final String key = String.valueOf(here.get(0).number);
+            final String place = st.shown(pl[0]);
+            LinearLayout card = Ui.card(this);
+            card.addView(Ui.text(this, pn + ". " + place, 16, Ui.TEXT, true));
+            int np = SheetSaver.placePictures(project, key);
+            card.addView(Ui.text(this, np > 0 ? "📷 " + np + " background picture" + (np > 1 ? "s" : "") + " of this place so far — add more: every view helps the director match the shots"
+                    : "No background picture yet — the studio draws it until you add one", 13, np > 0 ? Ui.GREEN : Ui.SUB, false));
+            int n = 0;
+            for (final String[] v : Bible.backgroundViews(st, place, pl[1] == null ? "" : pl[1], here)) {
+                n++;
+                final boolean thing = "thing".equals(v[0]);
+                int have = thing ? SheetSaver.thingPictures(project, v[2]) : 0;
+                String label = (thing && have > 0 ? "✓ " : "📷 ") + n + ". " + v[1];
+                card.addView(Ui.button(this, label.length() > 140 ? label.substring(0, 140) + "…" : label, thing ? Ui.BLUE : Ui.PRIMARY, new View.OnClickListener() {
+                    public void onClick(View x) {
+                        if (thing) anglesFor("angles:obj:" + v[2] + ":" + v[2], v[2] + " — " + v[1]);
+                        else anglesFor("angles:scene:" + key + ":" + place, place + " — " + v[1]);
+                    }
+                }));
+            }
+            body.addView(card);
+        }
+        if (pn == 0) body.addView(Ui.text(this, "The script names no place yet — the backgrounds are asked for once it does.", 13, Ui.SUB, false));
     }
 
     private LinearLayout sceneCard(final Story.Scene sc, SoundLib sl) {
