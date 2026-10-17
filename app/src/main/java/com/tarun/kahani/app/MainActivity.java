@@ -4732,7 +4732,8 @@ public class MainActivity extends Activity {
         background(thenShare ? "Preparing to share…" : "Saving to the gallery…", new Work() {
             public Object run() throws Exception {
                 String saved = project.setting("savedUri", "");
-                if (saved.length() > 0 && project.setting("saved", "0").equals("1")) return Uri.parse(saved);
+                // (v47.8: only while that copy is still in the gallery — one the user deleted was shared as a dead link)
+                if (saved.length() > 0 && project.setting("saved", "0").equals("1") && stillThere(Uri.parse(saved))) return Uri.parse(saved);
                 Uri uri = copyToGallery(src, name);
                 project.setSetting("savedUri", uri.toString());
                 project.setSetting("saved", "1");
@@ -4762,6 +4763,18 @@ public class MainActivity extends Activity {
         return n + "_" + (System.currentTimeMillis() / 1000 % 100000);
     }
 
+    /** v47.8: whether a gallery entry the app saved earlier can still be opened. */
+    private boolean stillThere(Uri u) {
+        try {
+            android.content.res.AssetFileDescriptor fd = getContentResolver().openAssetFileDescriptor(u, "r");
+            if (fd == null) return false;
+            fd.close();
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
     private Uri copyToGallery(File src, String name) throws Exception {
         if (Build.VERSION.SDK_INT >= 29) {
             ContentValues v = new ContentValues();
@@ -4771,8 +4784,14 @@ public class MainActivity extends Activity {
             v.put(MediaStore.Video.Media.IS_PENDING, 1);
             Uri uri = getContentResolver().insert(MediaStore.Video.Media.EXTERNAL_CONTENT_URI, v);
             if (uri == null) throw new Exception("Gallery not available");
-            OutputStream o = getContentResolver().openOutputStream(uri);
-            Project.copy(new FileInputStream(src), o);
+            try {
+                OutputStream o = getContentResolver().openOutputStream(uri);
+                Project.copy(new FileInputStream(src), o);
+            } catch (Exception e) {
+                // (v47.8: a copy that fails — a full phone — leaves no hidden half video in the gallery)
+                try { getContentResolver().delete(uri, null, null); } catch (Exception ignored) { /* the copy's error is the one reported */ }
+                throw e;
+            }
             v.clear();
             v.put(MediaStore.Video.Media.IS_PENDING, 0);
             getContentResolver().update(uri, v, null, null);

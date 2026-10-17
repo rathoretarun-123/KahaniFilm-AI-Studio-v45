@@ -451,12 +451,13 @@ public final class Project {
     static void copy(InputStream in, OutputStream out) throws IOException {
         try {
             if (in == null) throw new IOException("nothing to read");
+            if (out == null) throw new IOException("nowhere to write");     // (a content resolver hands out null too)
             byte[] buf = new byte[65536];
             int n;
             while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
         } finally {
             if (in != null) try { in.close(); } catch (IOException ignored) { /* the copy's own error is thrown */ }
-            out.close();
+            if (out != null) out.close();
         }
     }
 }
