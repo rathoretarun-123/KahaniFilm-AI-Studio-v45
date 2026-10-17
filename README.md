@@ -1,7 +1,8 @@
 # KahaniFilm v47 — films of the seventh round (17 October 2026, night)
 
-These films were rendered on the desktop (`tools/jvm/.../MakeFilm`) from commit `b70780e` on branch
-`ccr-a5fc4eef-d2p2nm`, the commit of APK build 350, at 960×540 and 24 fps with the frame audit on.
+These films were rendered on the desktop (`tools/jvm/.../MakeFilm`) from branch `ccr-a5fc4eef-d2p2nm` at 960×540 and
+24 fps with the frame audit on: the two drawn films and the sofa story from commit `5b799a7` (drawn figures with volume,
+the open book redrawn), the other three from `b70780e` (that change does not touch them).
 
 The phone app runs the same core code (`FilmJob` uses the same Director, Casting, Renderer and frame audit). These are
 the studio's own 2D renders: cut-out pictures on a mesh rig, with drawn effects. They are **not** Pixar-quality 3D
@@ -40,10 +41,13 @@ production document, shot list, and audit summary with the voice count.
   outlines. It is cleaned off.
 - **Grounded sitters.** A soft shadow on the seat and back cushion under each sitter. Hands on held things are shaded.
 - **Scene changes.** Title to first scene and last scene to end now dissolve.
+- **Drawn figures with volume** (आखिरी जोड़ी, आखिरी चाय drawn): every solid colour is lit from above and the left, so
+  heads and hands read round and clothes are lighter at the top and in shade at the hem. They are still simple shapes.
+- **The open book** shows the user's cover round its pages, curved leaves and a shaded fold.
 
 ## Still visible (not fixed)
 
-- The open book is drawn as plain white pages, not the user's picture of the book open.
+- The open book's pages are drawn (blank lines), not the user's picture of the book open.
 - The teddy in the little one's arms is a picture held in front of her own arm, not wrapped in it.
 - आखिरी चिट्ठी: the two jolts and the one picture change listed above.
 - बाबू के लिए: in medium shots of the shared bench, his photo's bench and the drawn bench can both be seen; the girl's
