@@ -424,7 +424,7 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघुवीर जी
 SOUND: Ambience of open place
-DURATION: 1.1 s
+DURATION: 1.3 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
 SHOT ID: KAHANI_SC02_SH018_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
@@ -432,14 +432,14 @@ PICTURES USED: परी ← the front picture (rigged); रघुवीर ज�
 FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
 GAZE: where the action goes; the characters look at what they do, never at the camera
 ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
-TRANSITION IN: cut on action — continue movement into the next shot
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: परी centre, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
 STATE AT END: परी centre, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 019   at 0:40.6
+SHOT 019   at 0:40.9
 PURPOSE: Follow the action: everyone who moves stays in the frame
-SHOT SIZE: Wide (Two-shot)
+SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
 CAMERA MOVEMENT: Static
 CHARACTER ACTION: रघुवीर जी in the scene
@@ -447,15 +447,15 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघुवीर जी
 SOUND: Ambience of open place
-DURATION: 1.5 s
+DURATION: 1.3 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH019_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH019_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
-FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
-GAZE: where the action goes; the characters look at what they do, never at the camera
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
 ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
-TRANSITION IN: cut on action — continue movement into the next shot
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: परी centre, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
 STATE AT END: परी centre, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
@@ -526,7 +526,7 @@ GAZE: on the thing of the action (eyes first, the head a moment later); never va
 ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: परी centre, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
-STATE AT END: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी centre, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: uneven steps (a limp)
 
 SHOT 023   at 0:46.2
@@ -534,21 +534,21 @@ PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
 CAMERA MOVEMENT: Static
-CHARACTER ACTION: परी moves
+CHARACTER ACTION: रघुवीर जी in the scene
 FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
-FOCUS: परी
+FOCUS: रघुवीर जी
 SOUND: Ambience of open place
 DURATION: 0.6 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
 SHOT ID: KAHANI_SC02_SH023_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
-FIVE QUESTIONS: see — परी moves | feel — Keep the story readable | attention first — परी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
 ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
-TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
-STATE AT START: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी centre, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
 STATE AT END: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
@@ -570,7 +570,7 @@ PICTURES USED: परी ← the front picture (rigged); रघुवीर ज�
 FIVE QUESTIONS: see — परी moves | feel — Keep the story readable | attention first — परी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
 ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
-TRANSITION IN: cut on action — continue movement into the next shot
+TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
 STATE AT START: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
 STATE AT END: परी right third, facing left, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, scared
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: uneven steps (a limp)
@@ -664,7 +664,7 @@ FIVE QUESTIONS: see — रघुवीर जी: "अरे, कौन है?
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
 ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
 TRANSITION IN: cut on action — continue movement into the next shot
-STATE AT START: परी left third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT START: परी centre, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
 STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
 VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 0:49.3 for 3.5 s: "अरे, कौन है?" | music: happy (ducked under the line)
 
@@ -1855,7 +1855,7 @@ VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action 
 
 QUALITY CHECK
 • Every part opens on a readable wide shot: yes
-• Jump cuts (a cut to almost the same framing): 7 removed (the shot simply continues)
+• Jump cuts (a cut to almost the same framing): 8 removed (the shot simply continues)
 • Technical Director protocol: locked tripod, every shot static, no camera shake unless the story asks for it
 • Shots longer than 4 s: 1
 • Lip-sync shots (front close-ups, face filling the frame, at most 6 words): 16; with more than 6 words: 0
@@ -1864,9 +1864,9 @@ QUALITY CHECK
 • Realism (v34): 1 looks held on an entrance, an exit, a return, a reveal or someone hurt (0 turned round to watch); 0 reactions to rain or snow beginning; 0 hurried out of the rain; 0 felt their way blindfolded; 0 doors heard; 4 footsteps moved across the stereo
 • Bodies (v35): 1 limping (uneven steps, never running), 0 with one arm (an empty sleeve; one hand does the work), 0 with one leg (crutches, or an artificial leg and a limp), 0 with fingers missing, 0 with one eye, 0 blind (feels the way or follows the cane, listens, no point-of-view shot), 0 deaf (0 sounds or calls not heard — no startle, no turn), 0 who sign (0 lines in sign language: hands and face framed together, the words in the subtitle)
 • Everyday actions (v35): 3 sat down (a chair, a sofa, a bed, the floor — each its own furniture and sound), 0 got up (leaning forward, slower from a low seat; from lying, sitting up first), 0 lay down to sleep (sat, then lay back; eyes shut, slow breath, a blanket in bed), 0 woke (sat up, stretched and yawned), 0 ate (hand to mouth, chewing, heard), 0 drank (raised to the lips, a sip or gulps, the cup set down); 0 shots of a seated speaker from a standing photo kept from the waist up, 0 close-ups of a photo eating or drinking (the cup or morsel comes up to the lips)
-• Cuts made so no character moves 15% of the frame in one shot: 8; shots still over the limit (very fast moves the story's timing leaves no room to slow): 6
+• Cuts made so no character moves 15% of the frame in one shot: 9; shots still over the limit (very fast moves the story's timing leaves no room to slow): 6
 • Cuts made so each shot holds one action: 1; shots with more than one: 0
-• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 94
+• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 103
 • Validation layer: 47 of 78 shots passed at once, 31 corrected
 • Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
 • First-frame checks: 0 shots reframed for a cut head, 0 for feet out of the frame (feet in the bottom 85-98% with their shadow)
@@ -2023,7 +2023,8 @@ LOCATION RECORDS (director's manual 1.6)
      time-of-day and lighting variants: day (Key: warm sun, top left 45 deg)  |  scenes: SC_01, SC_02, SC_03
 • Step 8 — the finished film metered frame by frame as it was written (3458 frames; 2932 pairs of frames in a row compared in 78 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 30.1 per cell at 1:48.2 (limit 14), the largest share of the frame changed 47% (limit 50%)
 
-FRAME AUDIT — every character in every frame as drawn (3087 frames, 5435 character-frames, 5210 frame pairs inside shots)
-• Jolts (a change of speed over 2% of the height in one frame): 1; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 1; extra faces: 0
+FRAME AUDIT — every character in every frame as drawn (3087 frames, 5425 character-frames, 5210 frame pairs inside shots)
+• Jolts (a change of speed over 2% of the height in one frame): 2; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 1; extra faces: 0
+  - परी jolts (2.1% of the height per frame, up and down) at frame 1116 (0:46.5)
   - परी jolts (2.0% of the height per frame, up and down) at frame 2787 (1:56.1)
   - परी's picture changes from the rigged front picture to a view (382x900) between frames 2782 and 2783 (1:55.9) without a cross-fade

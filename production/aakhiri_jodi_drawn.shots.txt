@@ -869,5 +869,5 @@ LOCATION RECORDS (director's manual 1.6)
      time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg), day (Key: warm sun, top left 45 deg)  |  scenes: SC_01, SC_02, SC_03
 • Step 8 — the finished film metered frame by frame as it was written (1606 frames; 1042 pairs of frames in a row compared in 29 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 88 moments; the largest change between two frames 5.7 per cell at 0:39.5 (limit 14), the largest share of the frame changed 12% (limit 50%)
 
-FRAME AUDIT — every character in every frame as drawn (1235 frames, 2470 character-frames, 2306 frame pairs inside shots)
+FRAME AUDIT — every character in every frame as drawn (1235 frames, 1899 character-frames, 1774 frame pairs inside shots)
 • Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0

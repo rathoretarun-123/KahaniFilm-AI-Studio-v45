@@ -1,0 +1,3 @@
+FRAME AUDIT — every character in every frame as drawn (2590 frames, 4558 character-frames, 4277 frame pairs inside shots)
+• Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 1; extra faces: 0
+  - बच्ची's picture changes from the rigged front picture to a view (341x996) between frames 2009 and 2010 (1:23.7) without a cross-fade

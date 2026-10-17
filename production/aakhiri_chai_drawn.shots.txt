@@ -1992,7 +1992,7 @@ QUALITY CHECK
 • Everyday actions (v35): 5 sat down (a chair, a sofa, a bed, the floor — each its own furniture and sound), 0 got up (leaning forward, slower from a low seat; from lying, sitting up first), 0 lay down to sleep (sat, then lay back; eyes shut, slow breath, a blanket in bed), 0 woke (sat up, stretched and yawned), 0 ate (hand to mouth, chewing, heard), 4 drank (raised to the lips, a sip or gulps, the cup set down); 0 shots of a seated speaker from a standing photo kept from the waist up, 0 close-ups of a photo eating or drinking (the cup or morsel comes up to the lips)
 • Cuts made so no character moves 15% of the frame in one shot: 2; shots still over the limit (very fast moves the story's timing leaves no room to slow): 1
 • Cuts made so each shot holds one action: 3; shots with more than one: 2
-• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 64
+• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 68
 • Validation layer: 39 of 83 shots passed at once, 44 corrected
 • Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
 • First-frame checks: 4 shots reframed for a cut head, 3 for feet out of the frame (feet in the bottom 85-98% with their shadow)
@@ -2173,5 +2173,5 @@ LOCATION RECORDS (director's manual 1.6)
      time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg)  |  scenes: SC_01, SC_02, SC_03, SC_04
 • Step 8 — the finished film metered frame by frame as it was written (3404 frames; 2767 pairs of frames in a row compared in 82 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 2, whole-frame story effects left out 52 moments; the largest change between two frames 9.7 per cell at 1:07.4 (limit 14), the largest share of the frame changed 17% (limit 50%)
 
-FRAME AUDIT — every character in every frame as drawn (3033 frames, 8370 character-frames, 7912 frame pairs inside shots)
+FRAME AUDIT — every character in every frame as drawn (3033 frames, 5771 character-frames, 5404 frame pairs inside shots)
 • Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0
