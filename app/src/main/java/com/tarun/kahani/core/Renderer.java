@@ -2666,6 +2666,28 @@ public final class Renderer {
                             p.holdR = Pose.I_COMB; p.headTilt += 5 * in;
                             if (!picture) { p.armR = (150 - 18 * (float) Math.abs(Math.sin(u * 2.4f))) * in + 8 * (1 - in); p.elbowR = 60 * in + 10 * (1 - in); }
                             break;
+                        case Film.T_FOLD: {
+                            // v47.8 (the user's reference: a T-shirt folded neatly at a table): both hands in front at
+                            // the waist bring the cloth's halves together and smooth it — about one fold a second,
+                            // the head down at the work (the forearms come up over 0.7 s and are down again before the
+                            // act's own last 0.3 s fade: no snap at 24 fps)
+                            in = Rig.smooth(0, 0.7f, u) * (1 - Rig.smooth(dur - 1.0f, dur - 0.3f, u));
+                            p.holdR = Pose.I_CLOTH; p.nod += 0.2f * in;
+                            float fold = (float) Math.sin(u * 2 * Math.PI * 0.9f);
+                            if (!picture) { p.armR = (22 + 5 * fold) * in + 8 * (1 - in); p.armL = (22 - 5 * fold) * in + 8 * (1 - in); p.elbowR = p.elbowL = 96 * in + 10 * (1 - in); }
+                            break;
+                        }
+                        case Film.T_DIG: {
+                            // v47.8 (the user's reference: digging the soil with a spade): bent at the waist, the spade
+                            // pushed down into the ground and levered up, a stroke every second and a half, eased
+                            in = Rig.smooth(0, 0.7f, u) * (1 - Rig.smooth(dur - 1.0f, dur - 0.3f, u));
+                            p.holdR = Pose.I_SPADE;
+                            float stroke = (float) (0.5 - 0.5 * Math.cos(u * 2 * Math.PI / 1.5f));
+                            p.tilt += (4 + 5 * stroke) * in; p.nod += (0.18f + 0.12f * stroke) * in;
+                            mo.dy += 4 * stroke * in;
+                            if (!picture) { p.armR = (24 + 18 * stroke) * in + 8 * (1 - in); p.elbowR = 35 * in + 10 * (1 - in); p.armL = (30 + 12 * stroke) * in + 8 * (1 - in); p.elbowL = 45 * in + 10 * (1 - in); }
+                            break;
+                        }
                         case Film.T_RANGOLI:
                             // v37: kneeling on the floor, the hand trickling coloured powder into the pattern
                             p.body = Pose.SIT; p.sit = Math.max(p.sit, in); p.seat = Film.SEAT_FLOOR; p.walkAmt = 0;
@@ -5933,6 +5955,24 @@ public final class Renderer {
         float fade = Math.min(1, (t - f.t0) / 0.5f);
         float x = f.x, walk = 0, amt = 0, y = s.ground;
         boolean graze = true;
+        if (f.y == 3 && f.a != null) {
+            // v47.8 daily A (the user's reference: walking a dog on a leash): the dog keeps a step ahead of its walker at
+            // their pace — its legs going with the ground covered, so it eases in and out with the walker's own eased
+            // walk — on a lead from the walker's hand to its collar, sagging a little
+            if (!f.a.stateAt(t).visible) return;
+            float wh = actorHeight(f.a.look, f.a.c, art, s);
+            float ax = Director.xAt(f.a, t), back = Director.xAt(f.a, Math.max(f.t0, t - 1f));
+            float v = (Director.xAt(f.a, t + 0.08f) - Director.xAt(f.a, t - 0.08f)) / 0.16f;
+            float lead = Math.max(-1, Math.min(1, face + (ax - back) / 40f));
+            float dx = ax + lead * 0.75f * wh, df = Math.abs(v) > 4 ? Math.signum(v) : lead >= 0 ? 1 : -1;
+            g.save(); g.setAlpha(fade);
+            ActionProps.animal(g, f.kind, dx, y, H, df, ax * 0.075f, Math.min(0.8f, Math.abs(v) / 70f), t, false);
+            float side = dx >= ax ? 1 : -1, hx = ax + side * 0.2f * wh, hy = y - 0.47f * wh, cx = dx + df * 0.32f * H, cy = y - 0.72f * H;
+            g.color(0xFF6D4C41);
+            g.begin(); g.moveTo(hx, hy); g.quadTo((hx + cx) / 2, Math.max(hy, cy) + 0.05f * wh, cx, cy); g.strokePath(Math.max(2f, 0.011f * wh));
+            g.restore();
+            return;
+        }
         if (t >= f.t2) {
             float w = t - f.t2;
             if (f.y == 2) { x = f.x + face * Math.min(w, 4f) * 80; walk = w * 6; amt = w < 4f ? 0.7f : 0; graze = false; }

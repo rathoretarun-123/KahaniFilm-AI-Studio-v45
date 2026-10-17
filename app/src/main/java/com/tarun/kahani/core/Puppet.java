@@ -1372,7 +1372,7 @@ public final class Puppet {
                 drawTurbanShape(g, hx, hy - 6, b.headR * 1.0f, p.turbanColor, p.turbanBand, false);
                 break;
             default:
-                if (hold >= Pose.I_LADLE && hold <= Pose.I_ROPE) drawTool(g, hold, hx, hy, b.headR / 34f, p.facing, p.time, b.floorY);
+                if (hold >= Pose.I_LADLE && hold <= Pose.I_ROPE || hold == Pose.I_CLOTH || hold == Pose.I_SPADE) drawTool(g, hold, hx, hy, b.headR / 34f, p.facing, p.time, b.floorY);
         }
     }
 
@@ -1438,6 +1438,21 @@ public final class Puppet {
                 g.color(base); g.roundRect(x - 11 * k, y - 2 * k, 22 * k, 8 * k, 3 * k);
                 g.color(0x44000000); g.roundRect(x - 11 * k, y + 4 * k, 22 * k, 3 * k, 1.2f * k);
                 g.color(0x55FFFFFF); g.roundRect(x - 7 * k, y - 1 * k, 7 * k, 3 * k, 1 * k);
+                break;
+            }
+            case Pose.I_CLOTH: {
+                // v47.8: a shirt being folded in both hands — a soft square with its fold line and a collar
+                g.color(0xFF90CAF9); g.roundRect(x - 18 * k, y - 11 * k, 36 * k, 21 * k, 3 * k);
+                g.color(0xFF64B5F6); g.rect(x - 18 * k, y - 1 * k, 36 * k, 1.6f * k);
+                g.color(0xFFE3F2FD); g.roundRect(x - 5 * k, y - 11 * k, 10 * k, 4 * k, 1.5f * k);
+                break;
+            }
+            case Pose.I_SPADE: {
+                // v47.8: a spade — the wooden handle up past the hand, the iron blade down ahead at the ground
+                float bx = x + f * 16 * k, by = Math.max(y + 24 * k, floorY - 4);
+                g.color(0xFF8D6E63); g.line(x - f * 4 * k, y - 14 * k, bx, by - 8 * k, 3.4f * k);
+                g.color(0xFF78909C); g.roundRect(bx - 8 * k, by - 13 * k, 16 * k, 16 * k, 2.5f * k);
+                g.color(0x553E2723); g.oval(bx, by + 2 * k, 10 * k, 2.5f * k);
                 break;
             }
             case Pose.I_BOX: {
