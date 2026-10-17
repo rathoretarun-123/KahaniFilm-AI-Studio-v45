@@ -44,7 +44,7 @@ public final class FrameAudit {
         m.put(frame(t), new float[]{x, y, h});
     }
 
-    /** Which picture it was drawn with (cycle: stepping through a walk's pictures, cross-faded — never a pop). */
+    /** Which picture it was drawn with (cycle: stepping through a walk's pictures cross-faded, or narrowed into a turn — never a pop). */
     public synchronized void picture(Film.Actor a, float t, String key, boolean cycle) {
         TreeMap<Integer, String> m = pictures.get(a.c.id);
         if (m == null) { m = new TreeMap<Integer, String>(); pictures.put(a.c.id, m); }

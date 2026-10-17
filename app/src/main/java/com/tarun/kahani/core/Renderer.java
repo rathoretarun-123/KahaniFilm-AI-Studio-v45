@@ -74,9 +74,11 @@ public final class Renderer {
                 // stroke of it multiplied, so nothing inside the new part pops in early)
                 float u = ease01((t - s.t0) / DISSOLVE);
                 float keepFollow = followX;
+                dissolveOld = prev; dissolveNew = s; dissolveU = u;
                 drawAny(g, prev, t);
                 followX = keepFollow;
                 if (u > 0.001f) { g.save(); g.setAlpha(u); drawAny(g, s, t); g.restore(); }
+                dissolveOld = dissolveNew = null;
             } else {
                 drawAny(g, s, t);
             }
@@ -1458,7 +1460,27 @@ public final class Renderer {
     static final class Motion { float dx, dy, rot, sx = 1, sy = 1; }
     private final Motion mo = new Motion();
 
+    /**
+     * v47.7 (the user: "no extra lips or eyes anywhere"): in a dissolve between two parts, one who is in both is never
+     * drawn twice at once — the old picture's one fades out over the first half, the new picture's one in over the
+     * second (a cross-dissolve laid both faces over each other for a second: the frame audit's "second face").
+     */
     private void drawActor(Gfx g, Film.Seg s, Film.Actor a, float t) {
+        float k = 1f;
+        if (dissolveOld != null && (s == dissolveOld || s == dissolveNew)) {
+            Film.Seg other = s == dissolveOld ? dissolveNew : dissolveOld;
+            boolean shared = false;
+            for (Film.Actor o : other.actors) if (o.c == a.c && o.stateAt(t).visible) { shared = true; break; }
+            if (shared) k = s == dissolveOld ? Math.max(0, 1 - 2 * dissolveU) : (dissolveU > 0.001f ? Math.max(0, 2 * dissolveU - 1) / dissolveU : 0);
+        }
+        if (k <= 0.001f) return;
+        if (k >= 0.999f) { drawActorNow(g, s, a, t); return; }
+        g.save(); g.setAlpha(k); drawActorNow(g, s, a, t); g.restore();
+    }
+    private Film.Seg dissolveOld, dissolveNew;
+    private float dissolveU;
+
+    private void drawActorNow(Gfx g, Film.Seg s, Film.Actor a, float t) {
         Film.Key k = a.stateAt(t);
         if (!k.visible) return;
         // v38: in an over-the-shoulder shot the speaker is the shoulder in the foreground — never also on the stage
@@ -2070,7 +2092,8 @@ public final class Renderer {
                 p.armL = 14 * in; p.armR = 14 * in; p.elbowL = Math.max(p.elbowL, 50 * in); p.elbowR = Math.max(p.elbowR, 50 * in);
             }
             Art.Sprite drawn = k.costume > 0 ? sp : viewOf(sp, a, s, p, k, spk != null, t);
-            if (audit != null) audit.picture(a, t, drawn == sp ? "the rigged front picture" : "a view (" + drawn.w + "x" + drawn.h + ")", false);
+            // (a picture changed while the figure is narrowed into its turn is the turn itself, not a pop)
+            if (audit != null) audit.picture(a, t, drawn == sp ? "the rigged front picture" : "a view (" + drawn.w + "x" + drawn.h + ")", turn < 0.999f);
             // a side picture cannot turn its head to someone: while it walks it faces the way it goes
             if (drawn != sp && drawn == sp.view(1)) {
                 float dir = Math.signum(Director.xAt(a, t + 0.04f) - Director.xAt(a, t - 0.04f));
