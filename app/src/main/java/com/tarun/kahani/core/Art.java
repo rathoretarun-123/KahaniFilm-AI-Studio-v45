@@ -313,6 +313,87 @@ public final class Art {
         return new float[]{m[0], m[1], m[2]};
     }
 
+    /**
+     * v47.9: the place's picture already shows this thing on its sofa (the user's room has the red cushion against the
+     * arm the script puts behind the girl): a patch of the thing's own hue and depth of colour, the room seen under white
+     * light, on the sofa — its back and seat, a little past its ends for the arms — of at least 3% of that area. Two
+     * photographs light a colour differently (the room's red is warmer than the cushion's own), so the hue may differ by
+     * 15°; and only a thing of a clear, strong colour counts (a brown teddy is no different from a wooden arm or a throw).
+     */
+    public static boolean shownOnSofa(Backdrop b, Backdrop thing) {
+        if (b == null || thing == null || b.seatU0 < 0 || b.small == null || b.sw < 20 || b.sh < 20) return false;
+        float[] ref = rawMiddle(thing);
+        if (ref == null) return false;
+        float[] hsv0 = hsv(ref[0], ref[1], ref[2]);
+        if (hsv0[1] < 0.45f) return false;
+        int w = b.sw, h = b.sh;
+        float[] wb = whiteBalanced(b.small, w * h);
+        float topV = (b.seatV - 0.45f * b.floorV) / 0.55f, span = b.seatU1 - b.seatU0;
+        int x0 = Math.max(0, Math.round((b.seatU0 - 0.05f * span) * w)), x1 = Math.min(w - 1, Math.round((b.seatU1 + 0.05f * span) * w));
+        int y0 = Math.max(0, Math.round(topV * h)), y1 = Math.min(h - 1, Math.round((b.seatV + 0.1f * (b.floorV - b.seatV)) * h));
+        if (x1 <= x0 || y1 <= y0) return false;
+        int rw = x1 - x0 + 1, rh = y1 - y0 + 1;
+        boolean[] on = new boolean[rw * rh];
+        for (int y = y0; y <= y1; y++) for (int x = x0; x <= x1; x++) {
+            int p = b.small[y * w + x];
+            float[] c = hsv(Math.min(1, ((p >> 16) & 255) / wb[0]), Math.min(1, ((p >> 8) & 255) / wb[1]), Math.min(1, (p & 255) / wb[2]));
+            float dh = Math.abs(c[0] - hsv0[0]); dh = Math.min(dh, 360 - dh);
+            on[(y - y0) * rw + (x - x0)] = dh < 15 && Math.abs(c[1] - hsv0[1]) < 0.2f && c[1] >= 0.35f && c[2] > 0.12f && c[2] < 0.97f;
+        }
+        // the largest patch of it
+        int[] stack = new int[on.length];
+        boolean[] seen = new boolean[on.length];
+        int bestN = 0;
+        for (int i = 0; i < on.length; i++) {
+            if (!on[i] || seen[i]) continue;
+            int n = 0, top = 0;
+            stack[top++] = i; seen[i] = true;
+            while (top > 0) {
+                int c = stack[--top]; n++;
+                int cx = c % rw, cy = c / rw;
+                if (cx > 0 && on[c - 1] && !seen[c - 1]) { seen[c - 1] = true; stack[top++] = c - 1; }
+                if (cx < rw - 1 && on[c + 1] && !seen[c + 1]) { seen[c + 1] = true; stack[top++] = c + 1; }
+                if (cy > 0 && on[c - rw] && !seen[c - rw]) { seen[c - rw] = true; stack[top++] = c - rw; }
+                if (cy < rh - 1 && on[c + rw] && !seen[c + rw]) { seen[c + rw] = true; stack[top++] = c + rw; }
+            }
+            bestN = Math.max(bestN, n);
+        }
+        return bestN >= on.length * 0.03f;
+    }
+
+    /** v47.9: hue (degrees), saturation and value of a colour of channels 0..1. */
+    static float[] hsv(float r, float g, float b) {
+        float mx = Math.max(r, Math.max(g, b)), mn = Math.min(r, Math.min(g, b)), d = mx - mn, hue = 0;
+        if (d > 1e-5f) {
+            if (mx == r) hue = 60 * (((g - b) / d) % 6);
+            else if (mx == g) hue = 60 * ((b - r) / d + 2);
+            else hue = 60 * ((r - g) / d + 4);
+        }
+        if (hue < 0) hue += 360;
+        return new float[]{hue, mx > 1e-5f ? d / mx : 0, mx};
+    }
+
+    /**
+     * v47.9: the middle colour of a thing's picture as photographed (a thing is shot in plain light; balancing it by its
+     * own brightest tenth turns a red cushion grey, its highlights being red), or null.
+     */
+    static float[] rawMiddle(Backdrop b) {
+        if (b.small == null) return null;
+        java.util.List<float[]> c = new java.util.ArrayList<float[]>();
+        for (int y = b.sh / 4; y < b.sh * 3 / 4; y++) for (int x = b.sw / 4; x < b.sw * 3 / 4; x++) {
+            int p = b.small[y * b.sw + x];
+            if ((p >>> 24) < 128) continue;
+            int r = (p >> 16) & 255, g = (p >> 8) & 255, bl = p & 255;
+            if (r > 235 && g > 235 && bl > 235) continue;
+            if (r > 200 && g < 60 && bl > 200) continue;
+            c.add(new float[]{r / 255f, g / 255f, bl / 255f, r + g + bl});
+        }
+        if (c.size() < 20) return null;
+        java.util.Collections.sort(c, new java.util.Comparator<float[]>() { public int compare(float[] x, float[] y) { return Float.compare(x[3], y[3]); } });
+        float[] m = c.get(c.size() / 2);
+        return new float[]{m[0], m[1], m[2]};
+    }
+
     /** Finds a seat of this (white-balanced) colour in the picture; sets the backdrop's seat when one is there. */
     public static boolean findSeat(Backdrop b, float[] ref) {
         if (b == null || b.small == null || b.sw < 20 || b.sh < 20 || ref == null) return false;

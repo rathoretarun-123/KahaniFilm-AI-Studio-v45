@@ -104,6 +104,7 @@ public final class Cutout {
         boolean given = hasAlpha(src);
         int[] px = given ? src.clone() : cutFull(src, w, h, holes);
         if (!given) defringe(px, src, w, h);
+        else unkey(px, w, h);
         // crop to opaque bounds
         int minX = w, minY = h, maxX = -1, maxY = -1;
         for (int y = 0; y < h; y++) {
@@ -771,6 +772,151 @@ public final class Cutout {
                 float keep = Math.max(0, Math.min(1, (d - 16) / 18f));
                 px[i] = (Math.round((c >>> 24) * keep) << 24) | (c & 0xFFFFFF);
             }
+        }
+    }
+
+    /**
+     * v47.9: a picture that comes cut out (a PNG with its own transparency) still carries the chroma colour it was cut
+     * from: its see-through pixels keep the magenta, and its part-see-through edge is a blend of the figure and the
+     * magenta (a purple halo round the hair in the film, drawn larger and sharpened). The key is the see-through pixels'
+     * own colour when they share a strong one, or magenta when the edge's blends lean that way; the edge is unmixed from
+     * it as a photo's is (defringe), and the faint edge and the see-through pixels round it take the figure's colour, so
+     * no scaling draws the key back in. A cut-out with clean edges is left as it is.
+     */
+    static void unkey(int[] px, int w, int h) {
+        int n = w * h;
+        if (w < 8 || h < 8) return;
+        long kr = 0, kg = 0, kb = 0;
+        int kn = 0, tn = 0, edge = 0, mag = 0;
+        for (int i = 0; i < n; i += 3) {
+            int c = px[i], a = c >>> 24, r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255;
+            if (a == 0) {
+                tn++;
+                if (Math.max(r, Math.max(g, b)) - Math.min(r, Math.min(g, b)) > 120) { kr += r; kg += g; kb += b; kn++; }
+            } else if (a < 250) {
+                edge++;
+                int lo = Math.min(r, b);
+                if (lo > g + 40 && Math.abs(r - b) <= Math.max(r, b) * 0.45f) mag++;
+            }
+        }
+        int key;
+        if (tn > 0 && kn > tn * 0.8f) key = 0xFF000000 | (int) (kr / kn) << 16 | (int) (kg / kn) << 8 | (int) (kb / kn);
+        else if (edge >= 30 && mag > edge * 0.08f) key = 0xFFFF00FF;
+        else return;
+        int[] src = px.clone();
+        for (int i = 0; i < n; i++) if ((px[i] >>> 24) < 128) src[i] = key;
+        defringe(px, src, w, h);
+        despill(px, w, h, key);
+        // the faint edge and the clear pixels next to it: the colour of the figure beside them (three rings)
+        byte[] set = new byte[n];
+        for (int i = 0; i < n; i++) if ((px[i] >>> 24) >= 128) set[i] = 1;
+        for (int ring = 0; ring < 3; ring++) {
+            byte[] next = set.clone();
+            for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+                int i = y * w + x;
+                if (set[i] == 1) continue;
+                int r = 0, g = 0, b = 0, k = 0;
+                for (int dy = -1; dy <= 1; dy++) for (int dx = -1; dx <= 1; dx++) {
+                    int xx = x + dx, yy = y + dy;
+                    if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+                    int j = yy * w + xx;
+                    if (set[j] == 0) continue;
+                    int o = px[j];
+                    r += (o >> 16) & 255; g += (o >> 8) & 255; b += o & 255; k++;
+                }
+                if (k == 0) continue;
+                px[i] = (px[i] & 0xFF000000) | (r / k) << 16 | (g / k) << 8 | (b / k);
+                next[i] = 1;
+            }
+            set = next;
+        }
+    }
+
+    /**
+     * v47.9: the key's colour cast on the figure's solid edge (a dark ponytail turns purple 5 to 10 pixels in from the
+     * cut). The key's channels split into high (over 128) and low; a pixel's lean towards the key is its lowest high
+     * channel over its highest low one. Within a band of the cut (1.2% of the picture's smaller side) a pixel keeps only
+     * the lean of the figure's own colour further in (a lavender shirt leans so everywhere and keeps it); the rest is
+     * taken off its high channels.
+     */
+    static void despill(int[] px, int w, int h, int key) {
+        int n = w * h;
+        boolean[] hi = {((key >> 16) & 255) > 128, ((key >> 8) & 255) > 128, (key & 255) > 128};
+        int highs = (hi[0] ? 1 : 0) + (hi[1] ? 1 : 0) + (hi[2] ? 1 : 0);
+        if (highs == 0 || highs == 3) return;                       // a white or black ground casts no colour
+        int band = Math.max(6, Math.round(Math.min(w, h) * 0.012f));
+        // the distance (in pixels, 8-connected) from the clear area
+        int[] dist = new int[n];
+        int far = band * 4;
+        for (int i = 0; i < n; i++) dist[i] = (px[i] >>> 24) < 128 ? 0 : far;
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            int i = y * w + x, d = dist[i];
+            if (d == 0) continue;
+            if (x > 0) d = Math.min(d, dist[i - 1] + 1);
+            if (y > 0) { d = Math.min(d, dist[i - w] + 1); if (x > 0) d = Math.min(d, dist[i - w - 1] + 1); if (x < w - 1) d = Math.min(d, dist[i - w + 1] + 1); }
+            dist[i] = d;
+        }
+        for (int y = h - 1; y >= 0; y--) for (int x = w - 1; x >= 0; x--) {
+            int i = y * w + x, d = dist[i];
+            if (d == 0) continue;
+            if (x < w - 1) d = Math.min(d, dist[i + 1] + 1);
+            if (y < h - 1) { d = Math.min(d, dist[i + w] + 1); if (x < w - 1) d = Math.min(d, dist[i + w + 1] + 1); if (x > 0) d = Math.min(d, dist[i + w - 1] + 1); }
+            dist[i] = d;
+        }
+        boolean any = false;
+        for (int i = 0; i < n && !any; i++) if (dist[i] > 0 && dist[i] <= band && leanOf(px[i], hi) > 8) any = true;
+        if (!any) return;
+        // the figure's own lean further in (band to twice the band from the cut), spread over the band by a box average
+        float[] sum = new float[n], cnt = new float[n];
+        for (int i = 0; i < n; i++) if (dist[i] > band && dist[i] <= band * 2) { sum[i] = Math.max(0, leanOf(px[i], hi)); cnt[i] = 1; }
+        int rad = band * 2;
+        boxBlur(sum, w, h, rad); boxBlur(cnt, w, h, rad);
+        for (int i = 0; i < n; i++) {
+            if (dist[i] == 0 || dist[i] > band) continue;
+            int lean = leanOf(px[i], hi);
+            if (lean <= 8) continue;
+            float own = cnt[i] > 1e-4f ? sum[i] / cnt[i] : 0;
+            int cut = Math.round(lean - own);
+            if (cut <= 0) continue;
+            int c = px[i];
+            int[] ch = {(c >> 16) & 255, (c >> 8) & 255, c & 255};
+            for (int k = 0; k < 3; k++) if (hi[k]) ch[k] = Math.max(0, ch[k] - cut);
+            px[i] = (c & 0xFF000000) | ch[0] << 16 | ch[1] << 8 | ch[2];
+        }
+    }
+
+    /** v47.9: how far a colour leans towards a key whose high channels are hi: its lowest high channel over its highest low one. */
+    static int leanOf(int c, boolean[] hi) {
+        int[] ch = {(c >> 16) & 255, (c >> 8) & 255, c & 255};
+        int lo = 255, top = 0;
+        for (int k = 0; k < 3; k++) { if (hi[k]) lo = Math.min(lo, ch[k]); else top = Math.max(top, ch[k]); }
+        return lo - top;
+    }
+
+    /** v47.9: an average over a (2r+1) square, in place (running sums, rows then columns). */
+    static void boxBlur(float[] a, int w, int h, int r) {
+        float[] row = new float[Math.max(w, h)];
+        for (int y = 0; y < h; y++) {
+            float s = 0;
+            for (int x = 0; x < Math.min(w, r + 1); x++) s += a[y * w + x];
+            for (int x = 0; x < w; x++) {
+                row[x] = s;
+                int add = x + r + 1, sub = x - r;
+                if (add < w) s += a[y * w + add];
+                if (sub >= 0) s -= a[y * w + sub];
+            }
+            System.arraycopy(row, 0, a, y * w, w);
+        }
+        for (int x = 0; x < w; x++) {
+            float s = 0;
+            for (int y = 0; y < Math.min(h, r + 1); y++) s += a[y * w + x];
+            for (int y = 0; y < h; y++) {
+                row[y] = s;
+                int add = y + r + 1, sub = y - r;
+                if (add < h) s += a[add * w + x];
+                if (sub >= 0) s -= a[sub * w + x];
+            }
+            for (int y = 0; y < h; y++) a[y * w + x] = row[y];
         }
     }
 

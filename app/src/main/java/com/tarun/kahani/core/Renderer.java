@@ -1570,7 +1570,17 @@ public final class Renderer {
         float y = s.ground;
         // v47.9: seated on the sofa the user's picture shows — the hips on its seat (the picture's own sofa, no drawn one)
         float[] sofaP = k.body == Pose.SIT && k.seat == Film.SEAT_SOFA ? Director.photoSofa(s) : null;
-        if (sofaP != null) y = sofaP[2] + seatTopOf(Film.SEAT_SOFA) * h;
+        if (sofaP != null) {
+            y = sofaP[2] + seatTopOf(Film.SEAT_SOFA) * h;
+            // v47.9: the sitter presses into the picture's cushion — a soft shadow on the seat round the hips, and a
+            // fainter one on the back cushion behind the body (without them the figure sat pasted on the photograph)
+            g.save(); g.translate(x, sofaP[2] + 0.01f * h); g.scale(1, 0.16f);
+            g.radial(0, 0, 0.22f * h, 0x46000000, 0x00000000); g.oval(0, 0, 0.22f * h, 0.22f * h); g.color(0);
+            g.restore();
+            g.save(); g.translate(x, sofaP[2] - 0.2f * h); g.scale(1, 1.3f);
+            g.radial(0, 0, 0.2f * h, 0x1E000000, 0x00000000); g.oval(0, 0, 0.2f * h, 0.2f * h); g.color(0);
+            g.restore();
+        }
         float scale = 1f;
         if (k.depth > 0) { y -= 26; scale = 0.88f; }
         // v40: on a path (round a fire): behind it further up and smaller, in front lower and larger (the ground's perspective)
@@ -5360,6 +5370,7 @@ public final class Renderer {
         float cx = hx + fc * tw * 0.42f, cy = hy - th * 0.12f;
         boolean book = p.heldOpen > 0.001f;                                         // v47.4: a book opened is held at the chest in both hands (the user's reference)
         if (book) { cx = fc * w * 0.06f; cy = -h * 0.47f + th * 0.1f; }
+        if (book && p.sit > 0.5f && !lap) cy = -h * 0.37f + th * 0.1f;            // v47.9: seated, it lies open on the lap (at the chest it covered her chin in a close-up)
         if (p.heldKind == Film.THING_GIVE) { cx = hx + fc * (tw * 0.5f + h * 0.1f); cy = hy - h * 0.08f; }
         if (lap) { cx = fc * w * 0.1f; cy = -h * 0.36f; if (p.heldKind == Film.THING_GIVE) { cx = fc * w * 0.3f; cy = -h * 0.42f; } }
         if (lap && h < w * 1.25f && p.ownSeat <= 0) { cx = fc * w * 0.16f; cy = -h * 0.14f; }     // a face-and-shoulders panel: the hands are below it; the thing shows at its lower edge, held low
@@ -5405,19 +5416,34 @@ public final class Renderer {
             float k = ease01(Math.max(0, Math.min(1, p.heldOpen))), lw = p.heldOpenPic != null || p.heldHinge == Rigidity.HINGE_LID ? 0 : tw * 0.92f * k;
             for (int sd = -1; sd <= 1; sd += 2) {
                 float hx2 = tx + sd * (lw > 4 ? lw * 0.9f : tw * 0.44f), hy2 = ty + th * 0.3f;
-                g.color(Puppet.shade(skin, 0.82f)); g.roundRect(hx2 - h * 0.022f, hy2 - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
-                g.color(skin); g.roundRect(hx2 - h * 0.02f, hy2 - h * 0.014f, h * 0.04f, h * 0.028f, h * 0.011f);
+                heldHand(g, hx2, hy2, h, skin, sd);
             }
             return;
         }
         // the fingers over the near edge (and, held against the chest, the other hand under the far side)
         float hxr = tx - fc * tw * 0.44f, hyr = ty + th * 0.2f;
-        g.color(Puppet.shade(skin, 0.82f)); g.roundRect(hxr - h * 0.022f, hyr - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
-        g.color(skin); g.roundRect(hxr - h * 0.02f, hyr - h * 0.014f, h * 0.04f, h * 0.028f, h * 0.011f);
+        heldHand(g, hxr, hyr, h, skin, -fc);
         if (lap && u >= 1 && p.heldKind != Film.THING_GIVE) {
             float ox = tx + fc * tw * 0.4f, oy = ty + th * 0.38f;
-            g.color(Puppet.shade(skin, 0.82f)); g.roundRect(ox - h * 0.022f, oy - h * 0.016f, h * 0.044f, h * 0.032f, h * 0.012f);
-            g.color(skin); g.roundRect(ox - h * 0.02f, oy - h * 0.014f, h * 0.04f, h * 0.028f, h * 0.011f);
+            heldHand(g, ox, oy, h, skin, fc);
+        }
+    }
+
+    /**
+     * v47.9: a hand over the edge of a thing held — rounded and lit from above, as the figures' own hands are: a soft
+     * shadow on the thing under it, the back of the hand shaded from a light top to a darker rim, the knuckles' creases
+     * towards the side the fingers point (side -1 left, +1 right). It was a flat rounded block of the skin colour.
+     */
+    static void heldHand(Gfx g, float x, float y, float h, int skin, float side) {
+        float rx = h * 0.022f, ry = h * 0.016f;
+        g.color(Puppet.alpha(0xFF000000, 0.22f)); g.oval(x, y + ry * 0.35f, rx * 1.05f, ry * 1.05f);
+        g.color(Puppet.shade(skin, 0.78f)); g.oval(x, y, rx, ry);
+        g.radial(x - side * rx * 0.25f, y - ry * 0.45f, rx * 1.15f, Puppet.lighten(skin, 0.18f), Puppet.shade(skin, 0.9f));
+        g.oval(x, y - ry * 0.06f, rx * 0.9f, ry * 0.86f);
+        g.color(Puppet.alpha(Puppet.shade(skin, 0.62f), 0.7f));
+        for (int i = 0; i < 3; i++) {
+            float cy = y - ry * 0.45f + i * ry * 0.42f;
+            g.line(x + side * rx * 0.35f, cy, x + side * rx * 0.8f, cy + ry * 0.08f, Math.max(0.8f, h * 0.0025f));
         }
     }
 

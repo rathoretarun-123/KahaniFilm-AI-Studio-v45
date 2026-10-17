@@ -1927,6 +1927,14 @@ public final class Director {
             sp.acts.add(new Film.Act(start, end, signs ? Film.G_SIGN : Film.G_TALK));
             // gestures from the manner, e.g. (तलवार घुमाते हुए) (घुटनों के बल गिरकर रोते हुए)
             mannerActions(sp, to, b.manner, start, end, line.emotion);
+            // v47.9: the things the manner handles (with the user's pictures of them): "किताब धीरे से बंद करके गोद में
+            // रखते हुए", "टेडी को गोद में कस कर पकड़े हुए" — the speaker does it as they speak
+            if (b.manner != null && !b.manner.trim().isEmpty()) {
+                Story.CharacterDef keep = lastSubject;
+                lastSubject = b.speaker;
+                thingsIn(b.manner, start);
+                lastSubject = keep;
+            }
         }
         if (call != null) { call.t1 = Math.max(call.t1, end + 0.4f); sp.acts.remove(call); sp.acts.add(call); }
         cuesFrom(b.manner, start, sp, to, null);
@@ -3623,6 +3631,12 @@ public final class Director {
     static final String[] CONTAINER_WORDS = {"डिब्ब", "बक्स", "संदूक", "box", "trunk", "chest", "carton"};
     /** v47.6: words that only count or heap a thing (their stems): "जोड़ी", "ढेर", "गुच्छा", "टुकड़ा", "pair", "pile". */
     static final String[] QUANTITY_HEADS = {"जोड", "जोड़", "ढेर", "गुच्छ", "गड्ड", "टुकड", "टुकड़", "pair", "pile", "bunch", "heap", "piece"};
+    /** v47.9: words that describe a thing (its colour, size, age, state, number) and never name it on their own. */
+    static final String[] THING_ADJECTIVES = {"लाल", "नीला", "नीली", "नीले", "पीला", "पीली", "हरा", "हरी", "काला", "काली", "सफेद", "सफ़ेद", "भूरा", "भूरी", "गुलाबी", "नारंगी", "बैंगनी",
+            "सुनहरा", "सुनहरी", "पुराना", "पुरानी", "पुराने", "नया", "नई", "नए", "बड़ा", "बड़ी", "बड़े", "छोटा", "छोटी", "छोटे", "टूटा", "टूटी", "टूटे", "फटा", "फटी", "फटे", "मुलायम", "लंबा",
+            "लंबी", "गोल", "चौकोर", "मोटा", "मोटी", "पतला", "पतली", "गीला", "सूखा", "खाली", "भरा", "भरी", "सुंदर", "प्यारा", "प्यारी", "दो", "तीन", "चार", "पाँच", "पांच", "छह", "सात", "आठ", "दस",
+            "red", "blue", "green", "yellow", "black", "white", "brown", "pink", "orange", "purple", "golden", "big", "small", "little", "large", "broken", "torn",
+            "soft", "long", "round", "square", "thick", "thin", "wet", "dry", "empty", "full", "pretty", "cute", "two", "three", "four"};
     static final String[] THING_STOP = {"का", "की", "के", "को", "से", "में", "पर", "वाला", "वाली", "वाले", "हुआ", "हुई", "हुए", "एक", "सा", "सी", "ये", "यह", "वो", "वह", "और", "the", "a", "an", "of", "his", "her", "its", "with", "old", "new"};
     private static final int TK_NONE = -1, TK_DOWN = 4, TK_WEAR = 5;
     private static final boolean THING_DEBUG = System.getProperty("kahani.thingDebug") != null;
@@ -3740,6 +3754,17 @@ public final class Director {
             if (stems.isEmpty()) continue;
             String head = stems.get(stems.size() - 1);
             mods.remove(head);
+            // v47.9: the first word of a two-word name ("भूरा टेडी बियर" is "टेडी" all through the script, as "pencil box" is
+            // "the pencil"): the word right before the head noun, when it is a noun itself — no colour, size, age or number
+            String compound = null;
+            for (int wi = kw.length - 1; wi > 0; wi--) {
+                if (kw[wi].isEmpty() || Txt.has(" " + kw[wi] + " ", spaced(THING_STOP))) continue;
+                String pw = kw[wi - 1], ps = stemHi(pw);
+                if (!pw.isEmpty() && !Txt.has(" " + pw + " ", spaced(THING_STOP)) && !Txt.has(" " + pw + " ", spaced(THING_ADJECTIVES)) && ps.length() >= 3
+                        && (story == null || ScriptParser.resolve(story, pw) == null) && !mods.contains(ps)) compound = ps;
+                break;
+            }
+            if (compound != null) for (Art.Shot o : art.shots) if (o != sh && o.keys != null && o.keys.length > 0 && startOf(Txt.norm(o.keys[0]), compound) >= 0) compound = null;
             // ("लाल जूतों की जोड़ी", "पत्तों का ढेर", "a pair of shoes": a pair, a pile, a bunch only counts the thing — the
             // shoes are what is named, the pair is not something else)
             if (Txt.has(" " + head + " ", spaced(QUANTITY_HEADS))) mods.clear();
@@ -3762,7 +3787,8 @@ public final class Director {
             // last half minute — any one of its longer words ("जूते" after "लाल जूते": the red pair)
             boolean whole = n.contains(key);
             Float said = thingSaid.get(sh.pic);
-            if (!(whole || score >= 2 || (headFound && (head.length() >= 3 || stems.size() == 1)) || (longest >= 3 && said != null && t - said < 30))) continue;
+            boolean byFirstWord = compound != null && startOf(n, compound) >= 0;
+            if (!(whole || score >= 2 || byFirstWord || (headFound && (head.length() >= 3 || stems.size() == 1)) || (longest >= 3 && said != null && t - said < 30))) continue;
             out.add(new Object[]{sh, at, score, places});
         }
         // two pictures claiming the same word ("जूते": the broken shoe, the red pair): the better match, then the one
@@ -3807,6 +3833,17 @@ public final class Director {
             String nk = Txt.norm(key).trim();
             if (nk.length() > 2 && win.contains(nk)) win = win.replace(nk, " ");
             int kind = thingKind(win);
+            // v47.9: in the lap ("गोद में खुली किताब", "किताब … गोद में रखते हुए") — the sitter keeps it; the earliest verb of
+            // the window was another's ("पीठ पीछे टिकाई हुई": her back leans, the book does not lie by the sofa)
+            // — the lap named just before the thing, or after it with a verb of keeping ("टेडी को गोद में कस कर पकड़े हुए");
+            // never the seat the lap is on ("सोफे पर … बैठी है … गोद में खुली किताब": the book, not the sofa)
+            boolean lap = false;
+            for (String lw : new String[]{"गोद में", "in her lap", "in his lap", "on her lap", "on his lap"}) {
+                int li = n.indexOf(lw, from);
+                if (li < 0 || li >= end) continue;
+                if (li < at ? at - li <= 20 : Txt.has(n.substring(li, end), "रख", "पकड़", "पकड", "लिए", "लिये", "थामे", "holds", "holding", "puts", "keeps")) lap = true;
+            }
+            if (lap && kind != TK_DOWN && kind != Film.THING_GIVE && kind != TK_WEAR) kind = Film.THING_HOLD;
             if (kind != TK_DOWN && kind != TK_WEAR && kind != TK_NONE && wornThing(key, win)) {
                 if (THING_DEBUG) System.out.println("THING " + key + " worn, kind " + kind + " ignored <- " + s);
                 continue;
@@ -3839,7 +3876,9 @@ public final class Director {
             if (Rigidity.bookLike(key)) {
                 Film.Fx hf = heldNow(sh.pic, t);
                 if (hf != null) {
-                    if (Txt.has(win, "खोल", "पन्ने", "पन्ना", "पलट", "पढ़", "opens", "turns the page", "turning the page", "reads", "reading", "unfolds", "looks through", "leafs") && hf.openFrom > 1e5f) { hf.openFrom = t + 0.2f; film.notes.add("  ↳ " + key + " is opened" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
+                    // (v47.9: not the pages stirring in the fan's wind — "पंखे की हवा से किताब के पन्ने हल्के हिल रहे हैं" opens nothing)
+                    boolean wind = Txt.has(win, "हवा से", "हवा में", "in the breeze", "in the wind") || Txt.has(win, "हिल रहे", "हिलते", "फड़फड़", "flutter", "stir");
+                    if (!wind && Txt.has(win, "खोल", "पन्ने", "पन्ना", "पलट", "पढ़", "opens", "turns the page", "turning the page", "reads", "reading", "unfolds", "looks through", "leafs") && hf.openFrom > 1e5f) { hf.openFrom = t + 0.2f; film.notes.add("  ↳ " + key + " is opened" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
                     if (Txt.has(win, "बंद कर", "बंद कि", "closes", "shuts", "folds") && hf.openFrom < 1e5f && hf.openUntil > 1e5f) { hf.openUntil = t + 0.2f; film.notes.add("  ↳ " + key + " is closed" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
                 }
             }
@@ -3863,6 +3902,8 @@ public final class Director {
                 // v47.9: the sofa itself is in the user's picture of the place — never a second, small one on the floor
                 float[] sofaP = photoSofa(seg);
                 if (sofaP != null && Art.sofaWord(key)) continue;
+                // v47.9: and a thing that lies on it in that picture already (the red cushion) is not pasted over it again
+                if (sofaP != null && Art.shownOnSofa(seg.backdrop, sh.pic)) { film.notes.add("  ↳ " + key + ": already on the sofa in the picture of the place"); continue; }
                 float hh = who != null && who.look != null ? Renderer.actorHeight(who.look, who.c, art, seg) : 300;
                 boolean under = Txt.has(win, "बिछ", "पर बैठ", "spread", "sits on", "sitting on");
                 boolean onFloor = who != null && who.stateAt(t).body != Pose.STAND;          // a sitter's folded legs reach further: beside means past them
@@ -3910,6 +3951,7 @@ public final class Director {
             }
             Film.Fx f = fx(Film.FX_HELD, heldFrom, 1e6f, 0, 0, who, null);
             f.pic = sh.pic; f.kind = kind; f.size = thingSize(key); f.what = key; f.t2 = kind == Film.THING_TAKE ? t + 1.4f : heldFrom;
+            if (Rigidity.bookLike(key) && Txt.has(win, "खुली", "खुला", "खुले", "open book", "lies open")) f.openFrom = heldFrom;     // v47.9: open from the first ("गोद में खुली किताब")
             if (kind == Film.THING_TAKE) {
                 Film.Key k = who.stateAt(t);
                 boolean seated = k.body == Pose.SIT || k.body == Pose.KNEEL || k.body == Pose.CROUCH;

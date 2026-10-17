@@ -880,6 +880,35 @@ script does not name; the director must never just stop, with a Continue the use
 - **Sharper.** Encoding bitrate raised (0.16 / 0.28 / 0.40 bits per pixel).
 - **Frame audit of the full film** (1852 frames, 3508 character-frames): jolts 0, jumps 0, size pops 0, picture pops 0.
 
+### Render refinements (the user: "render should also be refined to get pixer level film")
+
+- **No purple edge.** The user's pictures come cut out from a magenta ground. Their clear pixels keep the magenta, and
+  the hair kept a purple cast 5 to 10 pixels in from the edge, drawn larger and sharpened in the film. The key colour is
+  read from the clear pixels. The edge is unmixed from it, and the cast is taken off a band of the edge, but only where
+  the figure's own colour further in has none: a lavender shirt keeps its colour (`Cutout.unkey`, `Cutout.despill`,
+  `KeyFringeTest`).
+- **Sitting into the sofa.** A soft shadow on the seat round the hips and a fainter one on the back cushion behind the
+  body. Without them the girls sat pasted on the photograph.
+- **Hands on a thing held.** Shaded and lit from above, with a shadow on the thing and the knuckles' creases. They were
+  flat rounded blocks of skin colour.
+- **An open book on the lap** of someone seated, not at the chest (it covered her chin in a close-up).
+
+### Things, as a person reads them (`SofaThingsTest`)
+
+- **A two-word name said short.** "भूरा टेडी बियर" is "टेडी" all through the script. The word before the head noun
+  names the thing when it is a noun itself (no colour, size, age or number) and no other thing has it. Before, the
+  teddy was never staged.
+- **"गोद में" (in the lap)** means held by the sitter: "गोद में खुली किताब" is open in her hands from the start. The lap
+  named after the thing counts only with a verb of keeping ("टेडी को गोद में कस कर पकड़े हुए"), so the sofa she sits on
+  is never taken into her hand.
+- **The things a line's manner handles** are staged as the line is spoken: "किताब धीरे से बंद करके" closes the book,
+  "टेडी को गोद में कस कर पकड़े हुए" puts the teddy in her arms. This only applies when the user gave pictures of the
+  things; stories without them are unchanged.
+- **The fan's wind in the pages** ("पंखे की हवा से किताब के पन्ने हल्के हिल रहे हैं") opens nothing.
+- **Already in the picture.** A thing of a clear colour that the room's picture already shows on its sofa (the red
+  cushion behind the girl) is not pasted over it a second time (`Art.shownOnSofa`: its hue within 15°, the room seen
+  under white light). A brown teddy or a grey thing is never taken for part of the picture.
+
 ### The roles learn (`core/Lessons`)
 
 After each film the phone keeps a small notebook (`lessons.txt`). It counts the director's fixes, the shots, the rough
