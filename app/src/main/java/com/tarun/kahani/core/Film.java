@@ -202,7 +202,8 @@ public final class Film {
 
     /** v36: the everyday tasks a G_TASK act shows. */
     public static final int T_COOK = 1, T_SWEEP = 2, T_WASH = 3, T_READ = 4, T_WRITE = 5, T_PHONE = 6, T_BRUSH = 7, T_COMB = 8, T_WATER = 9, T_PAPER = 10,
-            T_RANGOLI = 11, T_PAINT = 12;     // v37: drawing a rangoli on the floor, painting at an easel
+            T_RANGOLI = 11, T_PAINT = 12,     // v37: drawing a rangoli on the floor, painting at an easel
+            T_FOLD = 13, T_DIG = 14;          // v47.8 daily A: folding clothes at a table, digging the garden with a spade
     /** v37: what a G_RIDE act rides, a G_PLAYGROUND act plays on, a G_EXERCISE act does, a G_MAKEUP act puts on. */
     public static final int V_BICYCLE = 1, V_MOTORBIKE = 2, V_SCOOTER = 3, V_CAR = 4, V_BUS = 5, V_AUTO = 6,
             V_HORSE = 7, V_ELEPHANT = 8;      // v44: ridden animals — a horse (walk, trot, gallop), a royal elephant

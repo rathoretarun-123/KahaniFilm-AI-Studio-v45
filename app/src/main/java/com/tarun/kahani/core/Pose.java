@@ -23,7 +23,9 @@ public final class Pose {
             // v47: a letter / envelope, a shoe, a cardboard box (held in both hands, like a child's gift)
             I_LETTER = 42, I_SHOE = 43, I_BOX = 44,
             // v47.3: a kulhad — the clay cup of a tea stall (the story's word for its cups)
-            I_KULHAD = 45;
+            I_KULHAD = 45,
+            // v47.8: a cloth being folded (in both hands), a garden spade (its blade at the ground)
+            I_CLOTH = 46, I_SPADE = 47;
 
     /** v37/v44: a make-up tool (it goes to its place on the face), not a drink or a weapon. */
     public static boolean makeup(int item) { return item >= I_KAJAL && item <= I_ROPE && item != I_MUG && item != I_ROPE; }
