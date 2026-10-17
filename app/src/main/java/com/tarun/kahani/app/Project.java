@@ -81,15 +81,38 @@ public final class Project {
         }
     }
 
+    /**
+     * v47.8: the film job and the screens write the same folder at once. Every file is written whole to a temporary file
+     * and then moved over the old one, so a reader sees the old text or the new one, never an empty or half-written file
+     * (a settings read during a write came back empty, and the next setting written put back only itself: the project's
+     * name, voices and choices were gone).
+     */
     public void write(String name, String text) {
-        try {
-            OutputStream o = new FileOutputStream(new File(dir, name));
-            o.write(text.getBytes("UTF-8"));
-            o.close();
-            dir.setLastModified(System.currentTimeMillis());
-        } catch (IOException ignored) {
+        synchronized (LOCK) {
+            File f = new File(dir, name), tmp = new File(dir, name + ".tmp");
+            OutputStream o = null;
+            try {
+                o = new FileOutputStream(tmp);
+                o.write(text.getBytes("UTF-8"));
+                o.close();
+                o = null;
+                if (!tmp.renameTo(f)) {
+                    // (a file system that does not replace on rename: the old file goes first)
+                    f.delete();
+                    if (!tmp.renameTo(f)) throw new IOException("could not save " + name);
+                }
+                dir.setLastModified(System.currentTimeMillis());
+            } catch (IOException e) {
+                System.err.println("Kahani: " + name + " not saved: " + e);
+            } finally {
+                if (o != null) try { o.close(); } catch (IOException ignored) { /* already failed */ }
+                if (tmp.exists()) tmp.delete();
+            }
         }
     }
+
+    /** v47.8: one writer at a time for every project's files and settings (the film job's thread and the screens'). */
+    private static final Object LOCK = new Object();
 
     public File file(String name) { return new File(dir, name); }
 
@@ -161,16 +184,18 @@ public final class Project {
     }
 
     public void setSetting(String key, String value) {
-        StringBuilder sb = new StringBuilder();
-        boolean done = false;
-        for (String l : read("settings.txt").split("\n")) {
-            if (l.trim().length() == 0) continue;
-            int i = l.indexOf('=');
-            if (i > 0 && l.substring(0, i).equals(key)) { sb.append(key).append('=').append(value).append('\n'); done = true; }
-            else sb.append(l).append('\n');
+        synchronized (LOCK) {           // (v47.8: read, change and write back as one step — two threads lost each other's)
+            StringBuilder sb = new StringBuilder();
+            boolean done = false;
+            for (String l : read("settings.txt").split("\n")) {
+                if (l.trim().length() == 0) continue;
+                int i = l.indexOf('=');
+                if (i > 0 && l.substring(0, i).equals(key)) { sb.append(key).append('=').append(value).append('\n'); done = true; }
+                else sb.append(l).append('\n');
+            }
+            if (!done) sb.append(key).append('=').append(value).append('\n');
+            write("settings.txt", sb.toString());
         }
-        if (!done) sb.append(key).append('=').append(value).append('\n');
-        write("settings.txt", sb.toString());
     }
 
     public String name() {
@@ -411,19 +436,27 @@ public final class Project {
     }
 
     static byte[] readAll(InputStream in) throws IOException {
-        ByteArrayOutputStream b = new ByteArrayOutputStream();
-        byte[] buf = new byte[65536];
-        int n;
-        while ((n = in.read(buf)) > 0) b.write(buf, 0, n);
-        in.close();
-        return b.toByteArray();
+        if (in == null) throw new IOException("nothing to read");        // (v47.8: a content resolver hands out null for a stale link)
+        try {
+            ByteArrayOutputStream b = new ByteArrayOutputStream();
+            byte[] buf = new byte[65536];
+            int n;
+            while ((n = in.read(buf)) > 0) b.write(buf, 0, n);
+            return b.toByteArray();
+        } finally {
+            in.close();                 // (v47.8: closed when a read fails too)
+        }
     }
 
     static void copy(InputStream in, OutputStream out) throws IOException {
-        byte[] buf = new byte[65536];
-        int n;
-        while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
-        in.close();
-        out.close();
+        try {
+            if (in == null) throw new IOException("nothing to read");
+            byte[] buf = new byte[65536];
+            int n;
+            while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
+        } finally {
+            if (in != null) try { in.close(); } catch (IOException ignored) { /* the copy's own error is thrown */ }
+            out.close();
+        }
     }
 }
