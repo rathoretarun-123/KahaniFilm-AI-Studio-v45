@@ -61,6 +61,7 @@ public final class FilmService extends Service {
             }
         }
         h.removeCallbacksAndMessages(null);
+        finished = false;           // (v47.8: a second film started while this service still ran gets its own "ready" notice)
         h.post(tick);
         return START_NOT_STICKY;
     }

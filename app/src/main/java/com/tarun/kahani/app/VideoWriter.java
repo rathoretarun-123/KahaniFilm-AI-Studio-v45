@@ -44,7 +44,7 @@ public final class VideoWriter {
     }
 
     /** Reads 16-bit little-endian PCM (interleaved stereo) from a file. */
-    public static final class FileSource implements PcmSource {
+    public static final class FileSource implements PcmSource, java.io.Closeable {
         final java.io.InputStream in; final byte[] b = new byte[8192];
         public FileSource(File f) throws IOException { in = new java.io.BufferedInputStream(new java.io.FileInputStream(f), 1 << 16); }
         public int read(short[] buf) throws IOException {
@@ -54,10 +54,16 @@ public final class VideoWriter {
             if (got == 0) in.close();
             return got / 2;
         }
+        public void close() throws IOException { in.close(); }
     }
 
     public void start(File out, PcmSource pcm, int sr, float bitsPerPixel) throws IOException {
-        encodeAudio(pcm, sr);
+        try {
+            encodeAudio(pcm, sr);
+        } finally {
+            // (v47.8: the soundtrack file is closed when its encoding fails too, not only at its end)
+            if (pcm instanceof java.io.Closeable) try { ((java.io.Closeable) pcm).close(); } catch (IOException ignored) { /* read to its end already */ }
+        }
         int bitrate = Math.max(2000000, (int) (w * (long) h * fps * bitsPerPixel));     // v33: dark frames need the bits
         video = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_VIDEO_AVC);
         // v35: the High profile where the phone's encoder has it (finer detail for the same bits than the Baseline most
@@ -114,6 +120,17 @@ public final class VideoWriter {
         f.setInteger(MediaFormat.KEY_BIT_RATE, ch == 2 ? 192000 : 128000);
         f.setInteger(MediaFormat.KEY_MAX_INPUT_SIZE, 16384);
         MediaCodec a = MediaCodec.createEncoderByType(MediaFormat.MIMETYPE_AUDIO_AAC);
+        // (v47.8: the encoder is released when the sound fails too — a phone has few codecs, and the leaked one made
+        // every smaller size tried after it fail as well)
+        try {
+            encodeAudio(a, f, src, sr, ch);
+        } finally {
+            try { a.stop(); } catch (Exception ignored) { /* not started, or already stopped */ }
+            a.release();
+        }
+    }
+
+    private void encodeAudio(MediaCodec a, MediaFormat f, PcmSource src, int sr, int ch) throws IOException {
         a.configure(f, null, null, MediaCodec.CONFIGURE_FLAG_ENCODE);
         a.start();
         long pos = 0;
@@ -163,8 +180,6 @@ public final class VideoWriter {
             }
             if (System.currentTimeMillis() - guard > 900000) throw new IOException("Could not encode the sound");
         }
-        a.stop();
-        a.release();
     }
 
     /** Adds one frame (ARGB pixels, width*height). */

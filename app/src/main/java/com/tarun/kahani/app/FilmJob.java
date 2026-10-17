@@ -343,7 +343,7 @@ public final class FilmJob implements Runnable {
             if (project.has(productionFile)) {
                 com.tarun.kahani.core.ProductionPlan.Result plan = com.tarun.kahani.core.ProductionPlan.apply(story, project.read(productionFile));
                 if (!plan.valid) info = "Production conference report could not be validated; original story retained.";
-                else if (!plan.readyToRender) throw new IllegalStateException("Production review needs resolution before rendering:\\n" + com.tarun.kahani.core.ProductionPlan.blockingSummary(project.read(productionFile)));
+                else if (!plan.readyToRender) throw new IllegalStateException("Production review needs resolution before rendering:\n" + com.tarun.kahani.core.ProductionPlan.blockingSummary(project.read(productionFile)));
                 else if (plan.scenesAdded > 0) info = "Production conference added " + plan.scenesAdded + " approved connective/reaction shot scene(s); authored dialogue and story events were preserved.";
             }
 
@@ -539,6 +539,9 @@ public final class FilmJob implements Runnable {
                 step("Voice: " + (l.who == null ? "Narrator" : who) + " (" + (i + 1) + "/" + film.lines.size() + ")", 0.06f + 0.22f * i / Math.max(1, film.lines.size()));
                 updateEta();
                 Voices.Cast k = l.who == null ? narratorCast : cast.get(l.who);
+                // (v47.8: a speaker the cast list does not hold — a line given to someone added after the cast was read —
+                // gets the voice their look gives, not a crash of the whole film)
+                if (k == null) { k = Voices.defaultCast(l.who.look); cast.put(l.who, k); }
                 float[] v = null;
                 // 1) the user's own recording of this exact line
                 File rec = new File(project.dir, "lines/" + hash(who + "|" + l.text) + ".wav");
@@ -650,18 +653,21 @@ public final class FilmJob implements Runnable {
             final File mix = new File(tmp, "mix.pcm");
             final java.io.OutputStream mo = new java.io.BufferedOutputStream(new java.io.FileOutputStream(mix), 1 << 16);
             final byte[] mb = new byte[Synth.SR * 8 * 2 * Mixer.CHANNELS];
-            Mixer.mixTo(film, new Mixer.VoiceSource() {
-                public float[] voice(int i) { return i < lineFiles.length && lineFiles[i] != null ? AudioIO.readRaw(lineFiles[i]) : null; }
-            }, lib.soundLib(), ed, new Mixer.Sink() {
-                public void write(short[] buf, int n) throws IOException {
-                    for (int i = 0; i < n; i++) { mb[2 * i] = (byte) buf[i]; mb[2 * i + 1] = (byte) (buf[i] >> 8); }
-                    mo.write(mb, 0, n * 2);
-                    check();
-                }
-            }, new Mixer.Progress() {
-                public void update(float f) { progress = 0.30f + 0.05f * f; }
-            });
-            mo.close();
+            try {           // (v47.8: the mix file is closed when the mix fails or is stopped too)
+                Mixer.mixTo(film, new Mixer.VoiceSource() {
+                    public float[] voice(int i) { return i < lineFiles.length && lineFiles[i] != null ? AudioIO.readRaw(lineFiles[i]) : null; }
+                }, lib.soundLib(), ed, new Mixer.Sink() {
+                    public void write(short[] buf, int n) throws IOException {
+                        for (int i = 0; i < n; i++) { mb[2 * i] = (byte) buf[i]; mb[2 * i + 1] = (byte) (buf[i] >> 8); }
+                        mo.write(mb, 0, n * 2);
+                        check();
+                    }
+                }, new Mixer.Progress() {
+                    public void update(float f) { progress = 0.30f + 0.05f * f; }
+                });
+            } finally {
+                mo.close();
+            }
             check();
             // the director's manual (V): the mix checked for missing dialogue, gaps and clipping
             audioCheck(film, mix, lineFiles);
@@ -748,6 +754,8 @@ public final class FilmJob implements Runnable {
         } finally {
             if (voices != null) voices.shutdown();
             MainActivity.deleteDir(tmp);
+            // (v47.8: a film stopped or failed after its video was written leaves no half-saved film_new.mp4 behind)
+            if (!done) { File half = new File(project.dir, "film_new.mp4"); if (half.exists()) half.delete(); }
         }
     }
 
