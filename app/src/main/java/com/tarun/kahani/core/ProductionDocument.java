@@ -1084,6 +1084,19 @@ public final class ProductionDocument {
                         said.add("seat" + a.c.displayName);
                         physicsIssue(s, f, "nobody sits on nothing", a.c.displayName + " is seated with no seat drawn under them", "seat them on the place's seat, on the floor, or stand them", a.c.displayName);
                     }
+                    // v47.8: a teleport — one frame here, the next far away, inside the scene (two rules' keys at one moment)
+                    if (f > Math.ceil(s.t0 * FPS) && !said.contains("jump" + a.c.displayName)) {
+                        float tp = t - 1f / FPS;
+                        Film.Key kp = a.stateAt(tp);
+                        float xp = Director.xAt(a, tp), jump = Math.abs(xa - xp);
+                        boolean riding = false;
+                        for (Film.Act x : a.acts) if (x.type == Film.G_RIDE && x.t0 < t + 0.5f && x.t1 > tp - 0.5f) riding = true;
+                        if (kp.visible && kp.anchor == Film.A_GROUND && jump > 0.12f * ha && !riding && a.trackAt(t) == null && a.trackAt(tp) == null
+                                && !Director.offStage(xp, ha) && !Director.offStage(xa, ha) && sg.t0 < tp) {
+                            said.add("jump" + a.c.displayName);
+                            physicsIssue(s, f, "nobody jumps from place to place", a.c.displayName + String.format(java.util.Locale.ROOT, " jumps %.0f px in one frame (teleport)", jump), "a walk from where they are, as long as a body takes for it", a.c.displayName);
+                        }
+                    }
                     if (speed < 20) continue;                                                       // standing still
                     for (Film.Actor o : sg.actors) {
                         if (o == a) continue;
