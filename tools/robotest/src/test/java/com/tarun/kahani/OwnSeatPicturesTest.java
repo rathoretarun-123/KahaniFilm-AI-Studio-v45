@@ -3,6 +3,8 @@ package com.tarun.kahani;
 import static org.junit.Assert.*;
 
 import com.tarun.kahani.core.Art;
+import com.tarun.kahani.core.Casting;
+import com.tarun.kahani.core.PoseSense;
 import com.tarun.kahani.core.Txt;
 import org.junit.Test;
 
@@ -40,6 +42,28 @@ public class OwnSeatPicturesTest {
         // a picture with its background (no cut-out) is never read so
         int[] full = picture(100, 100, new int[]{0, 0, 100, 100});
         assertEquals(-1f, Art.ownSeat(full), 0);
+    }
+
+    /**
+     * v47.8: a photograph of someone sitting, with its background, shows what they sit on (the old man of बाबू के लिए on
+     * his own bench, grey background and all, was lifted with his bench onto a drawn one): it brings its own seat. A
+     * standing one, a face-and-shoulders one or a cut-out with no seat found does not.
+     */
+    @Test public void aSeatedPhotographWithItsBackgroundBringsItsSeat() {
+        Art.PoseSprite photo = new Art.PoseSprite();
+        photo.pose = PoseSense.SIT; photo.withBackground = true;
+        assertTrue(Casting.seatOfItsOwn(photo));
+        Art.PoseSprite face = new Art.PoseSprite();
+        face.pose = PoseSense.SIT; face.withBackground = true; face.closeUp = true;
+        assertFalse("a face-and-shoulders picture shows no seat", Casting.seatOfItsOwn(face));
+        Art.PoseSprite standing = new Art.PoseSprite();
+        standing.pose = PoseSense.STAND; standing.withBackground = true;
+        assertFalse(Casting.seatOfItsOwn(standing));
+        Art.PoseSprite cutOut = new Art.PoseSprite();
+        cutOut.pose = PoseSense.SIT;
+        assertFalse("a cut-out sitter with no seat found is lifted onto the drawn seat", Casting.seatOfItsOwn(cutOut));
+        cutOut.ownSeat = 0.4f;
+        assertTrue(Casting.seatOfItsOwn(cutOut));
     }
 
     @Test public void theBrickGoesUnderTheLegTheScriptNames() {

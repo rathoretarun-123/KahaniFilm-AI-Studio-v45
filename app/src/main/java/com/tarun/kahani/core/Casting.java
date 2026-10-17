@@ -40,6 +40,13 @@ public final class Casting {
          * is too short a bench for two (the girl sat past its end, on nothing) — the bench's own picture holds both.
          */
         public boolean benchShared;
+        /** v47.8: seated on a bench, a stool or a chair (not a sofa, a bed or the floor): a picture of them on a seat of their own may play it whole. */
+        public boolean onSeat;
+        /**
+         * v47.8: someone else sits on any seat within reach of them in this shot (a bench, a sofa): a photograph of them
+         * sitting brings its own seat (seatOfItsOwn) — one too many for two; the drawn seat holds both and the rig sits.
+         */
+        public boolean seatShared;
         public String toString() { return Angles.name(angle) + " " + PoseSense.poseName(pose) + " " + PoseSense.emotionName(emotion) + (speaking ? " (speaking)" : ""); }
     }
 
@@ -64,7 +71,9 @@ public final class Casting {
                 if (sp == null || sp.poses == null || sp.poses.isEmpty()) continue;
                 Want w = want(film, s, sh, a, mid);
                 w.onListedBench = k.body == Pose.SIT && k.seat == Film.SEAT_STOOL && art.benchPicture() != null;
-                w.benchShared = w.onListedBench && benchShared(s, a, sh, Renderer.actorHeight(a.look, a.c, art, s));
+                w.onSeat = k.body == Pose.SIT && (k.seat == Film.SEAT_STOOL || k.seat == Film.SEAT_CHAIR);
+                w.benchShared = (w.onListedBench || w.onSeat) && benchShared(s, a, sh, Renderer.actorHeight(a.look, a.c, art, s));
+                w.seatShared = k.body == Pose.SIT && k.seat > 0 && seatShared(s, a, sh, Renderer.actorHeight(a.look, a.c, art, s));
                 Integer keep = w.pose == PoseSense.SIT ? seated.get(a.c.id) : null;
                 int best = choose(sp, w, keep == null ? MAIN - 10 : keep);
                 if (w.pose != PoseSense.SIT) seated.remove(a.c.id);
@@ -177,6 +186,27 @@ public final class Casting {
         return false;
     }
 
+    /** v47.8: whether anyone else sits on a seat (any seat, not the floor) within reach of a at any moment of the shot. */
+    static boolean seatShared(Film.Seg s, Film.Actor a, Film.Shot sh, float h) {
+        for (float t = sh.t; t <= sh.t + sh.dur + 1e-3f; t += 0.25f) {
+            for (Film.Actor o : s.actors) {
+                if (o == a) continue;
+                Film.Key ko = o.stateAt(t);
+                if (ko.visible && ko.body == Pose.SIT && ko.seat > 0 && Math.abs(Director.xAt(o, t) - Director.xAt(a, t)) < h * 0.9f) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * v47.8: the picture brings the seat its character sits on — one cut out on a bench of its own, or a photograph of them
+     * sitting with its background (it shows what they sit on: the old man of बाबू के लिए on his own bench). It is never
+     * lifted onto a drawn seat and the drawn seat steps aside for it (Renderer); where the seat is shared it is not used.
+     */
+    public static boolean seatOfItsOwn(Art.PoseSprite p) {
+        return p != null && (p.ownSeat > 0 || (p.withBackground && p.pose == PoseSense.SIT && !p.closeUp && !p.beast));
+    }
+
     /**
      * v47.7: the user's picture of the character seated on a bench of its own that fits the want — its face found (lips
      * and blinks live; never a back), the most frontal (the face's turn read from the picture), of the moment's feeling
@@ -224,7 +254,7 @@ public final class Casting {
             // user's own picture of them on that bench plays it whole — the bench and its bricks come with it, the bench's
             // own picture steps aside (Renderer.benchInPicture); the most frontal one with its face found, the same as the
             // shot before while it still fits
-            if (w.pose == PoseSense.SIT && w.onListedBench && !w.benchShared) {
+            if (w.pose == PoseSense.SIT && (w.onListedBench || w.onSeat) && !w.benchShared) {
                 int own = ownSeatPicture(sp, ps, w, keep);
                 if (own >= 0) return own;
             }
@@ -233,6 +263,7 @@ public final class Casting {
                 for (int i = 0; i < ps.size(); i++) {
                     Art.PoseSprite p = ps.get(i);
                     if (p.pose != PoseSense.SIT || p.closeUp || p.beast || p.ownSeat > 0) continue;      // (v47.7: a bench of its own only on the script's bench)
+                    if (w.seatShared && seatOfItsOwn(p)) continue;                                       // (v47.8: its seat is one too many for two)
                     float sc = (isFrontish(p.angle) ? 2 : 0) + (p.faceKnown() ? 1.5f : 0) + (p.emotion == w.emotion ? 1 : p.emotion == PoseSense.NEUTRAL ? 0.5f : 0);
                     if (i == keep) sc += 4;
                     if (sc > bestSc) { bestSc = sc; bestSit = i; }
@@ -260,7 +291,8 @@ public final class Casting {
         for (int i = 0; i < ps.size(); i++) {
             Art.PoseSprite p = ps.get(i);
             if (p.closeUp && !w.closeOk) continue;          // v39: a face-and-shoulders picture only in a face shot
-            if (p.ownSeat > 0 && !(w.onListedBench && !w.benchShared && w.pose == PoseSense.SIT)) continue;     // v47.7: its own bench only where the script's bench is, alone on it
+            if (p.ownSeat > 0 && !((w.onListedBench || w.onSeat) && !w.benchShared && w.pose == PoseSense.SIT)) continue;     // v47.7: its own bench only on a bench, a stool or a chair, alone on it
+            if (w.seatShared && seatOfItsOwn(p)) continue;                                                // v47.8: a photograph's own seat is one too many for two
             // v39: never a standing picture for one who sits (or a seated one for one who stands) — except a close-up,
             // where the body is out of the frame
             if (!p.closeUp && (lowPose(p.pose) != lowPose(w.pose) || (p.pose == PoseSense.LIE) != (w.pose == PoseSense.LIE))) continue;

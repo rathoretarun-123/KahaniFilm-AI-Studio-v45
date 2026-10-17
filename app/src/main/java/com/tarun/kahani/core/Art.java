@@ -121,6 +121,12 @@ public final class Art {
          * picture is used whole, never split from its seat and never lifted onto another one (Casting, Renderer).
          */
         public float ownSeat = -1;
+        /**
+         * v47.8: the picture came with its background (no clear pixels). A photograph of someone sitting shows what they
+         * sit on: it is never lifted onto a drawn seat, and no drawn seat is put under it (the old man of बाबू के लिए on
+         * his own bench, grey background and all, was lifted with his bench onto a drawn one).
+         */
+        public boolean withBackground;
         /** v47.7: for such a picture, the face's turn read from it (0 = to the camera; 999 = no face — a back, eyes in the hair). */
         public float ownSeatFace = 999;
         /** v39: the main picture's eye distance in its own heights (the measure every picture of the character is sized by), 0 = unknown. */
@@ -2023,8 +2029,17 @@ public final class Art {
                     // v47.6: one look per character — a dark-haired one's pose picture with light-brown hair is another
                     // design of them (the user's sheet of परी with light-brown hair played beside her black-haired front:
                     // two girls in one film); it is put aside and said so
+                    boolean opaque = false;
+                    if (d != null && d[0] > 0 && d.length >= 2 + d[0] * d[1]) {
+                        int[] px = new int[d[0] * d[1]];
+                        System.arraycopy(d, 2, px, 0, px.length);
+                        opaque = !Cutout.hasAlpha(px);
+                    }
                     if (main.hairTone >= 0 && d != null && d[0] > 0) {
-                        float mt = main.hairTone, pt = hairTone(d, 2, d[0], d[1]);
+                        // (v47.8: a picture with its background is read cut out — its top row is the background: the
+                        // grey studio wall above the girl of बाबू के लिए read as light hair and all twelve of her pictures
+                        // were put aside)
+                        float mt = main.hairTone, pt = opaque ? cutHairTone(d) : hairTone(d, 2, d[0], d[1]);
                         if (mt >= 0 && pt >= 0 && mt < 40 && pt > mt + 30) {
                             art.notes.add("pose picture " + p.file + " of " + f[1] + " not used: its hair is lighter than in the main picture (" + Math.round(pt) + " against " + Math.round(mt) + ")");
                             continue;
@@ -2042,7 +2057,10 @@ public final class Art {
                     // completely, don't split object from character"): a sitter with the seat under them is a seated
                     // picture whatever the upload read (the old man on the bench read as running), sized so its plank is
                     // where the bench's is for everyone else on it
+                    // (v47.8: a seat of its own is read only from a picture already cut out — with its background the
+                    // test took a stride with a stick for a bench; such a seated photograph shows its own seat instead)
                     float os = d != null && d[0] > 0 ? ownSeat(d) : -1;
+                    p.withBackground = opaque;
                     if (os > 0) {
                         p.ownSeat = os; p.pose = PoseSense.SIT; p.closeUp = false; p.cut = false;
                         // its face read from the sitter alone (above the plank, within the sitter's own width): with the
@@ -2080,6 +2098,17 @@ public final class Art {
      * Only the figure's own pixels count (a cut-out's opaque ones); -1 when there are too few.
      */
     static float hairTone(int[] px, int w, int h) { return hairTone(px, 0, w, h); }
+
+    /** v47.8: hairTone of a picture with its background {w, h, pixels…}, read from its cut-out figure; -1 when none is found. */
+    static float cutHairTone(int[] d) {
+        try {
+            int[] px = new int[d[0] * d[1]];
+            System.arraycopy(d, 2, px, 0, px.length);
+            Cutout.Result cr = Cutout.process(px, d[0], d[1]);
+            if (cr == null || cr.px == null || cr.w < 8 || cr.h < 8 || cr.px.length < cr.w * cr.h) return -1;
+            return hairTone(cr.px, 0, cr.w, cr.h);
+        } catch (RuntimeException e) { return -1; }
+    }
     static float hairTone(int[] px, int off, int w, int h) {
         if (w <= 0 || h <= 0 || px.length < off + w * h) return -1;
         int top = -1;

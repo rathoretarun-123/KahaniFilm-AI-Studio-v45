@@ -2041,7 +2041,7 @@ public final class Renderer {
                 pxs += ((sp.mouthX - 0.5f) * wMain - (real.mouthX - 0.5f) * wReal) * (p.facing < 0 ? -1 : 1);
             }
             // v39: a sitting picture on a sofa, a chair or a bed sits on its cushion, not on the floor in front of it
-            if (chosen.pose == PoseSense.SIT && chosen.ownSeat <= 0 && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing; v47.7: one with its own seat stands on its seat's legs)
+            if (chosen.pose == PoseSense.SIT && !Casting.seatOfItsOwn(chosen) && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing; v47.7: one with its own seat stands on its seat's legs; v47.8: a photograph of a sitter shows what they sit on — only a cut-out is lifted)
                 pys -= seatTopOf(p.seat) * h;
             if (camStill && pixelStep > 0) { pxs = Math.round(pxs / pixelStep) * pixelStep; pys = Math.round(pys / pixelStep) * pixelStep; }
             if (audit != null) { audit.at(a, t, pxs, pys, hReal * scale); audit.picture(a, t, chosen.file == null ? "the front picture" : chosen.file, stepping); }
@@ -3159,6 +3159,18 @@ public final class Renderer {
             if (sp != null && sp.poses != null && idx != null && idx >= 0 && idx < sp.poses.size() && sp.poses.get(idx).ownSeat > 0) return true;
         }
         return false;
+    }
+
+    /** v47.8: whether this one is drawn right now with the user's picture of them on a seat of its own, or with a photograph of them sitting (then the picture shows their seat). */
+    private boolean seatInPicture(Film.Actor a) {
+        if (art == null || curSeg == null) return false;
+        Film.Shot sh = shotAt(curT);
+        Film.Key k = a.stateAt(curT);
+        if (sh == null || !k.visible || k.body != Pose.SIT) return false;
+        Art.Sprite sp = art.sprites.get(a.c.id);
+        Integer idx = sh.pictures.get(a.c.id);
+        if (sp == null || sp.poses == null || idx == null || idx < 0 || idx >= sp.poses.size()) return false;
+        return Casting.seatOfItsOwn(sp.poses.get(idx));
     }
 
     /** v47.6: the user's picture of the bench the script lists, or null (Art.benchPicture). */
@@ -5678,6 +5690,7 @@ public final class Renderer {
                 } break;
                 case Film.FX_SLIDE: if (behind) drawSlideProp(g, s, f); break;
                 case Film.FX_SEAT: if (behind) {
+                    if (f.a != null && seatInPicture(f.a)) break;      // v47.8: their own picture brings the seat they sit on
                     float hh = f.a != null ? actorHeight(f.a.look, f.a.c, art, s) * seatScale(f.a) : 400;
                     float fc = f.a != null ? f.a.stateAt(t).facing : 1;
                     seatSpan = f.kind == Film.SEAT_SOFA || f.kind == Film.SEAT_STOOL ? seatGroup(s, f, hh, f.kind) : null;

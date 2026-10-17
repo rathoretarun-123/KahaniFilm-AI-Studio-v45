@@ -38,7 +38,14 @@ public class MakeFilm {
         if (System.getenv("SPRITE_SIDE") != null) Art.spriteSide = Integer.parseInt(System.getenv("SPRITE_SIDE"));
         if (System.getenv("BACKDROP_SIDE") != null) Art.backdropSide = Integer.parseInt(System.getenv("BACKDROP_SIDE"));
         Art art = new Art();
-        if (!assets.equals("-")) {
+        if (System.getenv("REFART") != null) {
+            // v47.8: a bundled film's own reference pack (film_library/<id>/manifest.json: the user's pictures), cast as the
+            // desktop render tests cast it — needs the test classes (ReferenceArtLoader) on the class path
+            Class<?> ra = Class.forName("com.tarun.kahani.ReferenceArtLoader");
+            java.lang.reflect.Method load = ra.getDeclaredMethod("load", String.class, Story.class, File.class);
+            load.setAccessible(true);
+            art = (Art) load.invoke(null, System.getenv("REFART"), story, new File(System.getenv().getOrDefault("REFART_ASSETS", "app/src/main/assets")));
+        } else if (!assets.equals("-")) {
             Art.Loader L = new AwtLoader(assets);
             art = Art.fromManifest(new String(Files.readAllBytes(Paths.get(assets, "cast.txt")), "UTF-8"), story, L);
         }
