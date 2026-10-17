@@ -183,7 +183,8 @@ public final class Film {
             G_STAGGER = 67,       // v44: unsteady on the feet after drinking: a sway, a stumble caught, a hand out for balance
             G_SNOW_PLAY = 68,     // v44: in the snow (Act.item: SNOW_*): a snowball made and thrown, a snowman built, flakes caught
             G_FALL = 69,          // v44: a fall (an accident): thrown down onto the ground, a moment there, then up holding the knee or the elbow
-            G_ANIMAL = 70,        // v47.7: an animal of the cast does its own thing (Act.item = AN_*): chews the cud, grazes, barks, holds its tail up…
+            G_ANIMAL = 70,
+            G_SPIN = 80,          // v47.8 daily B: a whole turn on the spot (the user's reference: "जगह पर 360 डिग्री घूमता व्यक्ति")        // v47.7: an animal of the cast does its own thing (Act.item = AN_*): chews the cud, grazes, barks, holds its tail up…
             G_PULL = 50,          // a hard pull (a plug, a wire, a rope): lean back and yank
             G_LISTEN = 51;        // thought before action (handbook ch. 6): a pause, the head turns toward the sound, the body holds still
 

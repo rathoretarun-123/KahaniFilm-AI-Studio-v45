@@ -4122,6 +4122,14 @@ public final class Director {
             for (float dt = 0.2f; dt <= Math.max(1.0f, d) + 0.6f && !moved; dt += 0.2f) if (Math.abs(xAt(who, t + dt) - x0) > 40 || !who.stateAt(t + dt).visible) moved = true;
             if (!moved) { walkedTo++; d = Math.max(d, everyday(s, t)); }
         }
+        // v47.8 daily B: the user's reference activities act even where another rule took the sentence — the sit of
+        // "सोफे पर बैठकर बातें करते हैं" (they sat, and never talked), the pick-up of "कचरे की थैली उठाकर बाहर ले जाती है"
+        // — after it, and never moving one it has seated again
+        if (!(nothing || incidental) && who != null && !negated(s) && gifRow(s) >= 0) {
+            float lag = Math.min(d, 1.2f);
+            gestureOnly = true;
+            try { d = Math.max(d, lag + everyday(s, t + lag)); } finally { gestureOnly = false; }
+        }
         // v47.7: an animal of the cast does what the words say it does — chews the cud, grazes, barks, wags, pricks its ears
         if (seg != null) d = Math.max(d, animalDoings(s, t, establishing));
         // v45: nobody glides seated — a move this sentence made from a seat or a bed is made on foot
@@ -4156,7 +4164,9 @@ public final class Director {
     private static final int EV_NONE = 0, EV_NEAR = 1, EV_FALL = 2, EV_HIDE = 3, EV_KNEEL = 4, EV_FLOOR = 5, EV_STAND = 6,
             EV_EYES = 7, EV_WAKE = 8, EV_UMBRELLA = 9, EV_WALK = 10, EV_READ = 12, EV_SWEEP = 13, EV_WASH = 14,
             EV_COOK = 15, EV_LOOK_ROUND = 16, EV_THUD = 17, EV_DOOR = 18, EV_GIVE = 19, EV_RUN = 20, EV_KNOCK = 21,
-            EV_SWEAT = 22, EV_KICK = 23, EV_TV = 24;
+            EV_SWEAT = 22, EV_KICK = 23, EV_TV = 24, EV_BED = 25;
+    /** v47.8: a conversation — everyone named in it talks, in turn. */
+    static final String[] CONVERSE = {"बातें कर", "बात कर रह", "बातचीत", "गपशप", "गप्पें", "chatting", "chats with", "talk to each other", "talking together"};
     /**
      * v41: the everyday words, each row: its words (Hindi stems, spellings, English), the face (-1: the face the feeling
      * words give), the gesture (-1: none), how long, and what else it does. The first row that fits is the action.
@@ -4170,12 +4180,18 @@ public final class Director {
         {new String[]{"शीशा साफ", "खिड़की साफ", "खिड़की का शीशा", "शीशा पोंछ", "पोंछता", "पोंछती", "wipes the window", "cleans the window", "wipes the glass"}, -1, Film.G_REACH, 2.6f, EV_SWEEP},
         {new String[]{"कपड़े तह", "तह करता", "तह करती", "तह कर", "फोल्ड कर", "folds the clothes", "folding clothes", "folds the shirt", "folds a"}, Pose.CURIOUS, Film.G_REACH, 2.6f, EV_NONE},
         {new String[]{"फावड़े से", "मिट्टी खोद", "खोदता", "खोदती", "गड्ढा खोद", "बागवानी", "निराई", "digs", "digging", "gardening", "shovels"}, Pose.DETERMINED, Film.G_PUSH, 2.8f, EV_NONE},
-        {new String[]{"बिस्तर बना", "बिस्तर लगा", "चादर बिछा", "चादर फैला", "तकिए सजा", "makes the bed", "spreads the sheet"}, -1, Film.G_REACH, 2.6f, EV_NONE},
+        {new String[]{"बिस्तर बना", "बिस्तर लगा", "चादर बिछा", "चादर फैला", "तकिए सजा", "makes the bed", "spreads the sheet"}, -1, Film.G_REACH, 2.6f, EV_BED},
         {new String[]{"कचरे की थैली", "कचरा बाहर", "कूड़ा बाहर", "कचरा फेंक", "कूड़ा फेंक", "takes out the trash", "takes out the garbage", "takes the rubbish out"}, -1, -1, 2.6f, EV_WALK},
-        {new String[]{"360", "गोल घूम", "चक्कर लगाकर घूम", "जगह पर घूम", "पूरा घूम", "spins round", "turns all the way round", "twirls"}, Pose.HAPPY, Film.G_TURN, 2.0f, EV_LOOK_ROUND},
+        {new String[]{"360", "गोल घूम", "गोल-गोल घूम", "चक्कर लगाकर घूम", "चक्कर घूम", "एक चक्कर", "जगह पर घूम", "पूरा घूम", "spins round", "turns all the way round", "twirls", "spins on the spot"}, Pose.HAPPY, Film.G_SPIN, 2.0f, EV_NONE},
         {new String[]{"कैन से पानी", "पौधों को पानी", "पौधों में पानी", "पेड़ को पानी", "waters the plants", "watering can", "waters the garden"}, Pose.HAPPY, -1, 2.6f, EV_WASH},
         {new String[]{"रिमोट से", "चैनल बदल", "remote", "changes the channel"}, Pose.CURIOUS, Film.G_REACH, 2.0f, EV_NONE},
         {new String[]{"स्विच", "बत्ती जला", "बत्ती बुझा", "लाइट जला", "लाइट बंद", "पंखा चला", "पंखा बंद", "switches on", "switches off", "turns on the light", "turns off the light"}, -1, Film.G_REACH, 1.4f, EV_NONE},
+        // v47.8 daily B: the rest of the user's reference activities — tying the shoelaces (down on one knee, the hands at
+        // the shoe, up again), a conversation (both talk, in turn), the laptop, the television
+        {new String[]{"फीते", "जूते बांध", "जूते बाँध", "shoelace", "shoe lace", "ties his shoes", "ties her shoes", "ties up his shoes", "ties up her shoes"}, -1, Film.G_REACH, 2.4f, EV_KNEEL},
+        {CONVERSE, Pose.HAPPY, Film.G_TALK, 3.2f, EV_NONE},
+        {new String[]{"लैपटॉप पर", "लैपटॉप चला", "टाइप कर", "on the laptop", "typing"}, Pose.CURIOUS, Film.G_REACH, 2.6f, EV_NONE},
+        {new String[]{"टीवी देख", "watches tv", "watching tv", "watch tv"}, Pose.HAPPY, -1, 2.8f, EV_TV},
         {new String[]{"पैर छू", "पाँव छू", "पांव छू", "चरण छू", "चरण स्पर्श", "touches the feet", "touches her feet", "touches his feet"}, Pose.HAPPY, Film.G_BOW, 2.2f, EV_NEAR},
         // v45: jostled in a crowd, nearly down — a stagger caught, not a fall (before the push and the fall)
         {new String[]{"धक्का खा", "धक्का लग", "धक्के से", "धक्के में", "गिरते-गिरते बच", "गिरते गिरते बच", "is pushed", "gets pushed", "is jostled", "gets jostled", "nearly falls",
@@ -4333,6 +4349,21 @@ public final class Director {
         {new String[]{"काट", "फुला", " cuts", "blows up", "inflates"}, Pose.HAPPY, Film.G_REACH, 1.6f, EV_NONE},
         {new String[]{"उठा", "रख", "तोड़", "खोल", "बंद कर", "picks up", "puts down", "plucks", "opens", "closes", "lifts", "places"}, -1, Film.G_REACH, 1.3f, EV_NONE},
     };
+    /** v47.8: the user's reference activity rows are EVERYDAY[0 .. GIF_END) (they run even where another rule took the sentence). */
+    static final int GIF_END = gifEnd();
+    private static int gifEnd() {
+        for (int i = 0; i < EVERYDAY.length; i++) for (String w : (String[]) EVERYDAY[i][0]) if (w.equals("पैर छू")) return i;
+        return 0;
+    }
+    /** v47.8: the first reference activity row the sentence names, or -1. */
+    static int gifRow(String s) {
+        String w = " " + s + " ";
+        for (int i = 0; i < GIF_END; i++) if (Txt.hasStart(w, (String[]) EVERYDAY[i][0])) return i;
+        return -1;
+    }
+    /** v47.8: everydayOne only does a reference row's gesture and look, never moves one already seated (see the caller). */
+    private boolean gestureOnly;
+
     /** v41: the feeling words of a direction: the face, a gesture that shows it (-1: none), how long. */
     private static final Object[][] FEELINGS = {
         {new String[]{"रोता", "रोती", "रोते", "रोने", "रो पड़", "रो रहा", "रो रही", "रो रहे", "रोकर", "आँसू", "आंसू", "सिसक", "फफक", "cries", "crying", "sobs", "weeps", "in tears"}, Pose.SAD, Film.G_CRY, 2.6f},
@@ -4587,7 +4618,9 @@ public final class Director {
             if (c.displayName != null && c.displayName.length() > 0) w = w.replace(c.displayName, " ");
         }
         Object[] row = null;
-        for (Object[] r : EVERYDAY) {
+        for (int ri = 0; ri < EVERYDAY.length; ri++) {
+            Object[] r = EVERYDAY[ri];
+            if (gestureOnly && ri >= GIF_END) break;
             // (v43: a word only where a word begins: "लगाता" sings nothing, "कराहता" is no relief)
             if (!Txt.hasStart(w, (String[]) r[0])) continue;
             int kind = (Integer) r[4];
@@ -4629,12 +4662,33 @@ public final class Director {
         int gesture = row != null ? (Integer) row[2] : -1;
         if (gesture < 0 && mood != null && (row == null || (Integer) row[4] == EV_NONE)) gesture = (Integer) mood[2];
         int ev = row != null ? (Integer) row[4] : EV_NONE;
+        if (gestureOnly && (row == null || ev == EV_SWEEP || ev == EV_WASH || ev == EV_READ || ev == EV_COOK)) return 0;
+        // v47.8: "माँ और दादाजी बातें करते हैं", "माँ, राजू और मीना साथ में टीवी देखते हैं": everyone named does it, not
+        // the first one at the others
+        boolean together = row != null && (row[0] == CONVERSE || ev == EV_TV);
+        // v47.8: out of a room with it ("कचरे की थैली उठाकर बाहर ले जाती है"): through the room's door and gone
+        if (ev == EV_WALK && seg != null && indoors(seg.set) && Txt.has(w, "बाहर ले जा", "बाहर ले ज", "takes out the", "takes the rubbish out")) ev = EV_DOOR;
+        if (together) {
+            for (Story.CharacterDef c : ms) { Film.Actor o = actor(c); if (o != null && !who.contains(o) && o.stateAt(t).visible) who.add(o); }
+            target = null;
+        }
+        // (a task the sentence names is its own rule's, and a task, an exercise or a bath already staged is not done
+        // twice: "पौधों को पानी देते हैं", "आँसू पोंछता है" is no wiping of the window)
+        if (gestureOnly) for (Film.Actor a : who) for (Film.Act x : a.acts)
+            if (x.t1 > t - 0.05f && x.t0 < t + dur && (x.type == Film.G_TASK || x.type == Film.G_EXERCISE || x.type == Film.G_BATHE || x.type == gesture)) return 0;
+        if (gestureOnly && ev != EV_EYES && ev != EV_TV && ev != EV_BED) {
+            boolean placed = false;
+            for (Film.Actor a : who) if (a.stateAt(t).body != Pose.STAND) placed = true;
+            if (placed) ev = EV_NONE;            // (one seated by the sentence stays seated: the gesture only)
+        }
         float used = 0;
+        int turn = -1;
         for (Film.Actor a : who) {
             Film.Key now = a.stateAt(t);
             if (!now.visible || a.look == null) continue;
             boolean human = a.look.isHumanoid();
             float t0 = t + 0.15f;
+            turn++;
             if (ev == EV_NEAR || ev == EV_GIVE || (ev == EV_HIDE && target != null)) {
                 if (target != null && target.stateAt(t).visible && human) {
                     moveNear(a, target, t, 0.7f);
@@ -4642,6 +4696,7 @@ public final class Director {
                 }
             }
             float d = dur;
+            boolean low = false;                     // (v47.8: the hands down at the feet — the shoelaces)
             // the face first (what follows copies it), back to the face before once the action is over
             int was = a.stateAt(t0).emotion;
             if (emo >= 0 && ev != EV_FALL) keyAt(a, t0).emotion = emo;
@@ -4687,12 +4742,34 @@ public final class Director {
                         Film.Key k = keyAt(a, t0 + 0.6f); k.body = Pose.CROUCH; Film.Key k2 = keyAt(a, t0 + 0.6f + dur); k2.body = Pose.STAND;
                     }
                     break;
-                case EV_KNEEL: if (human && now.body == Pose.STAND) { Film.Key k = keyAt(a, t0); k.body = Pose.KNEEL; } break;
+                case EV_KNEEL:
+                    if (human && now.body == Pose.STAND) {
+                        Film.Key k = keyAt(a, t0); k.body = Pose.KNEEL;
+                        // v47.8: down on one knee to tie the shoelaces, and up again once they are tied
+                        if (Txt.has(w, "फीते", "जूते बांध", "जूते बाँध", "shoelace", "shoe lace", "ties his shoes", "ties her shoes", "ties up his shoes", "ties up her shoes")) {
+                            Film.Key up = keyAt(a, t0 + dur + 0.2f); up.body = Pose.STAND; d = dur + 0.8f; low = true;
+                        }
+                    }
+                    break;
+                case EV_BED: {
+                    // v47.8: making the bed — the bed stands beside them from the start of the part (a bed does not appear),
+                    // and they bend over it spreading the sheet; one already there is the one made
+                    boolean have = false;
+                    for (Film.Fx f : seg.fx) if (f.type == Film.FX_SEAT && f.kind == Film.SEAT_BED) have = true;
+                    if (!have && human && now.body == Pose.STAND && now.anchor == Film.A_GROUND) {
+                        float fc = now.facing >= 0 ? 1 : -1;
+                        float bx = Math.max(160, Math.min(1120, xAt(a, t) + fc * heightOf(a) * 0.62f));
+                        Film.Fx bf = fx(Film.FX_SEAT, seg.t0, 1e6f, bx, 0, null, null); bf.kind = Film.SEAT_BED;
+                        bedsMade++;
+                    }
+                    break;
+                }
                 case EV_TV: {
                     // v44: watching television — settled on the sofa (on the floor outside a room with one), eyes on the
                     // screen, a laugh at the funny bit, the show heard
-                    if (human && now.body == Pose.STAND) { Film.Key k = keyAt(a, t0); k.body = Pose.SIT; k.seat = seg.set == Sets.ROOM ? Film.SEAT_SOFA : Film.SEAT_FLOOR; }
-                    a.acts.add(new Film.Act(t0 + 1.0f, t0 + 2.2f, Film.G_LAUGH));
+                    if (human && now.body == Pose.STAND && !gestureOnly) { Film.Key k = keyAt(a, t0); k.body = Pose.SIT; k.seat = seg.set == Sets.ROOM ? Film.SEAT_SOFA : Film.SEAT_FLOOR; }
+                    float lag = Math.min(turn, 3) * 0.35f;     // (v47.8: several watching laugh one after another, not on one frame)
+                    a.acts.add(new Film.Act(t0 + 1.0f + lag, t0 + 2.2f + lag, Film.G_LAUGH));
                     break;
                 }
                 case EV_FLOOR:
@@ -4706,7 +4783,13 @@ public final class Director {
                     }
                     break;
                 case EV_STAND: if (now.body == Pose.SIT || now.body == Pose.LIE || now.body == Pose.KNEEL) { Film.Key k = keyAt(a, t0); k.body = Pose.STAND; k.seat = -1; k.eyesShut = false; } break;
-                case EV_EYES: { Film.Key k = keyAt(a, t0 + 0.2f); k.eyesShut = true; Film.Key k2 = keyAt(a, t0 + dur); k2.eyesShut = false; break; }
+                case EV_EYES: {
+                    // (v47.8: meditation keeps them shut a while — "आँखें बंद करके ध्यान करते हैं")
+                    float open = Txt.has(w, "ध्यान", "meditat") ? Math.max(dur, 4.5f) : dur;
+                    Film.Key k = keyAt(a, t0 + 0.2f); k.eyesShut = true; Film.Key k2 = keyAt(a, t0 + open); k2.eyesShut = false;
+                    d = Math.max(d, open);
+                    break;
+                }
                 case EV_WAKE: if (now.eyesShut) { Film.Key k = keyAt(a, t0); k.eyesShut = false; } break;
                 case EV_UMBRELLA:
                     if (human && a.umbrellaFrom < 0 && (a.look == null || !a.look.umbrella)) {
@@ -4744,6 +4827,7 @@ public final class Director {
                     List<Film.Actor> one = new ArrayList<Film.Actor>();
                     one.add(a);
                     int kind = ev == EV_READ ? Film.T_READ : ev == EV_SWEEP ? Film.T_SWEEP : ev == EV_WASH ? Film.T_WASH : Film.T_COOK;
+                    if (ev == EV_WASH && Txt.has(w, "पौधों", "पौधे", "पेड़ को पानी", "plants", "watering", "waters the garden")) kind = Film.T_WATER;   // (v47.8)
                     d = Math.max(d, oneTask(s, " " + s + " ", kind, t0 - 0.2f, one));
                     break;
                 }
@@ -4781,7 +4865,7 @@ public final class Director {
                     gesture = -1;
                     d = Math.max(d, wd + 1.5f);
                     // v44: "दरवाज़ा खोलकर बाहर चला जाता है", "opens the door and goes out": through it and gone
-                    if (!shut && (leaving(w) || Txt.has(w, "बाहर चला", "बाहर चली", "बाहर चले", "बाहर जा", "बाहर निकल", "goes out", "walks out", "steps out", "leaves"))) {
+                    if (!shut && (leaving(w) || Txt.has(w, "बाहर चला", "बाहर चली", "बाहर चले", "बाहर जा", "बाहर निकल", "बाहर ले जा", "बाहर ले ज", "goes out", "walks out", "steps out", "leaves", "takes out the", "takes the rubbish out"))) {
                         Film.Key ok = keyAt(a, at + 1.05f); ok.x = dx + side * 170; ok.moveDur = 0.8f; ok.run = false; ok.facing = side; ok.backTurned = false;
                         Film.Key gone = keyAt(a, at + 1.9f); gone.visible = false;
                         leftFrom.put(a, dx + side * 170); goneAt.put(a, at + 1.9f);
@@ -4804,9 +4888,17 @@ public final class Director {
                 default:
             }
             if (gesture >= 0 && (human || gesture == Film.G_JUMP || gesture == Film.G_TREMBLE || gesture == Film.G_SHIVER || (a.look.isObject() && objectGesture(gesture)))) {
-                Film.Act act = new Film.Act(t0, t0 + Math.min(dur, 3f), gesture);
-                if (ev == EV_NEAR || ev == EV_GIVE) act.target = target;
-                a.acts.add(act);
+                if (row != null && row[0] == CONVERSE && who.size() > 1) {
+                    // v47.8: in turns — each talks, then listens while the next talks (twice round)
+                    int n = who.size();
+                    float slot = Math.min(dur, 3.2f) / (2 * n);
+                    for (int r2 = 0; r2 < 2; r2++) a.acts.add(new Film.Act(t0 + (r2 * n + turn) * slot, t0 + (r2 * n + turn + 1) * slot - 0.1f, gesture));
+                } else {
+                    Film.Act act = new Film.Act(t0, t0 + Math.min(dur, 3f), gesture);
+                    if (ev == EV_NEAR || ev == EV_GIVE) act.target = target;
+                    if (low && gesture == Film.G_REACH) act.item = 1;
+                    a.acts.add(act);
+                }
             }
             // v43: what was carried is given (or put down): the hands are empty after it
             if (ev == EV_GIVE && gesture == Film.G_GIVE || Txt.has(w, "रख देता", "रख देती", "रख दिया", "नीचे रख", "puts down", "puts it down", "sets down"))
@@ -7410,7 +7502,8 @@ public final class Director {
     static final String[] BED = {"बिस्तर", "पलंग", "चारपाई", "खाट", "bed", "cot", "mattress"};
     static final String[] STOOL = {"मूढ़ा", "मूढ़े", "चौकी", "बेंच", "स्टूल", "stool", "bench"};      // (v47.7: "स्टूल पर बैठा" sat on the floor)
     static final String[] ROCK = {"चट्टान", "पत्थर पर", "rock", "boulder"};
-    static final String[] FLOOR = {"ज़मीन पर", "जमीन पर", "धरती पर", "फर्श पर", "दरी", "चटाई", "floor", "ground", "on the grass", "घास पर"};
+    static final String[] FLOOR = {"ज़मीन पर", "जमीन पर", "धरती पर", "फर्श पर", "दरी", "चटाई", "floor", "ground", "on the grass", "घास पर",
+            "पालथी", "पद्मासन", "आलती-पालती", "cross-legged", "cross legged"};      // (v47.8: "पालथी मारकर बैठते हैं" sat on a chair)
     static final String[] BOW = {"प्रणाम", "नमस्ते", "नमस्कार", "झुककर", "सिर झुका", "bow", "bowed", "namaste", "pranam"};
     static final String[] WAVE = {"हाथ हिला", "टाटा", "wave", "waved", "waving"};
     static final String[] NOD = {"हाँ में सिर", "सिर हिलाकर हाँ", "nodded", "nods"};
@@ -10568,6 +10661,8 @@ public final class Director {
     }
 
     int dishesCooked;
+    /** v47.8: beds set beside one making the bed. */
+    int bedsMade;
 
     private float oneTask(String s, String sp, int kind, float t, List<Film.Actor> who) {
         if (kind == Film.T_READ && Txt.has(sp, "अख़बार", "अखबार", "newspaper")) kind = Film.T_PAPER;
