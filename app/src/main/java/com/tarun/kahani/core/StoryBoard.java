@@ -217,15 +217,17 @@ public final class StoryBoard {
                 list.append(m.label()).append(": no character known by its colours (").append(m.things).append(" figures) — a reference only\n");
                 continue;
             }
+            // (the next moment is a later moment of the story: the first fitting shot after the last one placed, else that same shot)
             int at = -1;
-            for (int i = from; i < film.shots.size() && at < 0; i++) if (onStage(film, film.shots.get(i), m.who)) at = i;
+            for (int i = placed > 0 ? from + 1 : from; i < film.shots.size() && at < 0; i++) if (onStage(film, film.shots.get(i), m.who)) at = i;
+            if (at < 0 && placed > 0 && onStage(film, film.shots.get(from), m.who)) at = from;
             if (at < 0) {
                 findings.add(m.label() + " (" + names(m.who, names) + " together) is not placed: they are never on the stage together after shot " + (from + 1));
                 list.append(m.label()).append(": ").append(names(m.who, names)).append(" — not placed\n");
                 continue;
             }
             m.shot = at; placed++;
-            from = at;          // (the next moment may follow in the same shot or after it, never before)
+            from = at;          // (the next moment follows after it, or in the same shot when none after fits; never before)
             Film.Shot sh = film.shots.get(at);
             list.append(m.label()).append(": ").append(names(m.who, names)).append(" → shot ").append(at + 1)
                     .append(String.format(Locale.US, " at %d:%04.1f", (int) (sh.t / 60), sh.t % 60)).append('\n');

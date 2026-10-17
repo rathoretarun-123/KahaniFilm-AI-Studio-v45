@@ -680,3 +680,84 @@ mumbai" has two people named together with a plural verb, and both now reach at 
 A first run with broader words for folding and digging changed 30 more stories wrongly ("folds his hands and prays"
 became folding clothes), and "आँसू पोंछता" swept a window. The words were narrowed, and those stories are back to how
 they were.
+
+## 10. Sixth round (17 October, evening): debugging every part, and the story board
+
+The user: "debug everything, every functionality, reader, director etc and all their collaboration"; then "add one more
+section in the studio section to take upto 100 images of 3x2 grid as per the story … train your director etc to check
+these pictures and put rightly in place in animation or take reference of them; starting title and end image should be
+only one".
+
+### The story board (`core/StoryBoard`, Studio section 6)
+
+- **Upload.** Up to 100 pictures in the story's order, kept as PNG so their clear background stays (`Project.saveBoardPicture`).
+- **Title and end.** The first picture is the title picture and the last the end picture, one each; they become the title
+  and end pages when the user gave none.
+- **Sheets.** Every picture between them is a sheet of six moments, three across and two down.
+- **Reading a moment.** Each figure standing apart in a moment is known as a character by its colours, compared with each
+  character's own picture. Figures are read left to right; anything else is a thing.
+- **Placing.** The director places the moments at the film's shots in story order: each moment goes to the first later
+  shot with all of its characters on stage. The shot list gets a STORY BOARD section.
+- **Checking.** The production document (category STORY_BOARD) reports a moment that could not be placed, and a moment
+  whose characters stand the other way round in the film.
+- **Not done.** The moments are references the film is staged and checked against. They are not pasted over the animated
+  characters (lips and eyes would stop), and the film's left-to-right order is not yet changed to follow them: it is
+  reported.
+
+Checked with a board made of the user's own pictures of बाबू and the girl (title, one sheet of five moments, end):
+
+- all five moments were known correctly;
+- they were placed at shots 1, 10, 11, 12 and 13;
+- the one moment with them the other way round was reported;
+- the title and end pages came from the board.
+
+`StoryBoardTest` covers this with a synthetic sheet.
+
+### What four debuggers found and fixed (each with tests; all merged)
+
+- **The app.** Nine fixes:
+  - project settings written by two threads at once were lost (writes are now whole-file and atomic);
+  - codec, microphone and stream leaks on failure;
+  - a crash on a speaker missing from the cast;
+  - a half-made film left behind after a stop;
+  - the "ready" notification missing for a second film;
+  - a backup restore stopped by one bad file;
+  - a dead gallery link shared;
+  - a broken reference clip kept;
+  - a "please wait" dialog stuck after a screen change.
+
+  `AppAuditTest`.
+- **The reader.**
+  - The script's own place line ("स्थान: …") was dropped, so बाबू के लिए and आखिरी चाय lost their setting. Its time line
+    ("समय: …बारिश…") was dropped too.
+  - People next to someone ("माँ के पीछे") were not put on stage.
+  - On-screen children called "बेटा" were flagged as unseen people.
+  - A device's voice was a BLOCKER.
+
+  `ReaderAuditTest`.
+- **The director.**
+  - Teleports from two rules' keys at the same moment (the sample story's witch, 1,096 px in a frame).
+  - Walks re-issued mid-move restarted from standstill.
+  - Walks too fast for a body: the least time is 1 height a second walking and 1.8 running.
+  - Arrivals on top of someone; a path running on past a cut.
+  - Stars under rain.
+
+  `DirectorAuditTest`.
+- **Casting and drawing.**
+  - Named back and side views were silently dropped ("back" read as a number): the over-the-shoulder shot showed the
+    girl's face.
+  - The shared bench now keeps बाबू's own bench photo.
+  - A folded umbrella was drawn across the boy's face.
+  - Changing anchor (branch, shoulder, face) now travels eased: the sample story's monkey dropped 467 px in a frame.
+  - The frame audit reads only characters inside the frame.
+
+  `RenderAuditTest`.
+
+### What remains (recorded, not claimed)
+
+- Getting into a car still cross-fades the rider into the seat (a 115 px jump of the drawn base).
+- A jump has no crouch before take-off.
+- The girl's kneel reads as standing. The sit-down jolt of परी (2.0%, at the limit) remains.
+- In medium shots of the shared bench the girl is placed in front of बाबू, so it reads as two benches.
+- 528 "passes through someone" plan findings remain, mostly at playground apparatus, car doors and cars driving past at
+  the same depth.
