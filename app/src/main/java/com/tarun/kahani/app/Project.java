@@ -163,11 +163,18 @@ public final class Project {
         if (in == null) throw new IOException("Could not open the clip");
         File f = freeRef("video_", ".mp4");
         OutputStream out = new FileOutputStream(f);
+        boolean whole = false;
         try {
             byte[] buf = new byte[1 << 16];
             int n;
             while ((n = in.read(buf)) > 0) out.write(buf, 0, n);
-        } finally { out.close(); in.close(); }
+            whole = true;
+        } finally {
+            out.close();
+            in.close();
+            // (v47.8: a clip cut off by a full phone or a lost link is not kept as one of the two references)
+            if (!whole) f.delete();
+        }
         return f;
     }
     public boolean has(String name) { return new File(dir, name).exists(); }
