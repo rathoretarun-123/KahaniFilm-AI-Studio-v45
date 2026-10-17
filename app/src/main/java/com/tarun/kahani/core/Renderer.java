@@ -3184,7 +3184,7 @@ public final class Renderer {
      */
     private boolean benchInPicture() {
         if (curSeg == null || art == null) return false;
-        Film.Shot sh = shotAt(curT);
+        Film.Shot sh = pictureShotAt(curT);
         if (sh == null) return false;
         for (Film.Actor a : curSeg.actors) {
             Film.Key k = a.stateAt(curT);
@@ -3199,7 +3199,7 @@ public final class Renderer {
     /** v47.8: whether this one is drawn right now with the user's picture of them on a seat of its own, or with a photograph of them sitting (then the picture shows their seat). */
     private boolean seatInPicture(Film.Actor a) {
         if (art == null || curSeg == null) return false;
-        Film.Shot sh = shotAt(curT);
+        Film.Shot sh = pictureShotAt(curT);
         Film.Key k = a.stateAt(curT);
         if (sh == null || !k.visible || k.body != Pose.SIT) return false;
         Art.Sprite sp = art.sprites.get(a.c.id);
@@ -4335,7 +4335,7 @@ public final class Renderer {
      */
     private Art.PoseSprite chosenPicture(Art.Sprite sp, Film.Actor a, float t, Pose p) {
         if (sp == null || sp.poses == null || sp.poses.isEmpty()) return null;
-        Film.Shot sh = shotAt(t);
+        Film.Shot sh = pictureShotAt(t);
         if (sh == null) return null;
         Integer idx = sh.pictures.get(a.c.id);
         if (idx != null && idx == Casting.MAIN_STILL) {
@@ -4376,13 +4376,31 @@ public final class Renderer {
     /** v33: while the character steps through its pictures, the picture before the current one in the cycle (for the cross-fade), or null. */
     private Art.PoseSprite previousStep(Art.Sprite sp, Film.Actor a, float t, Pose p) {
         if (sp == null || sp.poses == null || p == null || p.walkAmt <= 0.35f) return null;
-        Film.Shot sh = shotAt(t);
+        Film.Shot sh = pictureShotAt(t);
         if (sh == null) return null;
         int[] cyc = sh.cycles.get(a.c.id);
         if (cyc == null || cyc.length < 2) return null;
         int step = (int) Math.floor(p.walk / Math.PI) - 1;
         int i = cyc[((step % cyc.length) + cyc.length) % cyc.length];
         return i >= 0 && i < sp.poses.size() ? sp.poses.get(i) : null;
+    }
+
+    /**
+     * v47.8: the shot whose pictures the part being drawn plays at t — the one playing; in a dissolve between two parts,
+     * where no shot plays, the nearest shot of that part (its last as it fades out, its first as it fades in). Between
+     * them the old man of बाबू के लिए left his own bench picture for the rig on a drawn bench for two seconds.
+     */
+    Film.Shot pictureShotAt(float t) {
+        Film.Shot sh = shotAt(t);
+        if (sh != null || film == null || curSeg == null) return sh;
+        Film.Shot best = null;
+        float bd = 3f;
+        for (Film.Shot s : film.shots) {
+            if (film.segAt(s.t + 0.01f) != curSeg) continue;
+            float d = t < s.t ? s.t - t : t >= s.t + s.dur ? t - (s.t + s.dur) : 0;
+            if (d < bd) { bd = d; best = s; }
+        }
+        return best;
     }
 
     /** The shot playing at t (the shots are in order; the last one found is tried first). */
