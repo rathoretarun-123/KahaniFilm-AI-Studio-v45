@@ -168,6 +168,13 @@ public class DailyActivitiesBTest {
     }
 
     @Test
+    public void wipingTheSweatIsNoCleaning() {
+        Film f = make("घर का आँगन", "राजू तेज़ी से दौड़ता है और माथे से पसीना पोंछता है।");
+        for (Film.Act x : acts(who(scene(f), "राजू"), Film.G_TASK))
+            assertNotEquals("no window wiped or floor swept for the sweat", Film.T_SWEEP, x.item);
+    }
+
+    @Test
     public void whatTheWordsDenyIsNotDone() {
         Film f = make("घर का आँगन", "मीना अपनी जगह पर चक्कर नहीं घूमती।");
         assertTrue("no turn", acts(who(scene(f), "मीना"), Film.G_SPIN).isEmpty());

@@ -4662,7 +4662,7 @@ public final class Director {
         int gesture = row != null ? (Integer) row[2] : -1;
         if (gesture < 0 && mood != null && (row == null || (Integer) row[4] == EV_NONE)) gesture = (Integer) mood[2];
         int ev = row != null ? (Integer) row[4] : EV_NONE;
-        if (gestureOnly && row == null) return 0;
+        if (gestureOnly && (row == null || ev == EV_SWEEP || ev == EV_WASH || ev == EV_READ || ev == EV_COOK)) return 0;
         // v47.8: "माँ और दादाजी बातें करते हैं", "माँ, राजू और मीना साथ में टीवी देखते हैं": everyone named does it, not
         // the first one at the others
         boolean together = row != null && (row[0] == CONVERSE || ev == EV_TV);
@@ -4672,7 +4672,8 @@ public final class Director {
             for (Story.CharacterDef c : ms) { Film.Actor o = actor(c); if (o != null && !who.contains(o) && o.stateAt(t).visible) who.add(o); }
             target = null;
         }
-        // (a task, an exercise or a bath the sentence's own rule already staged is not done twice: "पौधों को पानी देते हैं")
+        // (a task the sentence names is its own rule's, and a task, an exercise or a bath already staged is not done
+        // twice: "पौधों को पानी देते हैं", "आँसू पोंछता है" is no wiping of the window)
         if (gestureOnly) for (Film.Actor a : who) for (Film.Act x : a.acts)
             if (x.t1 > t - 0.05f && x.t0 < t + dur && (x.type == Film.G_TASK || x.type == Film.G_EXERCISE || x.type == Film.G_BATHE || x.type == gesture)) return 0;
         if (gestureOnly && ev != EV_EYES && ev != EV_TV && ev != EV_BED) {
@@ -4766,7 +4767,7 @@ public final class Director {
                 case EV_TV: {
                     // v44: watching television — settled on the sofa (on the floor outside a room with one), eyes on the
                     // screen, a laugh at the funny bit, the show heard
-                    if (human && now.body == Pose.STAND) { Film.Key k = keyAt(a, t0); k.body = Pose.SIT; k.seat = seg.set == Sets.ROOM ? Film.SEAT_SOFA : Film.SEAT_FLOOR; }
+                    if (human && now.body == Pose.STAND && !gestureOnly) { Film.Key k = keyAt(a, t0); k.body = Pose.SIT; k.seat = seg.set == Sets.ROOM ? Film.SEAT_SOFA : Film.SEAT_FLOOR; }
                     float lag = Math.min(turn, 3) * 0.35f;     // (v47.8: several watching laugh one after another, not on one frame)
                     a.acts.add(new Film.Act(t0 + 1.0f + lag, t0 + 2.2f + lag, Film.G_LAUGH));
                     break;
