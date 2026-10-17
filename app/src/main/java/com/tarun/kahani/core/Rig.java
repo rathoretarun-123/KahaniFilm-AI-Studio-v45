@@ -148,6 +148,12 @@ public final class Rig {
 
     static Rig build(Cutout.Result r, Art.Sprite s, Look look, Art.Loader L, boolean stillOnly, Rig like) {
         if (r == null || r.px == null || r.w < 40 || r.h < 40) return null;
+        // v47.7: a thing that is a character (a talking car, a toy) never bends like a person or an animal: its picture is
+        // drawn as it is — only a face really found in it speaks and blinks (no face: no lips or eyes are drawn on it)
+        if (look != null && look.kind == Look.OBJECT) {
+            if (s == null || !s.faceKnown) return null;
+            stillOnly = true;
+        }
         int w = r.w, h = r.h;
         float aspect = h / (float) w;
         boolean beast = look != null && (look.kind == Look.ANIMAL || look.kind == Look.BIRD);

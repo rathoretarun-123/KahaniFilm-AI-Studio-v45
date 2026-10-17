@@ -3674,11 +3674,25 @@ public final class Director {
             {"जूत", "shoe"}, {"डिब्ब", "box"}, {"रूमाल", "handkerchief"}, {"थाल", "plate"}, {"किताब", "पुस्तक", "book"}, {"रिबन", "ribbon"}, {"अखबार", "समाचारपत्र", "newspaper"}};
     private static final java.util.Map<Art.Backdrop, Float> NO_SAID = new HashMap<Art.Backdrop, Float>();
 
+    /**
+     * v47.7: the user's picture of a thing open ("खुली नीली किताब" beside "नीली किताब") is that thing's open view — the
+     * renderer shows it as the thing opens (Renderer.openPicture) — and never stands for the thing itself.
+     */
+    private boolean openViewOfAnother(Art.Shot sh) {
+        String k = " " + Txt.norm(sh.keys[0]).trim() + " ";
+        if (!Txt.has(k, Rigidity.OPEN_PICTURE_WORDS)) return false;
+        for (String ow : Rigidity.OPEN_PICTURE_WORDS) k = k.replace(" " + ow + " ", " ");
+        String base = k.replace("(", " ").replace(")", " ").trim();
+        for (Art.Shot o : art.shots) if (o != sh && o.object && o.keys != null && o.keys.length > 0 && Txt.norm(o.keys[0]).trim().equals(base)) return true;
+        return false;
+    }
+
     /** The user's thing pictures this sentence speaks of: {shot, where in the normalised sentence, how many of its words, the word places}. */
     private List<Object[]> objectShots(String n, float t) {
         List<Object[]> out = new ArrayList<Object[]>();
         for (Art.Shot sh : art.shots) {
             if (!sh.object || sh.pic == null || sh.pic.img == null || sh.keys == null || sh.keys.length == 0) continue;
+            if (openViewOfAnother(sh)) continue;
             String key = Txt.norm(sh.keys[0]).trim();
             if (key.isEmpty()) continue;
             List<String> stems = new ArrayList<String>();
@@ -3799,6 +3813,19 @@ public final class Director {
                 if (hf != null) {
                     if (Txt.has(win, "खोल", "पन्ने", "पन्ना", "पलट", "पढ़", "opens", "turns the page", "turning the page", "reads", "reading", "unfolds", "looks through", "leafs") && hf.openFrom > 1e5f) { hf.openFrom = t + 0.2f; film.notes.add("  ↳ " + key + " is opened" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
                     if (Txt.has(win, "बंद कर", "बंद कि", "closes", "shuts", "folds") && hf.openFrom < 1e5f && hf.openUntil > 1e5f) { hf.openUntil = t + 0.2f; film.notes.add("  ↳ " + key + " is closed" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
+                }
+            }
+            // v47.7: a box, a trunk, a tiffin opened or shut by the words — in the hands or where it lies: its lid turns at
+            // the back edge (rigid). Not when the words open its lock ("डाक-बक्से का ताला खोलती है")
+            if (Rigidity.boxLike(key) && !Txt.has(win, "ताला", "ताले", "lock")) {
+                Film.Fx bf = heldNow(sh.pic, t);
+                if (bf == null) for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.kind == Film.THING_PLACE && f.pic == sh.pic && f.t1 > t) bf = f;
+                if (bf != null) {
+                    boolean opened = Txt.has(win, "खोल", "ढक्कन उठा", "ढक्कन हटा", "opens", "lifts the lid") && bf.openFrom > 1e5f;
+                    if (opened) { bf.openFrom = t + 0.2f; film.notes.add("  ↳ " + key + " is opened (its lid)" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
+                    if (Txt.has(win, "बंद कर", "बंद कि", "closes", "shuts") && bf.openFrom < 1e5f && bf.openUntil > 1e5f) { bf.openUntil = t + 0.2f; film.notes.add("  ↳ " + key + " is closed" + String.format(java.util.Locale.US, " at %.1f s", t + 0.2f)); }
+                    // opened where it lies, it stays there (not taken up) unless the words lift it
+                    if (opened && bf.kind == Film.THING_PLACE && !Txt.has(win, "उठा", "उठाती", "उठाता", "हाथ में ले", "गोद में", "picks up", "lifts it", "takes")) continue;
                 }
             }
             if (kind == TK_NONE) continue;
@@ -4504,6 +4531,12 @@ public final class Director {
     }
 
     /** v41/v43: one clause's everyday words; fallback: its subject when it names nobody; prevTarget: the one before's, for "उन्हें", "her". */
+    /** v47.7: the gestures a thing that is a character (a talking car, a toy) makes with its whole body (Renderer.objectMotion). */
+    static boolean objectGesture(int g) {
+        return g == Film.G_NOD || g == Film.G_SHAKE_HEAD || g == Film.G_LAUGH || g == Film.G_JUMP || g == Film.G_BOUNCE || g == Film.G_DANCE
+                || g == Film.G_WIGGLE || g == Film.G_TWIRL || g == Film.G_TREMBLE || g == Film.G_SHIVER || g == Film.G_BOW;
+    }
+
     private float everydayOne(String s, float t, Film.Actor fallback, Film.Actor prevTarget) {
         if (seg == null || negated(s)) return 0;
         List<Story.CharacterDef> ms = mentionsWithGroups(s, null);
@@ -4766,7 +4799,7 @@ public final class Director {
                 }
                 default:
             }
-            if (gesture >= 0 && (human || gesture == Film.G_JUMP || gesture == Film.G_TREMBLE || gesture == Film.G_SHIVER)) {
+            if (gesture >= 0 && (human || gesture == Film.G_JUMP || gesture == Film.G_TREMBLE || gesture == Film.G_SHIVER || (a.look.isObject() && objectGesture(gesture)))) {
                 Film.Act act = new Film.Act(t0, t0 + Math.min(dur, 3f), gesture);
                 if (ev == EV_NEAR || ev == EV_GIVE) act.target = target;
                 a.acts.add(act);
@@ -7203,7 +7236,7 @@ public final class Director {
             if (sg.type != Film.S_SCENE) continue;
             seg = sg;
             for (Film.Actor a : sg.actors) {
-                if (a.look == null || !a.look.isHumanoid()) continue;
+                if (a.look == null || !(a.look.isHumanoid() || a.look.isObject())) continue;     // (v47.7: a toy car's run too)
                 float ha = heightOf(a);
                 for (int i = 1; i < a.keys.size(); i++) {
                     Film.Key k = a.keys.get(i);
@@ -7697,6 +7730,9 @@ public final class Director {
         // v41: "प्रिया छाता लेकर कार से उतरती है": from now on she carries an umbrella (it opens over her while it rains)
         if (Txt.has(s, "छाता", "छतरी", "छाते", "umbrella") && !negated(s) && !Txt.has(s, "छाता बंद", "छतरी बंद", "closes the umbrella", "छाता भूल", "no umbrella", "without an umbrella", "बिना छात")
                 && Txt.has(s, "लेकर", "ले कर", "लेती", "लेता", "लेते", "ले ली", "ले लिया", "खोल", "उठा", "पकड़", "लिए", "लिये", "take", "open", "with an umbrella", "with umbrella", "hold", "carr")) {
+            // v47.7: opened by the words ("छाता खोलती है", "opens her umbrella"): open from then, rain or shine
+            if (Txt.has(s, "छाता खोल", "छतरी खोल", "छाते को खोल", "छतरी को खोल", "opens the umbrella", "opens her umbrella", "opens his umbrella", "opens their umbrella", "opened the umbrella", "opened her umbrella", "opened his umbrella"))
+                for (Film.Actor a : who) if (a.look != null && a.look.isHumanoid() && a.umbrellaOpenFrom < 0) a.umbrellaOpenFrom = t + 0.3f;
             for (Film.Actor a : who) if (a.look != null && a.look.isHumanoid() && !a.look.umbrella && a.umbrellaFrom < 0) {
                 a.umbrellaFrom = t; umbrellasTaken++;
                 // v47.4: one who comes in carrying it ("छाता लेकर आती है") has had it open since she came into view, not opened it at the stall

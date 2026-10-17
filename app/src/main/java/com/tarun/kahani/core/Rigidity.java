@@ -89,6 +89,28 @@ public final class Rigidity {
     }
 
     /**
+     * v47.7 (the user: "umbrella is rigid but can open, book is rigid but can open"): how a rigid thing opens — its
+     * leaves part (a book, a letter: HINGE_LEAVES), its lid turns at the back edge (a box, a trunk, a tiffin:
+     * HINGE_LID), its canopy spreads (an umbrella: HINGE_CANOPY) — or NO_HINGE. Each part stays rigid while it turns.
+     */
+    public static final int NO_HINGE = 0, HINGE_LEAVES = 1, HINGE_LID = 2, HINGE_CANOPY = 3;
+    public static final String[] LID_WORDS = {"डिब्बा", "डिब्बे", "डब्बा", "डब्बे", "बक्सा", "बक्से", "संदूक", "सन्दूक", "पेटी", "टिफ़िन", "टिफिन", "सूटकेस", "ट्रंक",
+            "box", "chest", "trunk", "tiffin", "lunchbox", "suitcase", "casket"};
+    public static int hinge(String name) {
+        if (name == null || name.trim().isEmpty()) return NO_HINGE;
+        String[] ws = name.trim().split("[\\s,]+");
+        String head = " " + ws[ws.length - 1].toLowerCase(java.util.Locale.ROOT).replace('-', ' ') + " ";
+        if (Txt.has(head, "छाता", "छतरी", "छाते", "umbrella")) return HINGE_CANOPY;
+        if (Txt.has(head, LID_WORDS)) return HINGE_LID;
+        if (bookLike(ws[ws.length - 1])) return HINGE_LEAVES;
+        return NO_HINGE;
+    }
+    public static boolean boxLike(String name) { return hinge(name) == HINGE_LID; }
+
+    /** v47.7: words that name a picture of a thing open ("खुली किताब", "box open", "open umbrella"). */
+    public static final String[] OPEN_PICTURE_WORDS = {"खुली", "खुला", "खुले", "open", "opened"};
+
+    /**
      * v47.6: the material classes the technical director works by (the user: rigid, flexible — cloth, paper, bags —,
      * liquid, granular — soil, dust —, soft, unknown). These are rules the director and renderer follow, not a physics
      * simulation: a RIGID thing keeps its shape; a FLEXIBLE one (cloth, paper, a bag, a ribbon) bends and hangs with the
@@ -169,7 +191,12 @@ public final class Rigidity {
         if (!story.things.isEmpty()) {
             sb.append(" Listed things by material:");
             int n = 0;
-            for (Story.PlaceDef th : story.things) sb.append(n++ == 0 ? " " : "; ").append(th.name).append(" — ").append(materialName(material(th.name)));
+            for (Story.PlaceDef th : story.things) {
+                sb.append(n++ == 0 ? " " : "; ").append(th.name).append(" — ").append(materialName(material(th.name)));
+                // v47.7: rigid, but it opens (its leaves, its lid, its canopy turn; each part keeps its shape)
+                int hg = hinge(th.name);
+                if (hg != NO_HINGE) sb.append(hg == HINGE_LID ? ", opens at its lid" : hg == HINGE_CANOPY ? ", opens its canopy" : ", opens at its spine");
+            }
             sb.append('.');
         }
         return sb.toString();
