@@ -16,6 +16,8 @@ public final class Film {
     public final List<Amb> ambience = new ArrayList<Amb>();
     public final List<Weather> weather = new ArrayList<Weather>();
     public final List<String> notes = new ArrayList<String>();   // director's notes for the analysis screen
+    /** v47.8: the director's check of the user's story board (StoryBoard.place): moments not placed or staged the other way round. */
+    public final List<String> boardChecks = new ArrayList<String>();
     /** The story spine (six beats, PixarLead R4) and the Braintrust review of the shots (PixarLead), for the descriptions and the QC. */
     public String[] spine;
     public PixarLead.Review braintrust;

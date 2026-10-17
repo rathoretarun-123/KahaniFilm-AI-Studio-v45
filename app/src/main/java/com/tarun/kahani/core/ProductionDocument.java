@@ -1034,6 +1034,10 @@ public final class ProductionDocument {
         for (int i = issues.size() - 1; i >= 0; i--) if (issues.get(i).stage.equals(READER) || issues.get(i).stage.equals(TECHNICAL_DIRECTOR) || issues.get(i).stage.equals(EDITOR)) issues.remove(i);
         editorReview();
         if (film != null) physicsCheck();
+        // v47.8: the user's story board, against the plan — a moment that could not be placed, or one staged the other way round
+        if (film != null) for (String f : film.boardChecks)
+            issue(WARNING, TECHNICAL_DIRECTOR, null, "the film follows the user's story board", f,
+                    "stage that moment as the board shows it, or keep the film's staging and note why").category = "STORY_BOARD";
         for (Line l : lines) if (l.speakerId == null && heardOnly.contains(l.id)) issue(WARNING, READER, l.sceneId, "a voice only heard: \"" + l.speakerName + "\"",
                 "\"" + l.text + "\"", "no picture is asked for; list it under पात्र to give it a picture");
         for (Line l : lines) if (l.speakerId == null && !heardOnly.contains(l.id)) issue(BLOCKER, READER, l.sceneId, "every line has a listed speaker", "no character for \"" + l.speakerName + "\"", "list the speaker under पात्र, or fix the name");

@@ -85,7 +85,7 @@ public class MainActivity extends Activity {
 
     static final int REQ_LOGIN = 11, REQ_SCRIPT = 12, REQ_IMAGE = 13, REQ_CAMERA = 14, REQ_AUDIO = 15, REQ_BULK = 16,
             REQ_SAVE_TEXT = 17, REQ_RESTORE = 18, REQ_PERMS = 20, REQ_PERM_GALLERY = 21, REQ_PERM_ONE = 22, REQ_LIB_MANY = 23, REQ_ANGLES = 24, REQ_IMPORT_BUNDLE = 25, REQ_IMPORT_SCRIPT = 26,
-            REQ_REF_FRAME = 27, REQ_REF_VIDEO = 28;
+            REQ_REF_FRAME = 27, REQ_REF_VIDEO = 28, REQ_BOARD = 29;
     /** The thing whose angles are being uploaded: "angles:char:<key>:<name>", "angles:scene:<n>:<name>", "angles:obj:<keys>:<name>". */
     private String anglesTarget;
     private String anglesFrom;       // "make" when the angles were asked for from the make-film dialog (v25: the user comes back to it)
@@ -1004,6 +1004,70 @@ public class MainActivity extends Activity {
      * technical director, editor) treats them as the look to reach: the finish is lifted towards their light and the
      * quality check compares every frame with them.
      */
+    /**
+     * v47.8 (the user): the story board — up to 100 pictures in the story's order. The first is the title picture and the
+     * last the end picture (one picture each); every one between is a sheet of six moments, three across and two down,
+     * each with one or more characters and their things on a clear background. The director places each moment at its
+     * shot and checks the film's staging against it.
+     */
+    private LinearLayout boardCard() {
+        final LinearLayout card = Ui.card(this);
+        card.addView(Ui.title(this, "🗂 Story board"));
+        card.addView(Ui.text(this, "Add the pictures in the story's order. The first is the title picture and the last the end picture — one picture each. "
+                + "Every picture between them is a sheet of 6 moments of the story, 3 across and 2 down: several characters at once with their things, "
+                + "without a background. The director reads who is in each moment, places it at its shot in the film and checks the staging against it "
+                + "(who stands left of whom); the shot list and the director's notes say where each moment went.", 13, Ui.SUB, false));
+        final List<File> pics = project.boardPictures();
+        if (!pics.isEmpty()) {
+            LinearLayout row = Ui.row(this);
+            row.setGravity(Gravity.CENTER_VERTICAL);
+            int shown = 0;
+            for (final File f : pics) {
+                if (++shown > 8) break;
+                ImageView iv = new ImageView(this);
+                iv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+                try { iv.setImageBitmap(thumb(f, 160)); } catch (Throwable ignored) { /* a picture that cannot be read shows empty */ }
+                row.addView(iv, new LinearLayout.LayoutParams(0, Ui.dp(this, 40), 1f));
+            }
+            card.addView(row);
+            card.addView(Ui.text(this, pics.size() + " picture" + (pics.size() == 1 ? "" : "s") + (pics.size() >= 2 ? ": the title, " + Math.max(0, pics.size() - 2) + " sheet" + (pics.size() - 2 == 1 ? "" : "s") + " of moments (up to " + 6 * Math.max(0, pics.size() - 2) + " moments), the end" : ": one sheet of moments"), 13, Ui.TEXT, false));
+        }
+        LinearLayout btns = Ui.row(this);
+        btns.addView(Ui.small(this, "🖼 Add pictures (" + pics.size() + "/" + Project.MAX_BOARD + ")", pics.size() < Project.MAX_BOARD ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
+            public void onClick(View v) {
+                if (project.boardPictures().size() >= Project.MAX_BOARD) { toast(Project.MAX_BOARD + " pictures are already on the board — remove some first"); return; }
+                pick("image/*", REQ_BOARD, true);
+            }
+        }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        if (!pics.isEmpty()) btns.addView(Ui.small(this, "✖ Remove the last", Ui.RED, new View.OnClickListener() {
+            public void onClick(View v) {
+                List<File> now = project.boardPictures();
+                if (!now.isEmpty()) now.get(now.size() - 1).delete();
+                toast("The last picture of the board was removed");
+                showStudio();
+            }
+        }));
+        card.addView(btns);
+        return card;
+    }
+
+    private void addBoard(final List<Uri> uris) {
+        background("Saving the story board…", new Work() {
+            public Object run() throws Exception {
+                int n = 0, full = 0;
+                for (Uri u : uris) { File f = project.saveBoardPicture(MainActivity.this, u); if (f == null) full++; else n++; }
+                return new int[]{n, full};
+            }
+        }, new Done() {
+            public void done(Object r, Exception e) {
+                if (e != null) { toast("Could not add it: " + e.getMessage()); showStudio(); return; }
+                int[] c = (int[]) r;
+                toast("Story board: " + c[0] + " picture" + (c[0] == 1 ? "" : "s") + " added" + (c[1] > 0 ? " (" + c[1] + " left out — the board holds " + Project.MAX_BOARD + ")" : ""));
+                showStudio();
+            }
+        });
+    }
+
     private LinearLayout referenceCard() {
         final LinearLayout card = Ui.card(this);
         card.addView(Ui.title(this, "🎞 Reference frames and clips (for the AI team's quality check)"));
@@ -1444,6 +1508,8 @@ public class MainActivity extends Activity {
         body.addView(pageCard(st.hindi ? "End page (समाप्त)" : "End page (The End)", "end"));
         heading(body, "5. Reference images and videos for the director's checks (up to " + Project.MAX_REF_FRAMES + " each)");
         body.addView(referenceCard());
+        heading(body, "6. Story board (up to " + Project.MAX_BOARD + " pictures, in the story's order)");
+        body.addView(boardCard());
 
         // ---- director plan
         LinearLayout plan = Ui.card(this);
@@ -3337,6 +3403,14 @@ public class MainActivity extends Activity {
                 uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES));
             }
             bulkPictures(uris);
+            return;
+        }
+        if (code == REQ_BOARD && project != null) {
+            // v47.8: the story board, in the order the pictures were chosen
+            List<Uri> uris = new ArrayList<Uri>();
+            if (data.getClipData() != null) for (int i = 0; i < data.getClipData().getItemCount(); i++) uris.add(data.getClipData().getItemAt(i).getUri());
+            else if (data.getData() != null) uris.add(data.getData());
+            if (!uris.isEmpty()) addBoard(uris);
             return;
         }
         if ((code == REQ_REF_FRAME || code == REQ_REF_VIDEO) && project != null) {

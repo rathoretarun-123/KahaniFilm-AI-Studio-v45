@@ -49,6 +49,14 @@ public class MakeFilm {
             Art.Loader L = new AwtLoader(assets);
             art = Art.fromManifest(new String(Files.readAllBytes(Paths.get(assets, "cast.txt")), "UTF-8"), story, L);
         }
+        // v47.8: BOARD=<dir>: the story board's pictures in that folder, in name order (the first the title, the last the end)
+        if (System.getenv("BOARD") != null) {
+            File bd = new File(System.getenv("BOARD"));
+            String[] names = bd.list();
+            java.util.List<String> files = new java.util.ArrayList<String>();
+            if (names != null) { java.util.Arrays.sort(names); for (String n : names) if (n.toLowerCase(java.util.Locale.ROOT).matches(".*\\.(png|jpe?g|webp)")) files.add(n); }
+            art.readBoard(new AwtLoader(bd.getAbsolutePath()), files, story);
+        }
         System.out.println("art: sprites=" + art.sprites.size() + " scenes=" + art.scenes.size() + " shots=" + art.shots.size()
                 + " title=" + (art.title != null) + " end=" + (art.end != null) + "  (" + (System.currentTimeMillis() - t0) + "ms)");
         for (String n : art.notes) System.out.println("  picture: " + n);

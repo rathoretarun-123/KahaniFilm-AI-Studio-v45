@@ -455,6 +455,8 @@ public final class Director {
         film.shotList += "\n" + Handbook.ledger(film, story);
         // the director's manual: the beat sheet (3.1), the scene records (3.3), the coverage report (3.2), the prop ledger and the location records (1.6)
         film.shotList += DirectorsManual.records(film, story, film.stats);
+        // v47.8: the user's story board — each moment placed at its shot in story order, its order across the stage checked
+        if (art != null && art.board != null) art.board.place(film, story);
         return film;
     }
 

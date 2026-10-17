@@ -401,6 +401,8 @@ public final class FilmJob implements Runnable {
             Art.spriteSide = sides[0];
             Art.backdropSide = sides[1];
             Art art = Art.fromManifest(castText, story, project.loader());
+            // v47.8: the user's story board (the title, the 3×2 sheets of the story's moments, the end)
+            art.readBoard(project.loader(), project.boardNames(), story);
             check();
 
             Director.Options opt = new Director.Options();

@@ -116,6 +116,50 @@ public final class Project {
 
     public File file(String name) { return new File(dir, name); }
 
+    // ---- v47.8: the story board — up to 100 pictures in story order: the title picture, sheets of six moments of the
+    // story (three across, two down: several characters with their things, on a clear background), the end picture
+    public static final int MAX_BOARD = com.tarun.kahani.core.StoryBoard.MAX;
+    public File boardDir() { File d = new File(dir, "board"); if (!d.exists()) d.mkdirs(); return d; }
+    public List<File> boardPictures() {
+        List<File> out = new ArrayList<File>();
+        File[] fs = boardDir().listFiles();
+        if (fs != null) for (File f : fs) if (f.isFile() && f.getName().startsWith("board_") && f.getName().endsWith(".png")) out.add(f);
+        java.util.Collections.sort(out);
+        return out;
+    }
+    /** The board's pictures as names the project's loader reads ("board/board_001.png", …), in story order. */
+    public List<String> boardNames() {
+        List<String> out = new ArrayList<String>();
+        for (File f : boardPictures()) out.add("board/" + f.getName());
+        return out;
+    }
+    /** Saves one picture at the end of the board, as PNG (its clear background kept), at most 2400 px; null when the board is full. */
+    public File saveBoardPicture(Context c, android.net.Uri uri) throws IOException {
+        List<File> have = boardPictures();
+        if (have.size() >= MAX_BOARD) return null;
+        byte[] data = readPicture(c.getContentResolver(), uri);
+        if (data == null) throw new IOException("This picture could not be read");
+        BitmapFactory.Options o = new BitmapFactory.Options();
+        o.inJustDecodeBounds = true;
+        BitmapFactory.decodeByteArray(data, 0, data.length, o);
+        int sample = 1;
+        while (Math.max(o.outWidth, o.outHeight) / sample > 2400) sample *= 2;
+        o = new BitmapFactory.Options();
+        o.inSampleSize = sample;
+        Bitmap b = BitmapFactory.decodeByteArray(data, 0, data.length, o);
+        if (b == null) throw new IOException("This picture could not be read");
+        b = upright(b, data);
+        int next = 1;
+        for (File f : have) { try { next = Math.max(next, Integer.parseInt(f.getName().substring(6, 9)) + 1); } catch (RuntimeException ignored) { } }
+        File f = new File(boardDir(), String.format(java.util.Locale.US, "board_%03d.png", Math.min(999, next)));
+        File tmp = new File(boardDir(), f.getName() + ".part");
+        OutputStream out = new FileOutputStream(tmp);
+        boolean ok = false;
+        try { ok = b.compress(Bitmap.CompressFormat.PNG, 100, out); } finally { out.close(); b.recycle(); }
+        if (!ok || !tmp.renameTo(f)) { tmp.delete(); throw new IOException("The picture could not be saved"); }
+        return f;
+    }
+
     // ---- v47.3: reference frames and clips for the film (the look the user wants), apart from the story's pictures
     public static final int MAX_REF_FRAMES = 18, MAX_REF_VIDEOS = 18;   // v47.6: up to 18 of each (the user)    // v47.4: 18 frames like every other upload (the user), two clips
     /** Up to five full frames (characters, props and background together) and two clips, kept under refs/. */

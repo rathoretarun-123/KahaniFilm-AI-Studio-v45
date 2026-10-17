@@ -65,6 +65,8 @@ public final class Art {
         /** The rod's top centre and size as fractions of the picture. */
         public float rodU, rodV, rodW, rodH;
         public transient Cutout.Result pixelsForSampling;
+        /** v47.8: its colours (StoryBoard.signature of the main picture), to know it in the user's story board; null unknown. */
+        public float[] colours;
         /** v47.6: the tone of the top of the head in the main picture (see hairTone), -1 unknown. */
         public float hairTone = -1;
         /** Bones and face for moving the picture (null = moved as one piece). */
@@ -401,6 +403,20 @@ public final class Art {
     public final Map<String, Backdrop> scenes = new HashMap<String, Backdrop>(); // "1", "10a", "10b"
     public final List<Shot> shots = new ArrayList<Shot>();
     public Backdrop title, end;
+    /** v47.8: the user's story board (null: none) — see StoryBoard. */
+    public StoryBoard board;
+
+    /**
+     * v47.8: reads the user's story board (the pictures in story order); its first picture is the title page and its
+     * last the end page when the user gave none of their own.
+     */
+    public void readBoard(Loader L, java.util.List<String> files, Story story) {
+        if (files == null || files.isEmpty()) return;
+        board = StoryBoard.read(L, files, this, story);
+        if (title == null && board.titleFile != null) { Backdrop b = makeBackdrop(L, board.titleFile, backdropSide); if (b != null) { title = b; titleText = false; notes.add("title page: the story board's first picture, as the user made it"); } }
+        if (end == null && board.endFile != null) { Backdrop b = makeBackdrop(L, board.endFile, backdropSide); if (b != null) { end = b; endText = false; notes.add("end page: the story board's last picture, as the user made it"); } }
+        notes.addAll(board.notes);
+    }
     /** v47: a user-provided title or end picture is used as-is: the studio draws its own text and sparkles only when
      *  no picture was given, or when the manifest line asks for the overlay with |1. */
     public boolean titleText = true, endText = true;
@@ -1774,6 +1790,8 @@ public final class Art {
                         } catch (Throwable ignored) { /* the character's own picture stays */ }
                     }
                     if (s.pixelsForSampling != null && !beast) s.hairTone = hairTone(s.pixelsForSampling.px, s.pixelsForSampling.w, s.pixelsForSampling.h);     // v47.6: for the poses below
+                    // v47.8: its colours, to know it in the user's story board
+                    if (s.pixelsForSampling != null) { Cutout.Result cr = s.pixelsForSampling; s.colours = StoryBoard.signature(cr.px, 0, cr.w, 0, 0, cr.w, cr.h); }
                     s.pixelsForSampling = null;
                     art.sprites.put(c.id, s);
                 } else if (f[0].equals("scene") && f.length >= 3) {
