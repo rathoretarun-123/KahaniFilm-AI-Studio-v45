@@ -104,6 +104,10 @@ public class MakeFilm {
                 l.shape = Mixer.shape(voices[i], Synth.SR);
             }
         }
+        // v47.9: the films had no voices when espeak-ng was missing, and nothing said so — the count is in the log now
+        int spoken = 0;
+        for (float[] v : voices) if (v != null) spoken++;
+        System.out.println("VOICES: " + spoken + " of " + film.lines.size() + " lines spoken (espeak-ng)" + (spoken < film.lines.size() ? " — install espeak-ng for the rest" : ""));
         film = dir.direct(art);
         // WIDE=1: every scene seen whole by one still camera — for looking at the staging itself (who stands where,
         // vehicles, doors), not at the film's shots

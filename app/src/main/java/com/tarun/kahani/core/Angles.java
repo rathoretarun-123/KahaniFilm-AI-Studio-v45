@@ -603,22 +603,38 @@ public final class Angles {
     /**
      * v47.9 (the user: "while splitting you do not split images of combined characters, or characters with object —
      * they are created as per story"): the pieces of a picture are a group, not views of one character, when a piece is
-     * wider than it is tall (two people side by side, a girl on a sofa, a moment of a story board) or holds two or more
-     * separate figures of its own. Such a picture is kept whole. An animal's side view is wide by nature, so a beast's
-     * pieces are judged by their figures only.
+     * not clearly taller than wide (two people side by side, a girl on a sofa, a moment of a story board) or holds two or more
+     * separate figures of its own, or when the pieces differ in height by half or more or in colours (two people side by
+     * side). Such a picture is kept whole. An animal's side view is wide by nature, so a beast's pieces are judged by
+     * their figures only.
      */
     public static boolean composite(List<Piece> parts, boolean beast) {
         for (Piece p : parts) {
-            if (!beast && p.w > p.h * 1.15f) return true;
-            if (bigBlobs(p) >= 2) return true;
+            // a view of one person standing is clearly taller than wide; a moment of two on a sofa, a girl on a bench
+            // or a panel of a story board is not
+            if (!beast && p.h < p.w * 1.2f) return true;
+            if (bigBlobs(p, 1f) >= 2) return true;
         }
+        if (parts.size() < 2 || beast) return false;
+        // views of one character are about as tall as each other and wear the same colours; two people side by side
+        // (a girl of 11 and her sister of 7) differ in both
+        int minH = Integer.MAX_VALUE, maxH = 0;
+        for (Piece p : parts) { minH = Math.min(minH, p.h); maxH = Math.max(maxH, p.h); }
+        if (maxH > minH * 1.5f) return true;
+        float[][] sig = new float[parts.size()][];
+        for (int i = 0; i < parts.size(); i++) { Piece p = parts.get(i); sig[i] = StoryBoard.signature(p.px, 0, p.w, 0, 0, p.w, p.h); }
+        for (int i = 0; i < sig.length; i++) for (int j = i + 1; j < sig.length; j++)
+            if (sig[i] != null && sig[j] != null && StoryBoard.likeness(sig[i], sig[j]) < 0.62f) return true;
         return false;
     }
 
-    /** How many separate figures a cut-out piece holds: opaque regions each over 15% of its opaque area (a coarse grid). */
-    static int bigBlobs(Piece p) {
+    /**
+     * How many separate figures a cut-out piece holds in its top share (1 = all of it): opaque regions each over 15% of
+     * the opaque area looked at (a coarse grid).
+     */
+    static int bigBlobs(Piece p, float topShare) {
         int step = Math.max(1, Math.max(p.w, p.h) / 120);
-        int gw = (p.w + step - 1) / step, gh = (p.h + step - 1) / step;
+        int gw = (p.w + step - 1) / step, gh = Math.max(1, (int) (((p.h * topShare) + step - 1) / step));
         boolean[] on = new boolean[gw * gh];
         int total = 0;
         for (int gy = 0; gy < gh; gy++) for (int gx = 0; gx < gw; gx++) {

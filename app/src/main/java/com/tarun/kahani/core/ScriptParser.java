@@ -291,6 +291,7 @@ public final class ScriptParser {
                     ? story.scenes.get(0).title : (story.hindi ? "मेरी कहानी" : "My Story");
         }
         resolveSpeakers(story);
+        cleanDialogue(story);
         placesOfScenes(story);
         timeOfScenes(story);
         genderFromVerbs(story);
@@ -468,7 +469,8 @@ public final class ScriptParser {
 
     static final String[] FEM_VERBS = {"ती है", "ती हैं", "ती हुई", "ती हुईं", "ती हूँ", "ती थी", "ती रही", "ती चली", "ई है", "ई थी", "ई और", "गई", "बैठी", "खड़ी", "रही है",
             "रही थी", "रही हो", "आई", "गयी", "चली", "लेती", "देती", "करती", "निकालती", "सोचती", "फुसफुसाती", "दौड़ती", "हँसती", "रोती", "चिल्लाती"};
-    static final String[] MAL_VERBS = {"ता है", "ते हैं", "ता हुआ", "ते हुए", "ता हूँ", "ता था", "ता रहा", "ता चला", "या है", "या था", "गया", "बैठा", "खड़ा", "रहा है",
+    // (v47.9: "ते हुए" is not here — "मुस्कुराते हुए", "हंसते हुए" are said of a girl and a boy alike; it made वृंदा a boy)
+    static final String[] MAL_VERBS = {"ता है", "ते हैं", "ता हुआ", "ता हूँ", "ता था", "ता रहा", "ता चला", "या है", "या था", "गया", "बैठा", "खड़ा", "रहा है",
             "रहा था", "रहा हो", "आया", "चला", "लेता", "देता", "करता", "निकालता", "सोचता", "फुसफुसाता", "दौड़ता", "हँसता", "रोता", "चिल्लाता"};
 
     /** The script's own grammar says who is a she and who a he: the verb forms used where a character acts. */
@@ -478,17 +480,190 @@ public final class ScriptParser {
             for (Story.Scene sc : st.scenes) for (Story.Beat b : sc.beats) {
                 List<String> texts = new ArrayList<String>();
                 if (b.type == Story.Beat.DIRECTION) for (String sent : b.text.split("[।.!?\\n]")) texts.add(sent);
-                else if (b.speaker == c && b.manner.length() > 0) texts.add(b.manner);
+                else if (b.speaker == c && b.manner.length() > 0) {
+                    // v47.9: each clause of the manner; one about something of theirs ("आग की लाली उसके चेहरे पर पड़
+                    // रही है") has another subject and says nothing of them
+                    for (String cl : b.manner.split("[,،;।]")) if (!Txt.has(cl, "उसके", "उसकी", "उसका", "उनके", "उनकी", "उनका")) texts.add(cl);
+                }
                 for (String sent : texts) {
                     List<Story.CharacterDef> ms = b.type == Story.Beat.DIRECTION ? mentions(st, sent) : java.util.Collections.singletonList(c);
                     if (ms.isEmpty() || ms.get(0) != c || (ms.size() > 1 && b.type == Story.Beat.DIRECTION && Txt.has(sent, "और", "and"))) continue;
                     String x = " " + Txt.norm(sent) + " ";
+                    // v47.9: "रघुवीर जी की आँखें भर आती हैं" — the name owns the subject; the verb is the eyes', not his
+                    if (b.type == Story.Beat.DIRECTION && possessed(x, c)) continue;
                     for (String v : FEM_VERBS) if (x.contains(Txt.norm(v) + " ") || x.contains(Txt.norm(v) + ",")) fem++;
                     for (String v : MAL_VERBS) if (x.contains(Txt.norm(v) + " ") || x.contains(Txt.norm(v) + ",")) mal++;
                 }
             }
+            // v47.9: what the others call them to their face — "दीदी, ये चाँद…" said to the one who answers is a she
+            int[] kin = kinshipAddressed(st, c);
+            fem += kin[0] * 2; mal += kin[1] * 2;
             c.genderHint = fem > mal ? 1 : mal > fem ? -1 : 0;
         }
+    }
+
+    /**
+     * v47.9: a story with no dialogue at all is read out by the narrator: each stage direction of a scene becomes a line
+     * of the narrator in the script's own words (the direction stays, for the staging). Returns how many lines were made.
+     */
+    public static int narrateProse(Story st) {
+        int n = 0;
+        for (Story.Scene sc : st.scenes) {
+            List<Story.Beat> out = new ArrayList<Story.Beat>();
+            for (Story.Beat b : sc.beats) {
+                out.add(b);
+                if (b.type != Story.Beat.DIRECTION) continue;
+                String t = b.text.replaceFirst("^\\s*(?:पर्यावरण|वातावरण|environment|setting)\\s*[-–—:：]\\s*", "").replaceAll("[\"“”]", "").trim();
+                if (t.length() < 3) continue;
+                // one line a sentence (or two short ones), so the pictures change with the telling
+                StringBuilder cur = new StringBuilder();
+                java.util.regex.Matcher m = java.util.regex.Pattern.compile("[^।.!?]+[।.!?]*").matcher(t);
+                List<String> parts = new ArrayList<String>();
+                while (m.find()) {
+                    String one = m.group().trim();
+                    if (one.length() == 0) continue;
+                    cur.append(cur.length() > 0 ? " " : "").append(one);
+                    if (cur.length() >= 40) { parts.add(cur.toString()); cur.setLength(0); }
+                }
+                if (cur.length() > 0) { if (!parts.isEmpty() && cur.length() < 20) parts.set(parts.size() - 1, parts.get(parts.size() - 1) + " " + cur); else parts.add(cur.toString()); }
+                for (String one : parts) {
+                    Story.Beat l = new Story.Beat();
+                    l.type = Story.Beat.DIALOGUE;
+                    l.narrator = true;
+                    l.speakerRaw = st.hindi ? "कथावाचक" : "Narrator";
+                    l.text = one;
+                    out.add(l);
+                    n++;
+                }
+            }
+            sc.beats.clear();
+            sc.beats.addAll(out);
+        }
+        if (n > 0) st.hasNarrator = true;
+        return n;
+    }
+
+    /** v47.9: the sentence names the character only as the owner of something ("X की आँखें", "X का हाथ"). */
+    static boolean possessed(String normSentence, Story.CharacterDef c) {
+        List<String> names = new ArrayList<String>();
+        names.add(c.displayName);
+        names.addAll(c.aliases);
+        for (String n : names) {
+            String k = Txt.norm(n).trim();
+            if (k.length() < 2) continue;
+            int at = normSentence.indexOf(k);
+            if (at < 0) continue;
+            String after = normSentence.substring(at + k.length()).trim();
+            if (after.startsWith(Txt.norm("जी")))  after = after.substring(Txt.norm("जी").length()).trim();
+            return after.startsWith(Txt.norm("की") + " ") || after.startsWith(Txt.norm("का") + " ") || after.startsWith(Txt.norm("के") + " ");
+        }
+        return false;
+    }
+
+    /** v47.9: words for a parent or a grandparent are never said to a child. */
+    static final String[] KIN_ELDER = {"माँ", "मां", "मम्मी", "दादी", "नानी", "पापा", "बाबा", "दादा", "नाना", "ताऊ", "अंकल", "आंटी", "चाचा", "चाची", "मामा", "मामी", "बुआ", "मौसी"};
+    static final String[] KIN_FEM = {"दीदी", "दीदीजी", "बहन", "बहना", "माँ", "मां", "मम्मी", "दादी", "नानी", "बुआ", "मौसी", "चाची", "मामी", "आंटी", "बेटी", "बिटिया", "गुड़िया"};
+    static final String[] KIN_MAL = {"भैया", "भाई", "भाईसाहब", "पापा", "बाबा", "दादा", "नाना", "चाचा", "मामा", "ताऊ", "अंकल", "बेटा", "बेटे"};
+
+    /**
+     * v47.9: {she, he} counts from the kinship words others use to address the character: a line that opens with
+     * "दीदी," (or ends with ", भैया!") is said to the one who answers it — the next speaker of the scene, else the one
+     * before. Only scenes where the two of them alone speak count (with a third speaker the addressee is unsure).
+     */
+    static int[] kinshipAddressed(Story st, Story.CharacterDef c) {
+        int f = 0, m = 0;
+        for (Story.Scene sc : st.scenes) {
+            List<Story.Beat> ds = new ArrayList<Story.Beat>();
+            java.util.Set<Story.CharacterDef> who = new java.util.HashSet<Story.CharacterDef>();
+            for (Story.Beat b : sc.beats) {
+                if (b.type == Story.Beat.DIALOGUE && b.speaker != null) { ds.add(b); who.add(b.speaker); }
+                else if (b.type == Story.Beat.DIRECTION) who.addAll(mentions(st, b.text));      // someone there who says nothing
+            }
+            // only a scene of the two of them: with a third one there ("तनय: माँ, …" said to his mother, his friend
+            // answering) whom a word is said to is not known
+            if (who.size() != 2 || !who.contains(c)) continue;
+            for (int i = 0; i < ds.size(); i++) {
+                Story.Beat b = ds.get(i);
+                if (b.speaker == c) continue;
+                Story.CharacterDef to = null;
+                for (int j = i + 1; j < ds.size() && to == null; j++) if (ds.get(j).speaker != b.speaker) to = ds.get(j).speaker;
+                if (to == null) for (int j = i - 1; j >= 0 && to == null; j--) if (ds.get(j).speaker != b.speaker) to = ds.get(j).speaker;
+                if (to != c) continue;
+                String t = Txt.norm(b.text).trim();
+                boolean child = c.age > 0 && c.age < 18;
+                for (String k : KIN_FEM) if (vocative(t, Txt.norm(k)) && !(child && java.util.Arrays.asList(KIN_ELDER).contains(k))) f++;
+                for (String k : KIN_MAL) if (vocative(t, Txt.norm(k)) && !(child && java.util.Arrays.asList(KIN_ELDER).contains(k))) m++;
+            }
+        }
+        return new int[]{f, m};
+    }
+
+    /** The word is used to call someone: at the start before a comma or "!", or at the end after a comma. */
+    static boolean vocative(String t, String k) {
+        if (t.startsWith(k)) {
+            String rest = t.substring(k.length()).trim();
+            if (rest.startsWith(",") || rest.startsWith("!") || rest.startsWith("?") || rest.startsWith(Txt.norm("जी,")) || rest.isEmpty()) return true;
+        }
+        String end = t.replaceAll("[।.!?\\s]+$", "");
+        return end.endsWith(", " + k) || end.endsWith("," + k);
+    }
+
+    /**
+     * v47.9: the words a character says, and only them. A line with a direction between two quotes — वृंदा: "नहीं
+     * पगली, वो दोस्त हैं।" (हल्की हंसी हंसते हुए) "सूरज दिन में…" — becomes two lines of the same speaker, the direction
+     * the manner of the first (as a direction after a line's only quote is); any other (direction) inside the words goes to the manner; no quote mark is left for
+     * the voice to read.
+     */
+    static void cleanDialogue(Story st) {
+        java.util.regex.Pattern mid = java.util.regex.Pattern.compile("^(.*?)[\"“”]\\s*\\(([^()]*)\\)\\s*[\"“”](.*)$", java.util.regex.Pattern.DOTALL);
+        for (Story.Scene sc : st.scenes) {
+            List<Story.Beat> out = new ArrayList<Story.Beat>();
+            for (Story.Beat b : sc.beats) {
+                if (b.type != Story.Beat.DIALOGUE) { out.add(b); continue; }
+                Story.Beat cur = b;
+                while (true) {
+                    Matcher m = mid.matcher(cur.text);
+                    if (!m.matches()) break;
+                    String first = Txt.stripQuotes(m.group(1).trim()), how = m.group(2).trim(), rest = Txt.stripQuotes(m.group(3).trim());
+                    if (first.length() == 0 || rest.length() == 0) break;
+                    // the direction after the first words is how they are said (this is how such scripts put a manner:
+                    // "…" (हंसते हुए)), the same as a direction after a line's only quote
+                    cur.text = first;
+                    if (how.length() > 0) cur.manner = cur.manner == null || cur.manner.trim().isEmpty() ? how : cur.manner.trim() + ", " + how;
+                    tidy(cur);
+                    out.add(cur);
+                    Story.Beat nb = copyLine(cur);
+                    nb.manner = "";
+                    nb.text = rest;
+                    cur = nb;
+                }
+                tidy(cur);
+                if (cur.text.length() > 0) out.add(cur);
+            }
+            sc.beats.clear();
+            sc.beats.addAll(out);
+        }
+    }
+
+    /** The words without quote marks; a (direction) inside them moved to the manner. */
+    static void tidy(Story.Beat b) {
+        String t = b.text;
+        StringBuilder how = new StringBuilder();
+        Matcher m = java.util.regex.Pattern.compile("\\(([^()]*)\\)").matcher(t);
+        StringBuffer sb = new StringBuffer();
+        while (m.find()) { String in = m.group(1).trim(); if (in.length() > 0) how.append(how.length() > 0 ? ", " : "").append(in); m.appendReplacement(sb, " "); }
+        m.appendTail(sb);
+        t = sb.toString().replaceAll("[\"“”«»]", " ").replaceAll("\\s+", " ").trim();
+        if (t.length() == 0) return;
+        b.text = t;
+        if (how.length() > 0) b.manner = b.manner == null || b.manner.trim().isEmpty() ? how.toString() : b.manner.trim() + ", " + how;
+    }
+
+    static Story.Beat copyLine(Story.Beat b) {
+        Story.Beat n = new Story.Beat();
+        n.type = b.type; n.speakerRaw = b.speakerRaw; n.speaker = b.speaker; n.narrator = b.narrator; n.offScreen = b.offScreen; n.cue = b.cue;
+        n.chorus.addAll(b.chorus);
+        return n;
     }
 
     // ------------------------------------------------------------------ preamble

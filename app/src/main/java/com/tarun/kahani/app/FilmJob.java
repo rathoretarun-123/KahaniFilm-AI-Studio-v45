@@ -49,6 +49,8 @@ public final class FilmJob implements Runnable {
     public volatile Bitmap preview;         // latest rendered frame (small)
     public volatile long startedAt = System.currentTimeMillis();
     public volatile float filmSeconds;
+    /** v47.9: how many lines got a voice and from which engine, for the making screen. */
+    public volatile String voiceNote = "";
     public volatile int voicedLines;        // lines that got a real voice (recording, sample, AI or phone)
 
     public FilmJob(Context ctx, Project p) {
@@ -292,8 +294,14 @@ public final class FilmJob implements Runnable {
             String script = scriptOf(project);
             if (script.trim().length() < 10) throw new IllegalStateException("The story is empty. Write or paste a story first.");
             Story story = overrides(project, ScriptParser.parse(script));
-            if (story.dialogueCount() == 0 && story.scenes.size() <= 1)
-                throw new IllegalStateException("No dialogue found in the story. Write lines like  Name: \"dialogue\"  — or tap \"Read with AI\".");
+            // v47.9 (the user: "it's not making film for any simple story … it should not stop"): a story told without
+            // lines (prose, or a story in a few sentences) is read out by the narrator in its own words — the film is
+            // made, never refused
+            if (story.dialogueCount() == 0) {
+                int told = com.tarun.kahani.core.ScriptParser.narrateProse(story);
+                if (told == 0) throw new IllegalStateException("The story has no words to film yet. Write a few sentences or lines like  Name: \"dialogue\".");
+                info = "No dialogue in the story — the narrator reads it in your own words (" + told + " parts)";
+            }
             Edits ed = Edits.fromJson(project.read("edits.json"));
             // v33: a remake after an instruction (the story and the pictures unchanged) keeps every picture and every
             // approval: no library search, no proposals, no shot check again — only the change is applied
@@ -602,6 +610,14 @@ public final class FilmJob implements Runnable {
                 warning = "Could not reach the natural voice service (check internet) — some lines used the phone voice. Tap \"Make again\" with internet on. " + (err[0] == null ? "" : err[0]);
             if (failedLines > 0 && warning.length() == 0)
                 warning = failedLines + " lines could not be spoken — check the phone's Text-to-Speech settings.";
+            // v47.9 (the user: "no voices are appearing"): how many lines have a voice, and from where, on the screen
+            voiceNote = "🔊 Voices: " + (film.lines.size() - failedLines) + " of " + film.lines.size() + " lines spoken"
+                    + (naturalLines > 0 ? " — " + naturalLines + " in the natural voice" : "") + (aiLines > 0 ? " — " + aiLines + " in the AI voice" : "")
+                    + (ttsOk ? " — phone engine: " + voices.engineUsed + (voices.spokeLanguage ? "" : " (no " + (story.hindi ? "Hindi" : "English") + " voice: read in Latin letters)") : "")
+                    + (voices.romanizedLines > 0 ? " — " + voices.romanizedLines + " read in Latin letters" : "");
+            if (failedLines == film.lines.size() && film.lines.size() > 0)
+                warning = "No line could be spoken: install the " + (story.hindi ? "Hindi" : "English") + " voice in Settings → Text-to-speech (Google), or turn on the internet for the natural voices. The film is still made; the mouths move with the words.";
+            info = (info.length() > 0 ? info + "\n" : "") + voiceNote;
             voices.shutdown();
             voices = null;
 
@@ -826,9 +842,11 @@ public final class FilmJob implements Runnable {
         java.util.List<String> out = new java.util.ArrayList<String>();
         try {
             for (String[] t : AutoLibrary.missingTargets(project, story)) {
-                // Character, location and story-prop references all block this gate. Titles/end cards are not
-                // identity assets and are deliberately excluded. The progress screen exposes upload buttons.
-                if (t[0].startsWith("char:") || t[0].startsWith("place:") || t[0].startsWith("shot:")) out.add(t[1]);
+                // Character and location references hold this gate (for 30 seconds at most). v47.9 (the user: "don't
+                // let him ask these images, they will be part of background images uploaded … process things from
+                // uploaded or library pictures"): a thing never holds the film — it is taken from the user's pictures
+                // and the library, or drawn; titles and end cards are not asked for either.
+                if (t[0].startsWith("char:") || t[0].startsWith("place:")) out.add(t[1]);
             }
         } catch (Throwable ignored) { }
         return out;

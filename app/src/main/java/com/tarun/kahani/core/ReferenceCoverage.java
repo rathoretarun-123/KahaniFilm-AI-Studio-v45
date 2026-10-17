@@ -7,16 +7,19 @@ import java.util.Set;
 
 /**
  * v46: the reference-image rules of the studio, and what each character's reference set still lacks.
- * A character may have up to 18 reference images (a front, two sides, two three-quarters, a back and up to ten more,
- * singly or on contact sheets of up to 3×2 panels); a prop or a place up to 10. A partial set is accepted; the gaps
+ * A character has six reference images (a front, two sides, two three-quarters and a back — v47.9, the user; it was 18),
+ * singly or on one contact sheet of up to 3×2 panels; a prop or a place up to 18 at a time (v47.9; it was 10). A partial set is accepted; the gaps
  * are named, never silently filled.
  */
 public final class ReferenceCoverage {
     private ReferenceCoverage() {}
 
-    public static final int MAX_CHARACTER_REFERENCES = 18;
-    public static final int MAX_PROP_REFERENCES = 10;
-    public static final int MAX_LOCATION_REFERENCES = 10;
+    // v47.9 (the user): a character takes six pictures — front, back, two sides, two three-quarters ("on the character
+    // page you just take 6 pictures"); a thing and a place up to 18 at a time ("everything remain same, 18 images"), a
+    // place up to 100 in all
+    public static final int MAX_CHARACTER_REFERENCES = 6;
+    public static final int MAX_PROP_REFERENCES = 18;
+    public static final int MAX_LOCATION_REFERENCES = 18;
     /** The largest contact-sheet grid a reference may use. */
     public static final int SHEET_COLUMNS = 3, SHEET_ROWS = 2;
     /** The views a full character set holds, and how many of each. */

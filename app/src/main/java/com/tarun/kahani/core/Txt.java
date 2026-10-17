@@ -93,6 +93,72 @@ public final class Txt {
 
     public static boolean isDevanagari(char c) { return c >= 'ऀ' && c <= 'ॿ'; }
 
+    /** v47.9: the text has Devanagari letters in it. */
+    public static boolean isDevanagariText(String s) {
+        if (s == null) return false;
+        for (int i = 0; i < s.length(); i++) if (isDevanagari(s.charAt(i))) return true;
+        return false;
+    }
+
+    private static final String[][] ROMAN_CONS = {{"क", "k"}, {"ख", "kh"}, {"ग", "g"}, {"घ", "gh"}, {"ङ", "n"}, {"च", "ch"}, {"छ", "chh"}, {"ज", "j"},
+            {"झ", "jh"}, {"ञ", "n"}, {"ट", "t"}, {"ठ", "th"}, {"ड", "d"}, {"ढ", "dh"}, {"ण", "n"}, {"त", "t"}, {"थ", "th"}, {"द", "d"}, {"ध", "dh"},
+            {"न", "n"}, {"प", "p"}, {"फ", "ph"}, {"ब", "b"}, {"भ", "bh"}, {"म", "m"}, {"य", "y"}, {"र", "r"}, {"ल", "l"}, {"व", "v"}, {"श", "sh"},
+            {"ष", "sh"}, {"स", "s"}, {"ह", "h"}, {"ळ", "l"}};
+    private static final String[][] ROMAN_NUKTA = {{"क", "q"}, {"ख", "kh"}, {"ग", "gh"}, {"ज", "z"}, {"फ", "f"}, {"ड", "r"}, {"ढ", "rh"}};
+    private static final String[][] ROMAN_VOWEL = {{"अ", "a"}, {"आ", "aa"}, {"इ", "i"}, {"ई", "ee"}, {"उ", "u"}, {"ऊ", "oo"}, {"ऋ", "ri"}, {"ए", "e"},
+            {"ऐ", "ai"}, {"ओ", "o"}, {"औ", "au"}, {"ऑ", "o"}};
+    private static final String[][] ROMAN_MATRA = {{"ा", "aa"}, {"ि", "i"}, {"ी", "ee"}, {"ु", "u"}, {"ू", "oo"}, {"ृ", "ri"}, {"े", "e"}, {"ै", "ai"},
+            {"ो", "o"}, {"ौ", "au"}, {"ॉ", "o"}};
+
+    private static String lookup(String[][] t, char c) {
+        for (String[] r : t) if (r[0].charAt(0) == c) return r[1];
+        return null;
+    }
+
+    /**
+     * v47.9: Hindi in Latin letters, the way it is written in chat ("दीदी, ये चाँद" → "deedee, ye chaand"), for a
+     * phone whose speech engine has no Hindi voice: an English voice can still say the line. A consonant carries its
+     * "a" unless a vowel sign or a halant follows; the "a" at the end of a word is not said ("कमल" → "kamal").
+     * Anything not Devanagari is kept as it is.
+     */
+    public static String romanize(String s) {
+        if (s == null) return "";
+        StringBuilder out = new StringBuilder();
+        int n = s.length();
+        for (int i = 0; i < n; i++) {
+            char c = s.charAt(i);
+            String cons = lookup(ROMAN_CONS, c);
+            if (cons != null) {
+                int j = i + 1;
+                if (j < n && s.charAt(j) == '़') { String nk = lookup(ROMAN_NUKTA, c); if (nk != null) cons = nk; j++; }
+                out.append(cons);
+                char next = j < n ? s.charAt(j) : ' ';
+                String matra = lookup(ROMAN_MATRA, next);
+                if (matra != null) { out.append(matra); j++; }
+                else if (next == '्') { j++; }
+                else {
+                    // the inherent "a": not at the end of a word
+                    boolean wordEnd = j >= n || !isDevanagari(next) || next == '।' || next == '॥';
+                    boolean nasalEnd = (next == 'ं' || next == 'ँ') && (j + 1 >= n || !isDevanagari(s.charAt(j + 1)));
+                    if (!wordEnd || nasalEnd) out.append('a');
+                }
+                i = j - 1;
+                continue;
+            }
+            String v = lookup(ROMAN_VOWEL, c);
+            if (v != null) { out.append(v); continue; }
+            String m = lookup(ROMAN_MATRA, c);
+            if (m != null) { out.append(m); continue; }
+            if (c == 'ं' || c == 'ँ') { out.append('n'); continue; }
+            if (c == 'ः') { out.append('h'); continue; }
+            if (c == '्' || c == '़') continue;
+            if (c == '।' || c == '॥') { out.append('.'); continue; }
+            if (c >= '०' && c <= '९') { out.append((char) ('0' + (c - '०'))); continue; }
+            out.append(c);
+        }
+        return out.toString();
+    }
+
     public static boolean mostlyHindi(String s) {
         int dev = 0, lat = 0;
         for (int i = 0; i < s.length(); i++) {

@@ -39,26 +39,86 @@ public final class Voices {
     private Locale locale;
     private boolean storyHindi = true;
 
-    /** Blocks (max ~8 s) until the speech engine is ready. Call from a background thread. */
+    /** v47.9: the speech engine that really spoke the test line ("com.google.android.tts"), or "" when none did. */
+    public String engineUsed = "";
+    /** v47.9: true when the engine spoke the story's language in the test; false when only another language works. */
+    public boolean spokeLanguage;
+
+    /**
+     * Blocks until a speech engine is ready. Call from a background thread.
+     * v47.9 (the user: "no voices are appearing … no voice is appearing for any character"): the phone's default engine
+     * is not always one that speaks Hindi (or speaks at all to a file); every installed engine is tried — the default,
+     * then Google's, then the others — and the first that really speaks a short test line in the story's language is
+     * kept. When none speaks the language, the first engine that speaks anything is kept (the lines are then read in
+     * Latin letters, see phoneTts).
+     */
     public boolean init(Context ctx, boolean hindi) {
+        List<String> engines = new ArrayList<String>();
+        engines.add(null);                                   // the phone's default engine
+        engines.add("com.google.android.tts");
+        try {
+            TextToSpeech probe = open(ctx, null);
+            if (probe != null) {
+                for (TextToSpeech.EngineInfo e : probe.getEngines()) if (!engines.contains(e.name)) engines.add(e.name);
+                try { probe.shutdown(); } catch (Exception ignored) { }
+            }
+        } catch (Exception ignored) { /* the default and Google's are still tried */ }
+        String fallbackEngine = null;
+        boolean anyOpened = false;
+        for (String engine : engines) {
+            if (!initWith(ctx, hindi, engine)) continue;
+            anyOpened = true;
+            boolean speaks = testSpeak(ctx, hindi ? "नमस्ते" : "Hello", hindi);
+            if (speaks && languageOk) { engineUsed = engine == null ? "default" : engine; spokeLanguage = true; return true; }
+            if (fallbackEngine == null && (speaks || testSpeak(ctx, "Hello", false))) fallbackEngine = engine == null ? "" : engine;
+            shutdown();
+        }
+        if (fallbackEngine != null && initWith(ctx, hindi, fallbackEngine.length() == 0 ? null : fallbackEngine)) {
+            engineUsed = fallbackEngine.length() == 0 ? "default" : fallbackEngine;
+            spokeLanguage = false;
+            languageOk = false;
+            return true;
+        }
+        return anyOpened && initWith(ctx, hindi, null);
+    }
+
+    /** A speech engine opened and ready, or null (max ~8 s). */
+    private static TextToSpeech open(Context ctx, String engine) {
         final CountDownLatch latch = new CountDownLatch(1);
         final boolean[] success = {false};
+        TextToSpeech t;
         try {
-            tts = new TextToSpeech(ctx.getApplicationContext(), new TextToSpeech.OnInitListener() {
+            TextToSpeech.OnInitListener l = new TextToSpeech.OnInitListener() {
                 public void onInit(int status) {
                     success[0] = status == TextToSpeech.SUCCESS;
                     latch.countDown();
                 }
-            });
+            };
+            t = engine == null ? new TextToSpeech(ctx.getApplicationContext(), l) : new TextToSpeech(ctx.getApplicationContext(), l, engine);
             latch.await(8, TimeUnit.SECONDS);
         } catch (Exception e) {
+            return null;
+        }
+        if (!success[0]) { try { t.shutdown(); } catch (Exception ignored) { } return null; }
+        return t;
+    }
+
+    /** v47.9: a short line spoken to a file really comes out as sound. */
+    private boolean testSpeak(Context ctx, String text, boolean hindi) {
+        try {
+            File dir = ctx.getCacheDir();
+            float[] pcm = phoneTts1(text, -1, 1f, 1f, dir, 999, hindi);       // the language itself, no fallback
+            return pcm != null && pcm.length > Synth.SR / 10;
+        } catch (Throwable e) {
             return false;
         }
-        if (!success[0]) {
-            try { if (tts != null) tts.shutdown(); } catch (Exception ignored) {}
-            tts = null;
-            return false;
-        }
+    }
+
+    /** Opens one engine and reads its voices for the story's language. */
+    private boolean initWith(Context ctx, boolean hindi, String engine) {
+        voices.clear();
+        tts = open(ctx, engine);
+        if (tts == null) return false;
         tts.setOnUtteranceProgressListener(new UtteranceProgressListener() {
             public void onStart(String id) {}
             public void onDone(String id) { finish(id, true); }
@@ -218,6 +278,23 @@ public final class Voices {
 
     /** Phone voice in the line's own language (a story may mix Hindi and English lines). */
     float[] phoneTts(String text, int voice, float pitch, float rate, File tmpDir, int idx, boolean hindi) {
+        if (!ready || tts == null || text.trim().length() == 0) return null;
+        // v47.9: no engine on this phone speaks Hindi: the line is read in Latin letters by the voice it has (better
+        // heard than silent); a Hindi line the Hindi voice fails on is tried the same way once
+        if (hindi && com.tarun.kahani.core.Txt.isDevanagariText(text) && engineUsed.length() > 0 && !spokeLanguage)
+            return phoneTts1(com.tarun.kahani.core.Txt.romanize(text), -1, pitch, rate, tmpDir, idx, false);
+        float[] pcm = phoneTts1(text, voice, pitch, rate, tmpDir, idx, hindi);
+        if (pcm == null && hindi && com.tarun.kahani.core.Txt.isDevanagariText(text)) {
+            romanizedLines++;
+            pcm = phoneTts1(com.tarun.kahani.core.Txt.romanize(text), -1, pitch, rate, tmpDir, idx, false);
+        }
+        return pcm;
+    }
+
+    /** v47.9: lines read in Latin letters because the Hindi voice could not speak them. */
+    public volatile int romanizedLines;
+
+    private float[] phoneTts1(String text, int voice, float pitch, float rate, File tmpDir, int idx, boolean hindi) {
         if (!ready || tts == null || text.trim().length() == 0) return null;
         try {
             if (voice >= 0 && voice < voices.size()) tts.setVoice(voices.get(voice));

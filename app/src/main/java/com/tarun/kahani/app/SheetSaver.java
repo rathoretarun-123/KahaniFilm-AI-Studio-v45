@@ -352,7 +352,33 @@ final class SheetSaver {
      * "angles:obj:key:name"); the pose files made go into newPoses (may be null). Returns the message for the user.
      */
     static Object save(Project project, Library library, Story st, String tgt, List<byte[]> datas, List<String> newPosesIn) throws Exception {
+        return save(project, library, st, tgt, datas, newPosesIn, null);
+    }
+
+    /**
+     * v47.9 (the user: "on the character page you just take 6 pictures — side, front, back and three-quarter"): the six
+     * named places of a character's pictures, each {id, label, angle}. A picture given for one of them is that view —
+     * never split, never guessed. The second side and the second three-quarter (facing the other way) are kept as
+     * pictures of the character at that angle for the shots that turn that way.
+     */
+    static final String[][] CHAR_SLOTS = {{"front", "Front", "0"}, {"back", "Back", "180"}, {"sideL", "Side (facing left)", "-90"},
+            {"sideR", "Side (facing right)", "-90"}, {"qL", "¾ (facing left)", "-45"}, {"qR", "¾ (facing right)", "-45"}};
+
+    static String[] slot(String id) {
+        if (id == null) return null;
+        for (String[] sl : CHAR_SLOTS) if (sl[0].equals(id)) return sl;
+        return null;
+    }
+
+    /** The picture file given for a character's slot, or null. */
+    static String slotFile(Project project, String key, String id) {
+        String f = project.setting("slot." + key + "." + id, "");
+        return f.length() > 0 && project.has(f) ? f : null;
+    }
+
+    static Object save(Project project, Library library, Story st, String tgt, List<byte[]> datas, List<String> newPosesIn, String slotId) throws Exception {
         final String[] p = tgt.split(":", 4);
+        final String[] slot = slot(slotId);
         final String kind = p.length > 1 ? p[1] : "char";
         final String keyGiven = p.length > 2 ? p[2] : "";
         if (kind.equals("costume")) {
@@ -381,7 +407,7 @@ final class SheetSaver {
         boolean beast = c != null && c.look != null && (c.look.kind == Look.ANIMAL || c.look.kind == Look.BIRD || c.look.kind == Look.MONSTER || c.look.kind == Look.MONKEY);   // v32/v33: fur reads like a beast
         // 1. every picture; a sheet of several figures split into them
         List<Object[]> pics = new ArrayList<Object[]>();     // {px, w, h, cutOut, cameraPhoto}
-        int split = 0;
+        int split = 0, keptWhole = 0;
         int unreadable = 0, files = 0, overLimit = 0;
         // v46: a character takes up to 18 reference pictures, a prop or a place up to 10 (ReferenceCoverage)
         final int limit = com.tarun.kahani.core.ReferenceCoverage.limitFor(kind);
@@ -407,14 +433,14 @@ final class SheetSaver {
             // into its panels (whole crops). v29: the picture itself decides (a sheet splits into two or more
             // figure-sized pieces; a photo with a real background does not), never a camera tag in the file
             try {
-                parts = kind.equals("scene") ? com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px, w, h, false), w, h)
+                if (slot == null) parts = kind.equals("scene") ? com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px, w, h, false), w, h)
                         : com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px, w, h), w, h, kind.equals("obj"));
             } catch (OutOfMemoryError oom) {
                 // v30: a large sheet on a phone with little heap left: read again smaller and split that
                 parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>();
                 try {
                     int[] dec2 = MainActivity.decodeBytes(d, 1600);
-                    if (dec2 != null) {
+                    if (dec2 != null && slot == null) {
                         w = dec2[0]; h = dec2[1];
                         px = new int[w * h];
                         System.arraycopy(dec2, 2, px, 0, px.length);
@@ -423,6 +449,10 @@ final class SheetSaver {
                     }
                 } catch (Throwable e) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); }
             } catch (Throwable e) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); }
+            // v47.9 (the user: "do not split images of combined characters, or characters with object"): a picture of a
+            // character is split only when it is a sheet of that one character's views; two people together, a girl on
+            // a sofa, a moment of a story board — kept whole, as the user made it
+            if (kind.equals("char") && parts.size() >= 2 && com.tarun.kahani.core.Angles.composite(parts, beast)) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); keptWhole++; }
             if (parts.size() >= 2) camera = false;
             if (parts.size() >= 2) {
                 split += parts.size();
@@ -556,6 +586,17 @@ final class SheetSaver {
                 }
                 if (best >= 0) angles[best] = com.tarun.kahani.core.Angles.SIDE;
             }
+            // v47.9: a picture given for one of the six named places is that view, as the user said — not guessed
+            if (slot != null && pics.size() >= 1) {
+                float want = Float.parseFloat(slot[2]);
+                java.util.Arrays.fill(angles, Float.NaN);
+                boolean second = slot[0].equals("sideR") || slot[0].equals("qR");
+                String first = slot[0].equals("sideR") ? "sideL" : "qL";
+                // the one facing right is the view only when no left-facing one is there; else a picture at that angle
+                if (!(second && slotFile(project, key, first) != null)) angles[0] = want;
+                guessed[0] = want;
+                if (tags[0] != null) tags[0].angle = want;
+            }
             String have = c == null ? null : Studio3DArt.charFile(project, st, c);
             boolean haveFront = false;
             for (float a : angles) if (a == com.tarun.kahani.core.Angles.FRONT) haveFront = true;
@@ -598,6 +639,7 @@ final class SheetSaver {
                     if (have == null) {
                         String f = project.savePicture(bytes[i], "char");
                         project.setManifest("char", key, "char|" + key + "|" + f);
+                        if (slot != null && i == 0) project.setSetting("slot." + key + "." + slot[0], f);
                         Library.Item it = library.addBytes(Library.PIC, "person", shown, "front", bytes[i], ext, "angles");
                         project.setSetting("pic.char:" + key, it.id);
                         libKey = it.id;
@@ -612,6 +654,7 @@ final class SheetSaver {
                 } else if (!Float.isNaN(a)) {
                     String f = project.savePicture(bytes[i], "view");
                     Studio3DArt.setView(project, key, a, "view|" + key + "|" + (int) a + "|" + f);
+                    if (slot != null && i == 0) project.setSetting("slot." + key + "." + slot[0], f);
                     project.setSetting("realview." + key + "." + (int) a, "1");
                     Library.Item it = library.addBytes(Library.PIC, "view", shown + " (" + com.tarun.kahani.core.Angles.name(a) + " view)", com.tarun.kahani.core.Angles.name(a), bytes[i], ext, "angles");
                     it.setMeta("view", String.valueOf((int) a));
@@ -634,6 +677,7 @@ final class SheetSaver {
                 if (tags[i] != null) {
                     try {
                         String pf = project.savePicture(bytes[i], "pose");
+                        if (slot != null && i == 0 && project.setting("slot." + key + "." + slot[0], "").length() == 0) project.setSetting("slot." + key + "." + slot[0], pf);
                         String pl = Studio3DArt.poseLine(key, pf, tags[i], hRatios[i], cuts[i]);
                         Studio3DArt.addPose(project, key, pl);
                         newPoses.add(pf);

@@ -168,13 +168,15 @@ public class ReviewProtocolTest {
         assertFalse(meera.missing.contains("back"));
         assertFalse(raghu.front);
         assertTrue(raghu.missing.get(0).startsWith("front"));
-        assertEquals(18, ReferenceCoverage.limitFor("char"));
-        assertEquals(10, ReferenceCoverage.limitFor("obj"));
-        assertEquals(10, ReferenceCoverage.limitFor("scene"));
+        // v47.9 (the user's new rule): six pictures for a character (front, back, two sides, two three-quarters), up to
+        // 18 at a time for a thing or a place
+        assertEquals(6, ReferenceCoverage.limitFor("char"));
+        assertEquals(18, ReferenceCoverage.limitFor("obj"));
+        assertEquals(18, ReferenceCoverage.limitFor("scene"));
         assertTrue(ReferenceCoverage.fitsSheet(6)); assertFalse(ReferenceCoverage.fitsSheet(7));
         assertEquals("sure", ReferenceCoverage.splitConfidence(new long[]{100, 104, 98, 101, 99, 103}));
         assertEquals("check", ReferenceCoverage.splitConfidence(new long[]{100, 104, 30, 101, 99, 103}));
         assertEquals("check", ReferenceCoverage.splitConfidence(new long[]{100, 104, 98, 101, 99, 103, 100}));
-        assertTrue(ReferenceCoverage.report(cs).contains("18 pictures per character"));
+        assertTrue(ReferenceCoverage.report(cs).contains("6 pictures per character"));
     }
 }

@@ -626,12 +626,21 @@ public final class LookDesigner {
                 "लहंगा", "घाघरा", "चोली", "सिंदूर", "चूड़ि", "princess", "queen", "girl", "woman", "mother", "lady", "aunt", "आंटी", "she ", " her ",
                 "गोरी", "दुबली", "मोटी", "सुंदरी", "बहादुर लड़की", "sister", "daughter", "grandmother", "बुआ", "मौसी", "चाची", "मैडम", "madam", "miss ",
                 // v34: what she wears says it when no word does ("two ponytails with yellow ribbons")
-                "ponytails", "pigtails", "ribbons", "ribbon", "रिबन", "frock", "फ्रॉक", "skirt", "स्कर्ट", "a dress", "her dress", "gown", "earrings", "झुमके", "hair clip", "hairband"};
+                "ponytails", "pigtails", "ribbons", "ribbon", "रिबन", "frock", "फ्रॉक", "skirt", "स्कर्ट", "a dress", "her dress", "gown", "earrings", "झुमके", "hair clip", "hairband",
+                // v47.9: the same in Hindi ("ऊँची पोनीटेल", "दो चोटियाँ", "पीले क्लिप")
+                "साल की", "वर्ष की", "बरस की", "years old girl",
+                "पोनीटेल", "पोनी टेल", "ponytail", "चोटियाँ", "चोटियां", "दो चोटी", "हेयर क्लिप", "हेयरबैंड", "बालों में क्लिप", "पायल"};
         String[] malW = {"राजा", "राजकुमार", "लड़का", "बेटा", "पिता", "दादा", "भाई", "भैया", "गार्ड", "सिपाही", "सैनिक", "मूँछ", "मूंछ", "देवता", " god ",
                 "दाढ़ी", "पगड़ी", "अचकन", "king", "prince", "boy", "man ", "father", "guard", "soldier", " he ", " his ",
+                "साल का", "वर्ष का", "बरस का",
                 "गोरा ", "दुबला", "मोटा", "mister", "मिस्टर", "sir ", "uncle", "अंकल", "चाचा", "मामा", "grandfather", "brother", "son "};
+        // v47.9: an adjective that agrees with the body or the skin ("पतला-दुबला शरीर", "रंग गोरा", "गोल-मटोल शरीर") says
+        // nothing of whether the character is a she or a he — those nouns are masculine for everyone (it made a girl of
+        // 11 with a ponytail a boy)
+        String forGender = Txt.norm(noPrincess).replaceAll("(?:" + Txt.norm("पतला") + "|" + Txt.norm("दुबला") + "|" + Txt.norm("मोटा") + "|" + Txt.norm("गोरा") + "|" + Txt.norm("सांवला") + "|" + Txt.norm("काला") + "|" + Txt.norm("गोल") + ")(?:[-\\s]*(?:" + Txt.norm("पतला") + "|" + Txt.norm("दुबला") + "|" + Txt.norm("मटोल") + "))?\\s*(?:" + Txt.norm("शरीर") + "|" + Txt.norm("बदन") + "|" + Txt.norm("चेहरा") + ")", " ")
+                .replaceAll("(?:" + Txt.norm("रंग") + "|" + Txt.norm("शरीर") + "|" + Txt.norm("बदन") + "|" + Txt.norm("चेहरा") + "|" + Txt.norm("कद") + ")\\s*(?:" + Txt.norm("गोरा") + "|" + Txt.norm("दुबला") + "|" + Txt.norm("पतला") + "|" + Txt.norm("मोटा") + "|" + Txt.norm("सांवला") + "|" + Txt.norm("गेहुंआ") + ")", " ");
         for (String w : femW) if (Txt.has(all, w)) fem++;
-        for (String w : malW) if (noPrincess.contains(Txt.norm(w))) mal++;
+        for (String w : malW) if (forGender.contains(Txt.norm(w))) mal++;
         // the script's own verbs decide a tie ("निकालती है" is a she, "दौड़ता है" a he)
         if (c.genderHint > 0) fem += fem == mal ? 1 : 0; else if (c.genderHint < 0) mal += fem == mal ? 1 : 0;
         int age = c.age;

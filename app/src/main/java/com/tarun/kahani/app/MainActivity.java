@@ -231,6 +231,9 @@ public class MainActivity extends Activity {
         }
     }
 
+    /** v47.9: when a failed film was last made again by itself (once in ten minutes at most). */
+    private static long lastAutoRetry;
+
     /** v47.8: the studio was opened with back from the film being made — the next back goes home. */
     private boolean backToHome;
 
@@ -559,24 +562,34 @@ public class MainActivity extends Activity {
     private boolean anglesOpen;
     private List<Placement> pendingLibrary;
 
+    /** v47.9: the named place of a character's picture being chosen ("front", "sideL"…), or null for a batch. */
+    private String anglesSlot, nextSlot;
+
+    /** One picture for one named place of a character (front, back, a side, a three-quarter). */
+    private void anglesForSlot(String tgt, String what, String slotId) {
+        nextSlot = slotId;
+        anglesFor(tgt, what);
+    }
+
     private void anglesFor(final String tgt, final String what, final String from) {
         anglesTarget = tgt;
         anglesFrom = from;
+        anglesSlot = nextSlot;
+        nextSlot = null;
+        Prefs.put(this, "angles.slot", anglesSlot == null ? "" : anglesSlot);
         // kept outside this screen too: the picker may run while Android drops the screen for memory (v25)
         Prefs.put(this, "angles.target", tgt);
         Prefs.put(this, "angles.from", from == null ? "" : from);
         Prefs.put(this, "angles.project", project == null ? "" : project.dir.getAbsolutePath());
         // v47: every character, object and place gets the exact same five-option uploader — no distinction by kind
-        final String[] opts = {"🖼  Photos / gallery — up to 18 at once", "📁  Files (Downloads, WhatsApp…) — up to 18", "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
+        final int most = maxPictures(tgt, anglesSlot);
+        final String[] opts = {"🖼  Photos / gallery — " + (most == 1 ? "one picture" : "up to " + most + " at once"), "📁  Files (Downloads, WhatsApp…) — " + (most == 1 ? "one picture" : "up to " + most), "📷  Camera — one at a time", "📚  From the tarunkahani library", "🌐  Search the internet / ✨ make with AI (the old chooser)"};
         // v38: the explanation and the choices as buttons in one view — a dialog with both a message and a list of
         // items shows only the message on a phone (the choices were never seen: "a pop-up with no option to upload")
         final AlertDialog[] dlg = new AlertDialog[1];
         LinearLayout box = Ui.column(this);
         box.setPadding(Ui.dp(this, 16), Ui.dp(this, 8), Ui.dp(this, 16), Ui.dp(this, 8));
-        box.addView(Ui.text(this, "Upload up to 18 reference images for this character or place: one full-front, one full-back, two side views, two three-quarter views, and up to ten additional images. "
-                + "For contact sheets, use a clear grid of up to 3 columns × 2 rows; the director splits panels into individual pictures when it can identify them. "
-                + "For individual uploads, use this order where practical: front, back, side 1, side 2, three-quarter 1, three-quarter 2, then extras. The director also analyses each image rather than relying only on position. "
-                + "References saved to the private library can be reused in future films. If an element cannot be identified confidently during production, pause and request a clearer reference instead of guessing. " + what + ".", 13, Ui.SUB, false));
+        box.addView(Ui.text(this, uploadHelp(tgt, anglesSlot) + " " + what + ".", 13, Ui.SUB, false));
         for (int i = 0; i < opts.length; i++) {
             final int w = i;
             box.addView(Ui.button(this, opts[i], i < 2 ? Ui.PRIMARY : Ui.BLUE, new View.OnClickListener() {
@@ -599,11 +612,33 @@ public class MainActivity extends Activity {
         dlg[0].show();
     }
 
+    /**
+     * v47.9: how many pictures one upload takes — one for a named place of a character, six for a character at once
+     * (front, back, two sides, two three-quarters), eighteen for a place or a thing (a place keeps up to 100 in all).
+     */
+    static int maxPictures(String tgt, String slot) {
+        if (slot != null && slot.length() > 0) return 1;
+        String[] q = tgt == null ? new String[0] : tgt.split(":", 4);
+        return com.tarun.kahani.core.ReferenceCoverage.limitFor(q.length > 1 ? q[1] : "char");
+    }
+
+    /** v47.9: what the upload asks for, in words for this kind of picture. */
+    static String uploadHelp(String tgt, String slot) {
+        String[] q = tgt == null ? new String[0] : tgt.split(":", 4);
+        String kind = q.length > 1 ? q[1] : "char";
+        if (slot != null && slot.length() > 0) return "Choose one picture for this place. It is used exactly as that view — it is never split or guessed.";
+        if (kind.equals("char")) return "Up to 6 pictures: front, back, two sides and two three-quarter views (or one sheet of those six views, which is split). "
+                + "A picture with two characters together, or a character with a thing (on a sofa, on a bench), is kept whole as it is.";
+        if (kind.equals("scene")) return "Up to 18 pictures of this place at a time, up to 100 in all: the wide view, the reverse view and close views behind the shots. "
+                + "A sheet of up to 3×2 views is split into its panels. No characters in them — the director puts the characters in.";
+        return "Up to 18 pictures of this thing; a sheet of up to 3×2 views of it is split into the views.";
+    }
+
     /** v38: what each choice of the angles dialog does (0 gallery, 1 files, 2 the camera, 3 the library, 4 the internet / AI). */
     private void angleChoice(int w, final String tgt, final String what) {
         target = "angles";
-        if (w == 0) pickPhotos(REQ_ANGLES, MAX_ANGLE_PICTURES);
-        else if (w == 1) pick("image/*", REQ_ANGLES, true);
+        if (w == 0) pickPhotos(REQ_ANGLES, maxPictures(tgt, anglesSlot));
+        else if (w == 1) pick("image/*", REQ_ANGLES, maxPictures(tgt, anglesSlot) > 1);
         else if (w == 2) camera();
         else if (w == 4) {
             // v33: the old chooser (a free picture from the internet, one made with AI) — v47 now for every kind
@@ -619,7 +654,7 @@ public class MainActivity extends Activity {
                     try {
                         List<byte[]> one = new ArrayList<byte[]>();
                         one.add(Project.readAll(library.open(it)));
-                        saveAngles(tgt, one);
+                        saveAngles(tgt, one, anglesSlot);
                     } catch (Exception e) { toast("Could not open the picture"); }
                 }
                 public void action(String a) { }
@@ -845,7 +880,9 @@ public class MainActivity extends Activity {
         }
     }
 
-    private void saveAngles(final String tgt, final List<byte[]> datas) {
+    private void saveAngles(final String tgt, final List<byte[]> datas) { saveAngles(tgt, datas, null); }
+
+    private void saveAngles(final String tgt, final List<byte[]> datas, final String slotId) {
         final String[] p = tgt.split(":", 4);
         final String kind = p.length > 1 ? p[1] : "char", key = p.length > 2 ? p[2] : "", shown = p.length > 3 && p[3].length() > 0 ? p[3] : key;
         if (project == null) {
@@ -857,13 +894,15 @@ public class MainActivity extends Activity {
         final List<String> newPoses = new ArrayList<String>();      // v27: the pose pictures this upload made (reviewed after)
         background("The director is reading " + datas.size() + " picture(s) of " + shown + "…", new Work() {
             public Object run() throws Exception {
-                return SheetSaver.save(project, library, st, tgt, datas, newPoses);
+                return SheetSaver.save(project, library, st, tgt, datas, newPoses, slotId);
             }
         }, new Done() {
             public void done(Object r, Exception e) {
                 if (e != null) { toast("Could not add the pictures: " + e.getMessage()); return; }
                 toast(String.valueOf(r));
                 Prefs.put(MainActivity.this, "angles.target", "");
+                Prefs.put(MainActivity.this, "angles.slot", "");
+                anglesSlot = null;
                 final String from = anglesFrom;
                 anglesFrom = null;
                 Runnable back = new Runnable() {
@@ -1702,9 +1741,31 @@ public class MainActivity extends Activity {
         info.addView(Ui.text(this, vtxt, 13, vs != null ? Ui.GREEN : Ui.SUB, false));
         top.addView(info, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         card.addView(top);
+        // v47.9 (the user: "on the character page you just take 6 pictures — side, front, back and three-quarter"):
+        // six named places, each one picture, shown with what is there
+        final String ck = keyFor(c);
+        card.addView(Ui.text(this, "📷 Six pictures of " + c.shown() + " — tap each place to add or change its picture (a picture with someone else or with a thing in it is kept whole)", 13, Ui.SUB, false));
+        LinearLayout g1 = Ui.row(this), g2 = Ui.row(this);
+        for (int si = 0; si < SheetSaver.CHAR_SLOTS.length; si++) {
+            final String[] sl = SheetSaver.CHAR_SLOTS[si];
+            LinearLayout tile = Ui.column(this);
+            tile.setGravity(Gravity.CENTER_HORIZONTAL);
+            ImageView tv = new ImageView(this);
+            tv.setScaleType(ImageView.ScaleType.FIT_CENTER);
+            String sf = SheetSaver.slotFile(project, ck, sl[0]);
+            if (sf == null && sl[0].equals("front")) sf = file;
+            if (sf != null) tv.setImageBitmap(thumb(project.file(sf), 200)); else tv.setBackgroundColor(0xFFEDE7F6);
+            tile.addView(tv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(this, 84)));
+            tile.addView(Ui.small(this, (sf != null ? "✓ " : "+ ") + sl[1], sf != null ? Ui.GREEN : Ui.PRIMARY, new View.OnClickListener() {
+                public void onClick(View v) { anglesForSlot("angles:char:" + ck + ":" + c.shown(), c.shown() + " — " + sl[1], sl[0]); }
+            }));
+            (si < 3 ? g1 : g2).addView(tile, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+        }
+        card.addView(g1);
+        card.addView(g2);
         LinearLayout r = Ui.row(this);
-        r.addView(Ui.small(this, "📷 Pictures (up to 100)", Ui.PRIMARY, new View.OnClickListener() {
-            public void onClick(View v) { anglesFor("angles:char:" + keyFor(c) + ":" + c.shown(), c.shown()); }          // v33: one button, several pictures at once, split and saved
+        r.addView(Ui.small(this, "📷 All six at once", Ui.PRIMARY, new View.OnClickListener() {
+            public void onClick(View v) { anglesFor("angles:char:" + keyFor(c) + ":" + c.shown(), c.shown()); }          // v33: one button, several pictures at once
         }));
         if (Studio3DArt.realAngles(project, keyFor(c))) info.addView(Ui.text(this, "📷 " + countAngles(c.shown()) + " real pictures of " + c.shown() + " in the library (angles, poses) — the film is played by the rigged, animated picture made from them; angles you did not give are made from your front picture for you to approve", 13, Ui.GREEN, false));
         r.addView(Ui.small(this, "🎙 Voice", Ui.GREEN, new View.OnClickListener() {
@@ -1852,10 +1913,24 @@ public class MainActivity extends Activity {
             LinearLayout head = Ui.card(this);
             head.addView(Ui.text(this, pn + ". " + pl.name, 16, Ui.TEXT, true));
             if (pl.description.length() > 0) head.addView(Ui.text(this, pl.description.length() > 160 ? pl.description.substring(0, 160) + "…" : pl.description, 12, Ui.SUB, false));
-            head.addView(Ui.text(this, here.isEmpty() ? "No scene is set here — it is seen around the main place (in its picture). A picture of it is optional."
+            head.addView(Ui.text(this, here.isEmpty() ? "No scene is set here by name — it is part of where the story happens. Its pictures are used behind the close shots there."
                     : "Scenes here: " + nums + (here.size() > 1 ? " — one picture for all of them" : ""), 13, here.isEmpty() ? Ui.SUB : Ui.PRIMARY_DARK, false));
             body.addView(head);
-            if (here.isEmpty()) continue;
+            if (here.isEmpty()) {
+                // v47.9 (the user: "it doesn't even ask for picture of all the … backgrounds"): every place the script
+                // lists has its button — a place no scene names (the sofa corner of the room) is part of the place the
+                // scenes are in, and its pictures are that place's close views
+                if (!st.scenes.isEmpty()) {
+                    final Story.Scene hostScene = st.scenes.get(0);
+                    final String hostKey = String.valueOf(hostScene.number), name = st.shown(pl.name);
+                    int np = SheetSaver.placePictures(project, hostKey);
+                    head.addView(Ui.small(this, "📷 Pictures of " + name + " (up to 100)", Ui.PRIMARY, new View.OnClickListener() {
+                        public void onClick(View v) { anglesFor("angles:scene:" + hostKey + ":" + name, name + " — part of the place of part " + hostKey); }
+                    }));
+                    if (np > 0) head.addView(Ui.text(this, "📷 " + np + " background picture" + (np > 1 ? "s" : "") + " so far where the story happens", 13, Ui.GREEN, false));
+                }
+                continue;
+            }
             // the scenes set here share the first one's picture
             String first = sceneFile(here.get(0));
             if (first != null) for (int i = 1; i < here.size(); i++) if (sceneFile(here.get(i)) == null)
@@ -1876,12 +1951,15 @@ public class MainActivity extends Activity {
         for (String[] pl : Bible.listedPlaces(st)) {
             List<Story.Scene> here = new ArrayList<Story.Scene>();
             for (Story.Scene sc : st.scenes) if (AutoLibrary.placeOf(sc, pl[0])) here.add(sc);
-            if (here.isEmpty()) continue;
+            // v47.9: a place no scene names is part of where the story happens — its views go there
+            boolean part = here.isEmpty();
+            if (part) { if (st.scenes.isEmpty()) continue; here.add(st.scenes.get(0)); }
             pn++;
             final String key = String.valueOf(here.get(0).number);
             final String place = st.shown(pl[0]);
             LinearLayout card = Ui.card(this);
             card.addView(Ui.text(this, pn + ". " + place, 16, Ui.TEXT, true));
+            if (part) card.addView(Ui.text(this, "Part of the place of part " + key + " — its pictures are the close views there", 13, Ui.SUB, false));
             int np = SheetSaver.placePictures(project, key);
             card.addView(Ui.text(this, np > 0 ? "📷 " + np + " background picture" + (np > 1 ? "s" : "") + " of this place so far — add more: every view helps the director match the shots"
                     : "No background picture yet — the studio draws it until you add one", 13, np > 0 ? Ui.GREEN : Ui.SUB, false));
@@ -2316,7 +2394,8 @@ public class MainActivity extends Activity {
         if ("angles".equals(target) && anglesTarget != null) {
             List<byte[]> one = new ArrayList<byte[]>();
             one.add(data);
-            saveAngles(anglesTarget, one);
+            String sl = anglesSlot != null ? anglesSlot : Prefs.get(this, "angles.slot", "").length() > 0 ? Prefs.get(this, "angles.slot", "") : null;
+            saveAngles(anglesTarget, one, sl);
             return;
         }
         final String tgt = target == null ? "lib:pic" : target;
@@ -3453,13 +3532,15 @@ public class MainActivity extends Activity {
             else if (data.getData() != null) uris.add(data.getData());
             // Reference upload contract: at most 18 images per character/place batch,
             // each read only when the director comes to it — a hundred photos are never in memory together
-            if (uris.size() > MAX_ANGLE_PICTURES) { toast("The first " + MAX_ANGLE_PICTURES + " pictures are used"); uris = new ArrayList<Uri>(uris.subList(0, MAX_ANGLE_PICTURES)); }
             final String tgt = anglesTarget != null ? anglesTarget : Prefs.get(this, "angles.target", "").length() > 0 ? Prefs.get(this, "angles.target", "") : null;
+            final String slotNow = anglesSlot != null ? anglesSlot : Prefs.get(this, "angles.slot", "").length() > 0 ? Prefs.get(this, "angles.slot", "") : null;
+            int most = maxPictures(tgt, slotNow);
+            if (uris.size() > most) { toast(most == 1 ? "The first picture is used" : "The first " + most + " pictures are used"); uris = new ArrayList<Uri>(uris.subList(0, most)); }
             if (tgt == null) { toast("Please tap the angles button again and choose the pictures"); return; }
             if (uris.isEmpty()) { toast("No picture was chosen"); return; }
             UriPictures up = new UriPictures(getContentResolver(), uris);
             up.act = this;
-            saveAngles(tgt, up);
+            saveAngles(tgt, up, slotNow);
             return;
         }
         if (code == REQ_BULK) {
@@ -4670,7 +4751,7 @@ public class MainActivity extends Activity {
             try {
                 final Story wst = loadStory();
                 if (wst != null) for (final String[] t : AutoLibrary.missingTargets(project, wst)) {
-                    if (!(t[0].startsWith("char:") || t[0].startsWith("place:") || t[0].startsWith("shot:"))) continue;
+                    if (!(t[0].startsWith("char:") || t[0].startsWith("place:"))) continue;       // v47.9: things never hold the film
                     final String ft = uploadTarget(t, wst);
                     if (ft == null) continue;
                     ask.addView(Ui.small(this, "📷 Add a picture of " + t[1], Ui.PRIMARY, new View.OnClickListener() {
@@ -4710,12 +4791,42 @@ public class MainActivity extends Activity {
                 }
                 if (j.failed || j.cancelled) {
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
-                    stage.setText(j.failed ? "❌ The film could not be made" : "Stopped");
+                    stage.setText(j.failed ? "❌ The film stopped — tap Continue to make it again" : "Stopped");
                     eta.setText("");
                     if (j.failed) warn.setText(j.error);
                     pause.setVisibility(View.GONE);
                     stop.setText("← Back to the studio");
                     stop.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { backToHome = true; showStudioFromMaking(); } });
+                    // v47.9 (the user: "it should not stop, and I should have the option to press continue if it stops"):
+                    // Continue makes the film again (your pictures stay, and the voices already spoken are reused); with no
+                    // answer it is pressed by itself after 30 seconds — once, so a film that fails the same way again
+                    // waits for the user instead of trying for ever
+                    if (j.failed) {
+                        final Project jp = j.project;
+                        final Button again = Ui.button(MainActivity.this, "▶  Continue — make it again", Ui.GREEN, null);
+                        final boolean auto = System.currentTimeMillis() - lastAutoRetry > 10 * 60 * 1000L;
+                        final long at = System.currentTimeMillis() + FilmJob.AUTO_CONTINUE_SECONDS * 1000L;
+                        final Runnable go = new Runnable() {
+                            public void run() {
+                                if (FilmJob.busy()) return;
+                                project = jp;
+                                startFilm();
+                            }
+                        };
+                        again.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { go.run(); } });
+                        ((LinearLayout) stop.getParent()).addView(again, ((LinearLayout) stop.getParent()).indexOfChild(stop));
+                        if (auto) {
+                            ui.post(new Runnable() {
+                                public void run() {
+                                    if (screen != S_PROGRESS || FilmJob.current != j) return;
+                                    long left = (at - System.currentTimeMillis() + 999) / 1000;
+                                    if (left <= 0) { lastAutoRetry = System.currentTimeMillis(); go.run(); return; }
+                                    again.setText("▶  Continue — make it again (by itself in " + left + " s)");
+                                    ui.postDelayed(this, 500);
+                                }
+                            });
+                        }
+                    }
                     return;
                 }
                 ui.postDelayed(this, 500);
