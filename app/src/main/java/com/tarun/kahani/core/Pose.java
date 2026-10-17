@@ -105,6 +105,12 @@ public final class Pose {
     public float pedal, pedalAmt;
     /** v38: how strongly the cheeks flush with the feeling of the beat (0..1; FilmCraft.flush). */
     public float flush;
+    /**
+     * v47.7: an animal's own actions (Renderer.animalActs): the head down to the grass (0..1), the jaw's own motion apart
+     * from speech (chewing, a bark's snap; 0..1), the tail held up (0..1) and wagged (0..1), the ears flicked (-1..1)
+     * and pricked up (0..1). Every one eases in and out — never a jump from one frame to the next.
+     */
+    public float graze, animalJaw, tailUp, wag, earFlick, earsUp;
     public String turbanOwner;         // whose turban / cap is being worn (its real picture is used when there is one)              // a sword is being swung right now (otherwise a held sword rests calmly)
     public long seed;
 
@@ -133,5 +139,6 @@ public final class Pose {
         gazeX = 0; gazeY = 0; gazeHeld = 0; turnBody = 0; turnHead = 0;
         kajal = 0; lipstick = 0; bindi = 0; mehndi = 0; powder = 0; facePaint = 0; towel = 0; flush = 0;
         bowDraw = 0; arrowOn = false; pedal = 0; pedalAmt = 0;
+        graze = 0; animalJaw = 0; tailUp = 0; wag = 0; earFlick = 0; earsUp = 0;
     }
 }

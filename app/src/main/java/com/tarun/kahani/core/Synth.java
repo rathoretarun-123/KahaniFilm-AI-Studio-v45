@@ -15,6 +15,20 @@ public final class Synth {
 
     static float clamp(float v) { return v > 1 ? 1 : v < -1 ? -1 : v; }
 
+    /** v47.7: how long each of a dog's barks sounds (the jaw snaps open and shut over it). */
+    public static final float BARK_LEN = 0.14f;
+
+    /** v47.7: when each bark of an SFX_BARK this long begins (seconds into it): two quick, a pause, two quick — the dog's jaw keeps the same time. */
+    public static float[] barkOnsets(float dur) {
+        float[] at = new float[4];
+        int k = 0;
+        float bt = 0.02f;
+        while (bt < dur - 0.2f && k < 4) { at[k] = bt; bt += k % 2 == 0 ? 0.22f : 0.5f; k++; }
+        float[] out = new float[k];
+        System.arraycopy(at, 0, out, 0, k);
+        return out;
+    }
+
     // ================================================================== effects
 
     public float[] sfx(int type, float dur) {
@@ -235,7 +249,7 @@ public final class Synth {
                 break;
             }
             // v44: the animals' voices — a dog's barks, a cow's moo, a cat's meow, hens clucking, a goat's bleat
-            case Film.SFX_BARK: { float bt = 0.02f; int k = 0; while (bt < dur - 0.2f && k < 4) { tone(o, bt, 0.14f, 520, 330, 0.4f, 1); burst(o, bt, 0.08f, 0.4f, 0.2f); bt += k % 2 == 0 ? 0.22f : 0.5f; k++; } lowpass(o, 0.3f); break; }
+            case Film.SFX_BARK: { for (float bt : barkOnsets(dur)) { tone(o, bt, BARK_LEN, 520, 330, 0.4f, 1); burst(o, bt, 0.08f, 0.4f, 0.2f); } lowpass(o, 0.3f); break; }
             case Film.SFX_MOO: { float ml = Math.min(dur, 1.3f); tone(o, 0, ml, 150, 120, 0.4f, 1); tone(o, 0, ml, 300, 240, 0.12f, 0); lowpass(o, 0.12f); fadeEnds(o, 0.15f); break; }
             case Film.SFX_MEOW: { tone(o, 0, 0.55f, 600, 900, 0.18f, 0); tone(o, 0.25f, 0.4f, 900, 520, 0.2f, 0); break; }
             case Film.SFX_CLUCK: { float ct = 0.02f; while (ct < dur - 0.08f) { tone(o, ct, 0.06f, 1100 + rnd() * 200, 700, 0.2f, 1); ct += 0.12f + Math.abs(rnd()) * 0.25f; } break; }

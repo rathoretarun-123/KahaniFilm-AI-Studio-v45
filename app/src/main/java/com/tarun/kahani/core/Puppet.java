@@ -2597,8 +2597,8 @@ public final class Puppet {
         for (int pass = 0; pass < 2; pass++) {
             if (pass == 1) {
                 // the tail, then the body over the far legs
-                float lift = mv * 0.25f;
-                float tsw = (float) Math.sin(p.time * 3 + ph) * H * 0.03f + lw * H * 0.08f;
+                float lift = mv * 0.25f + 0.35f * p.tailUp;          // v47.7: carried high, and swished
+                float tsw = (float) Math.sin(p.time * 3 + ph) * H * 0.03f + lw * H * 0.08f + p.wag * (float) Math.sin(p.time * 9) * H * 0.045f;
                 if (deer) {
                     g.color(coat); g.oval(-0.53f * H, -0.8f * H + tsw * 0.2f, 0.05f * H, 0.08f * H);
                     g.color(0xFFF5F5F5); g.oval(-0.535f * H, -0.78f * H + tsw * 0.2f, 0.03f * H, 0.06f * H);
@@ -2623,7 +2623,7 @@ public final class Puppet {
                     for (int i = 0; i < 16; i++) g.oval((-0.45f + 0.06f * i) * H, (-0.76f + 0.05f * (i % 3)) * H, 0.012f * H, 0.01f * H);
                 }
                 // the neck, arched, up to the head
-                float gz = Math.max(0, Math.min(1, p.nod * 1.6f)) * (1 - mv);     // grazing: the head down to the grass
+                float gz = Math.max(0, Math.min(1, Math.max(p.nod * 1.6f, p.graze))) * (1 - mv);     // grazing: the head down to the grass
                 float hx = 0.62f * H + gz * 0.14f * H, hy = -1.12f * H + nod + gz * 0.62f * H;
                 g.color(coat);
                 g.begin(); g.moveTo(0.2f * H, -0.8f * H);
@@ -2645,7 +2645,7 @@ public final class Puppet {
                 g.quadTo(0.36f * H, -1.0f * H + nod * 0.5f, 0.2f * H, -0.76f * H); g.close(); g.fillPath();
                 }
                 // the head: from the poll down and forward to the soft muzzle
-                g.save(); g.translate(hx, hy); g.rotate((deer ? 40 : 48) + nod / H * 60 + gz * 35);
+                g.save(); g.translate(hx, hy); g.rotate((deer ? 40 : 48) + nod / H * 60 + gz * 35 + p.headTilt);
                 if (deer) g.scale(0.78f, 0.82f);
                 g.color(coat);
                 g.begin(); g.moveTo(-0.07f * H, -0.05f * H);
@@ -2656,6 +2656,12 @@ public final class Puppet {
                 g.color(shade(coat, 0.8f)); g.oval(0.33f * H, 0.02f * H, 0.045f * H, 0.045f * H);     // muzzle
                 g.color(0xFF1A1A1A); g.oval(0.345f * H, -0.005f * H, 0.012f * H, 0.008f * H);        // nostril
                 g.line(0.3f * H, 0.055f * H, 0.36f * H, 0.045f * H, 0.006f * H);                       // mouth line
+                // v47.7: the lower lip drops with a neigh, the words or the chewing (from closed, never a jump)
+                float jaw = Math.max(0, Math.min(1, Math.max(p.mouth, p.animalJaw)));
+                if (jaw > 0.005f) {
+                    g.color(0xFF2A1210);
+                    g.begin(); g.moveTo(0.27f * H, 0.056f * H); g.lineTo(0.37f * H, 0.045f * H); g.lineTo(0.35f * H, (0.045f + 0.07f * jaw) * H); g.close(); g.fillPath();
+                }
                 float bl = Math.max(0, Math.min(1, p.blink));
                 g.color(0xFF120A06); g.oval(0.05f * H, -0.035f * H, 0.022f * H, 0.022f * H * (1 - bl * 0.85f));
                 if (bl < 0.5f) { g.color(0xCCFFFFFF); g.oval(0.058f * H, -0.043f * H, 0.006f * H, 0.006f * H); }
@@ -2671,7 +2677,7 @@ public final class Puppet {
                 g.color(coat);
                 for (int e = 0; e < 2; e++) {
                     float ex = hx - 0.03f * H + e * 0.035f * H, ey = hy - 0.05f * H;
-                    float tw = (float) Math.sin(p.time * 1.7f + e) * 0.01f * H;
+                    float tw = (float) Math.sin(p.time * 1.7f + e) * 0.01f * H + p.earFlick * 0.03f * H - p.earsUp * 0.008f * H;
                     g.begin(); g.moveTo(ex - 0.025f * H, ey + 0.01f * H); g.quadTo(ex - 0.02f * H, ey - 0.09f * H, ex + 0.015f * H + tw, ey - 0.12f * H);
                     g.quadTo(ex + 0.03f * H, ey - 0.05f * H, ex + 0.02f * H, ey + 0.015f * H); g.close(); g.fillPath();
                     g.color(shade(coat, 0.6f)); g.line(ex, ey - 0.01f * H, ex + 0.008f * H + tw, ey - 0.08f * H, 0.01f * H); g.color(coat);
@@ -2730,27 +2736,35 @@ public final class Puppet {
         if (sp == Look.SP_RABBIT || sp == Look.SP_MOUSE) { bodyRx = H * 0.45f; bodyRy = H * 0.3f; bodyY = -H * 0.45f; }
         float legTop = bodyY + bodyRy * 0.6f;
         float legW = sp == Look.SP_ELEPHANT ? H * 0.16f : (sp == Look.SP_HORSE || sp == Look.SP_DEER ? H * 0.06f : H * 0.09f);
+        // v47.7: sitting or lying down, the legs fold under it and the body comes down onto them (by how far it has sat
+        // or lain: it goes down over the move) — before, a seated cow or dog was drawn standing
+        float fold = Math.max(0, Math.min(1, 0.6f * p.sit + 0.4f * p.lie));
+        float drop = fold > 0 ? (-legW * 0.5f - legTop) * 0.72f * fold : 0, footY = -legW * 0.5f - drop, tuck = fold * bodyRx * 0.25f;
+        if (drop > 0) g.translate(0, drop);
         // far legs
         g.color(dark);
-        g.line(-bodyRx * 0.55f, legTop, -bodyRx * 0.55f - stride * H * 0.12f, -legW * 0.5f, legW);
-        g.line(bodyRx * 0.55f, legTop, bodyRx * 0.55f + stride * H * 0.12f, -legW * 0.5f, legW);
+        g.line(-bodyRx * 0.55f, legTop, -bodyRx * 0.55f - stride * H * 0.12f + tuck, footY, legW);
+        g.line(bodyRx * 0.55f, legTop, bodyRx * 0.55f + stride * H * 0.12f - tuck, footY, legW);
         // tail
         g.color(fur);
         // v36: the wind in this mirrored frame (+ = towards the head); it swings the tail, ruffles the fur and the mane
         float lw = p.wind * (p.facing < 0 ? -1 : 1);
         float tw = (float) Math.sin(p.time * 4) * H * 0.04f + lw * H * 0.06f * (0.8f + 0.4f * (float) Math.sin(p.time * 6.5f));
+        // v47.7: wagged harder, and carried high (the tip up over the back)
+        tw += p.wag * (float) Math.sin(p.time * 9) * H * 0.06f;
+        float tup = p.tailUp * bodyRy * 1.7f;
         switch (sp) {
             case Look.SP_FOX: case Look.SP_WOLF:
                 g.begin(); g.moveTo(-bodyRx * 0.9f, bodyY - bodyRy * 0.1f);
-                g.quadTo(-bodyRx * 1.6f, bodyY - bodyRy * 0.4f + tw, -bodyRx * 1.75f, bodyY + bodyRy * 0.5f);
-                g.quadTo(-bodyRx * 1.3f, bodyY + bodyRy * 0.6f, -bodyRx * 0.85f, bodyY + bodyRy * 0.3f); g.close(); g.fillPath();
+                g.quadTo(-bodyRx * 1.6f, bodyY - bodyRy * 0.4f + tw - tup * 0.6f, -bodyRx * 1.75f, bodyY + bodyRy * 0.5f - tup);
+                g.quadTo(-bodyRx * 1.3f, bodyY + bodyRy * 0.6f - tup * 0.6f, -bodyRx * 0.85f, bodyY + bodyRy * 0.3f); g.close(); g.fillPath();
                 g.color(sp == Look.SP_FOX ? 0xFFFFFFFF : 0xFFBDBDBD);
-                g.oval(-bodyRx * 1.68f, bodyY + bodyRy * 0.45f, H * 0.07f, H * 0.06f);
+                g.oval(-bodyRx * 1.68f, bodyY + bodyRy * 0.45f - tup, H * 0.07f, H * 0.06f);
                 break;
             case Look.SP_RABBIT: g.color(0xFFFFFFFF); g.oval(-bodyRx * 0.95f, bodyY - bodyRy * 0.2f, H * 0.09f, H * 0.09f); break;
             default:
-                g.line(-bodyRx * 0.9f, bodyY - bodyRy * 0.2f, -bodyRx * 1.35f, bodyY + bodyRy * 0.6f + tw, H * 0.035f);
-                if (sp == Look.SP_LION || sp == Look.SP_COW) { g.color(dark); g.oval(-bodyRx * 1.37f, bodyY + bodyRy * 0.7f + tw, H * 0.05f, H * 0.07f); }
+                g.line(-bodyRx * 0.9f, bodyY - bodyRy * 0.2f, -bodyRx * 1.35f, bodyY + bodyRy * 0.6f + tw - tup, H * 0.035f);
+                if (sp == Look.SP_LION || sp == Look.SP_COW) { g.color(dark); g.oval(-bodyRx * 1.37f, bodyY + bodyRy * 0.7f + tw - tup, H * 0.05f, H * 0.07f); }
                 if (sp == Look.SP_HORSE) { g.color(0xFF3E2716); g.begin(); g.moveTo(-bodyRx * 0.9f, bodyY - bodyRy * 0.3f); g.quadTo(-bodyRx * 1.5f, bodyY, -bodyRx * 1.3f, bodyY + bodyRy * 1.2f + tw); g.strokePath(H * 0.06f); }
         }
         // body
@@ -2809,18 +2823,26 @@ public final class Puppet {
         }
         // near legs
         g.color(fur);
-        g.line(-bodyRx * 0.45f, legTop, -bodyRx * 0.45f + stride * H * 0.12f, -legW * 0.5f, legW);
-        g.line(bodyRx * 0.62f, legTop, bodyRx * 0.62f - stride * H * 0.12f, -legW * 0.5f, legW);
+        g.line(-bodyRx * 0.45f, legTop, -bodyRx * 0.45f + stride * H * 0.12f + tuck, footY, legW);
+        g.line(bodyRx * 0.62f, legTop, bodyRx * 0.62f - stride * H * 0.12f - tuck, footY, legW);
         g.color(sp == Look.SP_HORSE || sp == Look.SP_DEER || sp == Look.SP_GOAT || sp == Look.SP_COW ? 0xFF2A1A12 : dark);
-        g.oval(-bodyRx * 0.45f + stride * H * 0.12f + legW * 0.2f, -legW * 0.3f, legW * 0.75f, legW * 0.4f);
-        g.oval(bodyRx * 0.62f - stride * H * 0.12f + legW * 0.2f, -legW * 0.3f, legW * 0.75f, legW * 0.4f);
+        g.oval(-bodyRx * 0.45f + stride * H * 0.12f + tuck + legW * 0.2f, footY + legW * 0.2f, legW * 0.75f, legW * 0.4f);
+        g.oval(bodyRx * 0.62f - stride * H * 0.12f - tuck + legW * 0.2f, footY + legW * 0.2f, legW * 0.75f, legW * 0.4f);
         // head
         float hx = bodyRx * 0.95f, hy = bodyY - bodyRy * 1.05f, hr = H * (sp == Look.SP_ELEPHANT ? 0.25f : sp == Look.SP_MOUSE ? 0.26f : 0.2f);
         if (sp == Look.SP_RABBIT) { hx = bodyRx * 0.8f; hy = bodyY - bodyRy * 1.1f; hr = H * 0.22f; }
         hy += p.bob * 0.3f + (float) Math.sin(p.time * 2) * 1.5f;
+        // v47.7: grazing — the head goes down to the grass in front of the forelegs, the neck stretched down to it
+        if (p.graze > 0.001f) {
+            float gx = hx + bodyRx * 0.18f * p.graze, gy = hy + (-hr * 0.85f - hy) * p.graze;
+            g.color(fur);
+            g.line(bodyRx * 0.7f, bodyY - bodyRy * 0.35f, gx, gy, hr * 0.95f);
+            hx = gx; hy = gy;
+        }
         g.save();
         g.translate(hx, hy);
-        if (p.headTilt != 0) g.rotate(p.headTilt);
+        float headTurn = p.headTilt + p.nod * 12 + p.graze * 28;       // (v47.7: a nod and the grazing tip the head down)
+        if (headTurn != 0) g.rotate(headTurn);
         if (sp == Look.SP_LION) {
             g.color(0xFF8D5524);
             for (int i = 0; i < 12; i++) {
@@ -2831,7 +2853,10 @@ public final class Puppet {
             }
             g.oval(0, 0, hr * 1.35f, hr * 1.35f);
         }
-        // ears behind
+        // ears behind (v47.7: flicked and pricked up — turned about where they join the head)
+        g.save();
+        float earTurn = p.earFlick * 16 - p.earsUp * 8;
+        if (earTurn != 0) { g.translate(-hr * 0.2f, -hr * 0.6f); g.rotate(earTurn); g.translate(hr * 0.2f, hr * 0.6f); }
         g.color(dark);
         switch (sp) {
             case Look.SP_FOX: case Look.SP_WOLF: case Look.SP_CAT: case Look.SP_TIGER:
@@ -2858,6 +2883,7 @@ public final class Puppet {
                 break;
             default:
         }
+        g.restore();
         if (sp == Look.SP_DEER) {
             g.color(0xFF8D6E4A);
             g.line(-hr * 0.1f, -hr * 0.8f, -hr * 0.3f, -hr * 1.8f, hr * 0.1f);
@@ -2877,7 +2903,7 @@ public final class Puppet {
         g.oval(0, 0, hr, hr * 0.95f);
         if (sp == Look.SP_HORSE) { g.color(0xFF3E2716); g.oval(-hr * 0.5f, -hr * 0.6f, hr * 0.3f, hr * 0.6f); }
         // snout & mouth (opens while speaking)
-        float open = Math.max(0, Math.min(1, p.mouth)) + (p.emotion == Pose.LAUGH ? 0.35f : 0);
+        float open = Math.max(0, Math.min(1, Math.max(p.mouth, p.animalJaw))) + (p.emotion == Pose.LAUGH ? 0.35f : 0);
         float snx = hr * 0.75f, sny = hr * 0.25f;
         if (sp == Look.SP_ELEPHANT) {
             g.color(fur);
@@ -2892,17 +2918,21 @@ public final class Puppet {
             float snLen = (sp == Look.SP_FOX || sp == Look.SP_WOLF || sp == Look.SP_DOG || sp == Look.SP_HORSE || sp == Look.SP_DEER) ? hr * 0.75f : hr * 0.45f;
             g.color(sp == Look.SP_FOX ? 0xFFF5EBDD : lighten(fur, 0.2f));
             g.oval(snx, sny, snLen, hr * 0.38f);
-            if (open > 0.08f) {
+            // v47.7: the mouth opens from the closed line (its lower edge drops with the jaw) — it never pops from a line
+            // to an open mouth between two frames, which a chewing jaw near the old threshold did every few frames
+            g.color(INK);
+            g.line(snx + snLen * 0.1f, sny + hr * 0.2f, snx + snLen * 0.8f, sny + hr * 0.12f, 2);
+            if (open > 0.005f) {
                 g.color(0xFF5A1A1A);
-                g.begin(); g.moveTo(snx - snLen * 0.3f, sny + hr * 0.12f);
-                g.lineTo(snx + snLen * 0.95f, sny + hr * 0.05f);
-                g.lineTo(snx + snLen * 0.8f, sny + hr * (0.15f + 0.4f * open));
+                g.begin(); g.moveTo(snx + snLen * 0.1f, sny + hr * 0.2f);
+                g.lineTo(snx + snLen * 0.95f, sny + hr * 0.11f);
+                g.lineTo(snx + snLen * 0.8f, sny + hr * (0.13f + 0.42f * open));
                 g.close(); g.fillPath();
-                g.color(0xFFFFFFFF);
-                g.line(snx + snLen * 0.2f, sny + hr * 0.12f, snx + snLen * 0.7f, sny + hr * 0.08f, hr * 0.05f);
-            } else {
-                g.color(INK);
-                g.line(snx + snLen * 0.1f, sny + hr * 0.2f, snx + snLen * 0.8f, sny + hr * 0.12f, 2);
+                float teeth = Math.max(0, Math.min(1, (open - 0.08f) / 0.12f));
+                if (teeth > 0) {
+                    g.color(alpha(0xFFFFFFFF, teeth));
+                    g.line(snx + snLen * 0.2f, sny + hr * 0.19f, snx + snLen * 0.7f, sny + hr * 0.14f, hr * 0.05f);
+                }
             }
             g.color(0xFF2A1A12);
             g.oval(snx + snLen * 0.92f, sny - hr * 0.08f, hr * 0.13f, hr * 0.1f);

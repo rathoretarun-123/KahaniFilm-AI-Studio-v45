@@ -2427,18 +2427,20 @@ public final class Director {
             for (Film.Actor a : sg.actors) {
                 // timing by weight (the 12 principles): a light, quick character may move faster than a heavy, tall one
                 final float maxSpeed = 260f * weightSpeed(a);          // stage units per second (about a third of a 16:9 frame)
+                // v47.7: an animal that runs (a dog dashing in, a horse at a gallop) is held to its running pace, and stays a run
+                final boolean beast = a.look != null && (a.look.kind == Look.ANIMAL || a.look.kind == Look.BIRD);
                 for (int i = 1; i < a.keys.size(); i++) {
                     Film.Key k = a.keys.get(i);
                     if (k.moveDur <= 0) continue;
                     // (v43: not a vehicle's move — a bike is not held to walking pace, and its ride ends when it stops:
                     // stretched, the rider slid on after getting off)
                     if (rideKeys.contains(k)) continue;
-                    float dist = Math.abs(k.x - prevX(a, k));
-                    if (dist / k.moveDur <= maxSpeed) continue;
-                    float want = dist / maxSpeed, room = sg.t1 - k.t;
+                    float dist = Math.abs(k.x - prevX(a, k)), cap = maxSpeed * (beast && k.run ? 2.2f : 1f);
+                    if (dist / k.moveDur <= cap) continue;
+                    float want = dist / cap, room = sg.t1 - k.t;
                     if (i + 1 < a.keys.size()) room = Math.min(room, a.keys.get(i + 1).t - k.t);
                     float d = Math.min(want, room - 0.05f);
-                    if (d > k.moveDur + 0.05f) { k.moveDur = d; k.run = false; calmed++; }
+                    if (d > k.moveDur + 0.05f) { k.moveDur = d; if (!beast) k.run = false; calmed++; }
                 }
             }
         }
@@ -4093,6 +4095,8 @@ public final class Director {
             for (float dt = 0.2f; dt <= Math.max(1.0f, d) + 0.6f && !moved; dt += 0.2f) if (Math.abs(xAt(who, t + dt) - x0) > 40 || !who.stateAt(t + dt).visible) moved = true;
             if (!moved) { walkedTo++; d = Math.max(d, everyday(s, t)); }
         }
+        // v47.7: an animal of the cast does what the words say it does — chews the cud, grazes, barks, wags, pricks its ears
+        if (seg != null) d = Math.max(d, animalDoings(s, t, establishing));
         // v45: nobody glides seated — a move this sentence made from a seat or a bed is made on foot
         if (seg != null) { List<Film.Seg> one = new ArrayList<Film.Seg>(); one.add(seg); standToWalk(one, t, true); }
         return d;
@@ -8934,6 +8938,148 @@ public final class Director {
         {Look.SP_PARROT, new String[]{"तोता", "तोते", "parrot"}},
         {Look.SP_PEACOCK, new String[]{"मोर", "peacock"}},
     };
+
+    // ---------------------------------------------------------------- v47.7: the animals of the cast
+    /** v47.7: what an animal of the cast does by the words for it: {AN_*, words…, seconds}. */
+    static final Object[][] ANIMAL_DOINGS = {
+        {Film.AN_CHEW, new String[]{"जुगाली", "chews the cud", "chewing the cud", "chews its cud", "chewing its cud", "chews cud", "ruminat"}, 6f},
+        {Film.AN_GRAZE, new String[]{"घास खा", "घास चर", "चारा खा", "चरती", "चरता", "चरते", "चर रही", "चर रहा", "चर रहे", "चरने", "grazes", "grazing",
+                "eats grass", "eating grass", "eats the grass", "eating the grass", "munches grass", "nibbles the grass", "nibbles grass"}, 5f},
+        {Film.AN_VOICE, new String[]{"भौंक", "रंभा", "हिनहिना", "म्याऊ", "मिमिया", "कुकड़ू", "गुर्रा", "barks", "barking", "woof", "moos", "mooing",
+                "neighs", "neighing", "whinnies", "meows", "mewing", "bleats", "clucks", "growls"}, 1.4f},
+        {Film.AN_TAIL_UP, new String[]{"पूंछ उठा", "पूँछ उठा", "पूंछ ऊपर", "पूँछ ऊपर", "पूंछ खड़ी", "पूँछ खड़ी", "दुम उठा", "raises its tail", "lifts its tail",
+                "tail up", "tail held high", "tail raised"}, 3f},
+        {Film.AN_WAG, new String[]{"पूंछ हिला", "पूँछ हिला", "दुम हिला", "पूंछ उठाकर हिला", "पूँछ उठाकर हिला", "पूंछ उठा कर हिला", "पूँछ उठा कर हिला", "wags", "wagging"}, 3f},
+        {Film.AN_EARS, new String[]{"कान हिला", "कान फड़फड़ा", "कान फड़का", "कान फटफटा", "twitches its ears", "flicks its ears", "ears twitch", "ears flick", "ear twitches"}, 2.2f},
+        {Film.AN_EARS_UP, new String[]{"कान खड़े", "कान खड़ा", "कान खड़ी", "pricks up its ears", "pricks its ears", "ears prick", "ears perk", "perks up its ears"}, 2.5f},
+    };
+    static final String[] ANIMAL_NOD = {"हाँ में सिर", "हां में सिर", "सिर झुका", "सर झुका", "nods"};
+    static final String[] ANIMAL_SHAKE = {"सिर हिला", "सर हिला", "सिर झटक", "सर झटक", "shakes its head", "shakes his head", "shakes her head", "tosses its head", "tosses his head", "tosses her head"};
+    static final String[] ANIMAL_RUN = {"दौड़", "दौड", "सरपट", "भागता", "भागती", "भाग रह", "runs", "running", "gallops", "galloping", "races", "dashes"};
+    static final String[] ANIMAL_WALK = {"चलता", "चलती", "चलते", "चल रहा", "चल रही", "टहल", "walks", "walking", "strolls", "trots"};
+    static final String[] ANIMAL_SIT = {"बैठ", "sits", "sitting", "sat down"};
+    static final String[] ANIMAL_LIE = {"लेट", "lies down", "lying down", "lay down"};
+    static final String[] ANIMAL_STAND = {"खड़ा हो", "खड़ी हो", "खड़े हो", "उठ खड़", "stands up", "gets up", "gets to its feet"};
+
+    private int animalDoings;
+
+    /** v47.7: an animal's own call for its kind (SFX_*), or -1. */
+    static int voiceOf(int species) {
+        return species == Look.SP_DOG ? Film.SFX_BARK : species == Look.SP_COW ? Film.SFX_MOO : species == Look.SP_CAT ? Film.SFX_MEOW : species == Look.SP_HEN ? Film.SFX_CLUCK
+                : species == Look.SP_GOAT ? Film.SFX_BLEAT : species == Look.SP_HORSE ? Film.SFX_NEIGH : -1;
+    }
+
+    /**
+     * v47.7: an animal of the cast acts what the script says it does (the user: "जुगाली करना, घास खाना, भौंकना, दौड़ना,
+     * चलना, घोड़े का दौड़ना, पूंछ उठाना, कान हिलाना, सर हिलाना, बैठना, खड़े होना"): its jaw chews the cud, its head goes
+     * down to the grass, it barks (its own voice, the jaw snapping with each bark), it holds its tail up or wags it, its
+     * ears flick or prick up, it shakes or nods its head, it sits, lies down or gets up, it runs (a horse gallops) or
+     * walks. Each clause is read for the one it is about; what the clause says it does not do is not done. Returns the
+     * time the sentence needs for it.
+     */
+    private float animalDoings(String s, float t, boolean establishing) {
+        boolean any = false;
+        for (Film.Actor a : seg.actors) if (a.look != null && (a.look.kind == Look.ANIMAL || a.look.kind == Look.BIRD)) any = true;
+        if (!any) return 0;
+        List<String> cl = clauses(s);
+        float clock = t, end = t;
+        Film.Actor prev = null;
+        for (String c : cl) {
+            List<Story.CharacterDef> ms = mentionsWithGroups(c, null);
+            Film.Actor a = !ms.isEmpty() ? actor(ms.get(subjectIndex(c, ms))) : prev != null ? prev
+                    : lastSubject != null && Txt.has(" " + c + " ", " वह ", " वो ", " it ", " he ", " she ", "It ", "He ", "She ") ? actor(lastSubject) : null;
+            if (a == null) continue;
+            prev = a;
+            if (a.look == null || (a.look.kind != Look.ANIMAL && a.look.kind != Look.BIRD)) continue;
+            // (the names out first: a dog called "भूरा" or a cow called "गौरी" is not a word for what it does)
+            String w = " " + c + " ";
+            for (Story.CharacterDef cd : story.characters) {
+                if (cd.fullName != null && cd.fullName.length() > 0) w = w.replace(cd.fullName, " ");
+                if (cd.displayName != null && cd.displayName.length() > 0) w = w.replace(cd.displayName, " ");
+            }
+            float ta = clock + 0.15f;
+            // it does it once it is there: after the move this sentence gave it (it runs in, then barks)
+            // (a move under way as the sentence begins counts: an entrance is laid a moment before its sentence)
+            for (Film.Key k : a.keys) if (k.moveDur > 0 && k.t + k.moveDur > t - 0.05f && k.t <= clock + 3f) ta = Math.max(ta, k.t + k.moveDur + 0.1f);
+            if (!a.stateAt(ta).visible && !establishing) continue;
+            float d = 0;
+            // the body: sits, lies down, gets up (from the start of the part when the description sets how things are)
+            int body = -1;
+            if (Txt.hasStart(w, ANIMAL_LIE) && !negatedNear(w, ANIMAL_LIE)) body = Pose.LIE;
+            else if (Txt.hasStart(w, ANIMAL_STAND) && !negatedNear(w, ANIMAL_STAND)) body = Pose.STAND;
+            else if (Txt.hasStart(w, ANIMAL_SIT) && !negatedNear(w, ANIMAL_SIT)) body = Pose.SIT;
+            if (body >= 0) {
+                float tb = establishing ? seg.t0 : ta;
+                if (a.stateAt(tb + 0.6f).body != body) {
+                    Film.Key k = keyAt(a, tb); k.body = body; k.seat = -1;
+                    if (!establishing) d = Math.max(d, 1.0f);
+                    animalDoings++;
+                }
+                if (!establishing) ta += 0.6f;
+            }
+            // runs (a horse gallops) or walks: the move this sentence made is a run; none made, a run across the place
+            boolean run = Txt.hasStart(w, ANIMAL_RUN) && !negatedNear(w, ANIMAL_RUN);
+            boolean walk = !run && Txt.hasStart(w, ANIMAL_WALK) && !negatedNear(w, ANIMAL_WALK);
+            if ((run || walk) && a.stateAt(ta).anchor == Film.A_GROUND && a.stateAt(ta).body != Pose.LIE) {
+                boolean moved = false;
+                for (Film.Key k : a.keys) if (k.moveDur > 0 && k.t + k.moveDur > t - 0.05f && k.t <= clock + 3f) { moved = true; if (run) k.run = true; }
+                if (!moved && a.stateAt(ta).visible) {
+                    float x = xAt(a, ta), far = run ? 420 : 280;
+                    float dest = x < 640 ? Math.min(1100, x + far) : Math.max(180, x - far);
+                    List<Film.Actor> me = new ArrayList<Film.Actor>();
+                    me.add(a);
+                    dest = freeNear(dest, ta + 1.4f, me, 110);
+                    if (Math.abs(dest - x) >= 60) {
+                        if (a.stateAt(ta).body != Pose.STAND) { Film.Key up = keyAt(a, ta); up.body = Pose.STAND; up.seat = -1; ta += 0.5f; }
+                        float md = Math.max(0.6f, Math.abs(dest - x) / (run ? 520f : 230f));
+                        Film.Key k = keyAt(a, ta); k.x = dest; k.moveDur = md; k.facing = dest > x ? 1 : -1; k.run = run;
+                        Film.Key k2 = keyAt(a, ta + md + 0.05f); k2.run = false;
+                        d = Math.max(d, md + 0.2f);
+                        ta += md + 0.1f;
+                        animalDoings++;
+                    }
+                }
+            }
+            // the head: a nod, a shake (flies off, "no")
+            if (Txt.hasStart(w, ANIMAL_NOD) && !negatedNear(w, ANIMAL_NOD)) { a.acts.add(new Film.Act(ta, ta + 1.2f, Film.G_NOD)); d = Math.max(d, 1.2f); animalDoings++; }
+            else if (Txt.hasStart(w, ANIMAL_SHAKE) && !negatedNear(w, ANIMAL_SHAKE) && !hasAct(a, Film.G_SHAKE_HEAD, ta)) {
+                a.acts.add(new Film.Act(ta, ta + 1.4f, Film.G_SHAKE_HEAD)); d = Math.max(d, 1.4f); animalDoings++;
+            }
+            // what it does with its jaw, its voice, its tail, its ears
+            for (Object[] r : ANIMAL_DOINGS) {
+                String[] words = (String[]) r[1];
+                if (!Txt.hasStart(w, words) || negatedNear(w, words)) continue;
+                int item = (Integer) r[0];
+                float dur = (Float) r[2], t0 = establishing && (item == Film.AN_CHEW || item == Film.AN_GRAZE) ? seg.t0 + 0.3f : ta;
+                if (establishing && (item == Film.AN_CHEW || item == Film.AN_GRAZE)) dur = 8f;
+                boolean twice = false;
+                for (Film.Act x : a.acts) if (x.type == Film.G_ANIMAL && x.item == item && x.t1 > t0 && x.t0 < t0 + dur) twice = true;
+                if (twice) continue;
+                if (item == Film.AN_VOICE) {
+                    // its own call, heard from where it stands; the jaw keeps time with it (Renderer.animalActs)
+                    t0 += 0.15f;
+                    int voice = voiceOf(a.look.species);
+                    if (voice >= 0) film.sfx.add(sfxAt(voice, t0, dur, 0.38f, a));
+                }
+                Film.Act act = new Film.Act(t0, t0 + dur, Film.G_ANIMAL);
+                act.item = item;
+                a.acts.add(act);
+                // (chewing and grazing go on behind what follows: the story does not wait for them)
+                d = Math.max(d, item == Film.AN_CHEW || item == Film.AN_GRAZE ? 1.6f : item == Film.AN_VOICE ? dur + 0.3f : 1.4f);
+                animalDoings++;
+            }
+            if (d > 0) {
+                film.notes.add("  ↳ " + a.c.shown() + " (an animal of the cast) acts \"" + clip(c.trim(), 50) + "\"" + String.format(java.util.Locale.US, " at %.1f s", ta));
+                clock = ta + d; end = Math.max(end, clock);
+            }
+        }
+        return end - t;
+    }
+
+    private static boolean hasAct(Film.Actor a, int type, float t) {
+        for (Film.Act x : a.acts) if (x.type == type && x.t1 > t - 0.2f && x.t0 < t + 0.6f) return true;
+        return false;
+    }
 
     /**
      * v44: an animal the direction names that is not one of the cast: it is there, at the place — by the one who feeds,

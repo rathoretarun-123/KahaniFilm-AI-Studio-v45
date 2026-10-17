@@ -59,6 +59,8 @@ public final class ProductionDocument {
         public String assetState = MISSING;
         /** A character's grammatical gender for reading the verbs (+1 feminine, -1 masculine, 0 unknown). */
         public int gender;
+        /** v47.7: a character that is an animal (a dog, a cow, a horse, a bird): what it does is its own action. */
+        public boolean animal;
         public String fact(String field) { for (Fact f : facts) if (f.field.equals(field)) return f.value; return null; }
         public Fact factOf(String field) { for (Fact f : facts) if (f.field.equals(field)) return f; return null; }
     }
@@ -199,6 +201,7 @@ public final class ProductionDocument {
         for (Story.CharacterDef c : st.cast()) {
             Entity e = d.entity(d.characters, "CHAR", c.displayName, c.description);
             e.gender = c.look != null ? (c.look.female ? 1 : -1) : c.genderHint;
+            e.animal = c.look != null && (c.look.kind == Look.ANIMAL || c.look.kind == Look.BIRD);
             d.characterFacts(e, c);
         }
         for (Story.PlaceDef th : st.things) d.entity(d.props, "PROP", th.name, th.description);
@@ -498,6 +501,12 @@ public final class ProductionDocument {
         }
         // "सिर झटके से उठता है", "चेहरा आसमान की तरफ उठाते हैं": the head comes up (no thing is picked up)
         if (Txt.has(c, "सिर", "चेहरा", "नज़र", "नजर", "head", "face") && Txt.has(c, "उठ", "raises", "lifts", "looks up")) verb = "RAISE_HEAD";
+        // v47.7: an animal of the cast chewing the cud, grazing, barking, its tail or its ears (Director.animalDoings)
+        if (animalDoing(c)) {
+            List<Story.CharacterDef> named = ScriptParser.mentions(st, clause);
+            Entity who = !named.isEmpty() ? find(characters, named.get(0).displayName) : lastActor != null ? byId(lastActor) : null;
+            if (who != null && who.animal) verb = "ANIMAL_DOES";
+        }
         if (verb == null) return null;
         // "भट्टी के पास बैठा": beside a thing is a sit; beside someone is a sit beside them
         if (verb.equals("SIT_BESIDE") && ScriptParser.mentions(st, clause).size() < 2 && !Txt.has(c, "उसके पास", "उनके पास", "बगल में", "beside him", "beside her")) verb = "SIT";
@@ -642,6 +651,8 @@ public final class ProductionDocument {
                 boolean neg = Txt.has(" " + np + " ", " नहीं ", " ना ", " बिना ", " no ", " not ", " without ");
                 for (EnvRule r : ENV_RULES) {
                     if (!Txt.has(np, r.words) || (r.not.length > 0 && Txt.has(np, r.not)) || neg) continue;
+                    // (v47.7: a dog of the cast barking is its own action, staged with its voice — not a dog far off)
+                    if (r.kind.equals("SOUND_DOG") && (animalNamedIn(np) || (animalNamedIn(sentence) && !Txt.has(np, "दूर", "कहीं", "far off", "in the distance")))) continue;
                     String method = r.method;
                     // (the characters' own shadows long on the wet ground: the renderer gives them only a contact shadow)
                     if (r.kind.equals("SHADOW") && (Txt.has(np, "तीनों", "दोनों", "उनकी", "उसकी", "their", "his", "her") || characterNamedIn(p) != null)) method = UNSUPPORTED;
@@ -744,6 +755,15 @@ public final class ProductionDocument {
 
     /** The character a description names, or null. */
     String characterNamedIn(String text) { for (Entity c : characters) if (Txt.has(text, c.name)) return c.id; return null; }
+
+    /** v47.7: whether the text names an animal of the cast. */
+    boolean animalNamedIn(String text) { for (Entity c : characters) if (c.animal && Txt.has(text, c.name)) return true; return false; }
+
+    /** v47.7: whether a clause says an animal's own doing (the director's words for it: Director.ANIMAL_DOINGS). */
+    static boolean animalDoing(String c) {
+        for (Object[] r : Director.ANIMAL_DOINGS) for (String w : (String[]) r[1]) if (c.contains(Txt.norm(w))) return true;     // (both read the same way)
+        return false;
+    }
 
     int eff(Scene s, int n, String kind, String cause, String affected, String behaviour, String evidence, String span, String method) {
         // (said twice in a scene — "छाया" in the opening and again by the bench — it is one requirement)
@@ -922,6 +942,11 @@ public final class ProductionDocument {
                 if (!MATCHED.equals(p.assetState)) { a.reason = "no picture of " + p.name + " to follow through the plan"; return "NOT_CHECKABLE"; }
                 for (Film.Fx f : seg.fx) if (f.type == Film.FX_HELD && f.a == fa && f.what != null && find(props, f.what) == p) return "IN_PLAN";
                 return Rigidity.groundCover(p.name) ? "NOT_CHECKABLE" : "NOT_IN_PLAN";
+            }
+            case "ANIMAL_DOES": {
+                // (chewing, grazing, its voice, its tail and ears: the director's own act for the animal, in this scene)
+                for (Film.Act x : fa.acts) if (x.type == Film.G_ANIMAL && x.t0 >= seg.t0 - 0.05f && x.t0 <= seg.t1) return "IN_PLAN";
+                return "NOT_IN_PLAN";
             }
             case "HEAD_ON_SHOULDER": case "HAND_ON_HAND":
                 a.reason = "the renderer has no gesture for one body resting on another; the two sit side by side instead";

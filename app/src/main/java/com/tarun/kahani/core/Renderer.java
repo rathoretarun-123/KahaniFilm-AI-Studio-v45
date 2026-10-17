@@ -1296,6 +1296,17 @@ public final class Renderer {
         return 0;
     }
 
+    /**
+     * v47.7: an animal's jaw through its words — the voice's opening averaged over the quarter second around this moment
+     * (a triangle of nine samples): a person's lips follow every syllable, the jaw of a dog or a cow follows the phrase,
+     * and it never changes by more than a little from one frame to the next.
+     */
+    public float jawAt(Film.Actor a, float t) {
+        float sum = 0, wsum = 0;
+        for (int i = -4; i <= 4; i++) { float w = 5 - Math.abs(i); sum += w * mouthAt(a, t + i * 0.03f); wsum += w; }
+        return sum / wsum;
+    }
+
     /** How wide (ee) or round (oo) the speaker's mouth is now (0.5 when unknown). */
     float mouthShapeAt(Film.Actor a, float t) {
         for (Film.Speak sp : a.speaks) {
@@ -1562,7 +1573,8 @@ public final class Renderer {
             p.mountMouth = mouthAt(a, t);             // v34: the rider's animal speaks (its jaw), the rider listens
             spk = null;
         } else if (spk != null) {
-            p.mouth = mouthAt(a, t);
+            // (v47.7: an animal's jaw is a heavy thing — it follows the voice a little behind, never flickering frame to frame)
+            p.mouth = a.look.isHumanoid() ? mouthAt(a, t) : jawAt(a, t);
             p.mouthWide = mouthShapeAt(a, t);
             if (spk.emotion != Pose.NEUTRAL) p.emotion = spk.emotion;
             if (p.emotion == Pose.SAD) p.tears = true;
@@ -1649,6 +1661,8 @@ public final class Renderer {
         }
         madeUp(a, p, t);
         applyActs(a, p, tp);
+        // v47.7: an animal's own actions (chewing, grazing, its voice, its tail and ears)
+        if (!a.look.isHumanoid()) animalActs(a, p, tp);
         // v38: the cheeks flush with the feeling, more strongly at the peak of the scene (FilmCraft)
         p.flush = FilmCraft.flush(p.emotion, FilmCraft.beatIntensity(film, t));
         // lip-sync protocol: a speaker seen close keeps the head still — a gesture may still move the arms, but
@@ -2932,7 +2946,7 @@ public final class Renderer {
      * floor, a sofa, a bed), where the body has further to go. v35: lying counts as seated (one sits down before
      * lying back, and sits up before standing).
      */
-    static float sitAmount(Film.Actor a, float t) {
+    public static float sitAmount(Film.Actor a, float t) {
         Film.Key cur = null, prev = null;
         float runStart = 0;
         boolean sitting = false;
@@ -2978,7 +2992,7 @@ public final class Renderer {
     }
 
     /** v35: 0 upright .. 1 lying: lying back and sitting up each take about 0.9 s, eased (never a fall). */
-    static float lieAmount(Film.Actor a, float t) {
+    public static float lieAmount(Film.Actor a, float t) {
         float runStart = 0;
         boolean lying = false, any = false;
         for (Film.Key k : a.keys) {
@@ -3715,39 +3729,129 @@ public final class Renderer {
      * An animal's tail, jaw, ears and legs from its feeling and voice: a happy dog wags fast, a sad one lets
      * its tail hang, an angry or frightened one lays its ears back; the jaw opens with the words.
      */
-    static void animalState(Rig.State st, Pose p) {
+    public static void animalState(Rig.State st, Pose p) { animalState(st, p, null); }
+
+    /**
+     * v47.7: the same, with the feelings of the last moments (newest first, Renderer.emotionAt): the tail and the ears go
+     * from one feeling to the next over that time, never in one frame (a dog turning sad had dropped its tail at once);
+     * and the animal's own actions on top (animalActs) — the tail held up and wagged, the head down to the grass, the jaw
+     * chewing or snapping with a bark, the ears flicked or pricked up. Nothing in it steps from one frame to the next.
+     */
+    public static void animalState(Rig.State st, Pose p, int[] recent) {
         float t = p.time, seed = p.seed;
-        float amp = 7, freq = 2.2f, droop = 0, ears = 0;
-        switch (p.emotion) {
-            case Pose.HAPPY: case Pose.LAUGH: amp = 24; freq = 11; break;
-            case Pose.PROUD: amp = 10; freq = 3; droop = -12; break;
-            case Pose.CURIOUS: amp = 12; freq = 4; droop = -8; break;
-            case Pose.SURPRISED: amp = 4; freq = 6; droop = -14; break;
-            case Pose.SAD: amp = 2; freq = 1.2f; droop = 26; ears = 0.5f; break;
-            case Pose.SCARED: amp = 2; freq = 16; droop = 36; ears = 1; break;
-            case Pose.ANGRY: case Pose.EVIL: amp = 4; freq = 14; droop = -16; ears = 1; break;
-            case Pose.PAIN: amp = 2; freq = 1; droop = 20; ears = 0.7f; break;
-            case Pose.DETERMINED: amp = 4; freq = 3; droop = -6; ears = 0.3f; break;
-            case Pose.SUSPICIOUS: amp = 3; freq = 5; droop = -4; ears = 0.6f; break;
-            case Pose.RELIEVED: amp = 14; freq = 6; droop = 4; break;
-            default:
+        int n = recent == null || recent.length == 0 ? 1 : recent.length;
+        float tail = 0, droops = 0, ears = 0, laugh = 0, curious = 0, happy = 0;
+        for (int i = 0; i < n; i++) {
+            int e = recent == null || recent.length == 0 ? p.emotion : recent[i];
+            float amp = 7, freq = 2.2f, droop = 0, ea = 0;
+            switch (e) {
+                case Pose.HAPPY: case Pose.LAUGH: amp = 24; freq = 11; break;
+                case Pose.PROUD: amp = 10; freq = 3; droop = -12; break;
+                case Pose.CURIOUS: amp = 12; freq = 4; droop = -8; break;
+                case Pose.SURPRISED: amp = 4; freq = 6; droop = -14; break;
+                case Pose.SAD: amp = 2; freq = 1.2f; droop = 26; ea = 0.5f; break;
+                case Pose.SCARED: amp = 2; freq = 16; droop = 36; ea = 1; break;
+                case Pose.ANGRY: case Pose.EVIL: amp = 4; freq = 14; droop = -16; ea = 1; break;
+                case Pose.PAIN: amp = 2; freq = 1; droop = 20; ea = 0.7f; break;
+                case Pose.DETERMINED: amp = 4; freq = 3; droop = -6; ea = 0.3f; break;
+                case Pose.SUSPICIOUS: amp = 3; freq = 5; droop = -4; ea = 0.6f; break;
+                case Pose.RELIEVED: amp = 14; freq = 6; droop = 4; break;
+                default:
+            }
+            amp = Math.max(amp, 7 + 2 * Math.min(1, p.walkAmt * 4));
+            tail += droop + amp * (float) Math.sin(t * freq + seed);     // + hangs down, - held up
+            droops += droop;
+            ears += ea;
+            if (e == Pose.LAUGH) laugh += 1;
+            if (e == Pose.CURIOUS || e == Pose.SURPRISED) curious += 1;
+            if (e == Pose.HAPPY) happy += 1;
         }
-        if (p.walkAmt > 0) amp = Math.max(amp, 9);
-        st.tail = droop + amp * (float) Math.sin(t * freq + seed);     // + hangs down, - held up
-        st.jaw = Math.min(1, p.mouth * 1.3f + (p.emotion == Pose.ANGRY && p.mouth > 0.05f ? 0.25f : 0));
-        if (p.emotion == Pose.LAUGH) st.jaw = Math.max(st.jaw, 0.35f + 0.2f * (float) Math.sin(t * 9));
-        // an ear flick now and then, more when listening
+        laugh /= n; curious /= n; happy /= n;
+        st.tail = tail / n;
+        // v47.7: wagged (the wag takes over from the feeling's own swing — two swings at once beat irregularly), held up
+        float wagged = droops / n + 18 * (float) Math.sin(t * 8 + seed * 1.7f);
+        st.tail += (wagged - st.tail) * p.wag;
+        st.tail += -34 * p.tailUp;
+        st.jaw = Math.min(1, p.mouth * 1.3f + (p.emotion == Pose.ANGRY ? 0.25f * Rig.smooth(0.02f, 0.1f, p.mouth) : 0));
+        st.jaw = Math.max(st.jaw, laugh * (0.35f + 0.2f * (float) Math.sin(t * 9)));
+        st.jaw = Math.max(st.jaw, p.animalJaw);
+        // an ear flick now and then (eased in and out: before, it flicked in a single frame), more when listening
         float flick = (float) Math.sin(t * 0.83f + seed * 3.1f);
-        st.ear = flick > 0.9f ? (float) Math.sin(t * 34) : 0;
-        if (p.emotion == Pose.CURIOUS || p.emotion == Pose.SURPRISED) st.ear = -0.8f + 0.2f * (float) Math.sin(t * 9);
-        st.earBack = ears;
+        st.ear = Rig.smooth(0.86f, 0.95f, flick) * 0.8f * (float) Math.sin(t * 13);
+        st.ear += curious * (-0.8f + 0.2f * (float) Math.sin(t * 9) - st.ear);
+        // v47.7: pricked up, flicked
+        st.ear += p.earsUp * (-0.85f - st.ear);
+        st.ear = Math.max(-1, Math.min(1, st.ear + p.earFlick));
+        st.earBack = ears / n * (1 - p.earsUp);
         st.walkPhase = p.walk;
         st.walkAmt = p.walkAmt;
-        // an animal lies or sits by folding its legs under it
-        st.sit = p.body == Pose.LIE ? 1 : p.body == Pose.SIT || p.body == Pose.KNEEL ? 0.6f : Math.min(1, p.sit);
-        if (p.body == Pose.LIE) { st.walkAmt = 0; st.nod += 0.4f; }
+        // an animal lies or sits by folding its legs under it (v47.7: by how far it has sat or lain down — it folds
+        // over the move, as a person sits; before, its legs folded at once)
+        st.sit = Math.min(1, 0.6f * p.sit + 0.4f * p.lie);
+        if (p.lie > 0) { st.walkAmt *= 1 - p.lie; st.nod += 0.4f * p.lie; }
+        // v47.7: grazing — the head down to the ground in front of it
+        st.nod += 3.6f * p.graze;
         // breathing shows more on a resting animal; panting when happy
-        if (p.emotion == Pose.HAPPY && p.mouth < 0.05f) st.breathe = (float) Math.sin(t * 9 + seed);
+        if (p.mouth < 0.05f) st.breathe = happy * (float) Math.sin(t * 9 + seed);
+    }
+
+    /**
+     * v47.7: an animal of the cast's own actions at t (G_ANIMAL acts, Director.animalDoings), into the pose: each eases
+     * in over a third of a second and out over 0.4 s, and its rhythm (the chewing, a wag, a flick of the ears) runs on
+     * the clock alone — so nothing jumps from one frame to the next. A dog's jaw snaps open with each of its barks, at
+     * the very times the barks are heard (Synth.barkOnsets); a moo, a neigh, a meow or a bleat opens it through the call.
+     */
+    public static void animalActs(Film.Actor a, Pose p, float t) {
+        for (Film.Act act : a.acts) {
+            if (act.type != Film.G_ANIMAL || t < act.t0 || t >= act.t1) continue;
+            float u = t - act.t0, dur = act.t1 - act.t0;
+            float env = Rig.smooth(0, 0.35f, u) * Rig.smooth(0, 0.4f, act.t1 - t);
+            switch (act.item) {
+                case Film.AN_CHEW: p.animalJaw = Math.max(p.animalJaw, env * chewJaw(t)); break;
+                case Film.AN_GRAZE: {
+                    // the head goes down to the grass over 0.9 s, bites and chews there, and comes up at the end (a heavy
+                    // head: under 3 degrees a frame at its quickest)
+                    float down = Rig.smooth(0, 0.9f, u) * Rig.smooth(0, 0.9f, act.t1 - t);
+                    p.graze = Math.max(p.graze, down);
+                    p.animalJaw = Math.max(p.animalJaw, down * chewJaw(t));
+                    break;
+                }
+                case Film.AN_VOICE: p.animalJaw = Math.max(p.animalJaw, voiceJaw(a.look != null ? a.look.species : -1, u, dur)); break;
+                case Film.AN_TAIL_UP: p.tailUp = Math.max(p.tailUp, Rig.smooth(0, 0.5f, u) * Rig.smooth(0, 0.5f, act.t1 - t)); break;     // (raised over half a second)
+                case Film.AN_WAG: p.wag = Math.max(p.wag, env); break;
+                case Film.AN_EARS: p.earFlick = Math.max(-1, Math.min(1, p.earFlick + env * 0.8f * (float) Math.sin(u * 2 * Math.PI * 2.2f))); break;
+                case Film.AN_EARS_UP: p.earsUp = Math.max(p.earsUp, env); break;
+                default:
+            }
+        }
+    }
+
+    /** v47.7: chewing — the jaw grinds a little, about one and a half times a second, never wide open. */
+    static float chewJaw(float t) { return 0.06f + 0.12f * (0.5f - 0.5f * (float) Math.cos(t * 2 * Math.PI * 1.45f)); }
+
+    /** v47.7: the jaw through an animal's call, u seconds into it (dur long). */
+    static float voiceJaw(int species, float u, float dur) {
+        if (species == Look.SP_DOG) {
+            // each bark: open a hair before it is heard, shut just after (a quick snap, eased at both ends) — wider than
+            // speech opens it (above 1: about 20 degrees on a picture's jaw), or a bark reads as a mumble
+            float j = 0;
+            for (float b : Synth.barkOnsets(dur)) {
+                float x = (u - b + 0.06f) / (Synth.BARK_LEN + 0.18f);
+                if (x > 0 && x < 1) { float sn = (float) Math.sin(Math.PI * x); j = Math.max(j, 1.3f * sn * sn); }
+            }
+            return j;
+        }
+        if (species == Look.SP_HEN) {
+            // clucks: small quick opens through the call
+            float x = Math.min(1, u / Math.max(0.3f, dur));
+            return 0.3f * (0.5f - 0.5f * (float) Math.cos(u * 2 * Math.PI * 4)) * (float) Math.sin(Math.PI * x);
+        }
+        // a moo, a neigh, a meow, a bleat: the mouth opens through the call and closes after it
+        float call = species == Look.SP_COW ? Math.min(dur, 1.3f) : species == Look.SP_HORSE ? Math.min(dur, 0.9f)
+                : species == Look.SP_CAT ? Math.min(dur, 0.65f) : species == Look.SP_GOAT ? Math.min(dur, 0.8f) : Math.min(dur, 1.0f);
+        if (u >= call) return 0;
+        float sn = (float) Math.sin(Math.PI * u / call);
+        return (species == Look.SP_COW ? 0.55f : 0.6f) * sn * sn;
     }
 
     /**
@@ -4273,7 +4377,12 @@ public final class Renderer {
         // v40: a front picture of a person is never mirrored (it turns through its mesh); a turned one faces its way
         float mirror = mirrorFor(sp, p);
         Rig.State st = rigged ? rigState(p, actor, sp, mirror) : null;
-        if (rigged && beast) animalState(st, p);
+        if (rigged && beast) {
+            // v47.7: the tail and the ears follow the feelings of the last 0.4 s (the same as the face of a person)
+            int[] recent = null;
+            if (actor != null) { recent = new int[8]; for (int i = 0; i < recent.length; i++) recent[i] = emotionAt(actor, p.time - i * 0.05f); }
+            animalState(st, p, recent);
+        }
         if (POSE_DEBUG) System.err.printf(java.util.Locale.US, "POSE t=%.2f %s body=%d emo=%d sit=%.2f lie=%.2f kneel=%.2f rigged=%b face=%b still=%b legs=%b stKneel=%.2f frown=%.2f legScale=%.2f sp=%dx%d%n",
                 p.time, actor == null || actor.c == null ? "?" : actor.c.displayName, p.body, p.emotion, p.sit, p.lie, p.kneel, rigged, rig != null && rig.face, rig != null && rig.still, rig != null && rig.legs,
                 st == null ? -1 : st.kneel, st == null ? -1 : st.frown, st == null ? -1 : st.legScale, sp.w, sp.h);
@@ -4471,19 +4580,24 @@ public final class Renderer {
             if (finerImg != null && blend > 0.01f) { g.save(); g.setAlpha(blend); g.image(finerImg, left, top, w, h); g.restore(); }
             if (p.wet > 0.02f && sp.wetImg != null) { g.save(); g.setAlpha(Math.min(0.85f, p.wet)); g.image(sp.wetImg, left, top, w, h); g.restore(); }
         }
-        if (rigged && rig.animal && st.jaw > 0.12f) {
-            // the open jaw: a dark mouth between the upper and the lowered jaw, a tongue inside
+        if (rigged && rig.animal && st.jaw > 0.04f) {
+            // the open jaw: a dark mouth between the upper and the lowered jaw, a tongue inside (v47.7: faded in as the
+            // jaw parts — a chewing jaw crossing the old threshold showed the mouth and hid it again every chew)
             float hx = left + rig.jawX * w, hy = top + rig.jawY * h, tx = left + rig.jawTipX * w;
             double ja = Math.toRadians(rig.headSide * 16 * st.jaw);
             float lx = hx + (float) Math.cos(ja) * (tx - hx), ly = hy + (float) Math.sin(ja) * (tx - hx);
+            g.save();
+            g.setAlpha(Rig.smooth(0.04f, 0.14f, st.jaw));
             g.color(0xF0300C0C);
             g.begin(); g.moveTo(hx, hy); g.lineTo(tx, hy); g.lineTo(lx, ly); g.close(); g.fillPath();
-            if (st.jaw > 0.3f) {
-                g.color(0xE0D9636B);
+            float tongue = Rig.smooth(0.25f, 0.35f, st.jaw);
+            if (tongue > 0) {
+                g.color(Puppet.alpha(0xD9636B, 0xE0 / 255f * tongue));
                 g.oval(hx + (lx - hx) * 0.62f, hy + (ly - hy) * 0.55f, Math.abs(tx - hx) * 0.2f, Math.abs(ly - hy) * 0.16f);
             }
             g.color(0xF0F5F2EA);    // a tooth or two at the front
             g.oval(tx - rig.headSide * Math.abs(tx - hx) * 0.1f, hy + Math.abs(ly - hy) * 0.08f, Math.abs(tx - hx) * 0.05f, Math.abs(ly - hy) * 0.09f);
+            g.restore();
         }
         if (sp.faceKnown && !isProfile(sp) && !(rigged && rig.animal && !rig.eyesOnHead)) {     // v47.4: never on a profile (they landed on the cheek)
             // v40: on the turned face (the rig's turn moves the eyes and the mouth with the mesh)
