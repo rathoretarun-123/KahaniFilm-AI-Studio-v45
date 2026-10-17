@@ -32,7 +32,8 @@ Repository and branches
   kahani-render-quality-gates and others) are older work. Everything useful from them is already in the working branch.
   Do not build from them.
 - Last commit with every CI test green before the handoff: f4a709f. Then a213376 (CI failed one AppTest check, fixed
-  in 9de6050), 9de6050 (CI was still running at handoff), and the handoff commit that added this file.
+  in 9de6050), 9de6050 (its CI run was cancelled by the next push), c6f4772 (the handoff files and picture folders),
+  and the commit that last updated this file. Check the newest commit's CI first (step 0b).
 
 Build, CI and signing
 - build.sh: builds the APK (release/KahaniFilm-v47.apk).
@@ -65,6 +66,9 @@ My references for the director
   frame sheets.
 - app/src/main/assets/vocab/daily_activities_hi.txt and daily_activities_40_hi.txt: the same vocabulary inside the app.
 - app/src/main/assets/director_reference_emotion_activity_guide.md (section 20) and docs/directors-manual.md.
+- I also uploaded two zips of GIFs (40 daily activities; 5 more: cycling, chess, cricket, football, newspaper). They
+  arrived only as HTML download pages, so only their descriptions were saved (gif_descriptions_40_hi.txt and the app
+  vocabulary). If I give the GIF files again, add them to docs/reference/daily_activities and learn from them.
 
 Records and guides
 - docs/testing-v47.md: the history of every decision, defect and test, newest at the end (sections 6.x).
@@ -78,10 +82,10 @@ Tools
 - tools/robotest/: the tests. tools/scripts/: the fixture and asset preparation scripts CI runs.
 
 2. SET UP THE PC
-Linux or WSL (Ubuntu) is easiest, because build.sh is a bash script. Install:
+Linux, or WSL (Ubuntu) on a Windows PC, is easiest, because build.sh and the CI steps are bash. Install:
 - JDK 17 (the build) and JDK 21 (the tests).
 - Android SDK command-line tools, then: sdkmanager "platform-tools" "platforms;android-23" "platforms;android-34"
-  "build-tools;34.0.0". Put build-tools/34.0.0 on PATH (aapt2, d8, zipalign, apksigner). Set ANDROID_HOME.
+  "build-tools;34.0.0". Put $ANDROID_HOME/build-tools/34.0.0 on PATH (aapt2, d8, zipalign, apksigner). Set ANDROID_HOME.
 - Gradle 8.14 or newer (for tools/robotest).
 - ffmpeg and espeak-ng (MakeFilm encodes with ffmpeg and makes voices with espeak-ng).
 - python3 with Pillow (python3-pil), zip, unzip, curl, git, gh.
@@ -117,7 +121,7 @@ Linux or WSL (Ubuntu) is easiest, because build.sh is a bash script. Install:
   STILL_EVERY, ASPECT, SUBS, NO_LOOK, SHOTS=<file> (the shot list), ACTS=all, FXS=1, KEYS=<name>, WIDE=1.
 - Checking a film: ffmpeg -i out.mp4 -vf fps=1 sec/f%04d.jpg, python3 tools/review/sheets.py sec sheet 6 4,
   python3 tools/review/scan_frames.py out.mp4 scan. A big change at a planned cut is fine; look at the frame pair.
-- Regression check for the reader and director: run tools/review/BatchProbe over a list of all scripts in
+- Regression check for the reader and director: run tools/review/BatchProbe.java over a list of all scripts in
   tools/testdata (plus the four films) before and after a change, and diff the outputs. Older scripts must stage the
   same unless the change is meant for them.
 
@@ -191,6 +195,13 @@ The film
     director's vocabulary and in the library.
 17. Refine the meshing (the rig of my pictures) and the rendering in all four stories, and check each one frame by
     frame.
+Delivery
+18. Debug the APK many times before each delivery: build it, check the app's own flows (a new film, the story page,
+    the studio uploads, the library, Settings, making a film) and the tests, and only then send the links.
+19. Every delivery gives me two links: the direct APK download and the source code zip of the exact commit. The APK
+    must be bug free, with all the tests done.
+20. Keep refining, checking and debugging on your own, without waiting for my instructions, and send me the links
+    again after every verified round.
 
 8. WHAT IS ALREADY DONE (git log of the working branch; details in docs/testing-v47.md)
 - One committed signing key, so updates install over each other (fdc3714); every APK published to the apk branch
@@ -235,5 +246,5 @@ The film
   push to the working branch, and wait for CI to be green.
 - Each time CI is green on a new commit, report to me in short plain English: the APK link, the source zip link with
   the full commit sha, what changed, what was tested, what is still open. The first report within 30 minutes, then
-  after every verified round through the night.
+  after every verified round through the night. I write in English and Hindi; answer in simple English.
 - Write each round's findings in docs/testing-v47.md.
