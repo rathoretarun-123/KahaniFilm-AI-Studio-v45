@@ -1,0 +1,1589 @@
+DIRECTOR'S SHOT LIST — बाबू के लिए
+Planned with the Pixar-style directing guide: emotion → performance → composition → camera → light → sound → cut.
+
+────────── दृश्य 1: room
+SCENE BRIEF (training guide §7)
+  Subjects: बाबू (CHAR_001)
+  Action: स्थान
+  Environment: room — floor line at 670, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Extreme wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 001   at 0:07.7
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Extreme wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: A huge place and small figures (scale contrast)
+CHARACTER ACTION: वाइड एस्टैब्लिशिंग शॉट। शाम की सुनहरी रोशनी पत्तों से छनकर म…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: room
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 2.9 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC01_SH001_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — वाइड एस्टैब्लिशिंग शॉट। शाम की सुनहरी रोशनी पत्तों से छनकर म… | feel — Orientation: the audience knows where it is | attention first — the whole place, then room in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — extreme wide: scale, geography, isolation or spectacle
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: rustle, a chair
+
+SHOT 002   at 0:10.6
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of room
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH002_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 003   at 0:12.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Extreme wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of room
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH003_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the whole place, then बाबू in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — extreme wide: scale, geography, isolation or spectacle
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 004   at 0:14.4
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of room
+DURATION: 8.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH004_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: rustle
+
+SHOT 005   at 0:23.3
+PURPOSE: The look (director's manual 3.4): बाबू's eyes go to what the sentence names
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू looks — बाबू डाक पेटी की ओर देखते हैं, फिर अपनी हथेली पर न…
+FACIAL PERFORMANCE: Eyes on the thing first, the head a moment later
+BODY LANGUAGE: Still, turned toward it
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.2 s
+CUT WHEN: the eyes have settled
+EMOTIONAL PURPOSE: We know where the character looks before we see it
+SHOT ID: KAHANI_SC01_SH005_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू looks — बाबू डाक पेटी की ओर देखते हैं, फिर अपनी हथेली पर न… | feel — We know where the character looks before we see it | attention first — बाबू's face and hands | reveals — The look (director's manual 3.4): बाबू's eyes go to what the sentence names | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a bicycle bell
+
+SHOT 006   at 0:24.5
+PURPOSE: Point of view: what बाबू sees — बाबू डाक पेटी की ओर देखते हैं, फिर अपनी हथेली पर न…
+SHOT SIZE: Wide (Point of view)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: The place ahead of बाबू, from where they stand
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: —
+LIGHTING: Natural light of the place
+FOCUS: what बाबू sees
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.6 s
+CUT WHEN: the thing seen has registered
+EMOTIONAL PURPOSE: The audience sees with the character
+SHOT ID: KAHANI_SC01_SH006_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — The place ahead of बाबू, from where they stand | feel — The audience sees with the character | attention first — the whole place, then what बाबू sees in it | reveals — Point of view: what बाबू sees — बाबू डाक पेटी की ओर देखते हैं, फिर अपनी हथेली पर न… | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut to the point of view — the look, then what is seen
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 007   at 0:26.0
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of room
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH007_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 008   at 0:27.3
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of room
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH008_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 009   at 0:28.5
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of room
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH009_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 बाबू (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बाबू centre, facing left, sitting, calm
+STATE AT END: बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 21
+
+────────── दृश्य 2: open place
+SCENE BRIEF (training guide §7)
+  Subjects: बच्ची (CHAR_002), बाबू (CHAR_001)
+  Action: समय: सुनहरी शाम
+  Environment: open place — floor line at 670, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 010   at 0:32.3
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: मीडियम वाइड। बच्ची गली से स्कूल बैग के साथ आती है। वह बाबू क…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: open place
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 2.9 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC02_SH010_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — मीडियम वाइड। बच्ची गली से स्कूल बैग के साथ आती है। वह बाबू क… | feel — Orientation: the audience knows where it is | attention first — the whole place, then open place in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 011   at 0:35.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH011_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 012   at 0:36.6
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH012_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the whole place, then बाबू in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 013   at 0:38.0
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH013_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 014   at 0:39.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH014_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 015   at 0:41.2
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: बच्ची: "बाबू… आज आपके लिए"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बच्ची
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.7 s
+CUT WHEN: after these 4 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH015_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बच्ची: "बाबू… आज आपके लिए" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of बच्ची — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (बच्ची) at 0:41.2 for 2.8 s: "बाबू… आज आपके लिए" | music: happy (ducked under the line)
+
+SHOT 016   at 0:42.8
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: बच्ची: "कुछ लाई हूँ।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बच्ची
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.2 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH016_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बच्ची: "कुछ लाई हूँ।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — बच्ची's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (बच्ची) at 0:41.2 for 2.8 s: "कुछ लाई हूँ।" | music: happy (ducked under the line)
+
+SHOT 017   at 0:44.1
+PURPOSE: Reaction: the audience feels the line through बाबू's face, over बच्ची's shoulder, and it is allowed to breathe
+SHOT SIZE: Close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू listens and takes it in, without words
+FACIAL PERFORMANCE: Brows up, eyes wide, mouth open
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.2 s
+CUT WHEN: the feeling has landed (0.0 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC02_SH017_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: बच्ची's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: बच्ची ← your picture 1 (back, standing, no face (back or hidden)); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of बाबू — the eyes, then the mouth | reveals — Reaction: the audience feels the line through बाबू's face, over बच्ची's shoulder, and it is allowed to breathe | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 018   at 0:45.3
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH018_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 019   at 0:46.7
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH019_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 020   at 0:48.0
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH020_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 21
+
+────────── दृश्य 3: open place
+SCENE BRIEF (training guide §7)
+  Subjects: बच्ची (CHAR_002), बाबू (CHAR_001)
+  Action: समय: सुनहरी शाम
+  Environment: open place — floor line at 670, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 021   at 0:49.4
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: कट टू मीडियम क्लोज़-अप। बच्ची बेंच के पास घुटनों के बल बैठकर…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: open place
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.6 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC03_SH021_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — कट टू मीडियम क्लोज़-अप। बच्ची बेंच के पास घुटनों के बल बैठकर… | feel — Orientation: the audience knows where it is | attention first — the whole place, then open place in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 022   at 0:51.0
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH022_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 023   at 0:52.6
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH023_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 024   at 0:54.2
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH024_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 025   at 0:55.8
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH025_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 026   at 0:57.4
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH026_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 027   at 0:58.9
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH027_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 028   at 1:00.3
+PURPOSE: Lip-sync close-up: front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: बच्ची: "मिला था… मैंने संभालकर रखा।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बच्ची
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC03_SH028_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बच्ची: "मिला था… मैंने संभालकर रखा।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of बच्ची — the eyes, then the mouth | reveals — Lip-sync close-up: front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (बच्ची) at 1:00.3 for 2.6 s: "मिला था… मैंने" | music: happy (ducked under the line)
+
+SHOT 029   at 1:01.7
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बच्ची: "मिला था… मैंने संभालकर रखा।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH029_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बच्ची: "मिला था… मैंने संभालकर रखा।" | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (बच्ची) at 1:00.3 for 2.6 s: "संभालकर रखा।" | music: happy (ducked under the line)
+
+SHOT 030   at 1:03.0
+PURPOSE: Reaction: the audience feels the line through बाबू's face, over बच्ची's shoulder, and it is allowed to breathe
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू listens and takes it in, without words
+FACIAL PERFORMANCE: Brows up, eyes wide, mouth open
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.2 s
+CUT WHEN: the feeling has landed (0.0 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC03_SH030_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: बच्ची's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: बच्ची ← your picture 1 (back, standing, no face (back or hidden)); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — बाबू's face and hands | reveals — Reaction: the audience feels the line through बाबू's face, over बच्ची's shoulder, and it is allowed to breathe | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 031   at 1:04.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH031_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 032   at 1:05.7
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH032_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 033   at 1:07.1
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH033_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 21
+
+────────── दृश्य 4: open place
+SCENE BRIEF (training guide §7)
+  Subjects: बच्ची (CHAR_002), बाबू (CHAR_001)
+  Action: समय: सुनहरी शाम
+  Environment: open place — floor line at 670, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 034   at 1:08.6
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: ओवर-द-शोल्डर शॉट में बच्ची पत्र बाबू को देती है। हाथों का सं…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: open place
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 3.2 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC04_SH034_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — ओवर-द-शोल्डर शॉट में बच्ची पत्र बाबू को देती है। हाथों का सं… | feel — Orientation: the audience knows where it is | attention first — the whole place, then open place in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: बच्ची left third, facing right, standing, walking, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, standing, happy; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: steps
+
+SHOT 035   at 1:11.7
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH035_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 036   at 1:13.2
+PURPOSE: Show what बाबू does
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH036_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 037   at 1:15.0
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH037_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 038   at 1:16.8
+PURPOSE: Show what बाबू does
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH038_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 039   at 1:18.5
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: बाबू: "मैंने सोचा था… अब"
+FACIAL PERFORMANCE: Eyes lowered, inner brows up, mouth corners down
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.6 s
+CUT WHEN: after these 4 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC04_SH039_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू: "मैंने सोचा था… अब" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of बाबू — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, standing, calm; बाबू centre, facing left, sitting, calm, tears
+STATE AT END: बच्ची centre, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
+VOICE / MUSIC: VOICE_001 (बाबू) at 1:18.5 for 3.3 s: "मैंने सोचा था… अब" | music: happy (ducked under the line)
+
+SHOT 040   at 1:20.1
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: बाबू: "कोई ख़त नहीं आएगा।"
+FACIAL PERFORMANCE: Eyes lowered, inner brows up, mouth corners down
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.7 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC04_SH040_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बाबू: "कोई ख़त नहीं आएगा।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — बाबू's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
+STATE AT END: बच्ची centre, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
+VOICE / MUSIC: VOICE_001 (बाबू) at 1:18.5 for 3.3 s: "कोई ख़त नहीं आएगा।" | music: happy (ducked under the line)
+
+SHOT 041   at 1:21.9
+PURPOSE: Reaction: the audience feels the line through बच्ची's face, and it is allowed to breathe
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बच्ची listens and takes it in, without words
+FACIAL PERFORMANCE: Eyes lowered, inner brows up, mouth corners down
+LIGHTING: Natural light of the place
+FOCUS: बच्ची
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: the feeling has landed (0.9 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC04_SH041_V001   LENS: 85mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← your picture 3 (three-quarter, sitting, neutral)
+FIVE QUESTIONS: see — बच्ची listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of बच्ची — the eyes, then the mouth | reveals — Reaction: the audience feels the line through बच्ची's face, and it is allowed to breathe | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: बच्ची centre, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
+STATE AT END: बच्ची centre, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 042   at 1:23.2
+PURPOSE: Lip-sync close-up: front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: बच्ची: "कुछ ख़त पुराने नहीं होते, बाबू।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बच्ची
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.6 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC04_SH042_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बच्ची: "कुछ ख़त पुराने नहीं होते, बाबू।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of बच्ची — the eyes, then the mouth | reveals — Lip-sync close-up: front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
+STATE AT END: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
+VOICE / MUSIC: VOICE_002 (बच्ची) at 1:23.2 for 2.9 s: "कुछ ख़त पुराने नहीं" | music: happy (ducked under the line) | effects: a chair
+
+SHOT 043   at 1:24.8
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बच्ची: "कुछ ख़त पुराने नहीं होते, बाबू।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH043_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बच्ची: "कुछ ख़त पुराने नहीं होते, बाबू।" | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
+STATE AT START: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
+STATE AT END: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
+VOICE / MUSIC: VOICE_002 (बच्ची) at 1:23.2 for 2.9 s: "होते, बाबू।" | music: happy (ducked under the line)
+
+SHOT 044   at 1:26.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH044_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) holding something | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+STATE AT END: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 045   at 1:27.8
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH045_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) holding something | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+STATE AT END: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 046   at 1:29.1
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH046_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) holding something | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+STATE AT END: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 047   at 1:30.3
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC04_SH047_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) holding something | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+STATE AT END: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 21
+
+────────── दृश्य 5: open place
+SCENE BRIEF (training guide §7)
+  Subjects: बच्ची (CHAR_002), बाबू (CHAR_001)
+  Action: समय: सुनहरी शाम
+  Environment: open place — floor line at 670, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 048   at 1:31.7
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: वाइड टू मीडियम पुल-बैक। बच्ची बाबू के पास बेंच पर बैठी है। प…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: open place
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 5.5 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC05_SH048_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — वाइड टू मीडियम पुल-बैक। बच्ची बाबू के पास बेंच पर बैठी है। प… | feel — Orientation: the audience knows where it is | attention first — the whole place, then open place in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a chair
+
+SHOT 049   at 1:37.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH049_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 050   at 1:39.1
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Extreme wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH050_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the whole place, then बाबू in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — extreme wide: scale, geography, isolation or spectacle
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 051   at 1:40.9
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH051_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 052   at 1:42.8
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH052_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+STATE AT END: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 053   at 1:44.6
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH053_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+STATE AT END: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 054   at 1:46.4
+PURPOSE: Show what बाबू does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 5.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH054_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — the face of बाबू — the eyes, then the mouth | reveals — Show what बाबू does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+STATE AT END: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 055   at 1:51.4
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH055_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+STATE AT END: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 056   at 1:53.1
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH056_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+STATE AT END: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 057   at 1:54.9
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH057_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+STATE AT END: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: rustle
+
+SHOT 058   at 1:56.7
+PURPOSE: Show what बाबू does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: बाबू in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: बाबू
+SOUND: Ambience of open place
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC05_SH058_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: बच्ची ← the front picture (rigged); बाबू ← the front picture (rigged)
+FIVE QUESTIONS: see — बाबू in the scene | feel — Keep the story readable | attention first — बाबू's face and hands | reveals — Show what बाबू does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (the master picture) | LOC_002 open place (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+STATE AT END: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+QUALITY CHECK
+• Every part opens on a readable wide shot: yes
+• Jump cuts (a cut to almost the same framing): 14 removed (the shot simply continues)
+• Technical Director protocol: locked tripod, every shot static, no camera shake unless the story asks for it
+• Shots longer than 4 s: 3
+• Lip-sync shots (front close-ups, face filling the frame, at most 6 words): 6; with more than 6 words: 0
+• Runs slowed to walking pace: 0; characters who stop walking to speak: 0
+• Moves read from the story's directions (v34): 0 leaving, 0 coming back, 0 across or around, 0 up to someone; 0 lines waited until their speaker had walked onto the stage (v35)
+• Realism (v34): 0 looks held on an entrance, an exit, a return, a reveal or someone hurt (0 turned round to watch); 0 reactions to rain or snow beginning; 0 hurried out of the rain; 0 felt their way blindfolded; 0 doors heard; 1 footsteps moved across the stereo
+• Everyday actions (v35): 3 sat down (a chair, a sofa, a bed, the floor — each its own furniture and sound), 0 got up (leaning forward, slower from a low seat; from lying, sitting up first), 0 lay down to sleep (sat, then lay back; eyes shut, slow breath, a blanket in bed), 0 woke (sat up, stretched and yawned), 0 ate (hand to mouth, chewing, heard), 0 drank (raised to the lips, a sip or gulps, the cup set down); 0 shots of a seated speaker from a standing photo kept from the waist up, 0 close-ups of a photo eating or drinking (the cup or morsel comes up to the lips)
+• Cuts made so no character moves 15% of the frame in one shot: 0; shots still over the limit (very fast moves the story's timing leaves no room to slow): 0
+• Cuts made so each shot holds one action: 2; shots with more than one: 0
+• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 50
+• Validation layer: 47 of 58 shots passed at once, 11 corrected
+• Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
+• First-frame checks: 0 shots reframed for a cut head, 2 for feet out of the frame (feet in the bottom 85-98% with their shadow)
+• Lip-sync framing (8.3): the face fills 43% of the frame on average in 6 lip-sync shots (65-75% where the picture and the frame allow it; the whole head always inside; a narrow frame keeps the face in its centre 60%); reframed on the face: 5
+• Objective (small films of 30-90 s): this film is 2:06 — the script decides the length; it is made as 58 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
+• Miyazaki ma pauses after two fast beats: 0; Russo / Gunn comic beats: 0; Gunn shadow passes in funny scenes: 0
+• Story spine filled before any shot was planned (R4, hardcoded): yes — hero बच्ची; the ending was read first (R3)
+• Spider-Verse animation on twos: off (every character moves every frame; switch it on in Settings)
+• Nolan: real sounds — steps by the floor of the place (stone, marble, cave, earth), running steps for runs; cross-cutting between speaker and listener in long lines
+• Handbook (AI Animation Director): the five questions answered for every shot, a stable shot ID and a lens by shot size; thought-before-action beats (a pause and a look before the reaction): 3; Dutch angles: 0 (at most one per scene); shot durations: 10 distinct lengths (never the same for every shot); the continuity ledger per scene and the four approval gates follow below
+• Director's manual (v2.0): establishing shots held for the cut length (2.5 s; shots are cut at 2.6 s since v26, the 4-s cap stays): 4 of 5 (the rest are cut sooner by the protocol's motion rule — someone enters or moves during them, and the move is seen wide); point-of-view shots for looks: 1; reactions staged for loud sounds: 0; suspicion and relief read from the manners; every shot carries its ASSETS, TRANSITION IN, STATE AT START / END and VOICE / MUSIC lines; the beat sheet, scene records, coverage report, prop ledger and location records follow the ledger
+• Phone-local guide (v1.0): establishing bridges added where the place changes between scenes: 1; reverse shots use the place's reverse angle when you gave one; real uploaded angles replace made views; no painted mouth where no mouth was found
+QC SCORE (training guide §12 — weighted rubric, 0–5 per category): 97/100 — review for approval
+  Character identity         5/5  (weight 25%)
+  3D geometry and anatomy    5/5  (weight 20%)
+  Style and rendering        5/5  (weight 15%)
+  Lighting and composition   5/5  (weight 10%)
+  Prompt compliance          5/5  (weight 15%)
+  Scene continuity           4/5  (weight 15%)
+  Critical-defect override: none (no character missing from its scene, feet on the floor)
+  Automatic rejection conditions watched: a face differing from the canonical picture (impossible: the pictures are the user's own, drawn as they are); a required character or prop missing (counted above); extra limbs or broken geometry (the feet check); an outfit change without instruction (impossible: one picture set per character); the action or composition violated (the validation layer); unexplained changes between frames (the Final QC's boiling and shake check); artefacts (the Final QC).
+• Situations (v34 training): 0 with a walking aid, 1 with glasses, goggles, a blindfold or a patch, 0 hurt, 0 with an umbrella, 0 changes of look — 0 reveals, 0 moments of concern, 0 of relief; 18 shots framed at a seated character's eye level; 0 point-of-view shots turned into listening for a blindfold; sounds: 1 footsteps, 0 of walking aids, 0 of rain on an umbrella
+
+THE ANIMATED DIRECTOR'S CRAFT (v38 — studio-style directing for family films)
+Readable performances: the speaker on the stage and facing us for 4 of 4 line(s)
+Pacing: 0 of 0 peak line(s) followed by breathing room (a pause of 0.35 s or more, or the end of the scene)
+Colour by beat: 0 peak shot(s) a little richer, 0 tender shot(s) a little warmer; cheeks flush with anger, pride, laughter and effort
+Touch only as written: 0 hug(s), held hand(s) or peck(s), each from the script's own words
+PICTURES THAT WOULD HELP (upload them and make the film again; until then the studio uses what it has):
+  • बाबू: a surprised face (2 shots); a sad face (2 shots)
+Delivery: edit_list.txt (scene markers and every shot's timecode) is saved with the film; subtitles: type "add subtitles" after the film
+Not trained from the guide: its sexual and nude content (the studio makes family films)
+• Static shots: 58 of 58
+• Reactions shown and allowed to breathe: 3
+• Relationships shown with both characters in the frame: 24 two-shots
+• Pacing: 58 shots in 108 s of scenes, an average shot of 1.9 s
+
+BRAINTRUST (every 5 shots, 12 rounds) — AUTHORITY: the Braintrust suggests only; the director decides.
+• Q1 story clear without dialogue: 12 of 12 rounds
+• Q2 the character has a strong opinion: 12 of 12 rounds
+• Q3 a ma pause (quiet moment): 9 of 12 rounds
+• Q4 costume culturally accurate (real garment names): 1 of 2 characters — generic: बाबू (name the real garment: ghagra-choli, Banarasi saree, achkan…)
+• Q5 the face is the same as the lock sheet: yes — every character keeps one picture (its lock sheet) for the whole film; the face layer is cut from it, never redrawn
+• R5 at most four characters per 60 s: yes
+• suggestion: shots 16-20: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 26-30: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 41-45: no quiet moment — the director holds a still shot after the next action (ma)
+
+CONTINUITY LEDGER (ch. 12)
+— दृश्य 1: room, evening, Key: orange sunset from the right, 15 deg, 0:07.5–0:29.6
+   बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
+— दृश्य 2: open place, evening, Key: orange sunset from the right, 15 deg, 0:32.0–0:49.2
+   बच्ची: left third, facing right → left third, facing right; costume: as the lock sheet
+   बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
+— दृश्य 3: open place, evening, Key: orange sunset from the right, 15 deg, 0:49.2–1:08.4
+   बच्ची: left third, facing right → left third, facing right; costume: as the lock sheet; holds something
+   बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
+— दृश्य 4: open place, evening, Key: orange sunset from the right, 15 deg, 1:08.4–1:31.5
+   बच्ची: left third, facing right → centre, facing right; costume: as the lock sheet
+   बाबू: centre, facing left → centre, facing left; costume: as the lock sheet; holds something
+   axis: बच्ची left, बाबू right — kept in every shot of the scene (180-degree principle)
+— दृश्य 5: open place, evening, Key: orange sunset from the right, 15 deg, 1:31.5–1:57.8
+   बच्ची: centre, facing right → centre, facing right; costume: as the lock sheet
+   बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
+
+NARRATIVE BEAT SHEET (director's manual 3.1)
+  1. Beginning and setup — दृश्य 1
+     what happens: Every day, वाइड एस्टैब्लिशिंग शॉट
+     who: no one speaks (the narration carries it)  |  where: room
+     the audience must understand: where we are and the ordinary day  |  what changes: the action, no spoken feeling
+     the next beat needs: बाबू डाक पेटी की ओर देखते हैं, फिर अपनी हथेली पर नज़र डालते हैं। कोई संवाद नहीं। चेहरे पर उम्मीद और …
+  2. Introduction of central characters and goals — दृश्य 1
+     what happens: बच्ची: "बाबू… आज आपके लिए कुछ लाई हूँ।"; बाबू: "मैंने सोचा था… अब कोई ख़त नहीं आएगा।"
+     who: no one speaks (the narration carries it)  |  where: room
+     the audience must understand: who wants what (their first lines)  |  what changes: the action, no spoken feeling
+     the next beat needs: बाबू डाक पेटी की ओर देखते हैं, फिर अपनी हथेली पर नज़र डालते हैं। कोई संवाद नहीं। चेहरे पर उम्मीद और …
+  3. Inciting incident — दृश्य 4
+     what happens: One day, पुराना ख़त
+     who: CHAR_001 बाबू, CHAR_002 बच्ची  |  where: open place
+     the audience must understand: the thing that changes the day  |  what changes: sad → calm
+     the next beat needs: बाबू पत्र को दोनों हाथों से पकड़ते हैं। बच्ची उनका कंधा छूती है। प्रतिक्रिया के लिए एक पूरा, बिना जल…
+  4. Escalation — the story has no separate escalation scene (not forced: the turn leads straight to the climax)
+  5. Discoveries and emotional turning points — दृश्य 4
+     what happens: the scene with the biggest change of feeling: sad → calm
+     who: CHAR_001 बाबू, CHAR_002 बच्ची  |  where: open place
+     the audience must understand: what is found out, how it feels  |  what changes: sad → calm
+     the next beat needs: बाबू पत्र को दोनों हाथों से पकड़ते हैं। बच्ची उनका कंधा छूती है। प्रतिक्रिया के लिए एक पूरा, बिना जल…
+  6. Climax — दृश्य 5
+     what happens: साथ
+     who: no one speaks (the narration carries it)  |  where: open place
+     the audience must understand: the hardest moment, met  |  what changes: the action, no spoken feeling
+     the next beat needs: स्क्रीन पर शीर्षक: “बाबू के लिए”। नीचे टैगलाइन: “कुछ ख़त कभी पुराने नहीं होते।” शीर्षक अलग संपादकीय …
+  7. Resolution — दृश्य 5
+     what happens: Until finally, साथ (after पुराना ख़त)
+     who: no one speaks (the narration carries it)  |  where: open place
+     the audience must understand: how it ends for everyone  |  what changes: the action, no spoken feeling
+     the next beat needs: स्क्रीन पर शीर्षक: “बाबू के लिए”। नीचे टैगलाइन: “कुछ ख़त कभी पुराने नहीं होते।” शीर्षक अलग संपादकीय …
+  8. Closing image: स्क्रीन पर शीर्षक: “बाबू के लिए”। नीचे टैगलाइन: “कुछ ख़त कभी पुराने नहीं होते।” शीर्षक अलग संपादकीय ग्राफ़िक के रूप में …
+  (the beats are read from the script's own scenes; a scene missing from this list is not missing from the film)
+
+SCENE RECORDS (director's manual 3.3)
+— SC_01: दृश्य 1 — इंतज़ार
+   purpose: इंतज़ार  |  act 1
+   location: LOC_001 room, evening (your picture)  |  characters: CHAR_001 बाबू
+   beginning state: बाबू centre, facing left, sitting, calm
+   ending state: बाबू centre, facing left, sitting, calm
+   objectives and conflict: no dialogue: the action is the objective
+   essential actions: वाइड एस्टैब्लिशिंग शॉट। शाम की सुनहरी रोशनी पत्तों से छनकर मिट्टी पर प… / बाबू डाक पेटी की ओर देखते हैं, फिर अपनी हथेली पर नज़र डालते हैं। कोई स…
+   emotional progression: बाबू: calm → calm
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: a dissolve to a new place, opened wide (establishing cut)
+— SC_02: दृश्य 2 — बच्ची आती है
+   purpose: बच्ची आती है  |  act 1
+   location: LOC_002 open place, evening (your picture)  |  characters: CHAR_002 बच्ची, CHAR_001 बाबू
+   beginning state: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+   ending state: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+   objectives and conflict: बच्ची — "बाबू… आज आपके लिए कुछ लाई हूँ।"
+   essential actions: मीडियम वाइड। बच्ची गली से स्कूल बैग के साथ आती है। वह बाबू को देखती है… / बाबू हल्का-सा सिर उठाते हैं। वह अपनी छड़ी को दोनों हाथों से थामते हैं।
+   emotional progression: बच्ची: calm → calm; बाबू: calm → surprised → calm
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: a dissolve, the same place
+— SC_03: दृश्य 3 — बैग में तलाश
+   purpose: बैग में तलाश  |  act 1
+   location: LOC_002 open place, evening (your picture)  |  characters: CHAR_002 बच्ची, CHAR_001 बाबू
+   beginning state: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+   ending state: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
+   objectives and conflict: बच्ची — "मिला था… मैंने संभालकर रखा।"
+   essential actions: कट टू मीडियम क्लोज़-अप। बच्ची बेंच के पास घुटनों के बल बैठकर गुलाबी बै… / इन्सर्ट शॉट: पत्र के मुड़े, फटे किनारे और फीकी लिखावट। अक्षरों को पढ़न… / बाबू की आँखें पत्र पर टिक जाती हैं। संगीत बहुत हल्का हो; कागज़ की आवाज…
+   emotional progression: बच्ची: calm → calm; बाबू: calm → surprised → calm
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: a dissolve, the same place
+— SC_04: दृश्य 4 — पुराना ख़त
+   purpose: पुराना ख़त  |  act 2
+   location: LOC_002 open place, evening (your picture)  |  characters: CHAR_002 बच्ची, CHAR_001 बाबू
+   beginning state: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
+   ending state: बच्ची centre, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
+   objectives and conflict: बाबू — "मैंने सोचा था… अब कोई ख़त नहीं आएगा।"; बच्ची — "कुछ ख़त पुराने नहीं होते, बाबू।"
+   essential actions: ओवर-द-शोल्डर शॉट में बच्ची पत्र बाबू को देती है। हाथों का संपर्क स्पष्… / बाबू पत्र को दोनों हाथों से पकड़ते हैं। बच्ची उनका कंधा छूती है। प्रति…
+   emotional progression: बच्ची: calm → sad; बाबू: calm → sad → calm
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: a dissolve, the same place
+— SC_05: दृश्य 5 — साथ
+   purpose: साथ  |  act 5
+   location: LOC_002 open place, evening (your picture)  |  characters: CHAR_002 बच्ची, CHAR_001 बाबू
+   beginning state: बच्ची centre, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
+   ending state: बच्ची centre, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
+   objectives and conflict: no dialogue: the action is the objective
+   essential actions: वाइड टू मीडियम पुल-बैक। बच्ची बाबू के पास बेंच पर बैठी है। पत्र उनके ह… / बाबू बच्ची की ओर देखते हैं और एक छोटी, सच्ची मुस्कान देते हैं। बच्ची उ… / स्क्रीन पर शीर्षक: “बाबू के लिए”। नीचे टैगलाइन: “कुछ ख़त कभी पुराने नह…
+   emotional progression: बच्ची: calm → happy; बाबू: calm → happy
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: the end card
+
+SCENE-COVERAGE REPORT (director's manual 3.2 — genuine gaps against intentional omissions)
+  1. A character suddenly appears in a location: 0 entrance(s) staged from the script's words ("enters", "comes running"…); 1 character(s) stand in the scene from its first frame though the opening does not name them (बाबू in SC_03) — intentional: the lineup rule puts everyone who speaks in the scene on the stage before the first line, so no one pops in mid-scene
+  2. An important object is used before being introduced: 2 thing(s) held that the story never names before: something (बच्ची), something (बाबू) — they come from the manner of a line ("sword in hand"); the insert of a thing's picture introduces it when there is one
+  3. A decision occurs without showing motivation: every realisation or decision line comes after a reaction or a look (thought before action)
+  4. A dramatic sound has no visible reaction: 0 loud sound(s) in the script, each given a startle on every face on stage and a reaction shot a beat later (the director adds them itself)
+  5. A location changes without adequate orientation: 3 of 5 parts open on a readable wide shot (an establishing cut)
+  6. Dialogue requires a response but lacks a reaction shot: 0 question(s) asked; each answered by a reaction shot or the next speaker
+  7. An action starts in one shot and is incomplete in the next: 0 move(s) continue across a cut — each next shot starts where the move is (cut on action; the key keeps going), none restarts
+  8. An emotional change has no believable transition: no feeling jumps to a far one within half a second (faces blend over 0.25 s, reactions wait a beat)
+
+PROP LEDGER (director's manual 1.6 — owner, state and location scene by scene)
+  • something — owner: whoever holds it first
+      SC_03: बच्ची — held in the right hand from 0:54.7
+      SC_03: बच्ची — held in the left hand from 0:56.1
+      SC_04: बाबू — held in the right hand from 1:26.5
+
+LOCATION RECORDS (director's manual 1.6)
+  LOC_001 — room: interior; reference: your picture (the location plate, feet on its floor line)
+     layout: the stage is 1280 wide, the floor line at the plate's ground; entrances none written (everyone present from the first frame)
+     time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg)  |  scenes: SC_01
+  LOC_002 — open place: exterior; reference: your picture (the location plate, feet on its floor line)
+     layout: the stage is 1280 wide, the floor line at the plate's ground; entrances none written (everyone present from the first frame)
+     time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg)  |  scenes: SC_02, SC_03, SC_04, SC_05
+• Step 8 — the finished film metered frame by frame as it was written (3018 frames; 2403 pairs of frames in a row compared in 58 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 13.2 per cell at 0:16.6 (limit 14), the largest share of the frame changed 22% (limit 50%)
+
+FRAME AUDIT — every character in every frame as drawn (2613 frames, 4612 character-frames, 4326 frame pairs inside shots)
+• Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0

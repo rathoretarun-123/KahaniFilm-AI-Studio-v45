@@ -1,0 +1,2029 @@
+DIRECTOR'S SHOT LIST — आखिरी चिट्ठी
+Planned with the Pixar-style directing guide: emotion → performance → composition → camera → light → sound → cut.
+
+────────── दृश्य 1: open place
+SCENE BRIEF (training guide §7)
+  Subjects: रघुवीर जी (CHAR_001)
+  Action: नीम के पेड़ के नीचे का कोना
+  Environment: open place — floor line at 647, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood action
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 001   at 0:07.7
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: पर्यावरण - दोपहर के 2 बजे का समय, बिल्कुल साफ नीला आसमान एक …
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: open place
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 2.9 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC01_SH001_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — पर्यावरण - दोपहर के 2 बजे का समय, बिल्कुल साफ नीला आसमान एक … | feel — Orientation: the audience knows where it is | attention first — the whole place, then open place in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action | effects: rustle, wind, birds (+1)
+
+SHOT 002   at 0:10.6
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH002_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action | effects: a bicycle bell
+
+SHOT 003   at 0:12.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH003_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 004   at 0:14.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH004_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 005   at 0:16.4
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH005_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 006   at 0:18.3
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH006_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action | effects: a bicycle bell
+
+SHOT 007   at 0:20.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH007_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 008   at 0:22.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH008_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 009   at 0:24.1
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH009_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 010   at 0:26.0
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "आज भी नहीं आई..."
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.5 s
+CUT WHEN: after these 4 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH010_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "आज भी नहीं आई..." | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 0:26.0 for 3.0 s: "आज भी नहीं आई..." | music: action (ducked under the line)
+
+SHOT 011   at 0:27.5
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "पंद्रह साल हो गए।"
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH011_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "पंद्रह साल हो गए।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघुवीर जी's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 0:26.0 for 3.0 s: "पंद्रह साल हो" | music: action (ducked under the line)
+
+SHOT 012   at 0:28.8
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी: "आज भी नहीं आई... पंद्रह साल हो गए।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH012_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "आज भी नहीं आई... पंद्रह साल हो गए।" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 0:26.0 for 3.0 s: "गए।" | music: action (ducked under the line) | effects: effect 21
+
+────────── दृश्य 2: open place
+SCENE BRIEF (training guide §7)
+  Subjects: परी (CHAR_002), रघुवीर जी (CHAR_001)
+  Action: नीम के पेड़ के नीचे का कोना
+  Environment: open place — floor line at 647, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 013   at 0:30.8
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: पर्यावरण - वही दोपहर की कड़क धूप और साफ नीला आसमान, गर्म हवा…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: open place
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 2.5 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC02_SH013_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — पर्यावरण - वही दोपहर की कड़क धूप और साफ नीला आसमान, गर्म हवा… | feel — Orientation: the audience knows where it is | attention first — the whole place, then open place in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: परी left third, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 014   at 0:33.3
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH014_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
+STATE AT START: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 015   at 0:34.8
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH015_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: running steps
+
+SHOT 016   at 0:36.4
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH016_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 017   at 0:38.0
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH017_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी centre, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: uneven steps (a limp)
+
+SHOT 018   at 0:39.6
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH018_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी centre, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी centre, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 019   at 0:40.6
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH019_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी centre, facing right, standing, walking, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी centre, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 020   at 0:42.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH020_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी centre, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी centre, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 021   at 0:43.7
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH021_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 परी (the master picture); CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी centre, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी centre, facing right, standing, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 022   at 0:45.3
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 0.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH022_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी centre, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: uneven steps (a limp)
+
+SHOT 023   at 0:46.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी moves
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Ambience of open place
+DURATION: 0.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH023_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी moves | feel — Keep the story readable | attention first — परी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
+STATE AT START: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 024   at 0:46.8
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी moves
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Ambience of open place
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH024_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी moves | feel — Keep the story readable | attention first — परी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी right third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी right third, facing left, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: uneven steps (a limp)
+
+SHOT 025   at 0:47.9
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 0.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH025_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
+STATE AT START: परी right third, facing left, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, scared
+STATE AT END: परी centre, facing left, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 026   at 0:48.3
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 0.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH026_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी centre, facing left, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, scared
+STATE AT END: परी centre, facing left, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 027   at 0:48.7
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 0.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH027_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी centre, facing left, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, scared
+STATE AT END: परी centre, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 028   at 0:49.3
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "अरे, कौन है? डाक-बक्से"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.0 s
+CUT WHEN: after these 4 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH028_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "अरे, कौन है? डाक-बक्से" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी left third, facing right, standing, walking, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 0:49.3 for 3.5 s: "अरे, कौन है?" | music: happy (ducked under the line)
+
+SHOT 029   at 0:50.3
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी: "अरे, कौन है? डाक-बक्से को हाथ मत लगाओ।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH029_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "अरे, कौन है? डाक-बक्से को हाथ मत लगाओ।" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on action — continue movement into the next shot
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 0:49.3 for 3.5 s: "डाक-बक्से" | music: happy (ducked under the line)
+
+SHOT 030   at 0:51.4
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "को हाथ मत लगाओ।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.5 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH030_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "को हाथ मत लगाओ।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघुवीर जी's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 0:49.3 for 3.5 s: "को हाथ मत लगाओ।" | music: happy (ducked under the line)
+
+SHOT 031   at 0:52.8
+PURPOSE: Reaction: the audience feels the line through परी's face, over रघुवीर जी's shoulder, and it is allowed to breathe
+SHOT SIZE: Close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी listens and takes it in, without words
+FACIAL PERFORMANCE: Brows up, eyes wide, mouth open
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: the feeling has landed (0.0 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC02_SH031_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: रघुवीर जी's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of परी — the eyes, then the mouth | reveals — Reaction: the audience feels the line through परी's face, over रघुवीर जी's shoulder, and it is allowed to breathe | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 032   at 0:54.1
+PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: परी: "मैं परी हूँ! आप रोज"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.7 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH032_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "मैं परी हूँ! आप रोज" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of परी — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 0:54.1 for 5.3 s: "मैं परी हूँ! आप रोज" | music: happy (ducked under the line)
+
+SHOT 033   at 0:55.8
+PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: परी: "यहाँ इस टूटी बेंच"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.5 s
+CUT WHEN: after these 4 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH033_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "यहाँ इस टूटी बेंच" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — परी's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 0:54.1 for 5.3 s: "यहाँ इस टूटी बेंच" | music: happy (ducked under the line)
+
+SHOT 034   at 0:57.3
+PURPOSE: Reaction (part 3 of 3): रघुवीर जी listens, seen over परी's shoulder; the line goes on off-screen
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी listens, subtle breathing, one small change of expression
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
+SHOT ID: KAHANI_SC02_SH034_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: परी's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — रघुवीर जी's face and hands | reveals — Reaction (part 3 of 3): रघुवीर जी listens, seen over परी's shoulder; the line goes on off-screen | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 035   at 0:58.6
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी: "मैं परी हूँ! आप रोज यहाँ इस टूटी बेंच पर…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH035_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "मैं परी हूँ! आप रोज यहाँ इस टूटी बेंच पर…" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 0:54.1 for 5.3 s: "हो दादाजी?" | music: happy (ducked under the line)
+
+SHOT 036   at 0:59.8
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH036_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, sad
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 037   at 1:01.1
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Eyes lowered, inner brows up, mouth corners down
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH037_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Show what रघुवीर जी does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, sad
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, sad
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 038   at 1:02.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Eyes lowered, inner brows up, mouth corners down
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH038_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, sad
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 039   at 1:03.9
+PURPOSE: The look (director's manual 3.4): रघुवीर जी's eyes go to what the sentence names
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी looks — धीरे-धीरे चेहरा आसमान की तरफ उठाते हैं उदास आँखें …
+FACIAL PERFORMANCE: Eyes on the thing first, the head a moment later
+BODY LANGUAGE: Still, turned toward it
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.2 s
+CUT WHEN: the eyes have settled
+EMOTIONAL PURPOSE: We know where the character looks before we see it
+SHOT ID: KAHANI_SC02_SH039_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी looks — धीरे-धीरे चेहरा आसमान की तरफ उठाते हैं उदास आँखें … | feel — We know where the character looks before we see it | attention first — रघुवीर जी's face and hands | reveals — The look (director's manual 3.4): रघुवीर जी's eyes go to what the sentence names | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 040   at 1:05.1
+PURPOSE: Point of view: what रघुवीर जी sees — धीरे-धीरे चेहरा आसमान की तरफ उठाते हैं उदास आँखें …
+SHOT SIZE: Wide (Point of view)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: The place ahead of रघुवीर जी, from where they stand
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: —
+LIGHTING: Natural light of the place
+FOCUS: what रघुवीर जी sees
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.7 s
+CUT WHEN: the thing seen has registered
+EMOTIONAL PURPOSE: The audience sees with the character
+SHOT ID: KAHANI_SC02_SH040_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — The place ahead of रघुवीर जी, from where they stand | feel — The audience sees with the character | attention first — the whole place, then what रघुवीर जी sees in it | reveals — Point of view: what रघुवीर जी sees — धीरे-धीरे चेहरा आसमान की तरफ उठाते हैं उदास आँखें … | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut to the point of view — the look, then what is seen
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 041   at 1:06.8
+PURPOSE: Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "अपने बेटे की चिट्ठी का"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.9 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH041_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "अपने बेटे की चिट्ठी का" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 1:06.8 for 7.5 s: "अपने बेटे की चिट्ठी का" | music: happy (ducked under the line)
+
+SHOT 042   at 1:08.6
+PURPOSE: Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "इंतजार करता हूँ। वो फौज"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.9 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH042_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "इंतजार करता हूँ। वो फौज" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघुवीर जी's face and hands | reveals — Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 1:06.8 for 7.5 s: "इंतजार करता हूँ। वो फौज" | music: happy (ducked under the line)
+
+SHOT 043   at 1:10.6
+PURPOSE: Reaction (part 3 of 4): परी listens, seen over रघुवीर जी's shoulder; the line goes on off-screen
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: परी listens, subtle breathing, one small change of expression
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.9 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
+SHOT ID: KAHANI_SC02_SH043_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: रघुवीर जी's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — परी's face and hands | reveals — Reaction (part 3 of 4): परी listens, seen over रघुवीर जी's shoulder; the line goes on off-screen | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 044   at 1:12.4
+PURPOSE: Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "था - चिट्ठी जरूर आएगी।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.1 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH044_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "था - चिट्ठी जरूर आएगी।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघुवीर जी's face and hands | reveals — Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 1:06.8 for 7.5 s: "था - चिट्ठी" | music: happy (ducked under the line)
+
+SHOT 045   at 1:13.5
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी: "अपने बेटे की चिट्ठी का इंतजार करता हूँ। …"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH045_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी: "अपने बेटे की चिट्ठी का इंतजार करता हूँ। …" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 1:06.8 for 7.5 s: "जरूर आएगी।" | music: happy (ducked under the line)
+
+SHOT 046   at 1:14.6
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH046_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 047   at 1:16.5
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH047_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Show what रघुवीर जी does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, kneeling, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 048   at 1:18.4
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH048_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, kneeling, something in the right hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, kneeling, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 049   at 1:20.1
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH049_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Show what रघुवीर जी does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, kneeling, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 050   at 1:21.8
+PURPOSE: Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: परी: "दादाजी, क्या ये वाली चिट्ठी है?"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH050_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "दादाजी, क्या ये वाली चिट्ठी है?" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of परी — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 1:21.8 for 9.7 s: "दादाजी, क्या ये" | music: happy (ducked under the line)
+
+SHOT 051   at 1:23.1
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH051_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 1:21.8 for 9.7 s: "वाली चिट्ठी है?" | music: happy (ducked under the line)
+
+SHOT 052   at 1:24.4
+PURPOSE: Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: परी: "मुझे ये आपके डाक-बक्से के पीछे,"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH052_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "मुझे ये आपके डाक-बक्से के पीछे," | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — परी's face and hands | reveals — Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 1:21.8 for 9.7 s: "मुझे ये आपके" | music: happy (ducked under the line)
+
+SHOT 053   at 1:25.6
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH053_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 1:21.8 for 9.7 s: "डाक-बक्से के पीछे," | music: happy (ducked under the line)
+
+SHOT 054   at 1:26.9
+PURPOSE: Reaction (part 3 of 4): रघुवीर जी listens, seen over परी's shoulder; the line goes on off-screen
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी listens, subtle breathing, one small change of expression
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.1 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
+SHOT ID: KAHANI_SC02_SH054_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: परी's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — रघुवीर जी listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — रघुवीर जी's face and hands | reveals — Reaction (part 3 of 4): रघुवीर जी listens, seen over परी's shoulder; the line goes on off-screen | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 055   at 1:28.0
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH055_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 1:21.8 for 9.7 s: "पत्तों में गिरी" | music: happy (ducked under the line)
+
+SHOT 056   at 1:29.2
+PURPOSE: Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: परी: "हुई मिली थी। बहुत पुरानी है।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.7 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH056_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "हुई मिली थी। बहुत पुरानी है।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — परी's face and hands | reveals — Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 1:21.8 for 9.7 s: "हुई मिली थी। बहुत पुरानी" | music: happy (ducked under the line)
+
+SHOT 057   at 1:30.9
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH057_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: परी ← the front picture (rigged); रघुवीर जी ← your picture 3 (front, sitting, neutral)
+FIVE QUESTIONS: see — परी: "दादाजी, क्या ये वाली चिट्ठी है? मुझे ये …" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 परी (the master picture) holding something; CHAR_001 रघुवीर जी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+STATE AT END: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (परी) at 1:21.8 for 9.7 s: "है।" | music: happy (ducked under the line) | effects: effect 21
+
+────────── दृश्य 3: open place
+SCENE BRIEF (training guide §7)
+  Subjects: रघुवीर जी (CHAR_001), परी (CHAR_002)
+  Action: नीम के पेड़ के नीचे का कोना
+  Environment: open place — floor line at 647, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood action
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 058   at 1:32.8
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: पर्यावरण - नीम के पेड़ की घनी ठंडी काली छाया, छाया के बाहर त…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: open place
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 2.9 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC03_SH058_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — पर्यावरण - नीम के पेड़ की घनी ठंडी काली छाया, छाया के बाहर त… | feel — Orientation: the audience knows where it is | attention first — the whole place, then open place in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action | effects: rustle
+
+SHOT 059   at 1:35.7
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH059_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 060   at 1:37.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH060_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 061   at 1:39.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH061_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action | effects: birds
+
+SHOT 062   at 1:40.9
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH062_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, scared; परी right third, facing left, standing, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 063   at 1:42.7
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH063_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, scared; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, scared; परी right third, facing left, standing, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 064   at 1:44.4
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH064_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the whole place, then रघुवीर जी in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, scared; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 065   at 1:46.2
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 3.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH065_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+STATE AT END: रघुवीर जी centre, facing left, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 066   at 1:49.1
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH066_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Show what रघुवीर जी does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing left, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, calm
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 067   at 1:50.4
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "हाँ... ये... ये उसी की"
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.7 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC03_SH067_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी: "हाँ... ये... ये उसी की" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, calm
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, scared
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 1:50.4 for 4.0 s: "हाँ... ये... ये उसी की" | music: action (ducked under the line)
+
+SHOT 068   at 1:52.1
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "लिखावट है... मेरे मुन्ना की..."
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.2 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC03_SH068_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी: "लिखावट है... मेरे मुन्ना की..." | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघुवीर जी's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, scared
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 1:50.4 for 4.0 s: "लिखावट है... मेरे" | music: tense (low drone) (ducked under the line)
+
+SHOT 069   at 1:53.3
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी: "हाँ... ये... ये उसी की लिखावट है... मेरे…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH069_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← your picture 3 (front, sitting, neutral); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी: "हाँ... ये... ये उसी की लिखावट है... मेरे…" | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, scared
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 1:50.4 for 4.0 s: "मुन्ना की..." | music: tense (low drone) (ducked under the line)
+
+SHOT 070   at 1:54.4
+PURPOSE: Reaction: the audience feels the line through परी's face, over रघुवीर जी's shoulder, and it is allowed to breathe
+SHOT SIZE: Close-up (Over the shoulder)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी listens and takes it in, without words
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.3 s
+CUT WHEN: the feeling has landed (0.9 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC03_SH070_V001   LENS: 85mm   ANGLE: high angle: vulnerability, exposure
+OVER THE SHOULDER: रघुवीर जी's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: रघुवीर जी ← your picture 27 (back, standing, no face (back or hidden)); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — परी listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of परी — the eyes, then the mouth | reveals — Reaction: the audience feels the line through परी's face, over रघुवीर जी's shoulder, and it is allowed to breathe | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, standing, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone)
+
+SHOT 071   at 1:55.8
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH071_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: रघुवीर जी ← the front picture (rigged); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Show what रघुवीर जी does | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone) | effects: a chair
+
+SHOT 072   at 1:57.1
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH072_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: रघुवीर जी ← the front picture (rigged); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — रघुवीर जी's face and hands | reveals — Show what रघुवीर जी does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, calm; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, happy; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone)
+
+SHOT 073   at 1:58.5
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 1.4 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH073_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← the front picture (rigged); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Show what रघुवीर जी does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, something in the left hand, happy; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, happy; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone)
+
+SHOT 074   at 1:59.9
+PURPOSE: The look (director's manual 3.4): रघुवीर जी's eyes go to परी
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी looks at परी
+FACIAL PERFORMANCE: Eyes on the thing first, the head a moment later
+BODY LANGUAGE: Still, turned toward it
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.0 s
+CUT WHEN: the eyes have settled
+EMOTIONAL PURPOSE: We know where the character looks before we see it
+SHOT ID: KAHANI_SC03_SH074_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← the front picture (rigged); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी looks at परी | feel — We know where the character looks before we see it | attention first — रघुवीर जी's face and hands | reveals — The look (director's manual 3.4): रघुवीर जी's eyes go to परी | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, calm; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, calm; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone)
+
+SHOT 075   at 2:00.9
+PURPOSE: Point of view: what रघुवीर जी sees — परी
+SHOT SIZE: Medium (Point of view)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी as रघुवीर जी sees them, from where रघुवीर जी stands
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+BODY LANGUAGE: Leans back, arms in
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 2.0 s
+CUT WHEN: the thing seen has registered
+EMOTIONAL PURPOSE: The audience sees with the character
+SHOT ID: KAHANI_SC03_SH075_V001   LENS: 50mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← the front picture (rigged); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — परी as रघुवीर जी sees them, from where रघुवीर जी stands | feel — The audience sees with the character | attention first — परी's face and hands | reveals — Point of view: what रघुवीर जी sees — परी | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut to the point of view — the look, then what is seen
+STATE AT START: रघुवीर जी centre, facing right, sitting, calm; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, calm; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone)
+
+SHOT 076   at 2:02.9
+PURPOSE: Lip-sync close-up: front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघुवीर जी: "तुम सच में परी हो।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 2.0 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC03_SH076_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← the front picture (rigged); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी: "तुम सच में परी हो।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Lip-sync close-up: front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, calm; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, happy; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: VOICE_001 (रघुवीर जी) at 2:02.9 for 2.0 s: "तुम सच में परी हो।" | music: tense (low drone) (ducked under the line)
+
+SHOT 077   at 2:04.9
+PURPOSE: Reaction: the audience feels the line through परी's face, over रघुवीर जी's shoulder, and it is allowed to breathe
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: परी listens and takes it in, without words
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Natural light of the place
+FOCUS: परी
+SOUND: Dialogue in the room of open place, खुला स्थान ambience
+DURATION: 1.0 s
+CUT WHEN: the feeling has landed (0.7 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC03_SH077_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: रघुवीर जी's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: रघुवीर जी ← your picture 27 (back, standing, no face (back or hidden)); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — परी listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — परी's face and hands | reveals — Reaction: the audience feels the line through परी's face, over रघुवीर जी's shoulder, and it is allowed to breathe | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_001 रघुवीर जी (the master picture); CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: रघुवीर जी centre, facing right, sitting, happy; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, happy; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action
+
+SHOT 078   at 2:05.9
+PURPOSE: Show what रघुवीर जी does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघुवीर जी in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: रघुवीर जी
+SOUND: Ambience of open place
+DURATION: 10.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH078_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघुवीर जी ← the front picture (rigged); परी ← the front picture (rigged)
+FIVE QUESTIONS: see — रघुवीर जी in the scene | feel — Keep the story readable | attention first — the face of रघुवीर जी — the eyes, then the mouth | reveals — Show what रघुवीर जी does | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघुवीर जी (the master picture) holding something; CHAR_002 परी (the master picture) holding something | LOC_001 open place (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघुवीर जी centre, facing right, sitting, something in the right hand, happy; परी right third, facing left, sitting, something in the right hand, scared
+STATE AT END: रघुवीर जी centre, facing right, sitting, something in the right hand, happy; परी right third, facing left, sitting, something in the right hand, scared
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: action | effects: a chair, birds
+
+QUALITY CHECK
+• Every part opens on a readable wide shot: yes
+• Jump cuts (a cut to almost the same framing): 7 removed (the shot simply continues)
+• Technical Director protocol: locked tripod, every shot static, no camera shake unless the story asks for it
+• Shots longer than 4 s: 1
+• Lip-sync shots (front close-ups, face filling the frame, at most 6 words): 16; with more than 6 words: 0
+• Runs slowed to walking pace: 1; characters who stop walking to speak: 0
+• Moves read from the story's directions (v34): 0 leaving, 0 coming back, 0 across or around, 1 up to someone; 0 lines waited until their speaker had walked onto the stage (v35)
+• Realism (v34): 1 looks held on an entrance, an exit, a return, a reveal or someone hurt (0 turned round to watch); 0 reactions to rain or snow beginning; 0 hurried out of the rain; 0 felt their way blindfolded; 0 doors heard; 4 footsteps moved across the stereo
+• Bodies (v35): 1 limping (uneven steps, never running), 0 with one arm (an empty sleeve; one hand does the work), 0 with one leg (crutches, or an artificial leg and a limp), 0 with fingers missing, 0 with one eye, 0 blind (feels the way or follows the cane, listens, no point-of-view shot), 0 deaf (0 sounds or calls not heard — no startle, no turn), 0 who sign (0 lines in sign language: hands and face framed together, the words in the subtitle)
+• Everyday actions (v35): 3 sat down (a chair, a sofa, a bed, the floor — each its own furniture and sound), 0 got up (leaning forward, slower from a low seat; from lying, sitting up first), 0 lay down to sleep (sat, then lay back; eyes shut, slow breath, a blanket in bed), 0 woke (sat up, stretched and yawned), 0 ate (hand to mouth, chewing, heard), 0 drank (raised to the lips, a sip or gulps, the cup set down); 0 shots of a seated speaker from a standing photo kept from the waist up, 0 close-ups of a photo eating or drinking (the cup or morsel comes up to the lips)
+• Cuts made so no character moves 15% of the frame in one shot: 8; shots still over the limit (very fast moves the story's timing leaves no room to slow): 6
+• Cuts made so each shot holds one action: 1; shots with more than one: 0
+• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 94
+• Validation layer: 47 of 78 shots passed at once, 31 corrected
+• Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
+• First-frame checks: 0 shots reframed for a cut head, 0 for feet out of the frame (feet in the bottom 85-98% with their shadow)
+• Lip-sync framing (8.3): the face fills 25% of the frame on average in 16 lip-sync shots (65-75% where the picture and the frame allow it; the whole head always inside; a narrow frame keeps the face in its centre 60%); reframed on the face: 16
+• Objective (small films of 30-90 s): this film is 2:24 — the script decides the length; it is made as 78 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
+• Miyazaki ma pauses after two fast beats: 0; Russo / Gunn comic beats: 0; Gunn shadow passes in funny scenes: 0
+• Story spine filled before any shot was planned (R4, hardcoded): yes — hero रघुवीर जी; the ending was read first (R3)
+• Spider-Verse animation on twos: off (every character moves every frame; switch it on in Settings)
+• Nolan: real sounds — steps by the floor of the place (stone, marble, cave, earth), running steps for runs; cross-cutting between speaker and listener in long lines
+• Handbook (AI Animation Director): the five questions answered for every shot, a stable shot ID and a lens by shot size; thought-before-action beats (a pause and a look before the reaction): 2; Dutch angles: 0 (at most one per scene); shot durations: 9 distinct lengths (never the same for every shot); the continuity ledger per scene and the four approval gates follow below
+• Director's manual (v2.0): establishing shots held for the cut length (2.5 s; shots are cut at 2.6 s since v26, the 4-s cap stays): 3 of 3 (the rest are cut sooner by the protocol's motion rule — someone enters or moves during them, and the move is seen wide); point-of-view shots for looks: 2; reactions staged for loud sounds: 0; suspicion and relief read from the manners; every shot carries its ASSETS, TRANSITION IN, STATE AT START / END and VOICE / MUSIC lines; the beat sheet, scene records, coverage report, prop ledger and location records follow the ledger
+• Phone-local guide (v1.0): establishing bridges added where the place changes between scenes: 0; reverse shots use the place's reverse angle when you gave one; real uploaded angles replace made views; no painted mouth where no mouth was found
+QC SCORE (training guide §12 — weighted rubric, 0–5 per category): 97/100 — review for approval
+  Character identity         5/5  (weight 25%)
+  3D geometry and anatomy    5/5  (weight 20%)
+  Style and rendering        5/5  (weight 15%)
+  Lighting and composition   5/5  (weight 10%)
+  Prompt compliance          5/5  (weight 15%)
+  Scene continuity           4/5  (weight 15%)
+  Critical-defect override: none (no character missing from its scene, feet on the floor)
+  Automatic rejection conditions watched: a face differing from the canonical picture (impossible: the pictures are the user's own, drawn as they are); a required character or prop missing (counted above); extra limbs or broken geometry (the feet check); an outfit change without instruction (impossible: one picture set per character); the action or composition violated (the validation layer); unexplained changes between frames (the Final QC's boiling and shake check); artefacts (the Final QC).
+• Situations (v34 training): 1 with a walking aid, 0 with glasses, goggles, a blindfold or a patch, 0 hurt, 0 with an umbrella, 0 changes of look — 0 reveals, 0 moments of concern, 0 of relief; 8 shots framed at a seated character's eye level; 0 point-of-view shots turned into listening for a blindfold; sounds: 5 footsteps, 0 of walking aids, 0 of rain on an umbrella
+
+THE ANIMATED DIRECTOR'S CRAFT (v38 — studio-style directing for family films)
+Readable performances: the speaker on the stage and facing us for 7 of 7 line(s)
+Pacing: 0 of 0 peak line(s) followed by breathing room (a pause of 0.35 s or more, or the end of the scene)
+Colour by beat: 0 peak shot(s) a little richer, 0 tender shot(s) a little warmer; cheeks flush with anger, pride, laughter and effort
+Touch only as written: 0 hug(s), held hand(s) or peck(s), each from the script's own words
+PICTURES THAT WOULD HELP (upload them and make the film again; until then the studio uses what it has):
+  • रघुवीर जी: a surprised face (11 shots); a sad face (2 shots)
+  • परी: a surprised face (13 shots)
+Delivery: edit_list.txt (scene markers and every shot's timecode) is saved with the film; subtitles: type "add subtitles" after the film
+Not trained from the guide: its sexual and nude content (the studio makes family films)
+• Static shots: 78 of 78
+• Reactions shown and allowed to breathe: 6
+• Relationships shown with both characters in the frame: 36 two-shots
+• Pacing: 78 shots in 129 s of scenes, an average shot of 1.6 s
+
+BRAINTRUST (every 5 shots, 16 rounds) — AUTHORITY: the Braintrust suggests only; the director decides.
+• Q1 story clear without dialogue: 16 of 16 rounds
+• Q2 the character has a strong opinion: 16 of 16 rounds
+• Q3 a ma pause (quiet moment): 12 of 16 rounds
+• Q4 costume culturally accurate (real garment names): 1 of 2 characters — generic: परी (name the real garment: ghagra-choli, Banarasi saree, achkan…)
+• Q5 the face is the same as the lock sheet: yes — every character keeps one picture (its lock sheet) for the whole film; the face layer is cut from it, never redrawn
+• R5 at most four characters per 60 s: yes
+• suggestion: shots 26-30: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 31-35: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 51-55: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 66-70: no quiet moment — the director holds a still shot after the next action (ma)
+
+CONTINUITY LEDGER (ch. 12)
+— दृश्य 1: open place, day, Key: warm sun, top left 45 deg, 0:07.5–0:30.2
+   रघुवीर जी: centre, facing left → centre, facing left; costume: as the lock sheet
+— दृश्य 2: open place, day, Key: warm sun, top left 45 deg, 0:30.2–1:32.6
+   परी: enters later → left third, facing right; costume: as the lock sheet; holds something
+   रघुवीर जी: centre, facing left → centre, facing left; costume: as the lock sheet
+   axis: परी left, रघुवीर जी right — kept in every shot of the scene (180-degree principle)
+— दृश्य 3: open place, day, Key: warm sun, top left 45 deg, 1:32.6–2:16.1
+   रघुवीर जी: centre, facing left → centre, facing right; costume: as the lock sheet; holds something
+   परी: right third, facing left → right third, facing left; costume: as the lock sheet; holds something
+
+NARRATIVE BEAT SHEET (director's manual 3.1)
+  1. Beginning and setup — दृश्य 1
+     what happens: Every day, दूर से चिड़ियों के चहचहाने की और कभी-कभी साइकिल की घंटी की ट्रिंग-ट्रिंग आवाज आ …
+     who: CHAR_001 रघुवीर जी  |  where: open place
+     the audience must understand: where we are and the ordinary day  |  what changes: scared → scared
+     the next beat needs: रघुवीर जी: आज भी नहीं आई... पंद्रह साल हो गए।
+  2. Introduction of central characters and goals — दृश्य 1
+     what happens: रघुवीर जी: "आज भी नहीं आई... पंद्रह साल हो गए।"; परी: "मैं परी हूँ! आप रोज यहाँ इस टूटी बेंच पर क्यों बैठ…"
+     who: CHAR_001 रघुवीर जी  |  where: open place
+     the audience must understand: who wants what (their first lines)  |  what changes: scared → scared
+     the next beat needs: रघुवीर जी: आज भी नहीं आई... पंद्रह साल हो गए।
+  3. Inciting incident — दृश्य 2
+     what happens: One day, नीम के पेड़ के नीचे का कोना
+     who: CHAR_001 रघुवीर जी, CHAR_002 परी  |  where: open place
+     the audience must understand: the thing that changes the day  |  what changes: calm → calm
+     the next beat needs: परी: दादाजी, क्या ये वाली चिट्ठी है? मुझे ये आपके डाक-बक्से के पीछे, जमीन पर सूखे पत्तों में गिरी हु…
+  4. Escalation — the story has no separate escalation scene (not forced: the turn leads straight to the climax)
+  5. Discoveries and emotional turning points — दृश्य 3
+     what happens: the scene with the biggest change of feeling: scared → calm
+     who: CHAR_001 रघुवीर जी  |  where: open place
+     the audience must understand: what is found out, how it feels  |  what changes: scared → calm
+     the next beat needs: धीरे-धीरे पीछे जाता हुआ वाइड दृश्य, नीम के पेड़ की घनी ठंडी छाया, छाया में ईंट से टिकी टूटी बेंच, बे…
+  6. Climax — दृश्य 3
+     what happens: नीम के पेड़ के नीचे का कोना
+     who: CHAR_001 रघुवीर जी  |  where: open place
+     the audience must understand: the hardest moment, met  |  what changes: scared → calm
+     the next beat needs: धीरे-धीरे पीछे जाता हुआ वाइड दृश्य, नीम के पेड़ की घनी ठंडी छाया, छाया में ईंट से टिकी टूटी बेंच, बे…
+  7. Resolution — दृश्य 3
+     what happens: Until finally, नीम के पेड़ के नीचे का कोना (after नीम के पेड़ के नीचे का कोना)
+     who: CHAR_001 रघुवीर जी  |  where: open place
+     the audience must understand: how it ends for everyone  |  what changes: scared → calm
+     the next beat needs: धीरे-धीरे पीछे जाता हुआ वाइड दृश्य, नीम के पेड़ की घनी ठंडी छाया, छाया में ईंट से टिकी टूटी बेंच, बे…
+  8. Closing image: धीरे-धीरे पीछे जाता हुआ वाइड दृश्य, नीम के पेड़ की घनी ठंडी छाया, छाया में ईंट से टिकी टूटी बेंच, बेंच पर एक बूढ़ा आदमी …
+  (the beats are read from the script's own scenes; a scene missing from this list is not missing from the film)
+
+SCENE RECORDS (director's manual 3.3)
+— SC_01: दृश्य 1 — नीम के पेड़ के नीचे का कोना
+   purpose: नीम के पेड़ के नीचे का कोना  |  act 1
+   location: LOC_001 open place, day (your picture)  |  characters: CHAR_001 रघुवीर जी
+   beginning state: रघुवीर जी centre, facing left, sitting, calm
+   ending state: रघुवीर जी centre, facing left, sitting, calm
+   objectives and conflict: रघुवीर जी — "आज भी नहीं आई... पंद्रह साल हो गए।"
+   essential actions: पर्यावरण - दोपहर के 2 बजे का समय, बिल्कुल साफ नीला आसमान एक भी बादल नह…
+   emotional progression: रघुवीर जी: calm → scared → calm
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: a dissolve, the same place
+— SC_02: दृश्य 2 — नीम के पेड़ के नीचे का कोना
+   purpose: नीम के पेड़ के नीचे का कोना  |  act 2
+   location: LOC_001 open place, day (your picture)  |  characters: CHAR_002 परी (enters), CHAR_001 रघुवीर जी
+   beginning state: रघुवीर जी centre, facing left, sitting, calm
+   ending state: परी left third, facing right, standing, something in the right hand, something in the left hand, calm; रघुवीर जी centre, facing left, sitting, calm
+   objectives and conflict: रघुवीर जी — "अरे, कौन है? डाक-बक्से को हाथ मत लगाओ।"; परी — "मैं परी हूँ! आप रोज यहाँ इस टूटी बेंच पर क्यों बैठते हो दादा…"
+   essential actions: पर्यावरण - वही दोपहर की कड़क धूप और साफ नीला आसमान, गर्म हवा से धूल उड… / रघुवीर जी का चेहरा फिर से उदास हो जाता है। एक बहुत लंबी गहरी सांस लेते… / परी का चेहरा सुनते ही बदल जाता है बड़ी मुस्कान एक सेकंड में गायब हो जा…
+   emotional progression: परी: calm → surprised → calm; रघुवीर जी: calm → scared → calm
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: a dissolve, the same place
+— SC_03: दृश्य 3 — नीम के पेड़ के नीचे का कोना
+   purpose: नीम के पेड़ के नीचे का कोना  |  act 5
+   location: LOC_001 open place, day (your picture)  |  characters: CHAR_001 रघुवीर जी, CHAR_002 परी
+   beginning state: रघुवीर जी centre, facing left, sitting, calm; परी right third, facing left, standing, calm
+   ending state: रघुवीर जी centre, facing right, sitting, something in the right hand, happy; परी right third, facing left, sitting, something in the right hand, scared
+   objectives and conflict: रघुवीर जी — "हाँ... ये... ये उसी की लिखावट है... मेरे मुन्ना की..."
+   essential actions: पर्यावरण - नीम के पेड़ की घनी ठंडी काली छाया, छाया के बाहर तेज धूप से … / परी धीरे-धीरे बिना शोर किए टूटी बेंच पर रघुवीर जी के बगल में बैठ जाती … / धीरे-धीरे पीछे जाता हुआ वाइड दृश्य, नीम के पेड़ की घनी ठंडी छाया, छाया…
+   emotional progression: रघुवीर जी: calm → scared → happy; परी: calm → scared
+   information revealed: रघुवीर जी: "तुम सच में परी हो।" (a realisation, decision or confession)
+   transition to the next scene: the end card
+
+SCENE-COVERAGE REPORT (director's manual 3.2 — genuine gaps against intentional omissions)
+  1. A character suddenly appears in a location: 1 entrance(s) staged from the script's words ("enters", "comes running"…); everyone else is named by the scene's opening
+  2. An important object is used before being introduced: 3 thing(s) held that the story never names before: something (परी), something (रघुवीर जी), something (परी) — they come from the manner of a line ("sword in hand"); the insert of a thing's picture introduces it when there is one
+  3. A decision occurs without showing motivation: every realisation or decision line comes after a reaction or a look (thought before action)
+  4. A dramatic sound has no visible reaction: 0 loud sound(s) in the script, each given a startle on every face on stage and a reaction shot a beat later (the director adds them itself)
+  5. A location changes without adequate orientation: 3 of 3 parts open on a readable wide shot (an establishing cut)
+  6. Dialogue requires a response but lacks a reaction shot: 1 question(s) asked; 1 without a reaction shot or an answer within 4 s (a rhetorical question, or the script moves on)
+  7. An action starts in one shot and is incomplete in the next: 4 move(s) continue across a cut — each next shot starts where the move is (cut on action; the key keeps going), none restarts
+  8. An emotional change has no believable transition: 1 quick jump(s) between far feelings — the script's own turns (a scream after a laugh); the face still blends
+
+PROP LEDGER (director's manual 1.6 — owner, state and location scene by scene)
+  • something — owner: whoever holds it first
+      SC_02: परी — held in the right hand from 0:45.3
+  • something — owner: whoever holds it first
+      SC_02: परी — held in the left hand from 1:18.9
+      SC_03: रघुवीर जी — held in the right hand from 1:46.5
+      SC_03: रघुवीर जी — held in the left hand from 1:47.9
+      SC_03: रघुवीर जी — put down at 1:59.4
+      SC_03: रघुवीर जी — put down at 1:59.4
+      SC_03: रघुवीर जी — held in the right hand from 2:05.9
+      SC_03: परी — held in the right hand from 1:46.5
+
+LOCATION RECORDS (director's manual 1.6)
+  LOC_001 — open place: exterior; reference: your picture (the location plate, feet on its floor line)
+     layout: the stage is 1280 wide, the floor line at the plate's ground; entrances heroes enter from the left
+     time-of-day and lighting variants: day (Key: warm sun, top left 45 deg)  |  scenes: SC_01, SC_02, SC_03
+• Step 8 — the finished film metered frame by frame as it was written (3458 frames; 2932 pairs of frames in a row compared in 78 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 30.1 per cell at 1:48.2 (limit 14), the largest share of the frame changed 47% (limit 50%)
+
+FRAME AUDIT — every character in every frame as drawn (3087 frames, 5435 character-frames, 5210 frame pairs inside shots)
+• Jolts (a change of speed over 2% of the height in one frame): 1; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 1; extra faces: 0
+  - परी jolts (2.0% of the height per frame, up and down) at frame 2787 (1:56.1)
+  - परी's picture changes from the rigged front picture to a view (382x900) between frames 2782 and 2783 (1:55.9) without a cross-fade

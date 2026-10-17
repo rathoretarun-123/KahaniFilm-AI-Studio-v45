@@ -1,0 +1,3 @@
+FRAME AUDIT — every character in every frame as drawn (3033 frames, 8370 character-frames, 7912 frame pairs inside shots)
+• Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0
+exit 0
