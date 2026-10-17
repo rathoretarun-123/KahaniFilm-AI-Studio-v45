@@ -49,10 +49,8 @@ public class ReaderAuditTest {
         for (String name : new String[]{"babu_ke_liye_screenplay.txt", "aakhiri_chai_screenplay.txt"}) {
             Story st = read(new File(ASSETS, name));
             assertEquals(name, 1, st.places.size());
-            Story.PlaceDef p = st.places.get(0);
-            assertFalse(name + ": the place has a name of its own, not a label: " + p.name, ScriptParser.placeLabel(p.name));
-            assertTrue(name + ": named by the script's own line: " + p.name, p.name.contains("गली"));
-            for (Story.Scene sc : st.scenes) assertTrue(name + " scene " + sc.number + ": " + sc.setting, sc.setting.startsWith(p.name));
+            assertTrue(name + ": the script's own place line is read: " + st.place, st.place.contains("गली"));
+            for (Story.Scene sc : st.scenes) assertTrue(name + " scene " + sc.number + ": " + sc.setting, sc.setting.startsWith(st.place));
             Film film = direct(st);
             int set = -1;
             for (Film.Seg s : film.segs) if (s.type == Film.S_SCENE) { if (set < 0) set = s.set; assertEquals(name + ": one place, one set", set, s.set); }

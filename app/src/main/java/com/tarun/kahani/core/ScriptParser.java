@@ -412,8 +412,7 @@ public final class ScriptParser {
         Story.PlaceDef own = null;
         if (st.place.length() > 0) {
             for (Story.PlaceDef p : st.places) if (placeLabel(p.name)) { own = p; break; }
-            if (own == null && st.places.isEmpty()) { own = new Story.PlaceDef(); st.places.add(own); }
-            if (own != null) own.name = st.place;
+            if (own == null && st.places.isEmpty()) { own = new Story.PlaceDef(); own.name = st.place; st.places.add(own); }
         }
         String prev = "";
         for (Story.Scene sc : st.scenes) {
@@ -422,7 +421,7 @@ public final class ScriptParser {
                 for (Story.Beat b : sc.beats) if (b.type == Story.Beat.DIRECTION) { first = b.text; break; }
                 String head = sc.title + " । " + (first.length() > 240 ? first.substring(0, 240) : first);
                 Story.PlaceDef p = placeNamedIn(st, head);
-                if (p == null && own != null && st.places.size() == 1) p = own;
+                if (p == null && own != null && st.places.size() == 1) { sc.setting = ownSetting(st, own); prev = sc.setting; continue; }
                 // v40: the one place a story lists is where its first scene happens when the scene names none
                 if (p == null && sc == st.scenes.get(0) && st.places.size() == 1) p = st.places.get(0);
                 if (p != null) sc.setting = p.name + (p.description.length() > 0 ? "। " + p.description : "");
@@ -431,6 +430,12 @@ public final class ScriptParser {
             }
             prev = sc.setting;
         }
+    }
+
+    /** v47.8: a scene's setting at the story's own place: the script's words for it first, then the list's description. */
+    static String ownSetting(Story st, Story.PlaceDef own) {
+        String d = own.description == null ? "" : own.description.trim();
+        return st.place + (d.length() > 0 && !d.equals(st.place) ? "। " + d : "");
     }
 
     /** The place from the list whose name the text mentions (its distinctive words, whole), or null. */
@@ -538,8 +543,13 @@ public final class ScriptParser {
      */
     static void timeOfScenes(Story st) {
         if (st.time.length() == 0) return;
+        // (v47.8: the story's own place, given to every scene, is no hour of the scene — a word of time in its description
+        // took the script's "समय: शाम 7:15…, मूसलाधार बारिश…" away from आखिरी चाय: no rain, stars instead)
+        String own = "";
+        if (st.place.length() > 0 && st.places.size() == 1) own = ownSetting(st, st.places.get(0));
         for (Story.Scene sc : st.scenes) {
-            if (Sets.detectTime(sc.title + " " + sc.setting, -1) >= 0) continue;
+            String mine = own.length() > 0 && sc.setting.startsWith(own) ? sc.setting.substring(own.length()) : sc.setting;
+            if (Sets.detectTime(sc.title + " " + mine, -1) >= 0) continue;
             sc.setting = sc.setting.length() == 0 ? "समय: " + st.time : sc.setting.replaceAll("[।.\\s]+$", "") + "। समय: " + st.time;
         }
     }
