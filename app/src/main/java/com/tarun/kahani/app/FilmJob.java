@@ -541,7 +541,11 @@ public final class FilmJob implements Runnable {
                 Voices.Cast k = l.who == null ? narratorCast : cast.get(l.who);
                 // (v47.8: a speaker the cast list does not hold — a line given to someone added after the cast was read —
                 // gets the voice their look gives, not a crash of the whole film)
-                if (k == null) { k = Voices.defaultCast(l.who.look); cast.put(l.who, k); }
+                if (k == null) {
+                    k = Voices.defaultCast(l.who.look != null ? l.who.look : new com.tarun.kahani.core.Look());
+                    k.style = com.tarun.kahani.core.VoiceStyle.forCharacter(l.who);
+                    cast.put(l.who, k);
+                }
                 float[] v = null;
                 // 1) the user's own recording of this exact line
                 File rec = new File(project.dir, "lines/" + hash(who + "|" + l.text) + ".wav");
