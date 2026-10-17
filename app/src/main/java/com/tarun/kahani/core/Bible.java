@@ -259,7 +259,7 @@ public final class Bible {
      * entry and collapse positional descriptions into that location, while retaining distinct anchors
      * such as the neem tree and the post office.
      */
-    static String placeIdentity(String place) {
+    public static String placeIdentity(String place) {
         String n = Txt.norm(place == null ? "" : place).toLowerCase(java.util.Locale.ROOT).trim();
         n = n.replaceAll("(?:के नीचे(?: का)?|के पास|के सामने|के पीछे|की छाया में|की छाया|के किनारे|वाले? कोने में|वाले? कोना|का कोना|कोने में|कोना|छाया में|के पास वाला)", " ");
         n = n.replaceAll("(?<=[\\p{IsDevanagari}])\\s+(?:का|की|के)\\s+", " ");
