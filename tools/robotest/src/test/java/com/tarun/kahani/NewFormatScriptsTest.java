@@ -135,6 +135,18 @@ public class NewFormatScriptsTest {
         }
     }
 
+    /** v47.7: "वो हिलते स्टूल पर बैठता है", "रघु स्टूल पर बैठा" — on the stool the script lists, never on the street. */
+    @Test public void whoSitsOnAStoolSitsOnTheStool() throws Exception {
+        Made m = make(CHAI);
+        int onStools = 0, seats = 0;
+        for (Film.Seg sg : m.film.segs) {
+            for (Film.Actor a : sg.actors) for (Film.Key k : a.keys) if (k.body == com.tarun.kahani.core.Pose.SIT && k.seat == Film.SEAT_STOOL) onStools++;
+            for (Film.Fx f : sg.fx) if (f.type == Film.FX_SEAT && f.kind == Film.SEAT_STOOL) seats++;
+        }
+        assertTrue("someone sits on a stool", onStools > 0);
+        assertTrue("the stools are drawn under them", seats >= 3);
+    }
+
     @Test public void aWalkAcrossSomeoneSeatedGoesInFrontOfThem() throws Exception {
         // any story: one sits on a bench in the middle, the other walks from one side of the stage to the other
         String s = "शीर्षक: बेंच\n\nपात्र\n\n1. दादा (70 साल)\nबूढ़ा आदमी\n\n2. मुन्नी (8 साल)\nछोटी लड़की\n\nस्थान\n\n1. पार्क\nएक छोटा पार्क\n\nकहानी\n\n"

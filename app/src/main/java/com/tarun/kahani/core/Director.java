@@ -7408,7 +7408,7 @@ public final class Director {
     static final String[] CHAIR = {"कुर्सी", "chair", "armchair"};
     static final String[] SOFA = {"सोफ़", "सोफा", "सोफे", "दीवान", "sofa", "couch", "settee"};
     static final String[] BED = {"बिस्तर", "पलंग", "चारपाई", "खाट", "bed", "cot", "mattress"};
-    static final String[] STOOL = {"मूढ़ा", "मूढ़े", "चौकी", "बेंच", "stool", "bench"};
+    static final String[] STOOL = {"मूढ़ा", "मूढ़े", "चौकी", "बेंच", "स्टूल", "stool", "bench"};      // (v47.7: "स्टूल पर बैठा" sat on the floor)
     static final String[] ROCK = {"चट्टान", "पत्थर पर", "rock", "boulder"};
     static final String[] FLOOR = {"ज़मीन पर", "जमीन पर", "धरती पर", "फर्श पर", "दरी", "चटाई", "floor", "ground", "on the grass", "घास पर"};
     static final String[] BOW = {"प्रणाम", "नमस्ते", "नमस्कार", "झुककर", "सिर झुका", "bow", "bowed", "namaste", "pranam"};

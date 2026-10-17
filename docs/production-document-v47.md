@@ -470,3 +470,78 @@ picture, and how many faces. The record is read back after the film. Inside a sh
 
 The audit runs on the phone (`FilmJob`, all render threads) and on the desktop (`MakeFilm`; `AUDIT=0` skips it).
 Its findings go into the shot list and into the production document as MAJOR issues in the category `FRAMES`.
+
+### Animals act what the script says (`Film.G_ANIMAL`, `Renderer.animalState`)
+
+An animal of the cast now acts its sentence (Hindi and English; a negated clause is not staged):
+
+| The script says | What the animal does |
+|---|---|
+| जुगाली करना (chews the cud) | A rhythmic small jaw |
+| घास खाना / चरना (grazes) | Head down to the grass, then chewing |
+| भौंकना, रंभाना, हिनहिनाना, म्याऊं, मिमियाना (its call) | Its own call; a dog's jaw snaps with each bark, at the bark's time |
+| पूंछ उठाना / हिलाना (tail) | Tail raised or wagging |
+| कान हिलाना / खड़े करना (ears) | Ears flicking or pricked |
+| सिर हिलाना (head) | A head shake, or a nod |
+| बैठना, लेटना, खड़े होना | Sits, lies down, stands up |
+| दौड़ना, सरपट (runs, gallops) | A run, a gallop for a horse |
+| A spoken line | The jaw follows the voice smoothly |
+
+The tail, ears and jaw now blend and never jump in one frame. `AnimalActionsTest` checks every frame at 24 fps against
+these limits for a jump in one frame:
+
+- jaw: 0.12 (0.6 in a bark);
+- tail: 14°;
+- head: 3°;
+- ears: 0.5.
+
+**Still wrong**
+
+- On a photographed animal, grazing tips the head about 36° but it does not reach the grass, and sitting reads as a
+  crouch.
+- A tail moves only where the rig finds one; it found none on the stand-in dog and cow pictures.
+- A dog sits with a uniform fold, not on its haunches.
+
+### Things as characters: talking cars and toys (`Look.OBJECT`)
+
+**Reading.** A character whose name and first described phrase say it is a thing is a thing character: a car, a train,
+a ball, a teddy, a toy, a kettle, a lamp, or any rigid thing the script calls talking or alive. A driver, a doll, a
+robot and a likeness ("कार जैसा") stay people.
+
+**Drawing.** It is drawn rigid, never bent like a person or an animal:
+
+- **Speaking:** a talk bounce. Lips and eyes only where a face was really found in its picture; with no picture, the
+  studio draws one pair of eyes and one mouth.
+- **Nod:** a forward tilt.
+- **Head shake:** a side-to-side rock.
+- **Sitting:** it settles down.
+- **Moving:** a toy hops; a car or a train rolls on its wheels.
+
+**Opening.** Rigid things open where the script says so:
+
+- a box's lid, about its back edge;
+- an umbrella, also in the sun;
+- a book, into the user's picture of it open.
+
+`ObjectCharactersTest` covers this. See `docs/object-characters-v47-7.md` for details and what is not done; among it:
+the wheels in a user's car picture do not turn, and the spacing ignores a thing's width.
+
+### A tremble that shook the frame
+
+**Found.** The frame audit of आखिरी चाय found आरव jolting 2.2% of his height a frame at 28.8 s. A tremble moved his
+whole body at 11 Hz, which a 24 fps film shows as a flip left and right every frame: a shaking video, not a tremble.
+
+**Fixed.**
+
+- Trembles are now 5 Hz, eased in and out.
+- Rubbing the eyes, the cold shiver and the roar stay under 6 Hz.
+- His largest change of speed there is now 0.9% of his height a frame.
+
+### "स्टूल पर बैठा" sat on the street
+
+In आखिरी चाय, "रघु स्टूल पर बैठा" and "वो हिलते स्टूल पर बैठता है" seated them cross-legged on the wet street. The
+director's stool words had मूढ़ा, चौकी and बेंच, but not स्टूल, the word the script uses and lists as object 5.
+
+- **Fixed:** they sit on stools, drawn under them.
+- **Test:** `NewFormatScriptsTest.whoSitsOnAStoolSitsOnTheStool`.
+- **Digest:** none of the 2,100 test stories changes.
