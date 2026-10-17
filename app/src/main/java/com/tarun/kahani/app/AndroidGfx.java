@@ -86,6 +86,36 @@ public final class AndroidGfx implements Gfx {
     public void setAlpha(float a) { alpha *= Math.max(0, Math.min(1, a)); }
 
     public void color(int argb) { color = argb; shader = null; }
+    private float shade;
+    private final android.graphics.Matrix mtx = new android.graphics.Matrix();
+    public void shading(float k) { shade = Math.max(0, Math.min(1, k)); }
+
+    /**
+     * v47.9: the fill paint, with volume while shading is on (Shading: a ball for an oval, a lit-from-above column
+     * otherwise) for a solid colour over the bounds (x0, y0)-(x1, y1).
+     */
+    private Paint f(float x0, float y0, float x1, float y1, boolean ball) {
+        if (shade > 0 && shader == null) {
+            c.getMatrix(mtx);
+            float k = mtx.mapRadius(1f);
+            if (com.tarun.kahani.core.Shading.applies(shade, color, (x1 - x0) * k, (y1 - y0) * k)) {
+                int hi = com.tarun.kahani.core.Shading.lit(color, shade), lo = com.tarun.kahani.core.Shading.shade(color, shade);
+                float[] stops = {0f, com.tarun.kahani.core.Shading.MID_STOP, 1f};
+                int[] cols = {hi | 0xFF000000, color | 0xFF000000, lo | 0xFF000000};
+                Shader sh;
+                if (ball) {
+                    float w = x1 - x0, h = y1 - y0, r = Math.max(w, h) * com.tarun.kahani.core.Shading.BALL_R;
+                    sh = new RadialGradient((x0 + x1) / 2 + w * com.tarun.kahani.core.Shading.BALL_DX, (y0 + y1) / 2 + h * com.tarun.kahani.core.Shading.BALL_DY,
+                            Math.max(0.01f, r), cols, stops, Shader.TileMode.CLAMP);
+                } else sh = new LinearGradient((x0 + x1) / 2, y0, (x0 + x1) / 2, Math.max(y1, y0 + 0.01f), cols, stops, Shader.TileMode.CLAMP);
+                fill.setShader(sh);
+                fill.setColor(0xFFFFFFFF);
+                fill.setAlpha((int) ((color >>> 24) * alpha));
+                return fill;
+            }
+        }
+        return f();
+    }
     public void linear(float x0, float y0, float x1, float y1, int c0, int c1) {
         if (x0 == x1 && y0 == y1) y1 += 0.01f;
         shader = new LinearGradient(x0, y0, x1, y1, c0, c1, Shader.TileMode.CLAMP);
@@ -113,9 +143,9 @@ public final class AndroidGfx implements Gfx {
         return stroke;
     }
 
-    public void rect(float x, float y, float w, float h) { c.drawRect(x, y, x + w, y + h, f()); }
-    public void roundRect(float x, float y, float w, float h, float r) { rf.set(x, y, x + w, y + h); c.drawRoundRect(rf, r, r, f()); }
-    public void oval(float cx, float cy, float rx, float ry) { rf.set(cx - rx, cy - ry, cx + rx, cy + ry); c.drawOval(rf, f()); }
+    public void rect(float x, float y, float w, float h) { c.drawRect(x, y, x + w, y + h, f(x, y, x + w, y + h, false)); }
+    public void roundRect(float x, float y, float w, float h, float r) { rf.set(x, y, x + w, y + h); c.drawRoundRect(rf, r, r, f(x, y, x + w, y + h, false)); }
+    public void oval(float cx, float cy, float rx, float ry) { rf.set(cx - rx, cy - ry, cx + rx, cy + ry); c.drawOval(rf, f(cx - rx, cy - ry, cx + rx, cy + ry, true)); }
     public void line(float x0, float y0, float x1, float y1, float w) { c.drawLine(x0, y0, x1, y1, s(w)); }
     public void strokeOval(float cx, float cy, float rx, float ry, float w) { rf.set(cx - rx, cy - ry, cx + rx, cy + ry); c.drawOval(rf, s(w)); }
 
@@ -125,7 +155,10 @@ public final class AndroidGfx implements Gfx {
     public void quadTo(float cx, float cy, float x, float y) { path.quadTo(cx, cy, x, y); }
     public void cubicTo(float a, float b, float cc, float d, float x, float y) { path.cubicTo(a, b, cc, d, x, y); }
     public void close() { path.close(); }
-    public void fillPath() { c.drawPath(path, f()); }
+    public void fillPath() {
+        if (shade > 0 && shader == null) { path.computeBounds(rf, true); c.drawPath(path, f(rf.left, rf.top, rf.right, rf.bottom, false)); }
+        else c.drawPath(path, f());
+    }
     public void strokePath(float w) { c.drawPath(path, s(w)); }
 
     public void text(String s, float x, float y, float size, boolean bold, int align) {

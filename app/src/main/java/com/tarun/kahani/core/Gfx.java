@@ -19,6 +19,8 @@ public interface Gfx {
     void setAlpha(float a);
 
     void color(int argb);
+    /** v47.9: solid fills drawn from now on get volume at this strength (0 off, 1 full): see Shading. Kept through save/restore. */
+    void shading(float k);
     void linear(float x0, float y0, float x1, float y1, int c0, int c1);
     void radial(float cx, float cy, float r, int c0, int c1);
 

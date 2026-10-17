@@ -891,7 +891,16 @@ script does not name; the director must never just stop, with a Continue the use
   body. Without them the girls sat pasted on the photograph.
 - **Hands on a thing held.** Shaded and lit from above, with a shadow on the thing and the knuckles' creases. They were
   flat rounded blocks of skin colour.
-- **An open book on the lap** of someone seated, not at the chest (it covered her chin in a close-up).
+- **An open book on the lap** of someone seated, not at the chest (it covered her chin in a close-up). It reads as a
+  book: the user's cover shows round the pages, the leaves rise from the spine in a curve and the fold is in shade (it
+  was two white rectangles).
+
+- **Volume on drawn figures** (the films with no pictures). A figure the studio draws was flat cut paper. With
+  `Gfx.shading` on (`Puppet.draw` turns it on), every solid colour it is filled with gets light from above and the left:
+  an oval like a ball (highlight up and left, rim in shade), any other shape like a standing column (lighter at the top,
+  darker at the bottom, warm shadows). Shadows, glows and tiny details stay as drawn. The phone and the desktop use the
+  same numbers (`core/Shading`, `ShadingTest`). Drawn figures are still simple shapes: this gives them roundness, not
+  Pixar's modelling.
 
 ### Things, as a person reads them (`SofaThingsTest`)
 

@@ -5399,11 +5399,21 @@ public final class Renderer {
                 else if (k > 0.001f) {
                     // v47.4: opened like a book — two leaves of pages spread from the hinge, the cover turning edge-on at it
                     float lw = tw * 0.92f * k;
-                    g.color(0xFFF3EBD8); g.rect(tx - lw, ty - th / 2, lw, th); g.rect(tx, ty - th / 2, lw, th);
-                    g.color(0xFFD9CDB4); g.line(tx - lw, ty - th / 2, tx - lw, ty + th / 2, 1.5f); g.line(tx + lw, ty - th / 2, tx + lw, ty + th / 2, 1.5f);
-                    g.color(0xFFBDB3A0);
-                    for (int li = 1; li <= 4; li++) { float ly = ty - th / 2 + th * (0.18f + 0.16f * li); if (lw > 8) { g.line(tx - lw * 0.85f, ly, tx - lw * 0.15f, ly, 1); g.line(tx + lw * 0.15f, ly, tx + lw * 0.85f, ly, 1); } }
-                    g.color(0xFF8A7A62); g.line(tx, ty - th / 2, tx, ty + th / 2, 2);
+                    // v47.9: the user's cover shows round the pages (it was white leaves on nothing), the leaves rise from
+                    // the spine in a curve, and the fold is in shade
+                    float bd = th * 0.045f * k, top = ty - th / 2, bot = ty + th / 2;
+                    g.imageRect(p.heldPic, 0, 0, pw, ph, tx - lw - bd, top - bd * 0.6f, (lw + bd) * 2, th + bd * 1.6f);
+                    for (int sd = -1; sd <= 1; sd += 2) {
+                        float ox = tx + sd * lw, rise = th * 0.035f;
+                        g.color(0xFFF3EBD8);
+                        g.begin(); g.moveTo(tx, top + rise); g.quadTo(tx + sd * lw * 0.45f, top - rise, ox, top);
+                        g.lineTo(ox, bot); g.quadTo(tx + sd * lw * 0.45f, bot - rise * 0.6f, tx, bot + rise * 0.4f); g.close(); g.fillPath();
+                        g.linear(tx, 0, tx + sd * lw * 0.3f, 0, 0x55402818, 0x00402818);
+                        g.rect(sd < 0 ? tx - lw * 0.3f : tx, top, lw * 0.3f, th);
+                        g.color(0xFFBDB3A0);
+                        for (int li = 1; li <= 5; li++) { float ly = top + th * (0.12f + 0.14f * li); if (lw > 8) g.line(tx + sd * lw * 0.18f, ly, tx + sd * lw * 0.84f, ly, Math.max(0.7f, th * 0.008f)); }
+                    }
+                    g.color(0xFF8A7A62); g.line(tx, top + th * 0.03f, tx, bot, Math.max(1.2f, th * 0.012f));
                     float cw = tw * (1 - k) + 2;
                     g.imageRect(p.heldPic, 0, 0, pw, ph * vis, tx - cw / 2, ty - th / 2, cw, th * vis);
                 } else if (p.heldSoft && u >= 1) softPicture(g, p.heldPic, pw, ph, tx - tw / 2, ty - th / 2, tw, th, p.wind, p.time, h);

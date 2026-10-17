@@ -30,7 +30,15 @@ public final class Puppet {
 
     // ------------------------------------------------------------------ entry point
 
+    /** v47.9: how much volume a drawn figure's shapes get (Gfx.shading): its flat colours were a cut-paper look. */
+    public static float SHADING = 1f;
+
     public static void draw(Gfx g, Look l, Pose p, float H) {
+        g.shading(SHADING);
+        try { drawShaded(g, l, p, H); } finally { g.shading(0); }
+    }
+
+    private static void drawShaded(Gfx g, Look l, Pose p, float H) {
         g.save();
         g.translate(0, p.bob);
         if (p.body == Pose.LIE) {

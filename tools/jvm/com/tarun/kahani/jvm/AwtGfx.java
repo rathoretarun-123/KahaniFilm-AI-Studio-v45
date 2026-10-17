@@ -1,6 +1,7 @@
 package com.tarun.kahani.jvm;
 
 import com.tarun.kahani.core.Gfx;
+import com.tarun.kahani.core.Shading;
 
 import java.awt.*;
 import java.awt.geom.*;
@@ -61,6 +62,36 @@ public class AwtGfx implements Gfx {
     }
 
     public void color(int argb) { paint = new Color(argb, true); }
+    private float shade;
+    public void shading(float k) { shade = Math.max(0, Math.min(1, k)); }
+
+    /** v47.9: a solid fill with volume while shading is on (Shading: a ball for an oval, a lit-from-above column otherwise). */
+    private void fill(Shape s, boolean ball) {
+        if (shade > 0 && paint instanceof Color) {
+            Color c = (Color) paint;
+            Rectangle2D b = s.getBounds2D();
+            float k = (float) Math.sqrt(Math.abs(g.getTransform().getDeterminant()));
+            if (Shading.applies(shade, c.getRGB(), (float) b.getWidth() * k, (float) b.getHeight() * k)) {
+                int argb = c.getRGB();
+                Color hi = new Color(Shading.lit(argb, shade), true), lo = new Color(Shading.shade(argb, shade), true);
+                Paint p;
+                if (ball) {
+                    float r = (float) Math.max(b.getWidth(), b.getHeight()) * Shading.BALL_R;
+                    p = new RadialGradientPaint((float) (b.getCenterX() + b.getWidth() * Shading.BALL_DX), (float) (b.getCenterY() + b.getHeight() * Shading.BALL_DY),
+                            Math.max(0.01f, r), new float[]{0f, Shading.MID_STOP, 1f}, new Color[]{hi, c, lo});
+                } else {
+                    p = new LinearGradientPaint((float) b.getCenterX(), (float) b.getMinY(), (float) b.getCenterX(), (float) b.getMaxY(),
+                            new float[]{0f, Shading.MID_STOP, 1f}, new Color[]{hi, c, lo});
+                }
+                g.setPaint(p);
+                g.setComposite(AlphaComposite.getInstance(AlphaComposite.SRC_OVER, alpha));
+                g.fill(s);
+                return;
+            }
+        }
+        apply();
+        g.fill(s);
+    }
     public void linear(float x0, float y0, float x1, float y1, int c0, int c1) {
         if (x0 == x1 && y0 == y1) y1 += 0.01f;
         paint = new GradientPaint(x0, y0, new Color(c0, true), x1, y1, new Color(c1, true));
@@ -69,9 +100,9 @@ public class AwtGfx implements Gfx {
         paint = new RadialGradientPaint(cx, cy, Math.max(0.01f, r), new float[]{0f, 1f}, new Color[]{new Color(c0, true), new Color(c1, true)});
     }
 
-    public void rect(float x, float y, float w, float h) { apply(); g.fill(new Rectangle2D.Float(x, y, w, h)); }
-    public void roundRect(float x, float y, float w, float h, float r) { apply(); g.fill(new RoundRectangle2D.Float(x, y, w, h, r * 2, r * 2)); }
-    public void oval(float cx, float cy, float rx, float ry) { apply(); g.fill(new Ellipse2D.Float(cx - rx, cy - ry, rx * 2, ry * 2)); }
+    public void rect(float x, float y, float w, float h) { fill(new Rectangle2D.Float(x, y, w, h), false); }
+    public void roundRect(float x, float y, float w, float h, float r) { fill(new RoundRectangle2D.Float(x, y, w, h, r * 2, r * 2), false); }
+    public void oval(float cx, float cy, float rx, float ry) { fill(new Ellipse2D.Float(cx - rx, cy - ry, rx * 2, ry * 2), true); }
     public void line(float x0, float y0, float x1, float y1, float w) {
         apply();
         g.setStroke(new BasicStroke(w, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
@@ -89,7 +120,7 @@ public class AwtGfx implements Gfx {
     public void quadTo(float cx, float cy, float x, float y) { path.quadTo(cx, cy, x, y); }
     public void cubicTo(float a, float b, float c, float d, float x, float y) { path.curveTo(a, b, c, d, x, y); }
     public void close() { path.closePath(); }
-    public void fillPath() { apply(); g.fill(path); }
+    public void fillPath() { fill(path, false); }
     public void strokePath(float w) {
         apply();
         g.setStroke(new BasicStroke(w, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));

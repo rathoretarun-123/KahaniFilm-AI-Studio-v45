@@ -182,6 +182,7 @@ jobs:
             --tests com.tarun.kahani.LessonsTest \
             --tests com.tarun.kahani.KeyFringeTest \
             --tests com.tarun.kahani.SofaThingsTest \
+            --tests com.tarun.kahani.ShadingTest \
             --tests com.tarun.kahani.FrameAuditTest \
             --tests com.tarun.kahani.ObjectCharactersTest \
             --tests com.tarun.kahani.AnimalActionsTest \
