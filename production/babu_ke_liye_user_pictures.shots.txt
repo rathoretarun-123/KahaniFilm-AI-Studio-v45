@@ -356,7 +356,7 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: बच्ची
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.7 s
+DURATION: 1.5 s
 CUT WHEN: after these 4 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
 SHOT ID: KAHANI_SC02_SH015_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
@@ -367,9 +367,9 @@ ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (th
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (बच्ची) at 0:38.8 for 2.8 s: "बाबू… आज आपके लिए" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (बच्ची) at 0:38.8 for 2.6 s: "बाबू… आज आपके लिए" | music: happy (ducked under the line)
 
-SHOT 016   at 0:40.4
+SHOT 016   at 0:40.3
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -380,7 +380,7 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: बच्ची
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.2 s
+DURATION: 1.1 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
 SHOT ID: KAHANI_SC02_SH016_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
@@ -391,9 +391,9 @@ ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (th
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (बच्ची) at 0:38.8 for 2.8 s: "कुछ लाई हूँ।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (बच्ची) at 0:38.8 for 2.6 s: "कुछ लाई हूँ।" | music: happy (ducked under the line)
 
-SHOT 017   at 0:41.7
+SHOT 017   at 0:41.4
 PURPOSE: Reaction: the audience feels the line through बाबू's face, over बच्ची's shoulder, and it is allowed to breathe
 SHOT SIZE: Close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -417,7 +417,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 018   at 0:42.9
+SHOT 018   at 0:42.6
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -440,7 +440,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 019   at 0:44.3
+SHOT 019   at 0:44.0
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -463,7 +463,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 020   at 0:45.6
+SHOT 020   at 0:45.3
 PURPOSE: Show what बाबू does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -494,7 +494,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Extreme wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 021   at 0:47.0
+SHOT 021   at 0:46.8
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -519,7 +519,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 022   at 0:48.6
+SHOT 022   at 0:48.4
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -542,7 +542,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, kneeling, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 023   at 0:50.2
+SHOT 023   at 0:50.0
 PURPOSE: Show what बाबू does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -565,7 +565,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, calm; बा
 STATE AT END: बच्ची left third, facing right, kneeling, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 024   at 0:51.8
+SHOT 024   at 0:51.6
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -588,7 +588,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, calm; बा
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 025   at 0:53.4
+SHOT 025   at 0:53.2
 PURPOSE: Show what बाबू does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -611,7 +611,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, something in
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 026   at 0:55.0
+SHOT 026   at 0:54.8
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -634,7 +634,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, something in
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 027   at 0:56.5
+SHOT 027   at 0:56.2
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -657,7 +657,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, something in
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 028   at 0:57.9
+SHOT 028   at 0:57.7
 PURPOSE: Lip-sync close-up: front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -668,7 +668,7 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: बच्ची
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.3 s
+DURATION: 1.2 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
 SHOT ID: KAHANI_SC03_SH028_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
@@ -679,9 +679,9 @@ ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_00
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (बच्ची) at 0:57.9 for 2.6 s: "मिला था… मैंने" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (बच्ची) at 0:57.7 for 2.4 s: "मिला था… मैंने" | music: happy (ducked under the line)
 
-SHOT 029   at 0:59.3
+SHOT 029   at 0:58.9
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -691,7 +691,7 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: बाबू
 SOUND: Ambience of city street
-DURATION: 1.3 s
+DURATION: 1.2 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
 SHOT ID: KAHANI_SC03_SH029_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
@@ -702,9 +702,9 @@ ASSETS: CHAR_002 बच्ची (the master picture) holding something; CHAR_00
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (बच्ची) at 0:57.9 for 2.6 s: "संभालकर रखा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (बच्ची) at 0:57.7 for 2.4 s: "संभालकर रखा।" | music: happy (ducked under the line)
 
-SHOT 030   at 1:00.6
+SHOT 030   at 1:00.2
 PURPOSE: Reaction: the audience feels the line through बाबू's face, over बच्ची's shoulder, and it is allowed to breathe
 SHOT SIZE: Medium close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -728,7 +728,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, something in
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 031   at 1:01.8
+SHOT 031   at 1:01.4
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -751,7 +751,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, something in
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 032   at 1:03.3
+SHOT 032   at 1:02.9
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -774,7 +774,7 @@ STATE AT START: बच्ची left third, facing right, kneeling, something in
 STATE AT END: बच्ची left third, facing right, kneeling, something in the right hand, something in the left hand, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 033   at 1:04.7
+SHOT 033   at 1:04.2
 PURPOSE: Show what बाबू does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -805,7 +805,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Extreme wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 034   at 1:06.2
+SHOT 034   at 1:05.7
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -830,7 +830,7 @@ STATE AT START: बच्ची left third, facing right, standing, walking, cal
 STATE AT END: बच्ची left third, facing right, standing, happy; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: steps on stone
 
-SHOT 035   at 1:09.3
+SHOT 035   at 1:08.9
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -853,7 +853,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 036   at 1:10.8
+SHOT 036   at 1:10.4
 PURPOSE: Show what बाबू does
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -876,7 +876,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 037   at 1:12.6
+SHOT 037   at 1:12.1
 PURPOSE: Show what बाबू does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -899,7 +899,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 038   at 1:14.4
+SHOT 038   at 1:13.9
 PURPOSE: Show what बाबू does
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -922,7 +922,7 @@ STATE AT START: बच्ची left third, facing right, standing, calm; बा
 STATE AT END: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 039   at 1:16.1
+SHOT 039   at 1:15.7
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -944,9 +944,9 @@ ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (th
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: बच्ची left third, facing right, standing, calm; बाबू centre, facing left, sitting, calm, tears
 STATE AT END: बच्ची left third, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
-VOICE / MUSIC: VOICE_001 (बाबू) at 1:16.1 for 3.3 s: "मैंने सोचा था… अब" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (बाबू) at 1:15.7 for 3.3 s: "मैंने सोचा था… अब" | music: happy (ducked under the line)
 
-SHOT 040   at 1:17.7
+SHOT 040   at 1:17.3
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -957,7 +957,7 @@ FACIAL PERFORMANCE: Eyes lowered, inner brows up, mouth corners down
 LIGHTING: Natural light of the place
 FOCUS: बाबू
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.7 s
+DURATION: 1.8 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
 SHOT ID: KAHANI_SC04_SH040_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
@@ -968,9 +968,9 @@ ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (th
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: बच्ची left third, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
 STATE AT END: बच्ची left third, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
-VOICE / MUSIC: VOICE_001 (बाबू) at 1:16.1 for 3.3 s: "कोई ख़त नहीं आएगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (बाबू) at 1:15.7 for 3.3 s: "कोई ख़त नहीं आएगा।" | music: happy (ducked under the line)
 
-SHOT 041   at 1:19.5
+SHOT 041   at 1:19.1
 PURPOSE: Reaction: the audience feels the line through बच्ची's face, over बाबू's shoulder, and it is allowed to breathe
 SHOT SIZE: Close-up (Over the shoulder)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -994,7 +994,7 @@ STATE AT START: बच्ची left third, facing right, standing, sad; बा�
 STATE AT END: बच्ची left third, facing right, standing, sad; बाबू centre, facing left, sitting, calm, tears
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 042   at 1:20.8
+SHOT 042   at 1:20.4
 PURPOSE: Lip-sync close-up: front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1016,9 +1016,9 @@ ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (th
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: बच्ची left third, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
 STATE AT END: बच्ची left third, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
-VOICE / MUSIC: VOICE_002 (बच्ची) at 1:20.8 for 2.9 s: "कुछ ख़त पुराने नहीं" | music: happy (ducked under the line) | effects: a chair
+VOICE / MUSIC: VOICE_002 (बच्ची) at 1:20.4 for 2.8 s: "कुछ ख़त पुराने नहीं" | music: happy (ducked under the line) | effects: a chair
 
-SHOT 043   at 1:22.4
+SHOT 043   at 1:22.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1039,9 +1039,9 @@ ASSETS: CHAR_002 बच्ची (the master picture); CHAR_001 बाबू (th
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: बच्ची left third, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
 STATE AT END: बच्ची left third, facing right, sitting, sad; बाबू centre, facing left, sitting, calm, tears
-VOICE / MUSIC: VOICE_002 (बच्ची) at 1:20.8 for 2.9 s: "होते, बाबू।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (बच्ची) at 1:20.4 for 2.8 s: "होते, बाबू।" | music: happy (ducked under the line)
 
-SHOT 044   at 1:24.1
+SHOT 044   at 1:23.5
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1064,7 +1064,7 @@ STATE AT START: बच्ची left third, facing right, sitting, sad; बा�
 STATE AT END: बच्ची left third, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 045   at 1:25.4
+SHOT 045   at 1:24.9
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1087,7 +1087,7 @@ STATE AT START: बच्ची left third, facing right, sitting, sad; बा�
 STATE AT END: बच्ची left third, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 046   at 1:26.7
+SHOT 046   at 1:26.2
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1110,7 +1110,7 @@ STATE AT START: बच्ची left third, facing right, sitting, sad; बा�
 STATE AT END: बच्ची left third, facing right, sitting, sad; बाबू centre, facing left, sitting, something in the right hand, calm, tears
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 047   at 1:27.9
+SHOT 047   at 1:27.4
 PURPOSE: Show what बाबू does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1141,7 +1141,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Extreme wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 048   at 1:29.3
+SHOT 048   at 1:28.7
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1166,7 +1166,7 @@ STATE AT START: बच्ची left third, facing right, sitting, calm; बा�
 STATE AT END: बच्ची left third, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a chair
 
-SHOT 049   at 1:34.8
+SHOT 049   at 1:34.2
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1189,7 +1189,7 @@ STATE AT START: बच्ची left third, facing right, sitting, calm; बा�
 STATE AT END: बच्ची left third, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 050   at 1:36.7
+SHOT 050   at 1:36.1
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1212,7 +1212,7 @@ STATE AT START: बच्ची left third, facing right, sitting, calm; बा�
 STATE AT END: बच्ची left third, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 051   at 1:38.5
+SHOT 051   at 1:38.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1235,7 +1235,7 @@ STATE AT START: बच्ची left third, facing right, sitting, calm; बा�
 STATE AT END: बच्ची left third, facing right, sitting, calm; बाबू centre, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 052   at 1:40.4
+SHOT 052   at 1:39.9
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1258,7 +1258,7 @@ STATE AT START: बच्ची left third, facing right, sitting, calm; बा�
 STATE AT END: बच्ची left third, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 053   at 1:42.2
+SHOT 053   at 1:41.7
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1281,7 +1281,7 @@ STATE AT START: बच्ची left third, facing right, sitting, happy; बा
 STATE AT END: बच्ची left third, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 054   at 1:44.0
+SHOT 054   at 1:43.4
 PURPOSE: Show what बाबू does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1304,7 +1304,7 @@ STATE AT START: बच्ची left third, facing right, sitting, happy; बा
 STATE AT END: बच्ची left third, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 055   at 1:49.0
+SHOT 055   at 1:48.4
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1327,7 +1327,7 @@ STATE AT START: बच्ची left third, facing right, sitting, happy; बा
 STATE AT END: बच्ची left third, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 056   at 1:50.7
+SHOT 056   at 1:50.2
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1350,7 +1350,7 @@ STATE AT START: बच्ची left third, facing right, sitting, happy; बा
 STATE AT END: बच्ची left third, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 057   at 1:52.5
+SHOT 057   at 1:52.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1373,7 +1373,7 @@ STATE AT START: बच्ची left third, facing right, sitting, happy; बा
 STATE AT END: बच्ची left third, facing right, sitting, happy; बाबू centre, facing left, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: rustle
 
-SHOT 058   at 1:54.3
+SHOT 058   at 1:53.7
 PURPOSE: Show what बाबू does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1444,7 +1444,7 @@ Not trained from the guide: its sexual and nude content (the studio makes family
 • Static shots: 58 of 58
 • Reactions shown and allowed to breathe: 3
 • Relationships shown with both characters in the frame: 24 two-shots
-• Pacing: 58 shots in 108 s of scenes, an average shot of 1.9 s
+• Pacing: 58 shots in 107 s of scenes, an average shot of 1.9 s
 
 BRAINTRUST (every 5 shots, 12 rounds) — AUTHORITY: the Braintrust suggests only; the director decides.
 • Q1 story clear without dialogue: 12 of 12 rounds
@@ -1460,17 +1460,17 @@ BRAINTRUST (every 5 shots, 12 rounds) — AUTHORITY: the Braintrust suggests onl
 CONTINUITY LEDGER (ch. 12)
 — दृश्य 1: city street, evening, Key: orange sunset from the right, 15 deg, 0:07.5–0:29.6
    बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
-— दृश्य 2: city street, evening, Key: orange sunset from the right, 15 deg, 0:29.6–0:46.8
+— दृश्य 2: city street, evening, Key: orange sunset from the right, 15 deg, 0:29.6–0:46.6
    बच्ची: left third, facing right → left third, facing right; costume: as the lock sheet
    बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
-— दृश्य 3: city street, evening, Key: orange sunset from the right, 15 deg, 0:46.8–1:06.0
+— दृश्य 3: city street, evening, Key: orange sunset from the right, 15 deg, 0:46.6–1:05.5
    बच्ची: left third, facing right → left third, facing right; costume: as the lock sheet; holds something
    बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
-— दृश्य 4: city street, evening, Key: orange sunset from the right, 15 deg, 1:06.0–1:29.1
+— दृश्य 4: city street, evening, Key: orange sunset from the right, 15 deg, 1:05.5–1:28.5
    बच्ची: left third, facing right → left third, facing right; costume: as the lock sheet
    बाबू: centre, facing left → centre, facing left; costume: as the lock sheet; holds something
    axis: बच्ची left, बाबू right — kept in every shot of the scene (180-degree principle)
-— दृश्य 5: city street, evening, Key: orange sunset from the right, 15 deg, 1:29.1–1:55.4
+— दृश्य 5: city street, evening, Key: orange sunset from the right, 15 deg, 1:28.5–1:54.8
    बच्ची: left third, facing right → left third, facing right; costume: as the lock sheet
    बाबू: centre, facing left → centre, facing left; costume: as the lock sheet
 
@@ -1573,16 +1573,15 @@ SCENE-COVERAGE REPORT (director's manual 3.2 — genuine gaps against intentiona
 
 PROP LEDGER (director's manual 1.6 — owner, state and location scene by scene)
   • something — owner: whoever holds it first
-      SC_03: बच्ची — held in the right hand from 0:52.3
-      SC_03: बच्ची — held in the left hand from 0:53.7
-      SC_04: बाबू — held in the right hand from 1:24.1
+      SC_03: बच्ची — held in the right hand from 0:52.0
+      SC_03: बच्ची — held in the left hand from 0:53.4
+      SC_04: बाबू — held in the right hand from 1:23.6
 
 LOCATION RECORDS (director's manual 1.6)
   LOC_001 — city street: exterior; reference: your picture (the location plate, feet on its floor line)
      layout: the stage is 1280 wide, the floor line at the plate's ground; entrances none written (everyone present from the first frame)
      time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg)  |  scenes: SC_01, SC_02, SC_03, SC_04, SC_05
-• Step 8 — the finished film metered frame by frame as it was written (2961 frames; 2402 pairs of frames in a row compared in 58 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 13.3 per cell at 0:16.6 (limit 14), the largest share of the frame changed 21% (limit 50%)
+• Step 8 — the finished film metered frame by frame as it was written (2948 frames; 2390 pairs of frames in a row compared in 58 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 13.3 per cell at 0:16.6 (limit 14), the largest share of the frame changed 21% (limit 50%)
 
-FRAME AUDIT — every character in every frame as drawn (2590 frames, 4558 character-frames, 4277 frame pairs inside shots)
-• Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 1; extra faces: 0
-  - बच्ची's picture changes from the rigged front picture to a view (341x996) between frames 2009 and 2010 (1:23.7) without a cross-fade
+FRAME AUDIT — every character in every frame as drawn (2600 frames, 4578 character-frames, 4250 frame pairs inside shots)
+• Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0

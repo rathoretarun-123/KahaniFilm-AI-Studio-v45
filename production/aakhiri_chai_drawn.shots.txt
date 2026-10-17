@@ -137,7 +137,7 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.8 s
+DURATION: 1.1 s
 CUT WHEN: after these 5 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
 SHOT ID: KAHANI_SC01_SH006_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
@@ -148,9 +148,32 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 5.9 s: "अरे ओ लेखक बाबू! धीरे" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "अरे ओ लेखक" | music: happy (ducked under the line)
 
-SHOT 007   at 0:20.3
+SHOT 007   at 0:19.5
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघु काका: "अरे ओ लेखक बाबू! धीरे भाग। गिरेगा तो तेर…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: रघु काका
+SOUND: Ambience of city street
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH007_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
+FIVE QUESTIONS: see — रघु काका: "अरे ओ लेखक बाबू! धीरे भाग। गिरेगा तो तेर…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet) holding something | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "बाबू! धीरे" | music: happy (ducked under the line)
+
+SHOT 008   at 0:20.6
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -161,10 +184,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.2 s
+DURATION: 1.4 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC01_SH007_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC01_SH008_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "भाग। गिरेगा तो तेरी कहानी के" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघु काका's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -172,9 +195,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 5.9 s: "भाग। गिरेगा तो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "भाग। गिरेगा तो" | music: happy (ducked under the line)
 
-SHOT 008   at 0:21.5
+SHOT 009   at 0:22.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -184,10 +207,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Ambience of city street
-DURATION: 1.2 s
+DURATION: 1.4 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC01_SH008_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC01_SH009_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "अरे ओ लेखक बाबू! धीरे भाग। गिरेगा तो तेर…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -195,9 +218,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 5.9 s: "तेरी कहानी के" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "तेरी कहानी के" | music: happy (ducked under the line)
 
-SHOT 009   at 0:22.7
+SHOT 010   at 0:23.4
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -208,10 +231,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.7 s
+DURATION: 1.0 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
-SHOT ID: KAHANI_SC01_SH009_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC01_SH010_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — आरव listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — आरव's face and hands | reveals — Reaction (part 3 of 3): आरव listens; the line goes on off-screen | why this camera — medium close-up: facial acting with some body language
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -221,7 +244,30 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 010   at 0:24.3
+SHOT 011   at 0:24.5
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघु काका: "अरे ओ लेखक बाबू! धीरे भाग। गिरेगा तो तेर…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: आरव
+SOUND: Ambience of city street
+DURATION: 1.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH011_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
+FIVE QUESTIONS: see — रघु काका: "अरे ओ लेखक बाबू! धीरे भाग। गिरेगा तो तेर…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet) holding something | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "भीग जाएगा।" | music: happy (ducked under the line)
+
+SHOT 012   at 0:25.5
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -231,10 +277,10 @@ FACIAL PERFORMANCE: Brows up, eyes wide, mouth open
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.6 s
+DURATION: 1.5 s
 CUT WHEN: the feeling has landed (0.0 s of silence)
 EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
-SHOT ID: KAHANI_SC01_SH010_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC01_SH012_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — आरव listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of आरव — the eyes, then the mouth | reveals — Reaction: the audience feels the line through आरव's face, and it is allowed to breathe | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -244,7 +290,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 011   at 0:25.9
+SHOT 013   at 0:27.1
 PURPOSE: Ma (Miyazaki): a quiet breath after two fast beats
 SHOT SIZE: Medium wide (Single)
 CAMERA HEIGHT: Eye level
@@ -258,7 +304,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.6 s
 CUT WHEN: the breath is over (1.8 s)
 EMOTIONAL PURPOSE: The audience catches up with the moment
-SHOT ID: KAHANI_SC01_SH011_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC01_SH013_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — रघु काका stands still, breathing; nothing else moves | feel — The audience catches up with the moment | attention first — रघु काका's face and hands | reveals — Ma (Miyazaki): a quiet breath after two fast beats | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -268,7 +314,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: wind
 
-SHOT 012   at 0:27.6
+SHOT 014   at 0:28.6
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -279,10 +325,10 @@ FACIAL PERFORMANCE: Wide eyes, raised inner brows
 LIGHTING: Harder, directional light (conflict, fear)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.1 s
+DURATION: 1.3 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC01_SH012_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC01_SH014_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — आरव: "काका... सब भीग गया... मेरी पूरी" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of आरव — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -290,9 +336,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:27.6 for 5.3 s: "काका... सब भीग" | music: happy (ducked under the line) | effects: wind
+VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "काका... सब भीग" | music: happy (ducked under the line) | effects: wind
 
-SHOT 013   at 0:28.7
+SHOT 015   at 0:29.9
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -302,54 +348,7 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Harder, directional light (conflict, fear)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.1 s
-CUT WHEN: the action moves on
-EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC01_SH013_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
-PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
-FIVE QUESTIONS: see — आरव: "काका... सब भीग गया... मेरी पूरी नोटबुक..…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
-GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
-ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet) holding something | LOC_001 city street (painted set), evening
-TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
-STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:27.6 for 5.3 s: "गया... मेरी पूरी" | music: tense (low drone) (ducked under the line)
-
-SHOT 014   at 0:29.8
-PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
-SHOT SIZE: Medium close-up (Single)
-CAMERA HEIGHT: Eye level
-CAMERA MOVEMENT: Static
-COMPOSITION: Face in the centre of the frame, 20% headroom
-CHARACTER ACTION: आरव: "नोटबुक... देखो... पन्ने फूल गए... स्याही..."
-FACIAL PERFORMANCE: Wide eyes, raised inner brows
-LIGHTING: Harder, directional light (conflict, fear)
-FOCUS: आरव
-SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.6 s
-CUT WHEN: the line ends
-EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC01_SH014_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
-PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
-FIVE QUESTIONS: see — आरव: "नोटबुक... देखो... पन्ने फूल गए... स्याही..." | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — आरव's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
-GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
-ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet) holding something | LOC_001 city street (painted set), evening
-TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
-STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:27.6 for 5.3 s: "नोटबुक... देखो... पन्ने" | music: tense (low drone) (ducked under the line)
-
-SHOT 015   at 0:31.4
-PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
-SHOT SIZE: Extreme close-up (Single)
-CAMERA HEIGHT: Eye level
-CAMERA MOVEMENT: Static
-CHARACTER ACTION: आरव: "काका... सब भीग गया... मेरी पूरी नोटबुक..…"
-FACIAL PERFORMANCE: Calm, listening
-LIGHTING: Harder, directional light (conflict, fear)
-FOCUS: आरव
-SOUND: Ambience of city street
-DURATION: 1.6 s
+DURATION: 1.3 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
 SHOT ID: KAHANI_SC01_SH015_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
@@ -360,9 +359,56 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:27.6 for 5.3 s: "फूल गए... स्याही..." | music: tense (low drone) (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "गया... मेरी पूरी" | music: tense (low drone) (ducked under the line)
 
-SHOT 016   at 0:32.9
+SHOT 016   at 0:31.3
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: आरव: "नोटबुक... देखो... पन्ने फूल गए... स्याही..."
+FACIAL PERFORMANCE: Wide eyes, raised inner brows
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: आरव
+SOUND: Dialogue in the room of city street, शहर की सड़क ambience
+DURATION: 1.8 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH016_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
+FIVE QUESTIONS: see — आरव: "नोटबुक... देखो... पन्ने फूल गए... स्याही..." | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — आरव's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet) holding something | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "नोटबुक... देखो... पन्ने" | music: tense (low drone) (ducked under the line)
+
+SHOT 017   at 0:33.1
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: आरव: "काका... सब भीग गया... मेरी पूरी नोटबुक..…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Harder, directional light (conflict, fear)
+FOCUS: आरव
+SOUND: Ambience of city street
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH017_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
+FIVE QUESTIONS: see — आरव: "काका... सब भीग गया... मेरी पूरी नोटबुक..…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet) holding something | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "फूल गए... स्याही..." | music: tense (low drone) (ducked under the line)
+
+SHOT 018   at 0:34.9
 PURPOSE: Reaction: the audience feels the line through रघु काका's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -375,7 +421,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.7 s
 CUT WHEN: the feeling has landed (1.4 s of silence)
 EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
-SHOT ID: KAHANI_SC01_SH016_V001   LENS: 85mm   ANGLE: high angle: vulnerability, exposure
+SHOT ID: KAHANI_SC01_SH018_V001   LENS: 85mm   ANGLE: high angle: vulnerability, exposure
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — रघु काका listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Reaction: the audience feels the line through रघु काका's face, and it is allowed to breathe | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -385,7 +431,7 @@ STATE AT START: रघु काका left third, facing right, sitting, scared
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone)
 
-SHOT 017   at 0:34.7
+SHOT 019   at 0:36.7
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -398,7 +444,7 @@ SOUND: Ambience of city street
 DURATION: 1.4 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC01_SH017_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC01_SH019_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — रघु काका's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -408,7 +454,7 @@ STATE AT START: रघु काका left third, facing right, sitting, scared
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, sitting, something in the right hand, something in the left hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone) | effects: a chair
 
-SHOT 018   at 0:36.1
+SHOT 020   at 0:38.1
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -421,7 +467,7 @@ SOUND: Ambience of city street
 DURATION: 1.4 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC01_SH018_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+SHOT ID: KAHANI_SC01_SH020_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
 FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — रघु काका's face and hands | reveals — Show what रघु काका does | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -439,7 +485,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 019   at 0:38.1
+SHOT 021   at 0:40.1
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -454,7 +500,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 0.6 s
 CUT WHEN: the place is clear and the first action begins
 EMOTIONAL PURPOSE: Orientation: the audience knows where it is
-SHOT ID: KAHANI_SC02_SH019_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH021_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — पर्यावरण - बारिश और तेज, जोरदार बिजली से गली एक पल सफेद, नाल… | feel — Orientation: the audience knows where it is | attention first — the whole place, then city street in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
 GAZE: where the action goes; the characters look at what they do, never at the camera
@@ -464,7 +510,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, walking, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 020   at 0:38.7
+SHOT 022   at 0:40.7
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -477,7 +523,7 @@ SOUND: Ambience of city street
 DURATION: 1.7 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH020_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH022_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — the whole place, then रघु काका in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
 GAZE: where the action goes; the characters look at what they do, never at the camera
@@ -487,7 +533,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: thunder
 
-SHOT 021   at 0:40.4
+SHOT 023   at 0:42.4
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -500,7 +546,7 @@ SOUND: Ambience of city street
 DURATION: 1.7 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH021_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH023_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — the whole place, then रघु काका in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
 GAZE: where the action goes; the characters look at what they do, never at the camera
@@ -510,7 +556,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 47
 
-SHOT 022   at 0:42.1
+SHOT 024   at 0:44.1
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -523,7 +569,7 @@ SOUND: Ambience of city street
 DURATION: 1.7 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH022_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH024_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — आरव's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -533,7 +579,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 023   at 0:43.7
+SHOT 025   at 0:45.7
 PURPOSE: Show what आरव does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -546,7 +592,7 @@ SOUND: Ambience of city street
 DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH023_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+SHOT ID: KAHANI_SC02_SH025_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — आरव's face and hands | reveals — Show what आरव does | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -556,7 +602,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, happy | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 024   at 0:44.8
+SHOT 026   at 0:46.8
 PURPOSE: Show what आरव does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -569,7 +615,7 @@ SOUND: Ambience of city street
 DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH024_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH026_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — Show what आरव does | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -579,7 +625,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, happy | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 025   at 0:45.9
+SHOT 027   at 0:47.9
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -590,10 +636,10 @@ FACIAL PERFORMANCE: Laughing, eyes squeezed
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: मीरा
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.1 s
+DURATION: 1.2 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC02_SH025_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH027_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "फिर भीग गए तुम? मैंने कहा" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of मीरा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -601,9 +647,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, happy | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:45.9 for 5.7 s: "फिर भीग गए" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "फिर भीग गए" | music: happy (ducked under the line)
 
-SHOT 026   at 0:47.0
+SHOT 028   at 0:49.1
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -613,10 +659,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.1 s
+DURATION: 1.2 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH026_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH028_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "फिर भीग गए तुम? मैंने कहा था ना, इस गली …" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -624,9 +670,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:45.9 for 5.7 s: "तुम? मैंने कहा" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "तुम? मैंने कहा" | music: happy (ducked under the line)
 
-SHOT 027   at 0:48.1
+SHOT 029   at 0:50.2
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -637,10 +683,10 @@ FACIAL PERFORMANCE: Laughing, eyes squeezed
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: मीरा
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.5 s
+DURATION: 1.6 s
 CUT WHEN: after these 5 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC02_SH027_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH029_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "था ना, इस गली में" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — मीरा's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -648,9 +694,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:45.9 for 5.7 s: "था ना, इस गली में" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "था ना, इस गली में" | music: happy (ducked under the line)
 
-SHOT 028   at 0:49.6
+SHOT 030   at 0:51.8
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -664,7 +710,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.1 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
-SHOT ID: KAHANI_SC02_SH028_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH030_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — आरव's face and hands | reveals — Reaction (part 3 of 3): आरव listens; the line goes on off-screen | why this camera — medium close-up: facial acting with some body language
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -674,7 +720,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 029   at 0:50.6
+SHOT 031   at 0:53.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -687,7 +733,7 @@ SOUND: Ambience of city street
 DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH029_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH031_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "फिर भीग गए तुम? मैंने कहा था ना, इस गली …" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -695,9 +741,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:45.9 for 5.7 s: "मत आया करो।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "मत आया करो।" | music: happy (ducked under the line)
 
-SHOT 030   at 0:51.7
+SHOT 032   at 0:54.1
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -710,7 +756,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.3 s
 CUT WHEN: the feeling has landed (0.0 s of silence)
 EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
-SHOT ID: KAHANI_SC02_SH030_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH032_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of आरव — the eyes, then the mouth | reveals — Reaction: the audience feels the line through आरव's face, and it is allowed to breathe | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -720,7 +766,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 031   at 0:53.0
+SHOT 033   at 0:55.4
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -734,7 +780,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.1 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC02_SH031_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH033_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "मैडम, मैं तो बस... कहानी का" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of आरव — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -742,9 +788,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:53.0 for 4.5 s: "मैडम, मैं तो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "मैडम, मैं तो" | music: happy (ducked under the line)
 
-SHOT 032   at 0:54.1
+SHOT 034   at 0:56.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -757,7 +803,7 @@ SOUND: Ambience of city street
 DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH032_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH034_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "मैडम, मैं तो बस... कहानी का आखिरी हिस्सा…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -765,9 +811,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:53.0 for 4.5 s: "बस... कहानी का" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "बस... कहानी का" | music: happy (ducked under the line)
 
-SHOT 033   at 0:55.2
+SHOT 035   at 0:57.7
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -781,7 +827,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.4 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC02_SH033_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH035_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "आखिरी हिस्सा लिखने आया था..." | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — आरव's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -789,9 +835,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:53.0 for 4.5 s: "आखिरी हिस्सा लिखने" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "आखिरी हिस्सा लिखने" | music: happy (ducked under the line)
 
-SHOT 034   at 0:56.6
+SHOT 036   at 0:59.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -804,7 +850,7 @@ SOUND: Ambience of city street
 DURATION: 1.4 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH034_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH036_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "मैडम, मैं तो बस... कहानी का आखिरी हिस्सा…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -812,9 +858,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:53.0 for 4.5 s: "आया था..." | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "आया था..." | music: happy (ducked under the line)
 
-SHOT 035   at 0:58.0
+SHOT 037   at 1:00.4
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -825,10 +871,10 @@ FACIAL PERFORMANCE: A warm smile, cheeks lifted
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.0 s
+DURATION: 1.1 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC02_SH035_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH037_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "ये मैडम रोज इसी टाइम आती" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -836,56 +882,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:58.0 for 6.8 s: "ये मैडम रोज" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "ये मैडम रोज" | music: happy (ducked under the line)
 
-SHOT 036   at 0:59.0
-PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
-SHOT SIZE: Extreme close-up (Single)
-CAMERA HEIGHT: Eye level
-CAMERA MOVEMENT: Static
-CHARACTER ACTION: रघु काका: "ये मैडम रोज इसी टाइम आती है। इसकी चाय मे…"
-FACIAL PERFORMANCE: Calm, listening
-LIGHTING: Soft, warm light (warmth, safety)
-FOCUS: रघु काका
-SOUND: Ambience of city street
-DURATION: 1.0 s
-CUT WHEN: the action moves on
-EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH036_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
-PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
-FIVE QUESTIONS: see — रघु काका: "ये मैडम रोज इसी टाइम आती है। इसकी चाय मे…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
-GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
-ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
-TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
-STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:58.0 for 6.8 s: "इसी टाइम आती" | music: happy (ducked under the line)
-
-SHOT 037   at 1:00.0
-PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
-SHOT SIZE: Medium close-up (Single)
-CAMERA HEIGHT: Eye level
-CAMERA MOVEMENT: Static
-COMPOSITION: Face in the centre of the frame, 20% headroom
-CHARACTER ACTION: रघु काका: "है। इसकी चाय में चीनी कम।"
-FACIAL PERFORMANCE: A warm smile, cheeks lifted
-LIGHTING: Soft, warm light (warmth, safety)
-FOCUS: रघु काका
-SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.1 s
-CUT WHEN: after these 6 words
-EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC02_SH037_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
-PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
-FIVE QUESTIONS: see — रघु काका: "है। इसकी चाय में चीनी कम।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघु काका's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
-GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
-ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
-TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
-STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:58.0 for 6.8 s: "है। इसकी चाय" | music: happy (ducked under the line)
-
-SHOT 038   at 1:01.1
+SHOT 038   at 1:01.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -906,9 +905,56 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:58.0 for 6.8 s: "में चीनी कम।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "इसी टाइम आती" | music: happy (ducked under the line)
 
-SHOT 039   at 1:02.1
+SHOT 039   at 1:02.6
+PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: रघु काका: "है। इसकी चाय में चीनी कम।"
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: रघु काका
+SOUND: Dialogue in the room of city street, शहर की सड़क ambience
+DURATION: 1.1 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH039_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — रघु काका: "है। इसकी चाय में चीनी कम।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघु काका's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "है। इसकी चाय" | music: happy (ducked under the line)
+
+SHOT 040   at 1:03.7
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघु काका: "ये मैडम रोज इसी टाइम आती है। इसकी चाय मे…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: रघु काका
+SOUND: Ambience of city street
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH040_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — रघु काका: "ये मैडम रोज इसी टाइम आती है। इसकी चाय मे…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "में चीनी कम।" | music: happy (ducked under the line)
+
+SHOT 041   at 1:04.9
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -919,10 +965,10 @@ FACIAL PERFORMANCE: A warm smile, cheeks lifted
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.9 s
+DURATION: 2.0 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
-SHOT ID: KAHANI_SC02_SH039_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH041_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — आरव's face and hands | reveals — Reaction (part 3 of 3): आरव listens; the line goes on off-screen | why this camera — medium close-up: facial acting with some body language
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -932,7 +978,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 040   at 1:04.0
+SHOT 042   at 1:06.8
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -942,10 +988,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.9 s
+DURATION: 2.0 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC02_SH040_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC02_SH042_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "ये मैडम रोज इसी टाइम आती है। इसकी चाय मे…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -953,7 +999,7 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:58.0 for 6.8 s: "ज्यादा।" | music: happy (ducked under the line) | effects: effect 21
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "ज्यादा।" | music: happy (ducked under the line) | effects: effect 21
 
 ────────── दृश्य 3: city street
 SCENE BRIEF (training guide §7)
@@ -963,7 +1009,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Extreme wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 041   at 1:06.1
+SHOT 043   at 1:09.0
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -978,7 +1024,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.1 s
 CUT WHEN: the place is clear and the first action begins
 EMOTIONAL PURPOSE: Orientation: the audience knows where it is
-SHOT ID: KAHANI_SC03_SH041_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH043_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — पर्यावरण - बारिश धीमी टिप-टिप, पीले बल्ब की रोशनी स्थिर तीनो… | feel — Orientation: the audience knows where it is | attention first — the whole place, then city street in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — extreme wide: scale, geography, isolation or spectacle
 GAZE: where the action goes; the characters look at what they do, never at the camera
@@ -988,7 +1034,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 48
 
-SHOT 042   at 1:07.1
+SHOT 044   at 1:10.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1001,7 +1047,7 @@ SOUND: Ambience of city street
 DURATION: 1.4 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH042_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH044_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — आरव's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1011,32 +1057,9 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 47
 
-SHOT 043   at 1:08.6
+SHOT 045   at 1:11.5
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Extreme close-up (Single)
-CAMERA HEIGHT: Eye level
-CAMERA MOVEMENT: Static
-CHARACTER ACTION: रघु काका in the scene
-FACIAL PERFORMANCE: Calm, listening
-LIGHTING: Natural light of the place
-FOCUS: रघु काका
-SOUND: Ambience of city street
-DURATION: 1.0 s
-CUT WHEN: the action moves on
-EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH043_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
-PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
-FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Show what रघु काका does | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
-GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
-ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
-TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
-STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
-
-SHOT 044   at 1:09.6
-PURPOSE: Show what रघु काका does
-SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
 CAMERA MOVEMENT: Static
 CHARACTER ACTION: रघु काका in the scene
@@ -1047,7 +1070,30 @@ SOUND: Ambience of city street
 DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH044_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH045_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Show what रघु काका does | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 046   at 1:12.5
+PURPOSE: Show what रघु काका does
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघु काका in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघु काका
+SOUND: Ambience of city street
+DURATION: 1.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH046_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Show what रघु काका does | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1057,7 +1103,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 045   at 1:10.7
+SHOT 047   at 1:13.6
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1067,10 +1113,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.7 s
+DURATION: 1.6 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH045_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH047_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — the whole place, then आरव in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
 GAZE: where the action goes; the characters look at what they do, never at the camera
@@ -1080,7 +1126,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 046   at 1:12.4
+SHOT 048   at 1:15.2
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1090,20 +1136,43 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.7 s
+DURATION: 1.6 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH046_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH048_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — आरव's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
 ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 049   at 1:16.8
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: आरव in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: आरव
+SOUND: Ambience of city street
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH049_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — the whole place, then आरव in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 047   at 1:14.0
+SHOT 050   at 1:18.4
 PURPOSE: Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1114,10 +1183,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.0 s
+DURATION: 1.2 s
 CUT WHEN: after these 5 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC03_SH047_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH050_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "लो, पकड़ो। गरम है। कहानी" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1125,9 +1194,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.0 for 7.4 s: "लो, पकड़ो।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "लो, पकड़ो।" | music: happy (ducked under the line)
 
-SHOT 048   at 1:15.1
+SHOT 051   at 1:19.6
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1137,10 +1206,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघु काका
 SOUND: Ambience of city street
-DURATION: 1.0 s
+DURATION: 1.2 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH048_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH051_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "लो, पकड़ो। गरम है। कहानी कागज पर नहीं, इ…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1148,9 +1217,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.0 for 7.4 s: "गरम है। कहानी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "गरम है। कहानी" | music: happy (ducked under the line)
 
-SHOT 049   at 1:16.1
+SHOT 052   at 1:20.9
 PURPOSE: Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1161,10 +1230,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.8 s
+DURATION: 1.1 s
 CUT WHEN: after these 5 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC03_SH049_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH052_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "कागज पर नहीं, इस गरमी" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघु काका's face and hands | reveals — Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1172,9 +1241,32 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.0 for 7.4 s: "कागज पर नहीं, इस गरमी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "कागज पर" | music: happy (ducked under the line)
 
-SHOT 050   at 1:17.8
+SHOT 053   at 1:22.0
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघु काका: "लो, पकड़ो। गरम है। कहानी कागज पर नहीं, इ…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: रघु काका
+SOUND: Ambience of city street
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH053_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — रघु काका: "लो, पकड़ो। गरम है। कहानी कागज पर नहीं, इ…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "नहीं, इस गरमी" | music: happy (ducked under the line)
+
+SHOT 054   at 1:23.1
 PURPOSE: Reaction (part 3 of 4): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1185,10 +1277,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.6 s
+DURATION: 2.0 s
 CUT WHEN: after these 4 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
-SHOT ID: KAHANI_SC03_SH050_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH054_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — आरव's face and hands | reveals — Reaction (part 3 of 4): आरव listens; the line goes on off-screen | why this camera — medium close-up: facial acting with some body language
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -1198,7 +1290,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 051   at 1:19.5
+SHOT 055   at 1:25.1
 PURPOSE: Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1209,10 +1301,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.2 s
+DURATION: 1.4 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC03_SH051_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH055_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "सोचोगे तो हाथ जल जाएगा।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघु काका's face and hands | reveals — Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1220,9 +1312,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.0 for 7.4 s: "सोचोगे तो हाथ" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "सोचोगे तो हाथ" | music: happy (ducked under the line)
 
-SHOT 052   at 1:20.7
+SHOT 056   at 1:26.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1232,10 +1324,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघु काका
 SOUND: Ambience of city street
-DURATION: 1.2 s
+DURATION: 1.4 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH052_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH056_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "लो, पकड़ो। गरम है। कहानी कागज पर नहीं, इ…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1243,9 +1335,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.0 for 7.4 s: "जल जाएगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "जल जाएगा।" | music: happy (ducked under the line)
 
-SHOT 053   at 1:21.9
+SHOT 057   at 1:27.9
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1256,10 +1348,10 @@ FACIAL PERFORMANCE: Tension gone, a soft smile, the gaze softened
 LIGHTING: Natural light of the place
 FOCUS: मीरा
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.0 s
+DURATION: 1.1 s
 CUT WHEN: after these 5 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC03_SH053_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH057_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "हम्म... यही तो चाहिए था।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of मीरा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1267,9 +1359,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:21.9 for 5.7 s: "हम्म... यही" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "हम्म... यही" | music: happy (ducked under the line)
 
-SHOT 054   at 1:22.9
+SHOT 058   at 1:29.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1279,10 +1371,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.0 s
+DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH054_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH058_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "हम्म... यही तो चाहिए था। काका, तुम्हारी …" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1290,9 +1382,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:21.9 for 5.7 s: "तो चाहिए था।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "तो चाहिए था।" | music: happy (ducked under the line)
 
-SHOT 055   at 1:23.9
+SHOT 059   at 1:30.1
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1303,10 +1395,10 @@ FACIAL PERFORMANCE: Tension gone, a soft smile, the gaze softened
 LIGHTING: Natural light of the place
 FOCUS: मीरा
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.8 s
+DURATION: 1.0 s
 CUT WHEN: after these 4 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC03_SH055_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH059_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "काका, तुम्हारी चाय में" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — मीरा's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1314,9 +1406,32 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:21.9 for 5.7 s: "काका, तुम्हारी चाय में" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "काका, तुम्हारी" | music: happy (ducked under the line)
 
-SHOT 056   at 1:25.7
+SHOT 060   at 1:31.1
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: मीरा: "हम्म... यही तो चाहिए था। काका, तुम्हारी …"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: आरव
+SOUND: Ambience of city street
+DURATION: 1.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH060_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — मीरा: "हम्म... यही तो चाहिए था। काका, तुम्हारी …" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) holding something | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "चाय में" | music: happy (ducked under the line)
+
+SHOT 061   at 1:32.2
 PURPOSE: Reaction (part 3 of 3): रघु काका listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1327,10 +1442,10 @@ FACIAL PERFORMANCE: A warm smile, cheeks lifted
 LIGHTING: Natural light of the place
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.6 s
+DURATION: 1.0 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
-SHOT ID: KAHANI_SC03_SH056_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH061_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — रघु काका's face and hands | reveals — Reaction (part 3 of 3): रघु काका listens; the line goes on off-screen | why this camera — medium close-up: facial acting with some body language
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -1340,7 +1455,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 057   at 1:27.3
+SHOT 062   at 1:33.2
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1350,20 +1465,43 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: रघु काका
 SOUND: Ambience of city street
-DURATION: 1.6 s
+DURATION: 1.0 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH057_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH062_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "हम्म... यही तो चाहिए था। काका, तुम्हारी …" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
 ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) holding something | LOC_001 city street (painted set), evening
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:21.9 for 5.7 s: "है।" | music: happy (ducked under the line)
+STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "स्वाद आता है।" | music: happy (ducked under the line)
 
-SHOT 058   at 1:28.9
+SHOT 063   at 1:34.2
+PURPOSE: Reaction: the audience feels the line through रघु काका's face, and it is allowed to breathe
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: रघु काका listens and takes it in, without words
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: रघु काका
+SOUND: Dialogue in the room of city street, शहर की सड़क ambience
+DURATION: 1.3 s
+CUT WHEN: the feeling has landed (0.0 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC03_SH063_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — रघु काका listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Reaction: the audience feels the line through रघु काका's face, and it is allowed to breathe | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) holding something | LOC_001 city street (painted set), evening
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 064   at 1:35.6
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1374,20 +1512,20 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.2 s
+DURATION: 1.3 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC03_SH058_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH064_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "...अरे... ये कड़वी नहीं है... ये" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of आरव — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
 ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) holding something | LOC_001 city street (painted set), evening
-TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:28.9 for 4.1 s: "...अरे... ये कड़वी" | music: happy (ducked under the line) | effects: a sip
+VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "...अरे... ये कड़वी" | music: happy (ducked under the line) | effects: a sip
 
-SHOT 059   at 1:30.2
+SHOT 065   at 1:36.9
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1397,10 +1535,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.2 s
+DURATION: 1.3 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH059_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH065_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "...अरे... ये कड़वी नहीं है... ये तो... म…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1408,9 +1546,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:28.9 for 4.1 s: "नहीं है... ये" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "नहीं है... ये" | music: happy (ducked under the line) | effects: a cup set down
 
-SHOT 060   at 1:31.4
+SHOT 066   at 1:38.2
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1421,10 +1559,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 2.0 s
+DURATION: 1.0 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC03_SH060_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH066_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "तो... मीठी लग रही है।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — आरव's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1432,34 +1570,34 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:28.9 for 4.1 s: "तो... मीठी लग रही है।" | music: happy (ducked under the line) | effects: a cup set down
+VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "तो... मीठी लग" | music: happy (ducked under the line) | effects: a cup set down
 
-SHOT 061   at 1:33.4
-PURPOSE: Follow the action: everyone who moves stays in the frame
-SHOT SIZE: Wide (Two-shot)
+SHOT 067   at 1:39.2
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
 CAMERA MOVEMENT: Static
-CHARACTER ACTION: आरव in the scene
+CHARACTER ACTION: आरव: "...अरे... ये कड़वी नहीं है... ये तो... म…"
 FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Natural light of the place
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.9 s
+DURATION: 1.0 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH061_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH067_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
-FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — the whole place, then आरव in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
-GAZE: where the action goes; the characters look at what they do, never at the camera
+FIVE QUESTIONS: see — आरव: "...अरे... ये कड़वी नहीं है... ये तो... म…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
 ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) holding something | LOC_001 city street (painted set), evening
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a sip, a sip, a sip
+VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "रही है।" | music: happy (ducked under the line)
 
-SHOT 062   at 1:35.3
+SHOT 068   at 1:40.3
 PURPOSE: Follow the action: everyone who moves stays in the frame
-SHOT SIZE: Medium wide (Two-shot)
+SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
 CAMERA MOVEMENT: Static
 CHARACTER ACTION: आरव in the scene
@@ -1470,7 +1608,30 @@ SOUND: Ambience of city street
 DURATION: 1.8 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC03_SH062_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC03_SH068_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
+FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — the whole place, then आरव in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_002 आरव (drawn puppet); CHAR_003 मीरा (drawn puppet) holding something | LOC_001 city street (painted set), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a sip, a sip, a sip
+
+SHOT 069   at 1:42.1
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: आरव in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: आरव
+SOUND: Ambience of city street
+DURATION: 1.9 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC03_SH069_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — आरव's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1488,7 +1649,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 063   at 1:37.3
+SHOT 070   at 1:44.2
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1503,7 +1664,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 2.9 s
 CUT WHEN: the place is clear and the first action begins
 EMOTIONAL PURPOSE: Orientation: the audience knows where it is
-SHOT ID: KAHANI_SC04_SH063_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH070_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — पर्यावरण - बारिश लगभग रुकी सिर्फ पन्नी के कोनों से टिप-टिप, … | feel — Orientation: the audience knows where it is | attention first — the whole place, then city street in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
 GAZE: where the action goes; the characters look at what they do, never at the camera
@@ -1513,7 +1674,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 47, a chair, a chair (+1)
 
-SHOT 064   at 1:40.2
+SHOT 071   at 1:47.1
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1526,7 +1687,7 @@ SOUND: Ambience of city street
 DURATION: 1.7 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH064_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH071_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — आरव's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1536,7 +1697,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 065   at 1:41.9
+SHOT 072   at 1:48.8
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1549,7 +1710,7 @@ SOUND: Ambience of city street
 DURATION: 1.6 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH065_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH072_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — the whole place, then आरव in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — wide: movement and the character-environment relationship
 GAZE: where the action goes; the characters look at what they do, never at the camera
@@ -1559,7 +1720,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 066   at 1:43.5
+SHOT 073   at 1:50.4
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1572,7 +1733,7 @@ SOUND: Ambience of city street
 DURATION: 1.6 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH066_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH073_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — आरव's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1582,7 +1743,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 067   at 1:45.1
+SHOT 074   at 1:51.9
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1593,10 +1754,10 @@ FACIAL PERFORMANCE: A warm smile, cheeks lifted
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: मीरा
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.0 s
+DURATION: 1.1 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC04_SH067_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH074_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "तो अब घर जाओगे? या यहीं" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of मीरा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1604,9 +1765,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:45.1 for 4.4 s: "तो अब घर" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "तो अब घर" | music: happy (ducked under the line)
 
-SHOT 068   at 1:46.1
+SHOT 075   at 1:53.1
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1616,10 +1777,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.0 s
+DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH068_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH075_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "तो अब घर जाओगे? या यहीं बैठ कर आखिरी पन्…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1627,9 +1788,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:45.1 for 4.4 s: "जाओगे? या यहीं" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "जाओगे? या यहीं" | music: happy (ducked under the line)
 
-SHOT 069   at 1:47.1
+SHOT 076   at 1:54.2
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1640,10 +1801,10 @@ FACIAL PERFORMANCE: A warm smile, cheeks lifted
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: मीरा
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.2 s
+DURATION: 1.3 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC04_SH069_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH076_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "बैठ कर आखिरी पन्ना लिखोगे?" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — मीरा's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1651,9 +1812,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:45.1 for 4.4 s: "बैठ कर आखिरी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "बैठ कर आखिरी" | music: happy (ducked under the line)
 
-SHOT 070   at 1:48.3
+SHOT 077   at 1:55.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1663,10 +1824,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.2 s
+DURATION: 1.3 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH070_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH077_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — मीरा: "तो अब घर जाओगे? या यहीं बैठ कर आखिरी पन्…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1674,9 +1835,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:45.1 for 4.4 s: "पन्ना लिखोगे?" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "पन्ना लिखोगे?" | music: happy (ducked under the line)
 
-SHOT 071   at 1:49.5
+SHOT 078   at 1:56.8
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1689,7 +1850,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.3 s
 CUT WHEN: the feeling has landed (0.0 s of silence)
 EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
-SHOT ID: KAHANI_SC04_SH071_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH078_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of आरव — the eyes, then the mouth | reveals — Reaction: the audience feels the line through आरव's face, and it is allowed to breathe | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -1699,7 +1860,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 072   at 1:50.8
+SHOT 079   at 1:58.1
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1710,10 +1871,10 @@ FACIAL PERFORMANCE: Laughing, eyes squeezed
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.0 s
+DURATION: 1.2 s
 CUT WHEN: after these 4 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC04_SH072_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH079_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "नहीं। आज नहीं लिखूंगा।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of आरव — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1721,9 +1882,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:50.8 for 3.6 s: "नहीं। आज" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "नहीं। आज" | music: happy (ducked under the line)
 
-SHOT 073   at 1:51.8
+SHOT 080   at 1:59.2
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1733,10 +1894,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.0 s
+DURATION: 1.2 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH073_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH080_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "नहीं। आज नहीं लिखूंगा। आज बस याद रखूंगा।" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1744,9 +1905,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:50.8 for 3.6 s: "नहीं लिखूंगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "नहीं लिखूंगा।" | music: happy (ducked under the line)
 
-SHOT 074   at 1:52.8
+SHOT 081   at 2:00.4
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1757,10 +1918,10 @@ FACIAL PERFORMANCE: Laughing, eyes squeezed
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.0 s
+DURATION: 1.1 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC04_SH074_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH081_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "आज बस याद रखूंगा।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — आरव's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1768,9 +1929,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:50.8 for 3.6 s: "आज बस याद" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "आज बस याद" | music: happy (ducked under the line)
 
-SHOT 075   at 1:53.8
+SHOT 082   at 2:01.6
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1780,10 +1941,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.0 s
+DURATION: 1.1 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH075_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH082_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव: "नहीं। आज नहीं लिखूंगा। आज बस याद रखूंगा।" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1791,9 +1952,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:50.8 for 3.6 s: "रखूंगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "रखूंगा।" | music: happy (ducked under the line)
 
-SHOT 076   at 1:54.9
+SHOT 083   at 2:02.7
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1804,10 +1965,10 @@ FACIAL PERFORMANCE: Laughing, eyes squeezed
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.0 s
+DURATION: 1.3 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC04_SH076_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH083_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "बस! यही तो मैं कहता हूँ।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1815,9 +1976,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:54.9 for 6.6 s: "बस! यही तो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "बस! यही तो" | music: happy (ducked under the line)
 
-SHOT 077   at 1:55.9
+SHOT 084   at 2:04.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1827,10 +1988,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Ambience of city street
-DURATION: 1.0 s
+DURATION: 1.3 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH077_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH084_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "बस! यही तो मैं कहता हूँ। बारिश रुक गई, च…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1838,9 +1999,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:54.9 for 6.6 s: "मैं कहता हूँ।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "मैं कहता हूँ।" | music: happy (ducked under the line)
 
-SHOT 078   at 1:56.9
+SHOT 085   at 2:05.3
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1851,10 +2012,10 @@ FACIAL PERFORMANCE: Laughing, eyes squeezed
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.2 s
+DURATION: 1.6 s
 CUT WHEN: after these 6 words
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
-SHOT ID: KAHANI_SC04_SH078_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH085_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "बारिश रुक गई, चाय खत्म, कहानी" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — रघु काका's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1862,9 +2023,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:54.9 for 6.6 s: "बारिश रुक गई," | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "बारिश रुक गई," | music: happy (ducked under the line)
 
-SHOT 079   at 1:58.1
+SHOT 086   at 2:06.8
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1874,10 +2035,10 @@ FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: रघु काका
 SOUND: Ambience of city street
-DURATION: 1.2 s
+DURATION: 1.6 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH079_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH086_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "बस! यही तो मैं कहता हूँ। बारिश रुक गई, च…" | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1885,9 +2046,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:54.9 for 6.6 s: "चाय खत्म, कहानी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "चाय खत्म, कहानी" | music: happy (ducked under the line)
 
-SHOT 080   at 1:59.3
+SHOT 087   at 2:08.4
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1898,10 +2059,10 @@ FACIAL PERFORMANCE: A warm smile, cheeks lifted
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.1 s
+DURATION: 1.4 s
 CUT WHEN: the line ends
 EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
-SHOT ID: KAHANI_SC04_SH080_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH087_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — आरव's face and hands | reveals — Reaction (part 3 of 3): आरव listens; the line goes on off-screen | why this camera — medium close-up: facial acting with some body language
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -1911,7 +2072,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 081   at 2:00.4
+SHOT 088   at 2:09.8
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1921,10 +2082,10 @@ FACIAL PERFORMANCE: A warm smile, cheeks lifted
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Ambience of city street
-DURATION: 1.1 s
+DURATION: 1.4 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH081_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH088_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका: "बस! यही तो मैं कहता हूँ। बारिश रुक गई, च…" | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
@@ -1932,9 +2093,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:54.9 for 6.6 s: "कल फिर आना।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "कल फिर आना।" | music: happy (ducked under the line)
 
-SHOT 082   at 2:01.5
+SHOT 089   at 2:11.1
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Low angle (power)
@@ -1947,7 +2108,7 @@ SOUND: Dialogue in the room of city street, शहर की सड़क ambien
 DURATION: 1.5 s
 CUT WHEN: the feeling has landed (1.2 s of silence)
 EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
-SHOT ID: KAHANI_SC04_SH082_V001   LENS: 85mm   ANGLE: low angle: power, threat, scale
+SHOT ID: KAHANI_SC04_SH089_V001   LENS: 85mm   ANGLE: low angle: power, threat, scale
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — आरव listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of आरव — the eyes, then the mouth | reveals — Reaction: the audience feels the line through आरव's face, and it is allowed to breathe | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
@@ -1957,7 +2118,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 083   at 2:03.1
+SHOT 090   at 2:12.7
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1970,7 +2131,7 @@ SOUND: Ambience of city street
 DURATION: 10.8 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
-SHOT ID: KAHANI_SC04_SH083_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+SHOT ID: KAHANI_SC04_SH090_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet; मीरा: drawn puppet
 FIVE QUESTIONS: see — रघु काका in the scene | feel — Keep the story readable | attention first — the face of रघु काका — the eyes, then the mouth | reveals — Show what रघु काका does | why this camera — close-up: a significant expression, realization or decision
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
@@ -1982,22 +2143,22 @@ VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy |
 
 QUALITY CHECK
 • Every part opens on a readable wide shot: yes
-• Jump cuts (a cut to almost the same framing): 5 removed (the shot simply continues)
+• Jump cuts (a cut to almost the same framing): 2 removed (the shot simply continues)
 • Technical Director protocol: locked tripod, every shot static, no camera shake unless the story asks for it
 • Shots longer than 4 s: 1
-• Lip-sync shots (front close-ups, face filling the frame, at most 6 words): 33; with more than 6 words: 0
+• Lip-sync shots (front close-ups, face filling the frame, at most 6 words): 38; with more than 6 words: 0
 • Runs slowed to walking pace: 2; characters who stop walking to speak: 0
 • Moves read from the story's directions (v34): 0 leaving, 0 coming back, 0 across or around, 0 up to someone; 0 lines waited until their speaker had walked onto the stage (v35)
 • Realism (v34): 3 looks held on an entrance, an exit, a return, a reveal or someone hurt (0 turned round to watch); 11 reactions to rain or snow beginning; 0 hurried out of the rain; 0 felt their way blindfolded; 0 doors heard; 2 footsteps moved across the stereo
 • Everyday actions (v35): 5 sat down (a chair, a sofa, a bed, the floor — each its own furniture and sound), 0 got up (leaning forward, slower from a low seat; from lying, sitting up first), 0 lay down to sleep (sat, then lay back; eyes shut, slow breath, a blanket in bed), 0 woke (sat up, stretched and yawned), 0 ate (hand to mouth, chewing, heard), 4 drank (raised to the lips, a sip or gulps, the cup set down); 0 shots of a seated speaker from a standing photo kept from the waist up, 0 close-ups of a photo eating or drinking (the cup or morsel comes up to the lips)
 • Cuts made so no character moves 15% of the frame in one shot: 2; shots still over the limit (very fast moves the story's timing leaves no room to slow): 1
 • Cuts made so each shot holds one action: 3; shots with more than one: 2
-• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 68
-• Validation layer: 39 of 83 shots passed at once, 44 corrected
+• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 74
+• Validation layer: 40 of 90 shots passed at once, 50 corrected
 • Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
-• First-frame checks: 4 shots reframed for a cut head, 3 for feet out of the frame (feet in the bottom 85-98% with their shadow)
-• Lip-sync framing (8.3): the face fills 20% of the frame on average in 33 lip-sync shots (65-75% where the picture and the frame allow it; the whole head always inside; a narrow frame keeps the face in its centre 60%); reframed on the face: 22
-• Objective (small films of 30-90 s): this film is 2:22 — the script decides the length; it is made as 83 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
+• First-frame checks: 4 shots reframed for a cut head, 4 for feet out of the frame (feet in the bottom 85-98% with their shadow)
+• Lip-sync framing (8.3): the face fills 20% of the frame on average in 38 lip-sync shots (65-75% where the picture and the frame allow it; the whole head always inside; a narrow frame keeps the face in its centre 60%); reframed on the face: 27
+• Objective (small films of 30-90 s): this film is 2:31 — the script decides the length; it is made as 90 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
 • Miyazaki ma pauses after two fast beats: 1; Russo / Gunn comic beats: 0; Gunn shadow passes in funny scenes: 0
 • Story spine filled before any shot was planned (R4, hardcoded): yes — hero रघु काका; the ending was read first (R3)
 • Spider-Verse animation on twos: off (every character moves every frame; switch it on in Settings)
@@ -2005,13 +2166,13 @@ QUALITY CHECK
 • Handbook (AI Animation Director): the five questions answered for every shot, a stable shot ID and a lens by shot size; thought-before-action beats (a pause and a look before the reaction): 0; Dutch angles: 0 (at most one per scene); shot durations: 9 distinct lengths (never the same for every shot); the continuity ledger per scene and the four approval gates follow below
 • Director's manual (v2.0): establishing shots held for the cut length (2.5 s; shots are cut at 2.6 s since v26, the 4-s cap stays): 2 of 4 (the rest are cut sooner by the protocol's motion rule — someone enters or moves during them, and the move is seen wide); point-of-view shots for looks: 0; reactions staged for loud sounds: 0; suspicion and relief read from the manners; every shot carries its ASSETS, TRANSITION IN, STATE AT START / END and VOICE / MUSIC lines; the beat sheet, scene records, coverage report, prop ledger and location records follow the ledger
 • Phone-local guide (v1.0): establishing bridges added where the place changes between scenes: 0; reverse shots use the place's reverse angle when you gave one; real uploaded angles replace made views; no painted mouth where no mouth was found
-QC SCORE (training guide §12 — weighted rubric, 0–5 per category): 76/100 — needs improvement
+QC SCORE (training guide §12 — weighted rubric, 0–5 per category): 79/100 — needs improvement
   Character identity         2/5  (weight 25%)
   3D geometry and anatomy    5/5  (weight 20%)
   Style and rendering        3/5  (weight 15%)
   Lighting and composition   5/5  (weight 10%)
   Prompt compliance          5/5  (weight 15%)
-  Scene continuity           4/5  (weight 15%)
+  Scene continuity           5/5  (weight 15%)
   Critical-defect override: none (no character missing from its scene, feet on the floor)
   Automatic rejection conditions watched: a face differing from the canonical picture (impossible: the pictures are the user's own, drawn as they are); a required character or prop missing (counted above); extra limbs or broken geometry (the feet check); an outfit change without instruction (impossible: one picture set per character); the action or composition violated (the validation layer); unexplained changes between frames (the Final QC's boiling and shake check); artefacts (the Final QC).
 • Situations (v34 training): 0 with a walking aid, 0 with glasses, goggles, a blindfold or a patch, 0 hurt, 1 with an umbrella, 0 changes of look — 0 reveals, 0 moments of concern, 0 of relief; 5 shots framed at a seated character's eye level; 0 point-of-view shots turned into listening for a blindfold; sounds: 3 footsteps, 0 of walking aids, 1 of rain on an umbrella
@@ -2019,52 +2180,55 @@ QC SCORE (training guide §12 — weighted rubric, 0–5 per category): 76/100 �
 THE ANIMATED DIRECTOR'S CRAFT (v38 — studio-style directing for family films)
 Readable performances: the speaker on the stage and facing us for 11 of 11 line(s)
 Pacing: 4 of 4 peak line(s) followed by breathing room (a pause of 0.35 s or more, or the end of the scene)
-Colour by beat: 7 peak shot(s) a little richer, 28 tender shot(s) a little warmer; cheeks flush with anger, pride, laughter and effort
+Colour by beat: 7 peak shot(s) a little richer, 30 tender shot(s) a little warmer; cheeks flush with anger, pride, laughter and effort
 Touch only as written: 0 hug(s), held hand(s) or peck(s), each from the script's own words
 PICTURES THAT WOULD HELP (upload them and make the film again; until then the studio uses what it has):
-  • रघु काका: a picture (drawn by the studio until you add one) (83 shots)
-  • आरव: a picture (drawn by the studio until you add one) (83 shots)
-  • मीरा: a picture (drawn by the studio until you add one) (65 shots)
+  • रघु काका: a picture (drawn by the studio until you add one) (90 shots)
+  • आरव: a picture (drawn by the studio until you add one) (90 shots)
+  • मीरा: a picture (drawn by the studio until you add one) (70 shots)
 Delivery: edit_list.txt (scene markers and every shot's timecode) is saved with the film; subtitles: type "add subtitles" after the film
 Not trained from the guide: its sexual and nude content (the studio makes family films)
-• Static shots: 83 of 83
-• Reactions shown and allowed to breathe: 11
-• Relationships shown with both characters in the frame: 19 two-shots
-• Pacing: 83 shots in 126 s of scenes, an average shot of 1.5 s
+• Static shots: 90 of 90
+• Reactions shown and allowed to breathe: 12
+• Relationships shown with both characters in the frame: 20 two-shots
+• Pacing: 90 shots in 136 s of scenes, an average shot of 1.5 s
 
-BRAINTRUST (every 5 shots, 17 rounds) — AUTHORITY: the Braintrust suggests only; the director decides.
-• Q1 story clear without dialogue: 15 of 17 rounds
-• Q2 the character has a strong opinion: 17 of 17 rounds
-• Q3 a ma pause (quiet moment): 13 of 17 rounds
+BRAINTRUST (every 5 shots, 18 rounds) — AUTHORITY: the Braintrust suggests only; the director decides.
+• Q1 story clear without dialogue: 15 of 18 rounds
+• Q2 the character has a strong opinion: 18 of 18 rounds
+• Q3 a ma pause (quiet moment): 12 of 18 rounds
 • Q4 costume culturally accurate (real garment names): 2 of 3 characters — generic: आरव (name the real garment: ghagra-choli, Banarasi saree, achkan…)
 • Q5 the face is the same as the lock sheet: yes — every character keeps one picture (its lock sheet) for the whole film; the face layer is cut from it, never redrawn
 • R5 at most four characters per 60 s: yes
-• suggestion: shots 26-30: no quiet moment — the director holds a still shot after the next action (ma)
-• suggestion: shots 31-35: five shots of talk — the story should read without the words (an action, a look, an object)
+• suggestion: shots 6-10: no quiet moment — the director holds a still shot after the next action (ma)
 • suggestion: shots 31-35: no quiet moment — the director holds a still shot after the next action (ma)
-• suggestion: shots 51-55: five shots of talk — the story should read without the words (an action, a look, an object)
-• suggestion: shots 71-75: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 36-40: five shots of talk — the story should read without the words (an action, a look, an object)
+• suggestion: shots 36-40: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 56-60: five shots of talk — the story should read without the words (an action, a look, an object)
+• suggestion: shots 56-60: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 61-65: no quiet moment — the director holds a still shot after the next action (ma)
 • suggestion: shots 76-80: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 81-85: five shots of talk — the story should read without the words (an action, a look, an object)
 
 CONTINUITY LEDGER (ch. 12)
-— दृश्य 1: city street, evening, Key: orange sunset from the right, 15 deg, 0:07.5–0:37.5
+— दृश्य 1: city street, evening, Key: orange sunset from the right, 15 deg, 0:07.5–0:39.5
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet
    आरव: enters later → right third, facing left; costume: as the lock sheet; holds something
    axis: रघु काका left, आरव right — kept in every shot of the scene (180-degree principle)
    state: everyone wet by the end (rain)
-— दृश्य 2: city street, evening, Key: orange sunset from the right, 15 deg, 0:37.5–1:05.9
+— दृश्य 2: city street, evening, Key: orange sunset from the right, 15 deg, 0:39.5–1:08.8
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet; holds something
    आरव: right third, facing left → right third, facing left; costume: as the lock sheet
    मीरा: enters later → right third, facing left; costume: as the lock sheet
    axis: रघु काका left, आरव right — kept in every shot of the scene (180-degree principle)
    state: everyone wet by the end (rain)
-— दृश्य 3: city street, evening, Key: orange sunset from the right, 15 deg, 1:05.9–1:37.1
+— दृश्य 3: city street, evening, Key: orange sunset from the right, 15 deg, 1:08.8–1:44.0
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet; holds something
    आरव: right third, facing left → right third, facing right; costume: as the lock sheet
    मीरा: right third, facing left → right third, facing left; costume: as the lock sheet; holds something
    axis: रघु काका left, आरव right — kept in every shot of the scene (180-degree principle)
    state: everyone wet by the end (rain)
-— दृश्य 4: city street, evening, Key: orange sunset from the right, 15 deg, 1:37.1–2:13.9
+— दृश्य 4: city street, evening, Key: orange sunset from the right, 15 deg, 1:44.0–2:23.5
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet
    आरव: right third, facing right → right third, facing left; costume: as the lock sheet
    मीरा: right third, facing left → right third, facing left; costume: as the lock sheet
@@ -2161,17 +2325,17 @@ SCENE-COVERAGE REPORT (director's manual 3.2 — genuine gaps against intentiona
 PROP LEDGER (director's manual 1.6 — owner, state and location scene by scene)
   • something — owner: whoever holds it first
       SC_01: आरव — held in the right hand from 0:17.0
-      SC_01: आरव — held in the left hand from 0:27.6
+      SC_01: आरव — held in the left hand from 0:28.7
   • something — owner: whoever holds it first
-      SC_02: रघु काका — held in the right hand from 0:58.0
-      SC_03: रघु काका — held in the right hand from 1:12.6
-      SC_03: मीरा — held in the right hand from 1:21.9
+      SC_02: रघु काका — held in the right hand from 1:00.5
+      SC_03: रघु काका — held in the right hand from 1:16.9
+      SC_03: मीरा — held in the right hand from 1:28.0
 
 LOCATION RECORDS (director's manual 1.6)
   LOC_001 — city street: exterior; reference: the painted set with its 2.5D depth
      layout: the stage is 1280 wide, the floor line at the plate's ground; entrances heroes enter from the left
      time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg)  |  scenes: SC_01, SC_02, SC_03, SC_04
-• Step 8 — the finished film metered frame by frame as it was written (3404 frames; 2767 pairs of frames in a row compared in 82 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 2, whole-frame story effects left out 52 moments; the largest change between two frames 9.7 per cell at 1:07.4 (limit 14), the largest share of the frame changed 17% (limit 50%)
+• Step 8 — the finished film metered frame by frame as it was written (3635 frames; 2991 pairs of frames in a row compared in 89 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 2, whole-frame story effects left out 52 moments; the largest change between two frames 8.6 per cell at 0:10.8 (limit 14), the largest share of the frame changed 13% (limit 50%)
 
-FRAME AUDIT — every character in every frame as drawn (3033 frames, 5771 character-frames, 5404 frame pairs inside shots)
+FRAME AUDIT — every character in every frame as drawn (3287 frames, 6177 character-frames, 5729 frame pairs inside shots)
 • Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0

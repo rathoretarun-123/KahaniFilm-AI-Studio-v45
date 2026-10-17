@@ -1,0 +1,1348 @@
+DIRECTOR'S SHOT LIST — सोफे वाली जादू की बातें
+Planned with the Pixar-style directing guide: emotion → performance → composition → camera → light → sound → cut.
+
+────────── दृश्य 1: room
+SCENE BRIEF (training guide §7)
+  Subjects: वृंदा (CHAR_001), वनुषा (CHAR_002)
+  Action: घर का छोटा लिविंग रूम
+  Environment: room — floor line at 670, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 001   at 0:07.7
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: पर्यावरण - शाम के 5 बजे का समय, खिड़की से हल्की सुनहरी धूप आ…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: room
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 2.9 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC01_SH001_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — पर्यावरण - शाम के 5 बजे का समय, खिड़की से हल्की सुनहरी धूप आ… | feel — Orientation: the audience knows where it is | attention first — the whole place, then room in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a sofa, a sofa
+
+SHOT 002   at 0:10.6
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH002_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 003   at 0:12.3
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Extreme wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH003_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — the whole place, then वनुषा in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — extreme wide: scale, geography, isolation or spectacle
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 004   at 0:14.1
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH004_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 005   at 0:15.8
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "दीदी, ये चाँद दिन में"
+FACIAL PERFORMANCE: One brow raised
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.7 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH005_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "दीदी, ये चाँद दिन में" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वनुषा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:15.8 for 3.2 s: "दीदी, ये चाँद दिन में" | music: happy (ducked under the line)
+
+SHOT 006   at 0:17.6
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "कहाँ चला जाता है?"
+FACIAL PERFORMANCE: One brow raised
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.5 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH006_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "कहाँ चला जाता है?" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वनुषा's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:15.8 for 3.2 s: "कहाँ चला जाता है?" | music: happy (ducked under the line)
+
+SHOT 007   at 0:19.0
+PURPOSE: Reaction: the audience feels the line through वृंदा's face, over वनुषा's shoulder, and it is allowed to breathe
+SHOT SIZE: Close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वृंदा listens and takes it in, without words
+FACIAL PERFORMANCE: Brows up, eyes wide, mouth open
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.3 s
+CUT WHEN: the feeling has landed (0.0 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC01_SH007_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: वनुषा's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — the face of वृंदा — the eyes, then the mouth | reveals — Reaction: the audience feels the line through वृंदा's face, over वनुषा's shoulder, and it is allowed to breathe | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 008   at 0:20.4
+PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "दिन में भी वहीं होता"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.6 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH008_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "दिन में भी वहीं होता" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वृंदा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:20.4 for 5.4 s: "दिन में भी वहीं होता" | music: happy (ducked under the line)
+
+SHOT 009   at 0:21.9
+PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "है, बस सूरज की रोशनी तेज"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.9 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH009_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "है, बस सूरज की रोशनी तेज" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वृंदा's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:20.4 for 5.4 s: "है, बस सूरज की रोशनी तेज" | music: happy (ducked under the line)
+
+SHOT 010   at 0:23.8
+PURPOSE: Reaction (part 3 of 3): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा listens, subtle breathing, one small change of expression
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.2 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
+SHOT ID: KAHANI_SC01_SH010_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: वृंदा's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — वनुषा's face and hands | reveals — Reaction (part 3 of 3): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 011   at 0:25.0
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वृंदा: "दिन में भी वहीं होता है, बस सूरज की रोशन…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH011_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "दिन में भी वहीं होता है, बस सूरज की रोशन…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:20.4 for 5.4 s | music: happy (ducked under the line)
+
+SHOT 012   at 0:26.2
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "तो क्या सूरज और चाँद लड़ते"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.0 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH012_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "तो क्या सूरज और चाँद लड़ते" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वनुषा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s: "तो क्या सूरज" | music: happy (ducked under the line)
+
+SHOT 013   at 0:27.3
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा: "तो क्या सूरज और चाँद लड़ते हैं कि कौन ज्…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH013_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "तो क्या सूरज और चाँद लड़ते हैं कि कौन ज्…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s | music: happy (ducked under the line)
+
+SHOT 014   at 0:28.3
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "हैं कि कौन ज्यादा चमकेगा?"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.5 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC01_SH014_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "हैं कि कौन ज्यादा चमकेगा?" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वनुषा's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s: "हैं कि कौन ज्यादा" | music: happy (ducked under the line)
+
+SHOT 015   at 0:29.8
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा: "तो क्या सूरज और चाँद लड़ते हैं कि कौन ज्…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.5 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH015_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वृंदा ← the front picture (rigged); वनुषा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "तो क्या सूरज और चाँद लड़ते हैं कि कौन ज्…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा (the master picture) | LOC_001 room (your picture), evening
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s | music: happy (ducked under the line) | effects: effect 21
+
+────────── दृश्य 2: room
+SCENE BRIEF (training guide §7)
+  Subjects: वनुषा (CHAR_002), वृंदा (CHAR_001)
+  Action: घर का छोटा लिविंग रूम
+  Environment: room — floor line at 670, the place's own picture when given
+  Lighting and mood: the natural light of the place; mood happy
+  Camera: Wide first, static; locked tripod
+  Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
+SHOT 016   at 0:31.6
+PURPOSE: Establish the place, its scale and the time of day before going closer
+SHOT SIZE: Wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: The whole place, the characters where they stand
+CHARACTER ACTION: पर्यावरण - वही सुनहरी रोशनी थोड़ी गहरी हो गई है। पर्दे हल्के…
+FACIAL PERFORMANCE: —
+BODY LANGUAGE: Everyone in their places
+LIGHTING: Natural light of the place
+FOCUS: room
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 2.9 s
+CUT WHEN: the place is clear and the first action begins
+EMOTIONAL PURPOSE: Orientation: the audience knows where it is
+SHOT ID: KAHANI_SC02_SH016_V001   LENS: 35mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — पर्यावरण - वही सुनहरी रोशनी थोड़ी गहरी हो गई है। पर्दे हल्के… | feel — Orientation: the audience knows where it is | attention first — the whole place, then room in it | reveals — Establish the place, its scale and the time of day before going closer | why this camera — wide: movement and the character-environment relationship
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: establishing cut — orient the viewer in a new location
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 017   at 0:34.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH017_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 018   at 0:36.1
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Extreme wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH018_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — the whole place, then वनुषा in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — extreme wide: scale, geography, isolation or spectacle
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, curious; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 019   at 0:37.8
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: One brow raised
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH019_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, curious; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 020   at 0:39.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Extreme wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.7 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH020_V001   LENS: 28mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — the whole place, then वनुषा in it | reveals — Follow the action: everyone who moves stays in the frame | why this camera — extreme wide: scale, geography, isolation or spectacle
+GAZE: where the action goes; the characters look at what they do, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 021   at 0:41.1
+PURPOSE: Lip-sync close-up: front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "नहीं पगली, वो दोनों दोस्त हैं।"
+FACIAL PERFORMANCE: Laughing, eyes squeezed
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.2 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH021_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "नहीं पगली, वो दोनों दोस्त हैं।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वृंदा — the eyes, then the mouth | reveals — Lip-sync close-up: front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:41.1 for 2.4 s: "नहीं पगली, वो" | music: happy (ducked under the line)
+
+SHOT 022   at 0:42.4
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वृंदा: "नहीं पगली, वो दोनों दोस्त हैं।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH022_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "नहीं पगली, वो दोनों दोस्त हैं।" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:41.1 for 2.4 s | music: happy (ducked under the line)
+
+SHOT 023   at 0:43.6
+PURPOSE: Reaction: the audience feels the line through वनुषा's face, over वृंदा's shoulder, and it is allowed to breathe
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा listens and takes it in, without words
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.5 s
+CUT WHEN: the feeling has landed (0.0 s of silence)
+EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
+SHOT ID: KAHANI_SC02_SH023_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: वृंदा's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा listens and takes it in, without words | feel — Let the reaction breathe before the scene goes on | attention first — वनुषा's face and hands | reveals — Reaction: the audience feels the line through वनुषा's face, over वृंदा's shoulder, and it is allowed to breathe | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 024   at 0:45.1
+PURPOSE: Show what वनुषा does
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH024_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Show what वनुषा does | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: wind
+
+SHOT 025   at 0:46.7
+PURPOSE: Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "सूरज दिन में रोशनी देता है"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 2.0 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH025_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "सूरज दिन में रोशनी देता है" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वृंदा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s: "सूरज दिन में रोशनी देता है" | music: happy (ducked under the line) | effects: wind
+
+SHOT 026   at 0:48.6
+PURPOSE: Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "ताकि हम स्कूल जा सकें, और"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.9 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH026_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "ताकि हम स्कूल जा सकें, और" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वृंदा's face and hands | reveals — Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s: "ताकि हम स्कूल जा सकें, और" | music: happy (ducked under the line)
+
+SHOT 027   at 0:50.5
+PURPOSE: Reaction (part 3 of 4): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा listens, subtle breathing, one small change of expression
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.8 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
+SHOT ID: KAHANI_SC02_SH027_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: वृंदा's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — वनुषा's face and hands | reveals — Reaction (part 3 of 4): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 028   at 0:52.3
+PURPOSE: Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "देता है ताकि डर न लगे।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.1 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH028_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "देता है ताकि डर न लगे।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वृंदा's face and hands | reveals — Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s: "देता है ताकि डर" | music: happy (ducked under the line)
+
+SHOT 029   at 0:53.4
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वृंदा: "सूरज दिन में रोशनी देता है ताकि हम स्कूल…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH029_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "सूरज दिन में रोशनी देता है ताकि हम स्कूल…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s | music: happy (ducked under the line)
+
+SHOT 030   at 0:54.5
+PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "अच्छा! तो जैसे आप दिन"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.7 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH030_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "अच्छा! तो जैसे आप दिन" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वनुषा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s: "अच्छा! तो जैसे आप दिन" | music: happy (ducked under the line) | effects: clap
+
+SHOT 031   at 0:56.2
+PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "में मेरी होमवर्क वाली दीदी और"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.2 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH031_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "में मेरी होमवर्क वाली दीदी और" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वनुषा's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s: "में मेरी होमवर्क" | music: happy (ducked under the line)
+
+SHOT 032   at 0:57.3
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा: "अच्छा! तो जैसे आप दिन में मेरी होमवर्क व…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH032_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "अच्छा! तो जैसे आप दिन में मेरी होमवर्क व…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s | music: happy (ducked under the line)
+
+SHOT 033   at 0:58.5
+PURPOSE: Reaction (part 3 of 3): वृंदा listens, seen over वनुषा's shoulder; the line goes on off-screen
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा listens, subtle breathing, one small change of expression
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.2 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
+SHOT ID: KAHANI_SC02_SH033_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: वनुषा's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — वृंदा's face and hands | reveals — Reaction (part 3 of 3): वृंदा listens, seen over वनुषा's shoulder; the line goes on off-screen | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 034   at 0:59.7
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा: "अच्छा! तो जैसे आप दिन में मेरी होमवर्क व…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.2 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH034_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "अच्छा! तो जैसे आप दिन में मेरी होमवर्क व…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s | music: happy (ducked under the line)
+
+SHOT 035   at 1:00.9
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "बिल्कुल सही! तू तो बहुत"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.1 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH035_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "बिल्कुल सही! तू तो बहुत" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वृंदा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:00.9 for 3.7 s: "बिल्कुल सही!" | music: happy (ducked under the line)
+
+SHOT 036   at 1:02.0
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वृंदा: "बिल्कुल सही! तू तो बहुत समझदार हो गई है।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.1 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH036_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "बिल्कुल सही! तू तो बहुत समझदार हो गई है।" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:00.9 for 3.7 s | music: happy (ducked under the line)
+
+SHOT 037   at 1:03.0
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "समझदार हो गई है।"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Natural light of the place
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 2.0 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH037_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "समझदार हो गई है।" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वृंदा's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:00.9 for 3.7 s: "समझदार हो गई है।" | music: happy (ducked under the line)
+
+SHOT 038   at 1:05.0
+PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "तो आज रात की कहानी में"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.8 s
+CUT WHEN: after these 6 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH038_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "तो आज रात की कहानी में" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वनुषा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 1:05.0 for 3.8 s: "तो आज रात की कहानी में" | music: happy (ducked under the line)
+
+SHOT 039   at 1:06.8
+PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा: "चाँद और सूरज दोस्त बनेंगे?"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.3 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH039_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "चाँद और सूरज दोस्त बनेंगे?" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वनुषा's face and hands | reveals — Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 1:05.0 for 3.8 s: "चाँद और सूरज दोस्त" | music: happy (ducked under the line)
+
+SHOT 040   at 1:08.1
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा: "तो आज रात की कहानी में चाँद और सूरज दोस्…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH040_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा: "तो आज रात की कहानी में चाँद और सूरज दोस्…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_002 (वनुषा) at 1:05.0 for 3.8 s | music: happy (ducked under the line)
+
+SHOT 041   at 1:09.3
+PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "हाँ, और उसमें एक छोटी"
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.8 s
+CUT WHEN: after these 5 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH041_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "हाँ, और उसमें एक छोटी" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — the face of वृंदा — the eyes, then the mouth | reveals — Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move | why this camera — close-up: a significant expression, realization or decision
+GAZE: on the listener, direct; eye contact held through the words, a glance away only on a pause; the head almost still
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:09.3 for 4.8 s: "हाँ, और उसमें एक छोटी" | music: happy (ducked under the line)
+
+SHOT 042   at 1:11.1
+PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वृंदा: "वनुषा भी होगी जो"
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वृंदा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.4 s
+CUT WHEN: after these 4 words
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = true)
+SHOT ID: KAHANI_SC02_SH042_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "वनुषा भी होगी जो" | feel — Lip-sync only in a locked close-up (contains_speech = true) | attention first — वृंदा's face and hands | reveals — Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:09.3 for 4.8 s: "वनुषा भी होगी जो" | music: happy (ducked under the line)
+
+SHOT 043   at 1:12.5
+PURPOSE: Reaction (part 3 of 3): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen
+SHOT SIZE: Medium close-up (Over the shoulder)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+COMPOSITION: Face in the centre of the frame, 20% headroom
+CHARACTER ACTION: वनुषा listens, subtle breathing, one small change of expression
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Dialogue in the room of room, कमरा ambience
+DURATION: 1.0 s
+CUT WHEN: the line ends
+EMOTIONAL PURPOSE: Lip-sync only in a locked close-up (contains_speech = false)
+SHOT ID: KAHANI_SC02_SH043_V001   LENS: 65mm   ANGLE: eye level: natural, neutral, intimate
+OVER THE SHOULDER: वृंदा's shoulder and back in the foreground, soft (the back view made from the picture)
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा listens, subtle breathing, one small change of expression | feel — Lip-sync only in a locked close-up (contains_speech = false) | attention first — वनुषा's face and hands | reveals — Reaction (part 3 of 3): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen | why this camera — over-the-shoulder: the conversational relationship and viewpoint
+GAZE: on the speaker, steady and attentive; a small shift down or aside with the feeling; the mouth at rest
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: reaction cut — show another character responding
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 044   at 1:13.5
+PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वृंदा: "हाँ, और उसमें एक छोटी वनुषा भी होगी जो च…"
+FACIAL PERFORMANCE: Calm, listening
+LIGHTING: Soft, warm light (warmth, safety)
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.0 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH044_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वृंदा: "हाँ, और उसमें एक छोटी वनुषा भी होगी जो च…" | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:09.3 for 4.8 s | music: happy (ducked under the line)
+
+SHOT 045   at 1:14.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Laughing, eyes squeezed
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.8 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH045_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, laughing
+STATE AT END: वनुषा right third, facing left, sitting, laughing; वृंदा centre, facing right, sitting, laughing
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 046   at 1:16.2
+PURPOSE: Show what वनुषा does
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Laughing, eyes squeezed
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH046_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Show what वनुषा does | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, laughing; वृंदा centre, facing right, sitting, laughing
+STATE AT END: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 047   at 1:17.8
+PURPOSE: Show what वनुषा does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH047_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Show what वनुषा does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
+STATE AT END: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 048   at 1:19.5
+PURPOSE: Follow the action: everyone who moves stays in the frame
+SHOT SIZE: Medium wide (Two-shot)
+CAMERA HEIGHT: Eye level
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Laughing, eyes squeezed
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.6 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH048_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Follow the action: everyone who moves stays in the frame | why this camera — full: whole-body action and posture
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, laughing; वृंदा centre, facing right, sitting, happy
+STATE AT END: वनुषा right third, facing left, sitting, laughing; वृंदा centre, facing right, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 049   at 1:21.0
+PURPOSE: Show what वनुषा does
+SHOT SIZE: Medium (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: Laughing, eyes squeezed
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH049_V001   LENS: 50mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Show what वनुषा does | why this camera — medium: dialogue, gestures and interaction
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, laughing; वृंदा centre, facing right, sitting, happy
+STATE AT END: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+SHOT 050   at 1:22.3
+PURPOSE: Show what वनुषा does
+SHOT SIZE: Medium close-up (Single)
+CAMERA HEIGHT: High angle (vulnerable)
+CAMERA MOVEMENT: Static
+CHARACTER ACTION: वनुषा in the scene
+FACIAL PERFORMANCE: A warm smile, cheeks lifted
+LIGHTING: Natural light of the place
+FOCUS: वनुषा
+SOUND: Ambience of room
+DURATION: 1.3 s
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC02_SH050_V001   LENS: 65mm   ANGLE: high angle: vulnerability, exposure
+PICTURES USED: वनुषा ← the front picture (rigged); वृंदा ← the front picture (rigged)
+FIVE QUESTIONS: see — वनुषा in the scene | feel — Keep the story readable | attention first — वनुषा's face and hands | reveals — Show what वनुषा does | why this camera — medium close-up: facial acting with some body language
+GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
+ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा (the master picture) | LOC_001 room (your picture), day
+TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
+STATE AT START: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
+STATE AT END: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
+VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
+
+QUALITY CHECK
+• Every part opens on a readable wide shot: yes
+• Jump cuts (a cut to almost the same framing): 4 removed (the shot simply continues)
+• Technical Director protocol: locked tripod, every shot static, no camera shake unless the story asks for it
+• Shots longer than 4 s: 0
+• Lip-sync shots (front close-ups, face filling the frame, at most 6 words): 9; with more than 6 words: 0
+• Runs slowed to walking pace: 0; characters who stop walking to speak: 0
+• Moves read from the story's directions (v34): 0 leaving, 0 coming back, 0 across or around, 0 up to someone; 0 lines waited until their speaker had walked onto the stage (v35)
+• Realism (v34): 0 looks held on an entrance, an exit, a return, a reveal or someone hurt (0 turned round to watch); 0 reactions to rain or snow beginning; 0 hurried out of the rain; 0 felt their way blindfolded; 0 doors heard; 0 footsteps moved across the stereo
+• Everyday actions (v35): 2 sat down (a chair, a sofa, a bed, the floor — each its own furniture and sound), 0 got up (leaning forward, slower from a low seat; from lying, sitting up first), 0 lay down to sleep (sat, then lay back; eyes shut, slow breath, a blanket in bed), 0 woke (sat up, stretched and yawned), 0 ate (hand to mouth, chewing, heard), 0 drank (raised to the lips, a sip or gulps, the cup set down); 0 shots of a seated speaker from a standing photo kept from the waist up, 0 close-ups of a photo eating or drinking (the cup or morsel comes up to the lips)
+• Activities (v37): 0 rides (a bicycle, a motorbike, a scooter, a car, a bus, an auto — the wheels turn with the distance, the engine or the bell heard), 0 on the playground (a swing, a slide, a see-saw, a merry-go-round), 0 exercises (dumbbells, a skipping rope, squats, yoga, push-ups), 0 make-up (kajal, lipstick, a bindi, mehndi, powder, face paint — it stays on), 0 baths (behind a curtain from the shoulders down, water from a mug, then a towel), 0 changes of clothes behind a folding screen, 0 pecks on the cheek or the forehead, 1 hugs
+• Cuts made so no character moves 15% of the frame in one shot: 0; shots still over the limit (very fast moves the story's timing leaves no room to slow): 0
+• Cuts made so each shot holds one action: 0; shots with more than one: 0
+• Shots reframed for the 16:9 frame (whole characters, 15% side margins, headroom): 61
+• Validation layer: 32 of 50 shots passed at once, 18 corrected
+• Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
+• First-frame checks: 0 shots reframed for a cut head, 0 for feet out of the frame (feet in the bottom 85-98% with their shadow)
+• Lip-sync framing (8.3): the face fills 25% of the frame on average in 9 lip-sync shots (65-75% where the picture and the frame allow it; the whole head always inside; a narrow frame keeps the face in its centre 60%); reframed on the face: 9
+• Objective (small films of 30-90 s): this film is 1:32 — the script decides the length; it is made as 50 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
+• Miyazaki ma pauses after two fast beats: 1; Russo / Gunn comic beats: 1; Gunn shadow passes in funny scenes: 0
+• Story spine filled before any shot was planned (R4, hardcoded): yes — hero वृंदा; the ending was read first (R3)
+• Spider-Verse animation on twos: off (every character moves every frame; switch it on in Settings)
+• Nolan: real sounds — steps by the floor of the place (stone, marble, cave, earth), running steps for runs; cross-cutting between speaker and listener in long lines
+• Handbook (AI Animation Director): the five questions answered for every shot, a stable shot ID and a lens by shot size; thought-before-action beats (a pause and a look before the reaction): 0; Dutch angles: 0 (at most one per scene); shot durations: 6 distinct lengths (never the same for every shot); the continuity ledger per scene and the four approval gates follow below
+• Director's manual (v2.0): establishing shots held for the cut length (2.5 s; shots are cut at 2.6 s since v26, the 4-s cap stays): 2 of 2 (the rest are cut sooner by the protocol's motion rule — someone enters or moves during them, and the move is seen wide); point-of-view shots for looks: 0; reactions staged for loud sounds: 0; suspicion and relief read from the manners; every shot carries its ASSETS, TRANSITION IN, STATE AT START / END and VOICE / MUSIC lines; the beat sheet, scene records, coverage report, prop ledger and location records follow the ledger
+• Phone-local guide (v1.0): establishing bridges added where the place changes between scenes: 0; reverse shots use the place's reverse angle when you gave one; real uploaded angles replace made views; no painted mouth where no mouth was found
+QC SCORE (training guide §12 — weighted rubric, 0–5 per category): 97/100 — review for approval
+  Character identity         5/5  (weight 25%)
+  3D geometry and anatomy    5/5  (weight 20%)
+  Style and rendering        5/5  (weight 15%)
+  Lighting and composition   5/5  (weight 10%)
+  Prompt compliance          5/5  (weight 15%)
+  Scene continuity           4/5  (weight 15%)
+  Critical-defect override: none (no character missing from its scene, feet on the floor)
+  Automatic rejection conditions watched: a face differing from the canonical picture (impossible: the pictures are the user's own, drawn as they are); a required character or prop missing (counted above); extra limbs or broken geometry (the feet check); an outfit change without instruction (impossible: one picture set per character); the action or composition violated (the validation layer); unexplained changes between frames (the Final QC's boiling and shake check); artefacts (the Final QC).
+• Situations (v34 training): 0 with a walking aid, 0 with glasses, goggles, a blindfold or a patch, 0 hurt, 0 with an umbrella, 0 changes of look — 0 reveals, 0 moments of concern, 0 of relief; 2 shots framed at a seated character's eye level; 0 point-of-view shots turned into listening for a blindfold; sounds: 0 footsteps, 0 of walking aids, 0 of rain on an umbrella
+
+THE ANIMATED DIRECTOR'S CRAFT (v38 — studio-style directing for family films)
+Readable performances: the speaker on the stage and facing us for 9 of 9 line(s)
+Pacing: 0 of 0 peak line(s) followed by breathing room (a pause of 0.35 s or more, or the end of the scene)
+Colour by beat: 0 peak shot(s) a little richer, 19 tender shot(s) a little warmer; cheeks flush with anger, pride, laughter and effort
+Touch only as written: 2 hug(s), held hand(s) or peck(s), each from the script's own words
+PICTURES THAT WOULD HELP (upload them and make the film again; until then the studio uses what it has):
+  • वृंदा: a surprised face (1 shot); a thinking face (4 shots); a laughing face (3 shots); a happy face (9 shots)
+  • वनुषा: a thinking face (3 shots); a happy face (5 shots); a laughing face (2 shots)
+Delivery: edit_list.txt (scene markers and every shot's timecode) is saved with the film; subtitles: type "add subtitles" after the film
+Not trained from the guide: its sexual and nude content (the studio makes family films)
+• Static shots: 50 of 50
+• Reactions shown and allowed to breathe: 6
+• Relationships shown with both characters in the frame: 11 two-shots
+• Pacing: 50 shots in 76 s of scenes, an average shot of 1.5 s
+
+BRAINTRUST (every 5 shots, 10 rounds) — AUTHORITY: the Braintrust suggests only; the director decides.
+• Q1 story clear without dialogue: 8 of 10 rounds
+• Q2 the character has a strong opinion: 10 of 10 rounds
+• Q3 a ma pause (quiet moment): 9 of 10 rounds
+• Q4 costume culturally accurate (real garment names): 1 of 2 characters — generic: वृंदा (name the real garment: ghagra-choli, Banarasi saree, achkan…)
+• Q5 the face is the same as the lock sheet: yes — every character keeps one picture (its lock sheet) for the whole film; the face layer is cut from it, never redrawn
+• R5 at most four characters per 60 s: yes
+• suggestion: shots 11-15: five shots of talk — the story should read without the words (an action, a look, an object)
+• suggestion: shots 31-35: no quiet moment — the director holds a still shot after the next action (ma)
+• suggestion: shots 36-40: five shots of talk — the story should read without the words (an action, a look, an object)
+
+CONTINUITY LEDGER (ch. 12)
+— दृश्य 1: room, evening, Key: orange sunset from the right, 15 deg, 0:07.5–0:31.4
+   वृंदा: centre, facing right → centre, facing right; costume: as the lock sheet
+   वनुषा: right third, facing left → right third, facing left; costume: as the lock sheet
+   axis: वृंदा left, वनुषा right — kept in every shot of the scene (180-degree principle)
+— दृश्य 2: room, day, Key: daylight from the window, right, 0:31.4–1:23.7
+   वनुषा: right third, facing left → right third, facing left; costume: as the lock sheet
+   वृंदा: centre, facing right → centre, facing right; costume: as the lock sheet
+   axis: वृंदा left, वनुषा right — kept in every shot of the scene (180-degree principle)
+
+NARRATIVE BEAT SHEET (director's manual 3.1)
+  1. Beginning and setup — दृश्य 1
+     what happens: Every day, पंखा धीरे चल रहा है और हल्की घर-घर की आवाज, बाहर बच्चों के खेलने की दूर की आवाज,…
+     who: CHAR_002 वनुषा, CHAR_001 वृंदा  |  where: room
+     the audience must understand: where we are and the ordinary day  |  what changes: curious → calm
+     the next beat needs: वनुषा: तो क्या सूरज और चाँद लड़ते हैं कि कौन ज्यादा चमकेगा?
+  2. Introduction of central characters and goals — दृश्य 1
+     what happens: वनुषा: "दीदी, ये चाँद दिन में कहाँ चला जाता है?"; वृंदा: "दिन में भी वहीं होता है, बस सूरज की रोशनी तेज होती…"
+     who: CHAR_002 वनुषा, CHAR_001 वृंदा  |  where: room
+     the audience must understand: who wants what (their first lines)  |  what changes: curious → calm
+     the next beat needs: वनुषा: तो क्या सूरज और चाँद लड़ते हैं कि कौन ज्यादा चमकेगा?
+  3. Inciting incident — दृश्य 2
+     what happens: One day, घर का छोटा लिविंग रूम
+     who: CHAR_001 वृंदा, CHAR_002 वनुषा  |  where: room
+     the audience must understand: the thing that changes the day  |  what changes: laughing → happy
+     the next beat needs: दोनों एक साथ हंस पड़ती हैं। वनुषा टेडी को बीच में रख कर दोनों गले लगाती हैं। हंसने से सोफा हल्का हिल…
+  4. Escalation — the story has no separate escalation scene (not forced: the turn leads straight to the climax)
+  5. Discoveries and emotional turning points — no scene changes its feeling (a short script)
+  6. Climax — दृश्य 2
+     what happens: घर का छोटा लिविंग रूम
+     who: CHAR_001 वृंदा, CHAR_002 वनुषा  |  where: room
+     the audience must understand: the hardest moment, met  |  what changes: laughing → happy
+     the next beat needs: दोनों एक साथ हंस पड़ती हैं। वनुषा टेडी को बीच में रख कर दोनों गले लगाती हैं। हंसने से सोफा हल्का हिल…
+  7. Resolution — दृश्य 2
+     what happens: Until finally, घर का छोटा लिविंग रूम
+     who: CHAR_001 वृंदा, CHAR_002 वनुषा  |  where: room
+     the audience must understand: how it ends for everyone  |  what changes: laughing → happy
+     the next beat needs: दोनों एक साथ हंस पड़ती हैं। वनुषा टेडी को बीच में रख कर दोनों गले लगाती हैं। हंसने से सोफा हल्का हिल…
+  8. Closing image: दोनों एक साथ हंस पड़ती हैं। वनुषा टेडी को बीच में रख कर दोनों गले लगाती हैं। हंसने से सोफा हल्का हिलता है। खिड़की की धूप…
+  (the beats are read from the script's own scenes; a scene missing from this list is not missing from the film)
+
+SCENE RECORDS (director's manual 3.3)
+— SC_01: दृश्य 1 — घर का छोटा लिविंग रूम
+   purpose: घर का छोटा लिविंग रूम  |  act 1
+   location: LOC_001 room, evening (your picture)  |  characters: CHAR_001 वृंदा, CHAR_002 वनुषा
+   beginning state: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+   ending state: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
+   objectives and conflict: वनुषा — "दीदी, ये चाँद दिन में कहाँ चला जाता है?"; वृंदा — "दिन में भी वहीं होता है, बस सूरज की रोशनी तेज होती है इसलिए …"
+   essential actions: पर्यावरण - शाम के 5 बजे का समय, खिड़की से हल्की सुनहरी धूप आ रही है।पं…
+   emotional progression: वृंदा: calm → surprised → calm; वनुषा: calm → curious → calm
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: a dissolve, the same place
+— SC_02: दृश्य 2 — घर का छोटा लिविंग रूम
+   purpose: घर का छोटा लिविंग रूम  |  act 2
+   location: LOC_001 room, day (your picture)  |  characters: CHAR_002 वनुषा, CHAR_001 वृंदा
+   beginning state: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
+   ending state: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
+   objectives and conflict: वृंदा — "नहीं पगली, वो दोनों दोस्त हैं।"; वनुषा — "अच्छा! तो जैसे आप दिन में मेरी होमवर्क वाली दीदी और रात में …"
+   essential actions: पर्यावरण - वही सुनहरी रोशनी थोड़ी गहरी हो गई है। पर्दे हल्के-हल्के हिल… / दोनों एक साथ हंस पड़ती हैं। वनुषा टेडी को बीच में रख कर दोनों गले लगात…
+   emotional progression: वनुषा: calm → laughing → happy; वृंदा: calm → laughing → happy
+   information revealed: nothing is revealed in words here (what the scene shows is the information)
+   transition to the next scene: the end card
+
+SCENE-COVERAGE REPORT (director's manual 3.2 — genuine gaps against intentional omissions)
+  1. A character suddenly appears in a location: 0 entrance(s) staged from the script's words ("enters", "comes running"…); 1 character(s) stand in the scene from its first frame though the opening does not name them (वृंदा in SC_02) — intentional: the lineup rule puts everyone who speaks in the scene on the stage before the first line, so no one pops in mid-scene
+  2. An important object is used before being introduced: every held thing is named by the story or the character's description before it is held
+  3. A decision occurs without showing motivation: every realisation or decision line comes after a reaction or a look (thought before action)
+  4. A dramatic sound has no visible reaction: 0 loud sound(s) in the script, each given a startle on every face on stage and a reaction shot a beat later (the director adds them itself)
+  5. A location changes without adequate orientation: 2 of 2 parts open on a readable wide shot (an establishing cut)
+  6. Dialogue requires a response but lacks a reaction shot: 4 question(s) asked; 1 without a reaction shot or an answer within 4 s (a rhetorical question, or the script moves on)
+  7. An action starts in one shot and is incomplete in the next: 0 move(s) continue across a cut — each next shot starts where the move is (cut on action; the key keeps going), none restarts
+  8. An emotional change has no believable transition: no feeling jumps to a far one within half a second (faces blend over 0.25 s, reactions wait a beat)
+
+PROP LEDGER (director's manual 1.6 — owner, state and location scene by scene)
+  no prop changes hands in this film (costumes and headwear as the lock sheets; see the continuity ledger)
+
+LOCATION RECORDS (director's manual 1.6)
+  LOC_001 — room: interior; reference: your picture (the location plate, feet on its floor line)
+     layout: the stage is 1280 wide, the floor line at the plate's ground; entrances none written (everyone present from the first frame)
+     time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg), day (Key: daylight from the window, right)  |  scenes: SC_01, SC_02
+• Step 8 — the finished film metered frame by frame as it was written (2200 frames; 1729 pairs of frames in a row compared in 50 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 8.4 per cell at 0:51.2 (limit 14), the largest share of the frame changed 10% (limit 50%)
+
+FRAME AUDIT — every character in every frame as drawn (1852 frames, 3508 character-frames, 3310 frame pairs inside shots)
+• Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0
