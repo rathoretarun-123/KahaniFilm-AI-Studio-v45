@@ -35,6 +35,11 @@ public final class Casting {
          * second bench, the girl on a third).
          */
         public boolean onListedBench;
+        /**
+         * v47.7: someone else sits on that bench beside them in this shot: the user's picture of them on a bench of its own
+         * is too short a bench for two (the girl sat past its end, on nothing) — the bench's own picture holds both.
+         */
+        public boolean benchShared;
         public String toString() { return Angles.name(angle) + " " + PoseSense.poseName(pose) + " " + PoseSense.emotionName(emotion) + (speaking ? " (speaking)" : ""); }
     }
 
@@ -59,6 +64,7 @@ public final class Casting {
                 if (sp == null || sp.poses == null || sp.poses.isEmpty()) continue;
                 Want w = want(film, s, sh, a, mid);
                 w.onListedBench = k.body == Pose.SIT && k.seat == Film.SEAT_STOOL && art.benchPicture() != null;
+                w.benchShared = w.onListedBench && benchShared(s, a, sh, Renderer.actorHeight(a.look, a.c, art, s));
                 Integer keep = w.pose == PoseSense.SIT ? seated.get(a.c.id) : null;
                 int best = choose(sp, w, keep == null ? MAIN - 10 : keep);
                 if (w.pose != PoseSense.SIT) seated.remove(a.c.id);
@@ -159,6 +165,37 @@ public final class Casting {
         return cyc;
     }
 
+    /** v47.7: whether anyone else sits on the bench within reach of a at any moment of the shot (every quarter second). */
+    static boolean benchShared(Film.Seg s, Film.Actor a, Film.Shot sh, float h) {
+        for (float t = sh.t; t <= sh.t + sh.dur + 1e-3f; t += 0.25f) {
+            for (Film.Actor o : s.actors) {
+                if (o == a) continue;
+                Film.Key ko = o.stateAt(t);
+                if (ko.visible && ko.body == Pose.SIT && ko.seat == Film.SEAT_STOOL && Math.abs(Director.xAt(o, t) - Director.xAt(a, t)) < h * 0.9f) return true;
+            }
+        }
+        return false;
+    }
+
+    /**
+     * v47.7: the user's picture of the character seated on a bench of its own that fits the want — its face found (lips
+     * and blinks live; never a back), the most frontal (the face's turn read from the picture), of the moment's feeling
+     * — or -1. keep: the one the shot before used, kept while it fits (no flicker between two).
+     */
+    static int ownSeatPicture(Art.Sprite main, List<Art.PoseSprite> ps, Want w, int keep) {
+        int best = -1; float bestSc = -1e9f;
+        for (int i = 0; i < ps.size(); i++) {
+            Art.PoseSprite p = ps.get(i);
+            if (p.ownSeat <= 0 || p.closeUp || p.beast || p.ownSeatFace > 100) continue;      // (a back has no face to speak with)
+            Art.Sprite s = p.sprite();
+            if (s == null || !s.faceKnown || s.h <= 0) continue;
+            float frontal = 1 - Math.min(1, Math.abs(p.ownSeatFace) / 90f);
+            float sc = 3 * frontal + (p.emotion == w.emotion ? 1 : p.emotion == PoseSense.NEUTRAL ? 0.5f : 0) + (i == keep ? 4 : 0);
+            if (sc > bestSc) { bestSc = sc; best = i; }
+        }
+        return best;
+    }
+
     /** The best of the character's pictures for the want, or MAIN. */
     public static int choose(Art.Sprite sp, Want w) { return choose(sp, w, MAIN - 10); }
 
@@ -183,11 +220,19 @@ public final class Casting {
             // moment — a front-ish one with its face found first (its lips and blinks still live), the feeling of the moment
             // when there is one
             if (System.getProperty("kahani.castDebug") != null) { StringBuilder sb = new StringBuilder(); for (Art.PoseSprite p : ps) sb.append(' ').append(p.pose).append('/').append((int) p.angle).append(p.closeUp ? "c" : "").append(p.beast ? "b" : ""); System.err.println("CAST want pose=" + w.pose + " closeOk=" + w.closeOk + " shoulder=" + w.shoulder + " poses:" + sb); }
+            // v47.7 (the user: "use them completely, don't split object from character"): seated on the script's bench, the
+            // user's own picture of them on that bench plays it whole — the bench and its bricks come with it, the bench's
+            // own picture steps aside (Renderer.benchInPicture); the most frontal one with its face found, the same as the
+            // shot before while it still fits
+            if (w.pose == PoseSense.SIT && w.onListedBench && !w.benchShared) {
+                int own = ownSeatPicture(sp, ps, w, keep);
+                if (own >= 0) return own;
+            }
             if (w.pose == PoseSense.SIT && !w.onListedBench) {
                 int bestSit = -1; float bestSc = -1e9f;
                 for (int i = 0; i < ps.size(); i++) {
                     Art.PoseSprite p = ps.get(i);
-                    if (p.pose != PoseSense.SIT || p.closeUp || p.beast) continue;
+                    if (p.pose != PoseSense.SIT || p.closeUp || p.beast || p.ownSeat > 0) continue;      // (v47.7: a bench of its own only on the script's bench)
                     float sc = (isFrontish(p.angle) ? 2 : 0) + (p.faceKnown() ? 1.5f : 0) + (p.emotion == w.emotion ? 1 : p.emotion == PoseSense.NEUTRAL ? 0.5f : 0);
                     if (i == keep) sc += 4;
                     if (sc > bestSc) { bestSc = sc; bestSit = i; }
@@ -215,6 +260,7 @@ public final class Casting {
         for (int i = 0; i < ps.size(); i++) {
             Art.PoseSprite p = ps.get(i);
             if (p.closeUp && !w.closeOk) continue;          // v39: a face-and-shoulders picture only in a face shot
+            if (p.ownSeat > 0 && !(w.onListedBench && !w.benchShared && w.pose == PoseSense.SIT)) continue;     // v47.7: its own bench only where the script's bench is, alone on it
             // v39: never a standing picture for one who sits (or a seated one for one who stands) — except a close-up,
             // where the body is out of the frame
             if (!p.closeUp && (lowPose(p.pose) != lowPose(w.pose) || (p.pose == PoseSense.LIE) != (w.pose == PoseSense.LIE))) continue;

@@ -115,6 +115,14 @@ public final class Art {
         public boolean framed;
         /** v39: the picture's height over its width (0 = unknown): a seated picture wider than tall brings its own chair. */
         public float aspect;
+        /**
+         * v47.7: the picture brings its own seat — the sitter and the bench (with its bricks) in one piece, as the user
+         * made it for the script: the plank's top as a fraction of the figure's height from its feet, else -1. Such a
+         * picture is used whole, never split from its seat and never lifted onto another one (Casting, Renderer).
+         */
+        public float ownSeat = -1;
+        /** v47.7: for such a picture, the face's turn read from it (0 = to the camera; 999 = no face — a back, eyes in the hair). */
+        public float ownSeatFace = 999;
         /** v39: the main picture's eye distance in its own heights (the measure every picture of the character is sized by), 0 = unknown. */
         float mainEye;
         Sprite sprite, main;
@@ -207,6 +215,137 @@ public final class Art {
     }
     private transient Backdrop benchPic;
     private transient boolean benchChecked;
+
+    /**
+     * v47.7: a thing the script lists as set under the bench ("बेंच के नीचे लगी ईंट", "a brick under the bench") and the
+     * user gave a picture of: {its picture, the end of the bench it props (-1 left, +1 right, 0 the middle)}, or null.
+     * The end is the one the script names beside the thing or the bench's broken leg ("दायें पैर के नीचे", "आगे वाला
+     * दायां पैर … टूटा") — the user's broken leg on the right is propped there, not wherever a set piece would stand.
+     */
+    public Object[] underBench(Story story) {
+        if (underChecked) return underPic;
+        underChecked = true;
+        if (story == null || benchPicture() == null) return null;
+        Story.PlaceDef bench = null, under = null;
+        for (Story.PlaceDef th : story.things) {
+            String n = Txt.norm(th.name).trim();
+            boolean benchWord = Txt.has(n, Txt.norm("बेंच"), Txt.norm("बेन्च"), "bench");
+            if (benchWord && (Txt.has(n, Txt.norm("के नीचे"), Txt.norm("के तले"), "under the", "beneath the"))) under = th;
+            else if (benchWord && bench == null) bench = th;
+        }
+        if (under == null) return null;
+        Backdrop pic = null;
+        for (Shot sh : shots) if (sh.object && sh.pic != null && sh.pic.img != null && sh.keys != null && sh.keys.length > 0
+                && Txt.norm(sh.keys[0]).trim().equals(Txt.norm(under.name).trim())) { pic = sh.pic; break; }
+        if (pic == null) return null;
+        // the side: first where the thing itself is named with it, then the bench's broken leg, then the scenes' words
+        String[] ws = Txt.norm(under.name).trim().split("[\\s,]+");
+        String head = ws[ws.length - 1];
+        java.util.List<String> texts = new java.util.ArrayList<String>();
+        texts.add(under.description);
+        if (bench != null) texts.add(bench.description);
+        for (Story.Scene sc : story.scenes) { texts.add(sc.setting); for (Story.Beat b : sc.beats) if (b.type == Story.Beat.DIRECTION) texts.add(b.text); }
+        int side = 0;
+        for (String t : texts) { side = sideNear(Txt.norm(t == null ? "" : t), head); if (side != 0) break; }
+        if (side == 0) for (String t : texts) { side = sideNear(Txt.norm(t == null ? "" : t), Txt.norm("टूट")); if (side == 0) side = sideNear(Txt.norm(t == null ? "" : t), "broken"); if (side != 0) break; }
+        underPic = new Object[]{pic, side};
+        notes.add("under the bench: " + under.name + (side > 0 ? ", under its right leg" : side < 0 ? ", under its left leg" : ", in the middle"));
+        return underPic;
+    }
+
+    /** v47.7: the top of the bench everyone sits on, in standing heights of its tallest sitter (Renderer draws its picture this tall). */
+    public static final float BENCH_TOP = 0.29f;
+
+    /**
+     * v47.7: whether a cut-out picture brings its own seat: a plank at least 0.72 of the figure's width across its lower
+     * part (below the top third, above the feet) with open ground between the legs under it — not a lap or crossed legs
+     * filling it — in a figure about as wide as it is tall (a standing figure is narrow). Returns the plank's top as a
+     * fraction of the figure's height from its feet, or -1.
+     */
+    public static float ownSeat(int[] d) {
+        int w = d[0], h = d[1];
+        if (w < 8 || h < 8 || d.length < 2 + w * h) return -1;
+        int x0 = w, x1 = -1, y0 = h, y1 = -1;
+        boolean clear = false;
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) {
+            if ((d[2 + y * w + x] >>> 24) < 128) { clear = true; continue; }
+            if (x < x0) x0 = x;
+            if (x > x1) x1 = x;
+            if (y < y0) y0 = y;
+            if (y > y1) y1 = y;
+        }
+        if (!clear || x1 < 0) return -1;
+        int fw = x1 - x0 + 1, fh = y1 - y0 + 1;
+        if (fw < fh * 0.55f || fh < 24) return -1;
+        // the seat stands on its own legs at both ends: the feet of the figure (its lowest rows) spread across most of it
+        // (a standing, bent or walking figure stands on its two feet close together)
+        int fl = x1, fr = x0;
+        for (int y = y1 - Math.max(1, (int) (fh * 0.06f)); y <= y1; y++) for (int x = x0; x <= x1; x++) if ((d[2 + y * w + x] >>> 24) >= 128) { fl = Math.min(fl, x); fr = Math.max(fr, x); }
+        if (fr - fl < fw * 0.7f) return -1;
+        // and its plank reaches from one side of the figure to the other, wider than the one sitting on it
+        int plank = -1;
+        for (int y = y0 + (int) (fh * 0.35f); y <= y1 - (int) (fh * 0.12f) && plank < 0; y++) {
+            int run = 0, best = 0, gap = 0, end = -1, bestEnd = -1;
+            for (int x = x0; x <= x1; x++) {
+                if ((d[2 + y * w + x] >>> 24) >= 128) { run += 1 + gap; gap = 0; end = x; if (run > best) { best = run; bestEnd = end; } }
+                else if (run > 0 && ++gap > fw * 0.02f) { run = 0; gap = 0; }
+            }
+            if (best >= fw * 0.85f && bestEnd - best + 1 <= x0 + fw * 0.06f && bestEnd >= x1 - fw * 0.06f) plank = y;
+        }
+        if (plank < 0) return -1;
+        int above = plank - (int) (fh * 0.15f), upper = 0;
+        if (above > y0) {
+            int l = x1, r = x0;
+            for (int x = x0; x <= x1; x++) if ((d[2 + above * w + x] >>> 24) >= 128) { l = Math.min(l, x); r = Math.max(r, x); }
+            upper = r - l + 1;
+        }
+        if (upper > fw * 0.78f) return -1;
+        int cover = 0, cells = 0;
+        for (int y = plank + (int) (fh * 0.08f); y <= y1 - (int) (fh * 0.02f); y++) for (int x = x0; x <= x1; x++) { cells++; if ((d[2 + y * w + x] >>> 24) >= 128) cover++; }
+        if (cells == 0 || cover > cells * 0.55f) return -1;
+        return (y1 - plank + 1) / (float) fh;
+    }
+
+    /**
+     * v47.7: the face of one sitting on a seat of their own, read from the part of the picture above the plank and
+     * within the sitter's width there: {mouth x, y, half-width, eye L x, y, eye R x, y, eye radius — fractions of the
+     * whole picture — and the face's turn in degrees}, or null when no face is seen there (a back).
+     */
+    static float[] sitterFace(int[] d, float ownSeat) {
+        int w = d[0], h = d[1];
+        int y0 = h, y1 = -1;
+        for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) if ((d[2 + y * w + x] >>> 24) >= 128) { if (y < y0) y0 = y; if (y > y1) y1 = y; }
+        if (y1 <= y0) return null;
+        int plank = y1 - (int) (ownSeat * (y1 - y0 + 1));
+        int cx0 = w, cx1 = -1;
+        for (int y = y0; y < plank; y++) for (int x = 0; x < w; x++) if ((d[2 + y * w + x] >>> 24) >= 128) { if (x < cx0) cx0 = x; if (x > cx1) cx1 = x; }
+        int top = Math.max(0, y0 - 2), cw = cx1 - cx0 + 1, ch = plank - top;
+        if (cw < 12 || ch < 24) return null;
+        int[] px = new int[cw * ch];
+        for (int y = 0; y < ch; y++) System.arraycopy(d, 2 + (top + y) * w + cx0, px, y * cw, cw);
+        Cutout.Result cr = Cutout.process(px, cw, ch);
+        if (!cr.faceFound) return null;
+        float turn = Angles.guess(cr, false);
+        if (Math.abs(turn) >= 100) return null;
+        float fx = cw / (float) w, fy = ch / (float) h, ox = cx0 / (float) w, oy = top / (float) h;
+        return new float[]{ox + cr.mouthX * fx, oy + cr.mouthY * fy, cr.mouthW / 2 * fx, ox + cr.eyeLX * fx, oy + cr.eyeY * fy, ox + cr.eyeRX * fx, oy + cr.eyeY * fy, cr.eyeR * fx, turn};
+    }
+
+    /** v47.7: "दायें"/"right" (+1) or "बायें"/"left" (-1) in the words just before or after the word at, else 0. */
+    public static int sideNear(String text, String word) {
+        if (word == null || word.length() == 0) return 0;
+        for (int at = text.indexOf(word); at >= 0; at = text.indexOf(word, at + 1)) {
+            String near = text.substring(Math.max(0, at - 40), Math.min(text.length(), at + word.length() + 24));
+            int cut = Math.max(near.lastIndexOf(','), near.lastIndexOf('।'));
+            if (cut >= 0 && cut < Math.min(40, at)) near = near.substring(cut + 1);
+            boolean r = Txt.has(near, Txt.norm("दायां"), Txt.norm("दायें"), Txt.norm("दाएं"), Txt.norm("दाएँ"), Txt.norm("दाहिन"), "right");
+            boolean l = Txt.has(near, Txt.norm("बायां"), Txt.norm("बायें"), Txt.norm("बाएं"), Txt.norm("बाएँ"), "left");
+            if (r != l) return r ? 1 : -1;
+        }
+        return 0;
+    }
+    private transient Object[] underPic;
+    private transient boolean underChecked;
 
     public static final class Shot {
         public String scene;          // scene number ("8") or "" for any
@@ -1898,6 +2037,23 @@ public final class Art {
                     } else if (f.length >= 18) {
                         // a picture with its background: the framing read when it was cut out at the upload
                         p.cut = "1".equals(f[17].trim()); p.framed = true; p.closeUp = p.cut;
+                    }
+                    // v47.7 (the user: "some pictures of characters may appear with objects as per the story, use them
+                    // completely, don't split object from character"): a sitter with the seat under them is a seated
+                    // picture whatever the upload read (the old man on the bench read as running), sized so its plank is
+                    // where the bench's is for everyone else on it
+                    float os = d != null && d[0] > 0 ? ownSeat(d) : -1;
+                    if (os > 0) {
+                        p.ownSeat = os; p.pose = PoseSense.SIT; p.closeUp = false; p.cut = false;
+                        // its face read from the sitter alone (above the plank, within the sitter's own width): with the
+                        // bench beside them the face finder put both eyes on one side of the face and read the front as
+                        // a side — the face did not live (no lips, no blinks)
+                        float[] fp = null;
+                        try { fp = sitterFace(d, os); } catch (RuntimeException e) { fp = null; }
+                        if (fp != null) { p.facePoints = new float[]{fp[0], fp[1], fp[2], fp[3], fp[4], fp[5], fp[6], fp[7]}; p.ownSeatFace = fp[8]; p.angle = fp[8]; }
+                        else p.ownSeatFace = 999;
+                        p.hRatio = Math.max(0.2f, Math.min(1.5f, BENCH_TOP / os));
+                        art.notes.add("pose picture " + p.file + " of " + f[1] + ": seated on a seat of its own — used whole, with its seat, on the script's bench");
                     }
                 }
                 if (p.mainEye > 0 && p.facePoints != null && Math.abs(p.angle) < 46 && !p.beast && d != null && d[1] > 0) {

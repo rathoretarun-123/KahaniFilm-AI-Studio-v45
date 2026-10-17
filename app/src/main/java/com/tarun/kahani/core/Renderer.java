@@ -1978,13 +1978,13 @@ public final class Renderer {
             float lean = stepping ? mo.rot * 0.6f : 0;
             // in a close shot the camera was aimed at the front picture's face: the chosen picture's face goes
             // exactly there (its feet are out of frame anyway); in a wide shot the feet stay on the ground
-            if (camZ > 1.6f && sp != null && sp.faceKnown && real.faceKnown && Math.abs(chosen.angle) < 100 && chosen.pose != PoseSense.LIE) {
+            if (camZ > 1.6f && sp != null && sp.faceKnown && real.faceKnown && Math.abs(chosen.angle) < 100 && chosen.pose != PoseSense.LIE && chosen.ownSeat <= 0) {     // (v47.7: one on their own bench stays on its legs: lifted to a standing face, the bench left the ground and the head left the frame)
                 float wMain = sp.w * (h / sp.h), wReal = real.w * (hReal / real.h);
                 pys += (-h + sp.mouthY * h) - (-hReal + real.mouthY * hReal);
                 pxs += ((sp.mouthX - 0.5f) * wMain - (real.mouthX - 0.5f) * wReal) * (p.facing < 0 ? -1 : 1);
             }
             // v39: a sitting picture on a sofa, a chair or a bed sits on its cushion, not on the floor in front of it
-            if (chosen.pose == PoseSense.SIT && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing)
+            if (chosen.pose == PoseSense.SIT && chosen.ownSeat <= 0 && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing; v47.7: one with its own seat stands on its seat's legs)
                 pys -= seatTopOf(p.seat) * h;
             if (camStill && pixelStep > 0) { pxs = Math.round(pxs / pixelStep) * pixelStep; pys = Math.round(pys / pixelStep) * pixelStep; }
             g.save();
@@ -2000,7 +2000,9 @@ public final class Renderer {
             if (Math.abs(chosen.angle) > 170 || chosen.emotion == PoseSense.NO_FACE) { p.mouth = 0; p.blink = 0; p.eyesClosed = false; }   // v34: a back never talks or blinks
             mo.sy = 1 + (float) Math.sin(tp * 2.1f + a.order) * 0.004f; mo.sx = 1;
             float facing = p.facing;
-            if (Math.abs(chosen.angle) > 1 && Math.abs(chosen.angle) < 179) p.facing = facing;      // a side or three-quarter picture faces the way of the picture; mirrored when the character faces the other way
+            p.ownSeat = chosen.ownSeat > 0 ? chosen.ownSeat : 0;
+            if (chosen.ownSeat > 0) p.facing = 1;                // v47.7: the sitter on their own bench as the user drew it (its bricks under the broken leg stay on that side)
+            else if (Math.abs(chosen.angle) > 1 && Math.abs(chosen.angle) < 179) p.facing = facing;      // a side or three-quarter picture faces the way of the picture; mirrored when the character faces the other way
             else p.facing = 1;       // v39: a front (or back) picture is never mirrored — writing in it ("doctor!") would read backwards
             // v33: a step's picture fades in over the first third of the step (no flip between two pictures)
             float phase = p.walk / (float) Math.PI;
@@ -3077,6 +3079,24 @@ public final class Renderer {
         return 0;
     }
 
+    /**
+     * v47.7: whether someone seated on the script's bench is drawn right now with the user's picture of them on it (the
+     * picture brings the bench and its bricks): then that is the bench, and the bench's own picture is not drawn too.
+     */
+    private boolean benchInPicture() {
+        if (curSeg == null || art == null) return false;
+        Film.Shot sh = shotAt(curT);
+        if (sh == null) return false;
+        for (Film.Actor a : curSeg.actors) {
+            Film.Key k = a.stateAt(curT);
+            if (!k.visible || k.body != Pose.SIT || k.seat != Film.SEAT_STOOL) continue;
+            Art.Sprite sp = art.sprites.get(a.c.id);
+            Integer idx = sh.pictures.get(a.c.id);
+            if (sp != null && sp.poses != null && idx != null && idx >= 0 && idx < sp.poses.size() && sp.poses.get(idx).ownSeat > 0) return true;
+        }
+        return false;
+    }
+
     /** v47.6: the user's picture of the bench the script lists, or null (Art.benchPicture). */
     private Art.Backdrop benchPicture() { return art == null ? null : art.benchPicture(); }
 
@@ -3264,9 +3284,10 @@ public final class Renderer {
                 // beside it — the user's reference has the old man and the girl side by side on the one broken bench
                 Art.Backdrop bp = benchPicture();
                 if (bp != null) {
-                    if (!front && (seatSpan == null || seatSpan[2] > 0)) {
+                    // (v47.7: not while a sitter on it is drawn with the user's picture of them on it — that picture's bench is the bench)
+                    if (!front && (seatSpan == null || seatSpan[2] > 0) && !benchInPicture()) {
                         float gl = seatSpan != null && seatSpan.length > 6 ? seatSpan[5] : 0, gr = seatSpan != null && seatSpan.length > 6 ? seatSpan[6] : 0;
-                        float bh = h * 0.29f, bw = bh * bp.w / (float) bp.h;
+                        float bh = h * Art.BENCH_TOP, bw = bh * bp.w / (float) bp.h;
                         float need = (gr - gl) + h * 0.5f;
                         if (bw < need) { bw = Math.min(need, bw * 1.35f); }          // a little wider, never pulled out of shape
                         float cx = (gl + gr) / 2;
@@ -3276,6 +3297,18 @@ public final class Renderer {
                         if (rock != 0) { g.save(); float px = cx - bw * 0.45f; g.translate(px, 0); g.rotate(rock); g.translate(-px, 0); }
                         g.image(bp.img, cx - bw / 2, -bh, bw, bh);
                         if (rock != 0) g.restore();
+                        // v47.7: the thing the script sets under the bench (the half brick under its broken right leg),
+                        // on the ground at that leg's foot, in front of the leg's broken end — it stays put while the
+                        // bench rocks on it
+                        Object[] ub = film != null ? art.underBench(film.story) : null;
+                        if (ub != null && ((Art.Backdrop) ub[0]).img != null) {
+                            Art.Backdrop br = (Art.Backdrop) ub[0];
+                            int side = (Integer) ub[1];
+                            float rh = bh * 0.24f, rw = rh * br.w / (float) Math.max(1, br.h);
+                            float lx = cx + side * bw * 0.37f;
+                            g.color(0x38000000); g.oval(lx, h * 0.004f, rw * 0.62f, h * 0.012f);
+                            g.image(br.img, lx - rw / 2, -rh + h * 0.004f, rw, rh);
+                        }
                     }
                     break;
                 }
@@ -4654,6 +4687,9 @@ public final class Renderer {
         // v47.4: the user's picture of a thing in the hand — coming up out of the bag, held at the chest, held out
         if (p.heldPic != null && p.body != Pose.LIE && !beast) {
             float hx = p.facing * w * 0.36f, hy = -h * 0.45f;
+            // v47.7: the user's picture of them on their own bench: its hands are where the picture has them (on the stick,
+            // in the lap) — the thing rests against the chest, above the lap, never out at the bench's end
+            if (p.ownSeat > 0 && !rigged) { hx = 0; hy = -h * (p.ownSeat + (1 - p.ownSeat) * 0.3f); }
             if (rigged) {
                 rig.handAt(rf, st, 1, hand);
                 hx = hand[0] * mirror * mo.sx;
@@ -4661,7 +4697,7 @@ public final class Renderer {
             }
             // a seated panel of the user's own (its arms are its own, folded where they are): the thing rests in the lap,
             // against the chest, with no drawn forearm reaching across the picture
-            boolean lap = actor != null && art != null && art.sprites.get(actor.c.id) != sp && p.sit > 0.5f;
+            boolean lap = actor != null && art != null && art.sprites.get(actor.c.id) != sp && (p.sit > 0.5f || p.ownSeat > 0);
             drawHeld(g, p, h, w, hx, hy, p.skinHint != 0 ? p.skinHint : sp.skin != 0 ? sp.skin : look.skin, lap);
         }
     }
@@ -4721,7 +4757,8 @@ public final class Renderer {
         if (book) { cx = fc * w * 0.06f; cy = -h * 0.47f + th * 0.1f; }
         if (p.heldKind == Film.THING_GIVE) { cx = hx + fc * (tw * 0.5f + h * 0.1f); cy = hy - h * 0.08f; }
         if (lap) { cx = fc * w * 0.1f; cy = -h * 0.36f; if (p.heldKind == Film.THING_GIVE) { cx = fc * w * 0.3f; cy = -h * 0.42f; } }
-        if (lap && h < w * 1.25f) { cx = fc * w * 0.16f; cy = -h * 0.14f; }     // a face-and-shoulders panel: the hands are below it; the thing shows at its lower edge, held low
+        if (lap && h < w * 1.25f && p.ownSeat <= 0) { cx = fc * w * 0.16f; cy = -h * 0.14f; }     // a face-and-shoulders panel: the hands are below it; the thing shows at its lower edge, held low
+        if (p.ownSeat > 0) { cx = 0; cy = -h * (p.ownSeat + (1 - p.ownSeat) * 0.34f); }      // v47.7: on their own bench: against the chest, above the lap
         // where it comes out: the bag's mouth at the hip, the box's top edge on the ground beside, the box picture lying
         // beside (3), or the box the other holds out at chest height (4)
         float mx = p.bagKind == 2 ? fc * h * 0.36f : p.bagKind == 3 ? fc * H * 0.45f : p.bagKind == 4 ? fc * (w * 0.5f + h * 0.12f) : p.bagKind == 5 ? hx : fc * h * 0.17f;

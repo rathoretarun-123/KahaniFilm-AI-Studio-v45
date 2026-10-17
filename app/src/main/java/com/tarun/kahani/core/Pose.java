@@ -80,6 +80,8 @@ public final class Pose {
     public boolean heldSoft;
     public float heldOpen, heldDown;   // v47.4: a book-like thing opened in the hands (0..1); the thing going down to its place (0..1)           // v47.4: a cloth, a bag, a rope, a flag in the hand — it hangs and flutters in the wind (Rigidity)
     public int seat = -1;
+    /** v47.7: drawn with the user's picture of them on a seat of its own (the plank's height in the picture's heights; 0: not): a thing in the hands rests at the chest. */
+    public float ownSeat;
     public float nod;                  // + head down, - head up
     public float wave;                 // > 0 while waving: the arm swings out and back
     public boolean twirl;              // twirling a moustache / fidgeting with the raised hand
@@ -125,7 +127,7 @@ public final class Pose {
     }
 
     public void reset() {
-        body = STAND; dead = false; emotion = NEUTRAL; facing = 1; mouth = 0; mouthWide = 0.5f; swing = false; turbanOwner = null; blink = 0; armL = 8; armR = 8; elbowL = 10; elbowR = 10;
+        ownSeat = 0; body = STAND; dead = false; emotion = NEUTRAL; facing = 1; mouth = 0; mouthWide = 0.5f; swing = false; turbanOwner = null; blink = 0; armL = 8; armR = 8; elbowL = 10; elbowR = 10;
         walk = 0; walkAmt = 0; tilt = 0; headTilt = 0; bob = 0; squash = 1; holdR = I_NONE; holdL = I_NONE;
         disguised = false; noHeadwear = false; wearsTurban = false; redFace = false; tears = false; sweat = false;
         eyesClosed = false; fist = false; glowWand = false; carrying = false; turbanBand = 0; wind = 0; wet = 0;
