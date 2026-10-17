@@ -362,8 +362,10 @@ public final class Puppet {
         float o = Math.max(0, Math.min(1, amt));
         float sway = (float) Math.sin(time * 1.7f) * 0.025f * o + wind * 0.04f * o;
         float R = R0 * (0.14f + 0.86f * o);
-        top += (1 - o) * R0 * 0.25f;
-        float ax = cx + sway * R0, base = top + R0 * (0.42f + 0.5f * (1 - o));
+        // v47.8: folded, it stands upright over the hand that holds it, its tip above the fist — not over the middle of
+        // the head, where the shut canopy hung down across the face as a dark box (आखिरी चाय, 2:52)
+        top = top * o + (hy - R0 * 2.3f) * (1 - o);
+        float ax = cx + (hx - cx) * (1 - o) + sway * R0, base = top + R0 * (0.42f + 0.5f * (1 - o));
         // v47.4: the shaft reads on any background — a dark edge with a lighter wood core (it had been a two-pixel brown
         // line, lost against hair and a rainy wall, so the dome looked to float with nobody holding it)
         float sw = Math.max(3, R * 0.05f);

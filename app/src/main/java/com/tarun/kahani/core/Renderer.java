@@ -3221,6 +3221,21 @@ public final class Renderer {
      * runs to the midpoints towards the neighbours (the parts meet), armrests or legs only at the free ends, and the
      * whole of it is as tall as for its tallest sitter. Returns {left, right, armL, armR, tall} or null when alone.
      */
+    /**
+     * v47.8: half the width of the seat a seated photograph brings, on the stage: the photograph as drawn for a sitter
+     * nh tall standing (its seat runs nearly across it), or a fifth of nh when the picture cannot be read.
+     */
+    private float photoSeatHalf(Film.Actor a, float nh) {
+        Film.Shot sh = pictureShotAt(curT);
+        Art.Sprite sp = art == null ? null : art.sprites.get(a.c.id);
+        Integer idx = sh == null ? null : sh.pictures.get(a.c.id);
+        if (sp == null || sp.poses == null || idx == null || idx < 0 || idx >= sp.poses.size()) return nh * 0.2f;
+        Art.PoseSprite ps = sp.poses.get(idx);
+        Art.Sprite real = ps.sprite();
+        if (real == null || real.h <= 0) return nh * 0.2f;
+        return 0.45f * nh * ps.hRatio * real.w / (float) real.h;
+    }
+
     private float[] seatGroup(Film.Seg s, Film.Fx self, float hh, int kind) {
         float sw = kind == Film.SEAT_SOFA ? hh * 1.05f : hh * 0.52f, left = Float.NaN, right = Float.NaN;
         float tall = hh;
@@ -3235,21 +3250,28 @@ public final class Renderer {
                 if (f.x < lo && lo - f.x <= reach) { lo = f.x; grew = true; }
                 else if (f.x > hi && f.x - hi <= reach) { hi = f.x; grew = true; }
                 else continue;
-                tall = Math.max(tall, nh);
+                if (f.a == null || !seatInPicture(f.a)) tall = Math.max(tall, nh);      // (v47.8: one whose picture brings their seat sits on that, not on this)
             }
         }
+        boolean photoL = false, photoR = false;
         for (Film.Fx f : s.fx) {
             if (f == self || f.type != Film.FX_SEAT || f.kind != kind) continue;
             float d = f.x - self.x;
             float nh = f.a != null && art != null ? actorHeight(f.a.look, f.a.c, art, s) * seatScale(f.a) : hh;
             float reach = (kind == Film.SEAT_SOFA ? 1.05f * 1.25f : 0.68f) * Math.max(hh, nh);
-            if (Math.abs(d) < 8 || Math.abs(d) > reach) continue;
-            if (d < 0 && (Float.isNaN(left) || d > left)) left = d;
-            if (d > 0 && (Float.isNaN(right) || d < right)) right = d;
+            // v47.8: a neighbour drawn with a photograph that brings its own seat (the old man on his own bench): this
+            // part runs on to that seat's near end and tucks behind it — one bench, not two with a gap between them
+            boolean photo = f.a != null && seatInPicture(f.a);
+            float dd = photo ? d - Math.signum(d) * photoSeatHalf(f.a, nh) : d;
+            if (Math.abs(d) < 8 || Math.abs(dd) > reach) continue;
+            if (d < 0 && (Float.isNaN(left) || dd > left)) { left = dd; photoL = photo; }
+            if (d > 0 && (Float.isNaN(right) || dd < right)) { right = dd; photoR = photo; }
         }
         if (Float.isNaN(left) && Float.isNaN(right)) return null;
+        float endL = Float.isNaN(left) ? -sw / 2 : photoL ? Math.min(left - hh * 0.03f, -sw * 0.25f) : left / 2 - 1;
+        float endR = Float.isNaN(right) ? sw / 2 : photoR ? Math.max(right + hh * 0.03f, sw * 0.25f) : right / 2 + 1;
         // (v47.6: and the whole group's ends, for a bench drawn once from the user's picture)
-        return new float[]{Float.isNaN(left) ? -sw / 2 : left / 2 - 1, Float.isNaN(right) ? sw / 2 : right / 2 + 1, Float.isNaN(left) ? 1 : 0, Float.isNaN(right) ? 1 : 0, tall,
+        return new float[]{endL, endR, Float.isNaN(left) ? 1 : 0, Float.isNaN(right) ? 1 : 0, tall,
                 lo - self.x, hi - self.x};
     }
 
@@ -3559,7 +3581,30 @@ public final class Renderer {
         // v47.3: held — the shaft comes down to a hand at chest height, and a forearm comes up to it from the elbow at
         // the side (the dome used to float over the head with the shaft ending in the air beside the shoulder)
         float gx = p.facing * h * 0.13f, gy = -h * 0.58f;
-        if (p.umbrellaPic != null) {
+        if (p.umbrellaPic != null && p.umbrellaPicAspect < 0.8f) {
+            // v47.8: the user's picture is of the umbrella folded (taller than wide): folded, it is held upright at the
+            // side, handle in the fist — drawn across the head it covered the face as a dark box (आखिरी चाय, 2:52); the
+            // dome opens over the head as the picture fades
+            float o = Math.max(0, Math.min(1, p.umbrellaAmt));
+            int iw = g.imageWidth(p.umbrellaPic), ih = g.imageHeight(p.umbrellaPic);
+            if (o < 1 && iw > 0 && ih > 0) {
+                float len = h * 0.7f, wd = len * p.umbrellaPicAspect;
+                float sx = gx + p.facing * wd * 0.35f;
+                g.save();
+                if (o > 0) g.setAlpha(1 - o);
+                g.translate(sx, gy + len * 0.12f);
+                if (p.facing < 0) g.scale(-1, 1);
+                g.rotate(6f + p.wind * 3f);
+                g.imageRect(p.umbrellaPic, 0, 0, iw, ih, -wd / 2, -len, wd, len);
+                g.restore();
+            }
+            if (o > 0) {
+                g.save();
+                if (o < 1) g.setAlpha(o);
+                Puppet.drawUmbrella(g, p.facing * h * 0.03f, top, h * 0.3f, gx, gy, Puppet.umbrellaColor(look), p.facing, p.time, p.wind, o);
+                g.restore();
+            }
+        } else if (p.umbrellaPic != null) {
             // v47.4: the user's own umbrella picture — its handle's end (near the lower right of such a picture) in the fist,
             // the canopy up over the head; mirrored to the facing; folding and opening as a fade and a shrink at the hand
             float o = Math.max(0, Math.min(1, p.umbrellaAmt));

@@ -337,6 +337,21 @@ public final class Art {
         return new float[]{ox + cr.mouthX * fx, oy + cr.mouthY * fy, cr.mouthW / 2 * fx, ox + cr.eyeLX * fx, oy + cr.eyeY * fy, ox + cr.eyeRX * fx, oy + cr.eyeY * fy, cr.eyeR * fx, turn};
     }
 
+    /**
+     * v47.8: a view line's angle as a number. A manifest may name the view instead ("back", "side", "three-quarter"):
+     * the bundled films' reference packs did, and their back pictures were dropped silently (an unreadable angle). A
+     * back is 180°, a side −90°, a three-quarter −45°, a front 0°. Anything else is left as it is.
+     */
+    public static String viewAngle(String a) {
+        String t = a == null ? "" : a.trim().toLowerCase(java.util.Locale.ROOT);
+        try { Float.parseFloat(t); return t; } catch (NumberFormatException e) { /* a name, read below */ }
+        if (t.equals("back") || t.equals("rear") || t.equals("behind") || t.equals(Txt.norm("पीछे")) || t.equals(Txt.norm("पीठ"))) return "180";
+        if (t.equals("side") || t.equals("profile") || t.equals("left") || t.equals("right") || t.equals(Txt.norm("बगल"))) return "-90";
+        if (t.equals("three-quarter") || t.equals("three_quarter") || t.equals("threequarter") || t.equals("quarter") || t.equals("3/4")) return "-45";
+        if (t.equals("front")) return "0";
+        return a;
+    }
+
     /** v47.7: "दायें"/"right" (+1) or "बायें"/"left" (-1) in the words just before or after the word at, else 0. */
     public static int sideNear(String text, String word) {
         if (word == null || word.length() == 0) return 0;
@@ -1660,6 +1675,7 @@ public final class Art {
                 if (f[0].equals("pose") && f.length >= 6) {
                     poses.add(f);            // v27: after the characters, below
                 } else if (f[0].equals("view") && f.length >= 4) {
+                    f[2] = viewAngle(f[2]);  // v47.8: "back", "side", "three-quarter" read as their angles
                     views.add(f);            // after the characters, below
                 } else if (f[0].equals("costume") && f.length >= 3) {
                     costumeLines.add(f);     // v34: after the characters, below
