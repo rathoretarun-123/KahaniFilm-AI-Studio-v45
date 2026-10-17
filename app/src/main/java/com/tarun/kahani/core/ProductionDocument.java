@@ -1240,7 +1240,7 @@ public final class ProductionDocument {
         if (r == null) return;
         framesAudited = r.frames;
         for (String f : r.findings) issue(MAJOR, TECHNICAL_DIRECTOR, null, "every frame as drawn is smooth (no jolt, jump, pop or second face)", f,
-                "ease the motion there, keep one picture through the shot, draw one face", null).category = "FRAMES";
+                "ease the motion there, keep one picture through the shot, draw one face").category = "FRAMES";
     }
     public int framesAudited;
 

@@ -63,5 +63,14 @@ public class FrameAuditTest {
         assertEquals(r.text(), 1, r.sizePops);
         assertEquals(r.text(), 1, r.picturePops);
         assertEquals(r.text(), 1, r.extraFaces);
+        // the findings go into the production document as the technical director's issues (a null entity list made
+        // the phone's film job fail at "Saving the film…" whenever the audit found anything)
+        com.tarun.kahani.core.ProductionDocument d = new com.tarun.kahani.core.ProductionDocument();
+        d.frameAudit(r);
+        int frames = 0;
+        for (com.tarun.kahani.core.ProductionDocument.Issue i : d.issues) if ("FRAMES".equals(i.category)) { frames++; assertNotNull(i.entityIds); }
+        assertEquals(r.findings.size(), frames);
+        assertEquals(120, d.framesAudited);
+        assertTrue(d.toJson().contains("FRAMES"));
     }
 }
