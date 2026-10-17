@@ -65,6 +65,8 @@ public final class Art {
         /** The rod's top centre and size as fractions of the picture. */
         public float rodU, rodV, rodW, rodH;
         public transient Cutout.Result pixelsForSampling;
+        /** v47.6: the tone of the top of the head in the main picture (see hairTone), -1 unknown. */
+        public float hairTone = -1;
         /** Bones and face for moving the picture (null = moved as one piece). */
         public Rig rig;
         /** The same picture soaked by rain: darker, deeper colours (made only for rainy stories). */
@@ -1592,6 +1594,7 @@ public final class Art {
                             if (v != null) art.costumes.put(c.id + "#" + (ci + 1), v);
                         } catch (Throwable ignored) { /* the character's own picture stays */ }
                     }
+                    if (s.pixelsForSampling != null && !beast) s.hairTone = hairTone(s.pixelsForSampling.px, s.pixelsForSampling.w, s.pixelsForSampling.h);     // v47.6: for the poses below
                     s.pixelsForSampling = null;
                     art.sprites.put(c.id, s);
                 } else if (f[0].equals("scene") && f.length >= 3) {
@@ -1860,6 +1863,16 @@ public final class Art {
                 if (!p.beast) {
                     try { d = L.decode(p.file, 320); } catch (RuntimeException ignored) { d = null; }
                     if (d != null && d[0] > 0) p.aspect = d[1] / (float) d[0];
+                    // v47.6: one look per character — a dark-haired one's pose picture with light-brown hair is another
+                    // design of them (the user's sheet of परी with light-brown hair played beside her black-haired front:
+                    // two girls in one film); it is put aside and said so
+                    if (main.hairTone >= 0 && d != null && d[0] > 0) {
+                        float mt = main.hairTone, pt = hairTone(d, 2, d[0], d[1]);
+                        if (mt >= 0 && pt >= 0 && mt < 40 && pt > mt + 30) {
+                            art.notes.add("pose picture " + p.file + " of " + f[1] + " not used: its hair is lighter than in the main picture (" + Math.round(pt) + " against " + Math.round(mt) + ")");
+                            continue;
+                        }
+                    }
                     boolean[] fr = d != null && d[1] > 0 ? framingOf(d, p.facePoints != null ? (p.facePoints[4] + p.facePoints[6]) / 2 : -1) : null;
                     if (fr != null) {
                         p.cut = fr[0]; p.framed = true; p.closeUp = fr[0];
@@ -1886,6 +1899,30 @@ public final class Art {
             }
         }
         return art;
+    }
+
+    /**
+     * v47.6: the tone of the top of a figure's head (its darker half, 0..255): black hair reads 15-30, light-brown 55-70.
+     * Only the figure's own pixels count (a cut-out's opaque ones); -1 when there are too few.
+     */
+    static float hairTone(int[] px, int w, int h) { return hairTone(px, 0, w, h); }
+    static float hairTone(int[] px, int off, int w, int h) {
+        if (w <= 0 || h <= 0 || px.length < off + w * h) return -1;
+        int top = -1;
+        for (int y = 0; y < h && top < 0; y++) for (int x = 0; x < w; x++) if ((px[off + y * w + x] >>> 24) > 200) { top = y; break; }
+        if (top < 0) return -1;
+        int y1 = Math.min(h, top + Math.max(4, Math.round(h * 0.12f)));
+        int[] hist = new int[256];
+        int n = 0;
+        for (int y = top; y < y1; y++) for (int x = 0; x < w; x += 2) {
+            int c = px[off + y * w + x];
+            if ((c >>> 24) <= 200) continue;
+            hist[Cutout.lum(c)]++; n++;
+        }
+        if (n < 40) return -1;
+        long sum = 0; int k = 0;
+        for (int v = 0; v < 256 && k < n / 2; v++) { int take = Math.min(hist[v], n / 2 - k); sum += (long) v * take; k += take; }
+        return k == 0 ? -1 : sum / (float) k;
     }
 
     /**

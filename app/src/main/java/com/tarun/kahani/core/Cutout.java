@@ -85,6 +85,9 @@ public final class Cutout {
         return Math.abs(dr) + Math.abs(dg) + Math.abs(db);
     }
 
+    /** v47.6: a colour's brightness, 0..255. */
+    static int lum(int c) { return (((c >> 16) & 255) * 299 + ((c >> 8) & 255) * 587 + (c & 255) * 114) / 1000; }
+
     /** True if the picture already has transparency (e.g. a PNG cut-out). */
     public static boolean hasAlpha(int[] px) {
         int n = 0;
@@ -980,6 +983,8 @@ public final class Cutout {
         // v40: on a clean, even white sheet the background is taken to within a smaller distance — a cream shirt's
         // light folds (अर्जुन's) are 40 away from the paper's white and were taken with it, leaving holes in the shirt
         int TOL = cleanWhite(px, w, h, bg) ? 34 : 60;
+        // v47.6: a flat black sheet: black hair at the outline is 40-60 from it and was eaten from the border in
+        if (lum(bg) < 24 && flatBorder(px, w, h, bg)) TOL = 30;
         final int SOFT = 120;
         byte[] state = new byte[w * h]; // 0 unknown, 1 background, 2 queued
         int[] queue = new int[w * h];
@@ -1002,18 +1007,28 @@ public final class Cutout {
         // closed gaps of plain background colour (the page seen between legs that stand on their shadow)
         if (holes) {
             int min = Math.max(30, w * h / 900);
+            // v47.6: on a black sheet the dark parts of a figure are the background's colour too — a cartoon child's big
+            // black pupils and her black hair came out see-through (आखिरी चिट्ठी's परी: the leaves showed through her
+            // eyes). There a closed gap is the sheet itself only when it is the sheet's own flat black (JPEG noise, no
+            // shading) and as big as a gap between an arm and the body.
+            boolean dark = lum(bg) < 48;
+            float holeTol = dark ? Math.min(TOL * 0.6f, 14) : TOL * 0.6f;
+            if (dark) min = Math.max(min, w * h / 160);
             int[] comp = new int[w * h];
             for (int s0 = 0; s0 < px.length; s0++) {
-                if (state[s0] != 0 || dist(px[s0], bg) > TOL * 0.6f) continue;
+                if (state[s0] != 0 || dist(px[s0], bg) > holeTol) continue;
                 int n0 = 0;
+                long dsum = 0;
                 comp[n0++] = s0;
                 state[s0] = 3;
                 for (int k = 0; k < n0; k++) {
                     int i = comp[k], x = i % w, y = i / w;
+                    dsum += dist(px[i], bg);
                     int[] nb = {x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1};
-                    for (int j : nb) if (j >= 0 && state[j] == 0 && dist(px[j], bg) <= TOL * 0.6f) { state[j] = 3; comp[n0++] = j; }
+                    for (int j : nb) if (j >= 0 && state[j] == 0 && dist(px[j], bg) <= holeTol) { state[j] = 3; comp[n0++] = j; }
                 }
-                byte to = n0 >= min ? (byte) 1 : (byte) 4;
+                boolean flat = !dark || dsum <= 5L * n0;
+                byte to = n0 >= min && flat ? (byte) 1 : (byte) 4;
                 for (int k = 0; k < n0; k++) state[comp[k]] = to;
             }
             for (int i = 0; i < state.length; i++) if (state[i] == 4) state[i] = 0;
@@ -1033,6 +1048,14 @@ public final class Cutout {
                 }
             }
         }
+    }
+
+    /** v47.6: the border is one even colour (JPEG noise only), whatever the colour. */
+    static boolean flatBorder(int[] px, int w, int h, int bg) {
+        long sum = 0; int n = 0, far = 0;
+        for (int x = 0; x < w; x += Math.max(1, w / 128)) for (int y : new int[]{0, 2, h - 3, h - 1}) { int d = dist(px[y * w + x], bg); sum += d; n++; if (d > 24) far++; }
+        for (int y = 0; y < h; y += Math.max(1, h / 128)) for (int x : new int[]{0, 2, w - 3, w - 1}) { int d = dist(px[y * w + x], bg); sum += d; n++; if (d > 24) far++; }
+        return n > 0 && sum / (float) n < 8 && far <= n / 40;
     }
 
     /** v40: the sheet's border is white paper and even (JPEG noise only): no shading, no texture, no gradient. */

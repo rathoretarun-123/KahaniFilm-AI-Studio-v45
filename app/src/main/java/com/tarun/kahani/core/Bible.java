@@ -263,7 +263,7 @@ public final class Bible {
         String n = Txt.norm(place == null ? "" : place).toLowerCase(java.util.Locale.ROOT).trim();
         n = n.replaceAll("(?:के नीचे(?: का)?|के पास|के सामने|के पीछे|की छाया में|की छाया|के किनारे|वाले? कोने में|वाले? कोना|का कोना|कोने में|कोना|छाया में|के पास वाला)", " ");
         n = n.replaceAll("(?<=[\\p{IsDevanagari}])\\s+(?:का|की|के)\\s+", " ");
-        n = n.replaceAll("(?:पेड़|वृक्ष)", " ").replaceAll("\\btree\\b", " ");
+        n = n.replaceAll("(?:पेड़|पेड|वृक्ष)", " ").replaceAll("\\btree\\b", " ");     // (v47.6: the text is normalised, so "पेड़" is "पेड" here)
         n = n.replaceAll("\\b(?:the|a|an|under|below|near|beside|in front of|behind|corner|shade|shadow)\\b", " ");
         n = n.replaceAll("[^\\p{IsDevanagari}a-z0-9]+", " ").replaceAll("\\s+", " ").trim();
         return n;

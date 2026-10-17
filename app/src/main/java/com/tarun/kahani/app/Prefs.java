@@ -25,7 +25,8 @@ public final class Prefs {
     /** The studio creates missing character/background pictures with free AI (3D animated style) when online. */
     public static boolean autoArt(Context c) { return !"0".equals(get(c, "autoArt", "1")); }
     /** Free pictures of the story's objects from GitHub (Fluent Emoji 3D, MIT) for inserts. */
-    public static boolean freeObjects(Context c) { return !"0".equals(get(c, "freeObjects", "1")); }
+    // v47.6: off unless the user turns it on — an emoji is never the thing the script describes, and the Studio asks for the real one
+    public static boolean freeObjects(Context c) { return "1".equals(get(c, "freeObjects", "0")); }
     /** Studio 3D: whatever still has no picture is built in three dimensions on the phone (no internet needed). */
     /** The optional native 3D doll generator was removed; old saved toggles no longer enable it. */
     public static boolean studio3d(Context c) { return false; }

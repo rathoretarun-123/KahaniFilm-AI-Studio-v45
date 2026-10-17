@@ -26,7 +26,7 @@ public final class ScriptParser {
     static final String[] TITLE_WORDS = {"बड़ी", "छोटी", "बड़ा", "छोटा", "बाकी", "राजकुमारी", "राजकुमार", "गार्ड", "गार्ड्स",
             "the", "princess", "prince", "guard", "guards", "little", "big", "old", "young", "और", "का", "की", "के",
             // honorifics are never a name on their own ("गेम वाली आंटी हूँ" does not call Aunty Algora on to the stage)
-            "आंटी", "आँटी", "अंकल", "दीदी", "भैया", "भाई", "मिस्टर", "मिस", "मिसेज", "सर", "मैडम", "डॉक्टर", "बाबा", "दादा", "दादी", "नानी", "नाना", "चाचा", "चाची", "मामा", "मामी", "बुआ", "मौसी",
+            "जी", "साहब", "साहेब", "श्री", "श्रीमती", "आंटी", "आँटी", "अंकल", "दीदी", "भैया", "भाई", "मिस्टर", "मिस", "मिसेज", "सर", "मैडम", "डॉक्टर", "बाबा", "दादा", "दादी", "नानी", "नाना", "चाचा", "चाची", "मामा", "मामी", "बुआ", "मौसी",
             "aunty", "auntie", "aunt", "uncle", "mister", "mr", "mrs", "ms", "miss", "sir", "madam", "dr", "doctor", "grandpa", "grandma", "papa", "mama", "mummy", "daddy"};
 
     // ------------------------------------------------------------------ v41: the many ways a script is written
@@ -574,7 +574,7 @@ public final class ScriptParser {
      * except a spoken line with its manner after the quote, which is always turned round (the manner was spoken).
      */
     static String userFormat(String raw) {
-        String[] lines = raw.replace("\r\n", "\n").replace('\r', '\n').split("\n", -1);
+        String[] lines = numberedEntries(raw.replace("\r\n", "\n").replace('\r', '\n').split("\n", -1));
         boolean fmt = false;
         int heads = 0;
         java.util.Set<String> kinds = new java.util.HashSet<String>();
@@ -584,6 +584,7 @@ public final class ScriptParser {
         String sec = "";
         for (String l : lines) {
             String k = userHeading(l);
+            if (k == null && SCENE_HEAD.matcher(l.trim()).matches()) { sec = "story"; continue; }     // (the story started without its heading)
             if (k != null) { if (!k.equals("end")) kinds.add(k); sec = k; continue; }
             String tl = l.trim();
             if (tl.isEmpty() || !(sec.equals("char") || sec.equals("thing") || sec.equals("place"))) continue;
@@ -596,12 +597,14 @@ public final class ScriptParser {
         StringBuilder out = new StringBuilder();
         String section = "";
         int n = 0;
-        List<String> places = new ArrayList<String>();
+        List<String> places = new ArrayList<String>(), placeDescs = new ArrayList<String>(), thingHeads = new ArrayList<String>();
         String lastPlace = null;
         for (int i = 0; i < lines.length; i++) {
             String l = lines[i], t = l.trim();
             java.util.regex.Matcher sp = speech.matcher(t);
             if (sp.matches()) { out.append(sp.group(1).trim()).append(" (").append(sp.group(3).trim()).append("): \"").append(sp.group(2).trim()).append("\"\n"); continue; }
+            // v47.6: "समाप्त" / "END" after the last scene, in any format, ends the film; it is never an action of the last scene
+            if ("end".equals(userHeading(t)) && !sceneAfter(lines, i)) { out.append('\n'); continue; }
             if (!fmt) { out.append(l).append('\n'); continue; }
             String hk = userHeading(t);
             if ("char".equals(hk)) { section = "char"; n = 0; out.append("पात्र:\n"); continue; }
@@ -609,6 +612,8 @@ public final class ScriptParser {
             if ("place".equals(hk)) { section = "place"; n = 0; out.append("स्थान:\n"); continue; }
             if ("story".equals(hk)) { section = "story"; out.append("कहानी:\n"); continue; }
             if ("end".equals(hk)) { out.append('\n'); continue; }      // the end card says it; it is no direction
+            // v47.6: a scene heading while a list is open: the story has started (its "कहानी" heading was left out)
+            if (hk == null && !section.equals("story") && SCENE_HEAD.matcher(t).matches()) { section = "story"; out.append("कहानी:\n"); }
             // "Scene 1" / "दृश्य - 1" / "दृश्य १": the scene heading the reader knows
             java.util.regex.Matcher sm = SCENE_HEAD.matcher(t);
             if (section.equals("story") && sm.matches()) t = "दृश्य " + sm.group(1);
@@ -620,23 +625,13 @@ public final class ScriptParser {
             }
             if (t.length() == 0 || section.equals("story") || section.length() == 0) {
                 if (section.equals("story") && t.matches("^दृश्य\\s*[0-9०-९]+\\s*$")) {
-                    // the scene's place: the listed place its first direction names (most of its words), or the one before ("वही जगह")
+                    // the scene's place (v47.6): where its first direction puts the people, read as a person reads it, or the
+                    // one before ("वही जगह") — see scenePlace
                     String dir = "";
-                    for (int j = i + 1; j < lines.length && j < i + 4; j++) if (lines[j].trim().startsWith("(")) { dir = Txt.norm(lines[j]).toLowerCase(java.util.Locale.ROOT); break; }
-                    boolean same = dir.contains(Txt.norm("वही जगह")) || dir.contains(Txt.norm("उसी जगह")) || dir.toLowerCase(java.util.Locale.ROOT).contains("same place");
-                    String best = null; float bestF = 0;
-                    for (String pl : places) {
-                        String[] ws = pl.split("\\s+"); int have = 0, all = 0;
-                        for (String w : ws) {
-                            String lw = w.toLowerCase(java.util.Locale.ROOT);
-                            if (lw.length() < 2 || lw.matches("का|के|की|और|-|the|of|and|an|in|at|on")) continue;
-                            all++;
-                            if (dir.contains(Txt.norm(w).toLowerCase(java.util.Locale.ROOT))) have++;
-                        }
-                        float f = all == 0 ? 0 : have / (float) all;
-                        if (f > bestF || (f == bestF && best != null && pl.length() > best.length())) { bestF = f; best = pl; }
-                    }
-                    String place = same && lastPlace != null ? lastPlace : bestF >= 0.6f ? best : lastPlace != null ? lastPlace : best;
+                    for (int j = i + 1; j < lines.length && j < i + 4; j++) if (lines[j].trim().startsWith("(")) { dir = lines[j]; break; }
+                    String nd = Txt.norm(dir).toLowerCase(java.util.Locale.ROOT);
+                    boolean same = nd.contains(Txt.norm("वही जगह")) || nd.contains(Txt.norm("उसी जगह")) || nd.contains("same place");
+                    String place = same && lastPlace != null ? lastPlace : scenePlace(dir, places, placeDescs, thingHeads, lastPlace);
                     if (place != null) { lastPlace = place; out.append(t).append(": ").append(place).append('\n'); continue; }
                 }
                 out.append(t.equals(l.trim()) ? l : t).append('\n');
@@ -650,13 +645,146 @@ public final class ScriptParser {
                 desc = t.substring(par).replaceAll("^\\(|\\)$", "").replace(") (", ", ").replace(")(", ", ").trim();
                 desc = desc.replace(':', ',').replace('：', ',');      // (a colon inside the description is no "name: description" cut)
             }
-            name = name.replaceAll("\\s+[-–—]\\s+.*$", "").trim();          // "गांव का पुराना डाकघर - बाहरी हिस्सा": the place's name
+            // a character's or a thing's name is the words before a dash; a place keeps the whole name the script gives it
+            // (v47.6, the user: "take only what is mentioned in the script, no changes": "गांव का पुराना डाकघर - बाहरी हिस्सा")
+            if (!section.equals("place")) name = name.replaceAll("\\s+[-–—]\\s+.*$", "").trim();
             if (name.length() == 0) { out.append(l).append('\n'); continue; }
-            if (section.equals("place")) places.add(name);
+            if (section.equals("place")) { places.add(name); placeDescs.add(desc); }
+            if (section.equals("thing")) { List<String> ws = placeWords(name, false); if (!ws.isEmpty()) thingHeads.add(ws.get(ws.size() - 1)); }
             out.append(++n).append(". ").append(name).append(section.equals("place") ? ": " : " - ").append(desc).append('\n');
         }
         return out.toString();
     }
+
+    /** v47.6: words that say where something is seen from, not where the scene is: "पीछे कच्चा रास्ता …", "far off, the road". */
+    static final String[] BACKDROP_WORDS = {"पीछे", "दूर", "पृष्ठभूमि", "पृष्ठभूमि में", "सामने", "उस पार", "पार", "behind", "background", "distance", "far", "beyond", "across", "from"};
+    /** v47.6: the words of a place's name that tell nothing apart ("का", "कोना", "पुराना", "बाहरी हिस्सा", "the", "old"). */
+    static final String PLACE_GENERIC = "का|के|की|और|में|पर|से|एक|-|नीचे|ऊपर|पास|अंदर|बाहर|बाहरी|भीतरी|हिस्सा|कोना|कोने|तरफ|ओर|जगह|स्थान"
+            + "|पुराना|पुरानी|पुराने|नया|नई|नए|बड़ा|बड़ी|बड़े|छोटा|छोटी|छोटे|the|of|and|a|an|in|at|on|under|near|by|old|new|big|small|little|part|side|corner|outside|inside|place";
+
+    /** v47.6: the words of a text, normalised, punctuation dropped (a hyphen inside a word stays: "डाक-बक्सा"). */
+    static List<String> placeWords(String text, boolean all) {
+        List<String> out = new ArrayList<String>();
+        for (String w : Txt.norm(text).toLowerCase(java.util.Locale.ROOT).split("[\\s,।.!?;:()\"“”'‘’]+")) {
+            w = w.replaceAll("^[-–—]+|[-–—]+$", "");
+            if (w.isEmpty()) continue;
+            if (!all && w.matches(Txt.norm(PLACE_GENERIC))) continue;
+            out.add(w);
+        }
+        return out;
+    }
+
+    /** v47.6: one word of a place's name in the text's word: the same, or the same Hindi word bent ("कच्चा" in "कच्चे"). */
+    static boolean sameWord(String name, String w) {
+        if (w.equals(name)) return true;
+        if (name.length() > 2 && name.endsWith("ा")) { String st = name.substring(0, name.length() - 1); return w.equals(st + "े") || w.equals(st + "ों"); }
+        return name.matches("[a-z]{3,}") && (w.equals(name + "s") || w.equals(name + "es"));
+    }
+
+    /**
+     * v47.6: the listed place a scene happens at, from its first direction, read as a person reads it. A place named
+     * where things happen counts by the share of its own words the direction uses; a place only seen behind ("पीछे कच्चा
+     * रास्ता धूप में चमक रहा है") or one somebody comes from ("परी कच्चे रास्ते से दौड़ती हुई आती है") does not. The place
+     * whose description holds the things the scene uses ("यहीं टूटी बेंच रखी है"), the one the list calls the main location
+     * ("मुख्य लोकेशन") and the place of the scene before (the story goes on where it was) lean in. With no word for any place,
+     * the scene stays where the last one was, else at the main location, else at the first place listed.
+     */
+    static String scenePlace(String dir, List<String> places, List<String> descs, List<String> thingHeads, String last) {
+        if (places.isEmpty()) return last;
+        List<String> ws = placeWords(dir, true);
+        java.util.Set<String> backdrop = new java.util.HashSet<String>();
+        for (String b : BACKDROP_WORDS) backdrop.add(Txt.norm(b));
+        String best = null, main = null;
+        float bestS = 0;
+        for (int p = 0; p < places.size(); p++) {
+            String pl = places.get(p), desc = p < descs.size() ? descs.get(p) : "";
+            List<String> nameWs = placeWords(pl, false);
+            int have = 0;
+            for (String nw : new java.util.LinkedHashSet<String>(nameWs)) {
+                for (int k = 0; k < ws.size(); k++) {
+                    if (!sameWord(nw, ws.get(k))) continue;
+                    boolean seen = false;
+                    for (int q = Math.max(0, k - 3); q < k; q++) if (backdrop.contains(ws.get(q))) seen = true;
+                    // "… रास्ते से (दौड़ती हुई आती है)": the place somebody comes from (the word after the name's last word)
+                    int e = k + 1;
+                    while (e < ws.size() && e < k + 3 && nameWs.contains(ws.get(e))) e++;
+                    if (e < ws.size() && ws.get(e).equals(Txt.norm("से"))) seen = true;
+                    if (!seen) { have++; break; }
+                }
+            }
+            int distinct = new java.util.LinkedHashSet<String>(nameWs).size();
+            float sc = distinct == 0 ? 0 : have / (float) distinct;
+            // the whole name, word for word, where the people are ("नीम के पेड़ के नीचे का कोना, दादाजी …"): that place
+            // and not the shorter one inside it ("नीम का पेड़")
+            if (distinct > 0 && have == distinct && (" " + String.join(" ", ws) + " ").contains(" " + String.join(" ", placeWords(pl, true)) + " ")) sc += 0.5f;
+            String nd = Txt.norm(desc).toLowerCase(java.util.Locale.ROOT);
+            List<String> dws = placeWords(desc, true);
+            for (String th : thingHeads) if (dws.contains(th) && ws.contains(th)) { sc += 0.3f; break; }
+            boolean isMain = nd.contains(Txt.norm("मुख्य लोकेशन")) || nd.contains(Txt.norm("मुख्य स्थान")) || nd.contains(Txt.norm("मुख्य जगह"))
+                    || nd.contains("main location") || nd.contains("main place") || nd.contains("main set");
+            if (isMain) { sc += 0.25f; if (main == null) main = pl; }
+            if (pl.equals(last)) sc += 0.2f;
+            if (sc > bestS) { bestS = sc; best = pl; }
+        }
+        if (best != null) return best;
+        return last != null ? last : main != null ? main : places.get(0);
+    }
+
+    /** v47.6: true when a scene heading comes after line i (so an "END" there is not the script's end). */
+    static boolean sceneAfter(String[] lines, int i) {
+        for (int j = i + 1; j < lines.length; j++) if (SCENE_HEAD.matcher(lines[j].trim()).matches()) return true;
+        return false;
+    }
+
+    /**
+     * v47.6: the numbered lists of the user's format ("1. रघुवीर जी (78 साल)" with what he looks like on the line under it,
+     * or "1. रघुवीर जी (78 साल) (बहुत दुबला…)" on one line) as the format's one-line entries without their numbers:
+     * "रघुवीर जी (78 साल) (बहुत दुबला-पतला शरीर, …)". Only under the format's own headings (पात्र, वस्तुएं, स्थान), and only
+     * when the numbered lines are names (a numbered line that is itself "name: description" or "name - description" is
+     * an older form the reader reads as it is).
+     */
+    static String[] numberedEntries(String[] lines) {
+        String sec = "";
+        int heads = 0, named = 0, wordy = 0;
+        java.util.Set<String> kinds = new java.util.HashSet<String>();
+        for (int i = 0; i < lines.length; i++) {
+            String t = lines[i].trim(), k = userHeading(t);
+            if (k == null && SCENE_HEAD.matcher(t).matches()) { sec = "story"; continue; }
+            if (k != null) { sec = k; if (!k.equals("end")) kinds.add(k); continue; }
+            if (!(sec.equals("char") || sec.equals("thing") || sec.equals("place"))) continue;
+            Matcher m = ENTRY_NO.matcher(t);
+            if (!m.matches()) continue;
+            heads++;
+            String name = m.group(1).trim(), bare = Txt.withoutParens(name).trim();
+            if (colonOutsideParens(name) > 0 || bare.length() > 70 || bare.contains("।") || (!sec.equals("place") && bare.matches(".*\\s[-–—]\\s.*"))) { wordy++; continue; }
+            String nx = i + 1 < lines.length ? lines[i + 1].trim() : "";
+            if (name.indexOf('(') > 0 || (nx.length() > 0 && !ENTRY_NO.matcher(nx).matches() && userHeading(nx) == null)) named++;
+        }
+        if (kinds.size() < 3 || heads < 2 || wordy > 0 || named * 10 < heads * 8) return lines;
+        List<String> out = new ArrayList<String>();
+        sec = "";
+        for (int i = 0; i < lines.length; i++) {
+            String t = lines[i].trim(), k = userHeading(t);
+            if (k == null && SCENE_HEAD.matcher(t).matches()) sec = "story";
+            if (k != null) { sec = k; out.add(lines[i]); continue; }
+            Matcher m = ENTRY_NO.matcher(t);
+            if (!(sec.equals("char") || sec.equals("thing") || sec.equals("place")) || !m.matches()) { out.add(lines[i]); continue; }
+            StringBuilder d = new StringBuilder();
+            int j = i + 1;
+            for (; j < lines.length; j++) {
+                String nx = lines[j].trim();
+                if (nx.isEmpty() || ENTRY_NO.matcher(nx).matches() || userHeading(nx) != null) break;
+                if (nx.startsWith("(") && nx.endsWith(")")) nx = nx.substring(1, nx.length() - 1).trim();
+                d.append(d.length() > 0 ? ", " : "").append(nx.replaceAll("[।.,\\s]+$", ""));
+            }
+            out.add(m.group(1).trim() + (d.length() > 0 ? " (" + d + ")" : ""));
+            i = j - 1;
+        }
+        return out.toArray(new String[0]);
+    }
+
+    /** v47.6: "1. name", "२) name": a numbered entry of a list, its words after the number. */
+    static final Pattern ENTRY_NO = Pattern.compile("^[0-9०-९]{1,3}\\s*[.)]\\s*(\\S.*)$");
 
     /** v47.5: "Scene 1", "दृश्य 1", "दृश्य - 1", "दृश्य १" alone on a line. */
     static final Pattern SCENE_HEAD = Pattern.compile("^(?:दृश्य|scene)\\s*[-–—:.]?\\s*([0-9०-९]+)\\s*[:：.]?\\s*$", Pattern.CASE_INSENSITIVE | Pattern.UNICODE_CASE);
@@ -673,7 +801,9 @@ public final class ScriptParser {
         if (h.matches("वस्तुएं|वस्तुएँ|वस्तुयें|वस्तुए|वस्तु|सामान|प्रॉप्स|objects?|props|things|the objects")) return "thing";
         if (h.matches("स्थान और पृष्ठभूमि|स्थान व पृष्ठभूमि|स्थान एवं पृष्ठभूमि|स्थान|पृष्ठभूमि|जगह|जगहें|स्थान और पृष्ठभूमियाँ|places?|locations?|backgrounds?"
                 + "|places? (?:and|&) backgrounds?|locations? (?:and|&) backgrounds?|the places")) return "place";
-        if (h.matches("कहानी|कथा|पटकथा|story|the story|script|screenplay")) return "story";
+        // (v47.6: and the start words written after it: "कहानी शुरू", "Story begins")
+        if (h.matches("कहानी|कथा|पटकथा|story|the story|script|screenplay|(?:कहानी|कथा|पटकथा|स्क्रिप्ट) (?:शुरू|शुरु|आरंभ|आरम्भ|प्रारंभ|प्रारम्भ)"
+                + "|(?:the )?(?:story|script|screenplay) (?:begins|starts)")) return "story";
         if (h.matches("समाप्त|समाप्ति|अंत|the end|end|द एंड")) return "end";
         return null;
     }

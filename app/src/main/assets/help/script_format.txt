@@ -3,23 +3,35 @@
 शीर्षक: फ़िल्म का नाम
 
 पात्र
-नाम (उम्र) (रूप-रंग, कद, कपड़े और आवाज़ का विवरण)
-नाम (उम्र) (विवरण)
+
+1. नाम (उम्र)
+रूप-रंग, कद, कपड़े और आवाज़ का विवरण
+
+2. नाम (उम्र)
+विवरण
 
 वस्तुएं
-वस्तु का नाम (विवरण)
 
-स्थान और पृष्ठभूमि
-जगह का नाम (विवरण)
+1. वस्तु का नाम
+विवरण
+
+स्थान
+
+1. जगह का नाम
+विवरण
 
 कहानी
 
 दृश्य 1
-(दृश्य का विवरण: कौन कहाँ है, क्या हो रहा है, कैमरा कैसे देखता है)
+(पर्यावरण - समय, रोशनी, हवा, आवाज़ें। फिर कौन कहाँ है, क्या हो रहा है, कैमरा कैसे देखता है)
+
 नाम: "संवाद" (बोलते समय के भाव, आवाज़ और हरकतें)
+
+(संवादों के बीच की हरकत)
 
 दृश्य 2
 (विवरण)
+
 नाम: "संवाद" (भाव)
 
 समाप्त
@@ -27,8 +39,11 @@
 नियम
 - हर विवरण ( ) में, हर संवाद " " में।
 - * / # जैसे कोई और चिन्ह नहीं।
-- पात्र, वस्तुएं और स्थान कहानी शुरू होने से पहले लिखें। स्टूडियो सिर्फ़ इन्हीं की तस्वीरें माँगता है: पहले पात्र, फिर वस्तुएं, फिर स्थान और पृष्ठभूमि।
+- पात्र, वस्तुएं और स्थान कहानी शुरू होने से पहले, गिनती के साथ (1. 2. 3.) लिखें। नाम वाली लाइन के नीचे की लाइन उसका विवरण है। एक ही लाइन में नाम (उम्र) (विवरण) भी चलता है।
+- स्टूडियो सिर्फ़ इन्हीं की तस्वीरें माँगता है, उन्हीं नामों से जो आपने लिखे: पहले पात्र, फिर वस्तुएं, फिर स्थान। हर जगह एक ही बार।
+- हर जगह एक बार लिखें। लोग जहाँ हैं वही दृश्य की जगह है: "पीछे कच्चा रास्ता दिख रहा है" या "रास्ते से दौड़ती हुई आती है" उस दृश्य की जगह नहीं बदलते।
 - हवा, पानी, आसमान, धूप, बारिश, आग, छाया, आवाज़ें और भावनाएँ स्टूडियो खुद बनाता है। इनकी तस्वीर नहीं माँगी जाती।
+- संवाद के बाद ( ) में लिखा भाव कभी बोला नहीं जाता; ( ) के विवरण भी कभी बोले नहीं जाते।
 - कैमरा भी ( ) में लिख सकते हैं: वाइड शॉट, मीडियम शॉट, क्लोज़-अप, ऊपर से, नीचे से, कैमरा धीरे-धीरे पीछे जाता है, कैमरा पास आता है।
 - आख़िर में समाप्त (या END)।
 
@@ -38,22 +53,32 @@ SCRIPT FORMAT (write every story this way)
 Title: Name of the film
 
 Characters
-Name (age) (looks, height, clothes and voice)
+
+1. Name (age)
+Looks, height, clothes and voice
 
 Objects
-Name of the object (description)
 
-Places and Backgrounds
-Name of the place (description)
+1. Name of the object
+Description
+
+Places
+
+1. Name of the place
+Description
 
 Story
 
 Scene 1
-(What the scene shows: who is where, what happens, how the camera sees it)
+(Environment - time, light, wind, sounds. Then who is where, what happens, how the camera sees it)
+
 Name: "Dialogue" (how it is said: feeling, voice, movement)
+
+(what happens between the lines)
 
 Scene 2
 (description)
+
 Name: "Dialogue" (feeling)
 
 END
@@ -61,7 +86,10 @@ END
 Rules
 - Every description in ( ), every dialogue in " ".
 - No other marks such as * / #.
-- Characters, objects and places come before the story starts. The studio asks for pictures of these only: first the characters, then the objects, then the places and backgrounds.
+- Characters, objects and places come before the story starts, numbered (1. 2. 3.). The line under a name is its description. Name (age) (description) on one line works too.
+- The studio asks for pictures of these only, by the names you wrote: first the characters, then the objects, then the places. Each place once.
+- Write each place once. A scene is where its people are: "the dirt road shines behind" or "she runs in from the road" does not move the scene.
 - Wind, water, sky, sunlight, rain, fire, shade, sounds and feelings are made by the studio. No picture of them is asked for.
+- The note in ( ) after a line is never spoken; descriptions in ( ) are never spoken either.
 - The camera can be written in ( ) too: wide shot, medium shot, close-up, from above, from below, the camera slowly pulls back, the camera moves closer.
 - Finish with END (or समाप्त).

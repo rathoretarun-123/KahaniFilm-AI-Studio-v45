@@ -12,7 +12,7 @@ concurrency:
   cancel-in-progress: true
 
 permissions:
-  contents: write    # the apk branch (the direct download link)
+  contents: write    # the GitHub Release that carries the APK (the direct download link)
 
 jobs:
   build:
@@ -111,30 +111,6 @@ jobs:
           path: release/KahaniFilm.apk
           if-no-files-found: error
 
-      # The user installs from the phone: a raw file on a branch downloads directly (an artifact is a zip behind a login).
-      # https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/raw/apk/KahaniFilm.apk is always the latest build of
-      # this branch; the commit it came from is in the file name beside it and in README.md there.
-      - name: Publish the APK to the apk branch (direct download link)
-        if: success()
-        shell: bash
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          set -euo pipefail
-          d=$(mktemp -d)
-          cp release/KahaniFilm-v47.apk "$d/KahaniFilm.apk"
-          cp release/KahaniFilm-v47.apk "$d/KahaniFilm-${GITHUB_SHA::7}.apk"
-          cd "$d"
-          git init -q -b apk
-          git config user.name "github-actions"
-          git config user.email "actions@github.com"
-          printf 'KahaniFilm APK built by CI from commit %s on %s (%s).\n\nDirect download: https://github.com/%s/raw/apk/KahaniFilm.apk\nSource of this build: https://github.com/%s/archive/%s.zip\n' "$GITHUB_SHA" "$GITHUB_REF_NAME" "$(date -u +%Y-%m-%dT%H:%MZ)" "$GITHUB_REPOSITORY" "$GITHUB_REPOSITORY" "$GITHUB_SHA" > README.md
-          git add .
-          git commit -q -m "APK built from $GITHUB_SHA"
-          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" apk:apk
-          echo "published: https://github.com/${GITHUB_REPOSITORY}/raw/apk/KahaniFilm.apk"
-
-
       - name: Set up Java 21 for production-plan regression tests
         uses: actions/setup-java@v4
         with:
@@ -186,6 +162,11 @@ jobs:
             --tests com.tarun.kahani.ScreenplayNotesTest \
             --tests com.tarun.kahani.SeatContinuityTest \
             --tests com.tarun.kahani.SheetPanelsTest \
+            --tests com.tarun.kahani.ThingsInHandsTest \
+            --tests com.tarun.kahani.UserScreenplayFormatTest \
+            --tests com.tarun.kahani.app.FreeArtTest \
+            --tests com.tarun.kahani.MaterialsAndCutoutTest \
+            --tests com.tarun.kahani.LookReadingTest \
             --tests com.tarun.kahani.DashboardSoakTest \
             --tests com.tarun.kahani.ThreeStoriesSoakTest 2>&1 | tee tools/robotest/build/test.log
       - name: Name the failing tests (annotations, readable through the API)
@@ -229,3 +210,46 @@ jobs:
           if-no-files-found: warn
           retention-days: 30
 
+      # The APK (~112 MB) is over GitHub's 100 MB limit for a file on a branch, so it is published as a Release asset,
+      # and only after the build, the payload check and every test above have passed (a failing run publishes nothing).
+      # https://github.com/<repo>/releases/latest/download/KahaniFilm.apk is always the newest passing build;
+      # each build also keeps its own tag, with the commit it was built from in the release notes.
+      - name: Publish the tested APK as a GitHub Release (direct download link)
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          short=${GITHUB_SHA::7}
+          tag="v47-build-${GITHUB_RUN_NUMBER}-${short}"
+          cp release/KahaniFilm-v47.apk "release/KahaniFilm-v47-${short}.apk"
+          size=$(du -h release/KahaniFilm.apk | cut -f1)
+          printf 'KahaniFilm debug APK built and tested by CI run %s from commit %s on %s (%s).\n\nInstalls over the earlier KahaniFilm install (same package and signing key, higher version code).\n\nDirect download (always the newest passing build): https://github.com/%s/releases/latest/download/KahaniFilm.apk\nThis build: https://github.com/%s/releases/download/%s/KahaniFilm.apk\nSource of this build: https://github.com/%s/archive/%s.zip\nAPK size: %s\n' \
+            "$GITHUB_RUN_ID" "$GITHUB_SHA" "$GITHUB_REF_NAME" "$(date -u +%Y-%m-%dT%H:%MZ)" \
+            "$GITHUB_REPOSITORY" "$GITHUB_REPOSITORY" "$tag" "$GITHUB_REPOSITORY" "$GITHUB_SHA" "$size" > release/notes.md
+          gh release create "$tag" release/KahaniFilm.apk "release/KahaniFilm-v47-${short}.apk" \
+            --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
+            --title "KahaniFilm v47 build ${GITHUB_RUN_NUMBER} (${short})" \
+            --notes-file release/notes.md --latest
+          echo "::notice title=apk::https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/KahaniFilm.apk"
+
+      # The apk branch used to carry the APK itself; it now carries only a pointer to the release, so an old
+      # raw/apk link can no longer hand out a stale build.
+      - name: Point the apk branch at the release
+        if: success()
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          d=$(mktemp -d)
+          cd "$d"
+          git init -q -b apk
+          git config user.name "github-actions"
+          git config user.email "actions@github.com"
+          printf 'The KahaniFilm APK is published as a GitHub Release asset (it is over the 100 MB limit for a branch file).\n\nDirect download (newest passing build): https://github.com/%s/releases/latest/download/KahaniFilm.apk\nAll builds: https://github.com/%s/releases\nNewest build came from commit %s: https://github.com/%s/archive/%s.zip\n' \
+            "$GITHUB_REPOSITORY" "$GITHUB_REPOSITORY" "$GITHUB_SHA" "$GITHUB_REPOSITORY" "$GITHUB_SHA" > README.md
+          git add README.md
+          git commit -q -m "APK for $GITHUB_SHA is a release asset"
+          git push -q -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" apk:apk

@@ -728,3 +728,74 @@ drawable (for example, dry leaves with dust), while a list of effects alone shou
   converting image references before running its regression suite. This Windows environment currently has no Java or
   FFmpeg on PATH; an attempted user-scope JDK install found no applicable winget installer. No render or test result
   is claimed for this round yet.
+
+### 6.21 The numbered script format, the Studio's requests, the user's own pictures of आखिरी चिट्ठी (17 October)
+
+The user's format from now on (tools/testdata/aakhiri_chitthi/aakhiri_chitthi_numbered.txt is their sample, word for
+word): `शीर्षक:`, then `पात्र` / `वस्तुएं` / `स्थान` as numbered lists — `1. रघुवीर जी (78 साल)` with the description on the
+line under it — then `कहानी`, `दृश्य N`, `(पर्यावरण - …)`, `नाम: "line" (delivery)`, `(action)`, `समाप्त`. "The reader
+should take only what is mentioned in the script, no changes."
+
+Reader (ScriptParser):
+- `numberedEntries` turns the numbered lists (description on the next line, or `नाम (उम्र) (विवरण)` on one line) into
+  the format's one-line entries; lists written any other way are left as they are.
+- A place keeps the whole name the script gives it ("गांव का पुराना डाकघर - बाहरी हिस्सा"); characters and things are
+  still the words before a dash.
+- `समाप्त` / `END` after the last scene ends the film in every format; it was read as an action of scene 3.
+- "कहानी शुरू", "Story begins" are the story heading; a `दृश्य N` heading while a list is open starts the story.
+- `scenePlace`: a scene is where its people are. A place counts by the share of its own words the first direction uses;
+  a place seen behind ("पीछे कच्चा रास्ता धूप में चमक रहा है") or come from ("कच्चे रास्ते से दौड़ती हुई आती है") does not;
+  the place whose description holds a thing the scene names ("यहीं टूटी बेंच रखी है"), the main location ("मुख्य
+  लोकेशन") and the previous scene's place lean in; the whole name word for word wins over a shorter one inside it.
+  All three scenes of the sample are now at नीम के पेड़ के नीचे का कोना (scene 2 had been put on the dirt road).
+- "जी", "साहब", "श्री" are honorifics, never a name alone ("जी" had become an alias of रघुवीर जी).
+- Measured on all 2,099 test stories (a parse digest before and after): only the two earlier format samples changed
+  (the honorific alias, and the full place name with its "- बाहरी हिस्सा").
+
+Studio:
+- The emoji stand-ins (FreeArt) are off by default and take only the objects the script lists, matched by the whole
+  name or the head noun as whole words, and only where the emoji is that thing: no "Magic wand" for a walking stick, no
+  "Scroll" for a letter, no "Backpack" for a school bag, no "Open book" for a book in a direction, no "Diya lamp" for
+  "दिया" (gave). The user's own picture of a thing always comes first.
+- "📷 Pictures first" lists each place once (the three parts under the same neem are one background).
+- The place key ignores "पेड़" after normalisation too (the nukta had kept "नीम पेड" apart from "नीम").
+
+The user's 101 pictures of आखिरी चिट्ठी (tools/testdata/aakhiri_chitthi/plan.txt, cast with CastFromUploads):
+- Seen on contact sheets, all 101. The film's first render showed परी with light-brown hair and see-through eyes:
+  (1) cutting a picture sheet with a black background removed every closed dark patch — the pupils and the black hair
+  — as "background seen through a gap"; on a black sheet a gap is now taken only when it is the sheet's own flat black
+  and as big as a gap between an arm and the body, and the edge tolerance is tighter on a flat black sheet;
+  (2) one of the user's sheets (pari_upload_19) draws परी with light-brown hair: a pose picture whose head is much
+  lighter than a dark-haired character's main picture is now put aside and said so (all eight of that sheet, none other).
+- The director had put the ground's "जमीन पर बिखरे सूखे पत्ते और धूल" into रघुवीर जी's hand ("छड़ी जमीन पर टिकी है") and
+  had परी hold it out ("धूल लगा हाथ आगे बढ़ा कर"): a word that only says where or whose ("जमीन पर", "दादाजी की") no longer
+  names a thing ("जूतों की जोड़ी": a pair only counts the shoes), and scattered dust, soil and leaves are never in a hand.
+- The letter: परी takes it out of her bag (78 s); रघुवीर जी takes it from her hand (105.7 s) — it was in his hand from
+  the start of the part as well, two letters at once; a hand-over now starts at the hand-over.
+- "टूटी बेंच पर रघुवीर जी के बगल में बैठ जाती है": the one who sits beside someone seated goes to their side first and
+  sits on the same bench (one other story changed by this rule: dono_behne, "वृंदा उसके पास आकर बैठती है" — she now
+  walks over before sitting). Where the script lists a bench and the user gave its picture, that picture is the bench,
+  drawn once under everyone seated on it.
+- Material classes for the technical director (Rigidity.material): rigid, flexible (cloth, paper, bags), liquid,
+  granular (dust, soil, sand, scattered leaves), soft, unknown — rules the director and renderer follow, not a physics
+  simulation; the ledger lists each listed thing by its class.
+- The user's 20 reference frames (sent again at 1920x1280) are the storyboard frames already in the stills; indexed beat
+  by beat in tools/testdata/aakhiri_chitthi/reference/README.md instead of stored twice.
+
+- The look reader took "काली" (black) for the goddess Kali: "गहरी काली आँखें" gave परी ten arms and a tiger to ride, so
+  she was read as a beast — never moved through her rig, always a still pose picture (the ones with the letter already in
+  her hands played while she held nothing). A deity is now read from the name, or from a phrase that names one ("माँ
+  काली", "भगवान शिव का रूप"), as whole words; "असुरक्षित" is no demon. Measured on all 2,099 test stories: 458 characters
+  had been given ten arms and a tiger by a black-haired, black-eyed or black-clothed description — आखिरी चाय's रघु काका and
+  आरव, the sample story's वानुषा among them — and nothing else changed (LookReadingTest).
+
+Still wrong in the आखिरी चिट्ठी render (not claimed fixed): the user's seated pictures carry their own bench and bricks, so
+रघुवीर जी sits above the bench the director draws, and in scene 3 परी sits on a bench of her own instead of beside him
+(the picture alone does not tell whether a seated picture brings its seat; to be solved next); a standing picture seated by
+the rig shows a dark slab behind him; in close two-shots his head can be out of frame; her closed eyes are drawn pale; the
+postbox and the tea cart the directions name are not yet placed in the set from the user's pictures; the closing wide
+shot of the two on the bench is not reached before the end card.
+
+Tests: UserScreenplayFormatTest (+2: the numbered sample exactly as written; one-line numbered entries with "कहानी
+शुरू"), FreeArtTest, MaterialsAndCutoutTest and LookReadingTest (new); the whole plain-JVM suite, 52 tests, passes on a
+clean copy of this tree. AppTest and DashboardSoakTest (Robolectric) run on CI, which publishes the APK only when all pass.

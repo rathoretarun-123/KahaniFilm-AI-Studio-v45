@@ -4004,12 +4004,21 @@ public class MainActivity extends Activity {
                         for (String[] u : all) if (u[0].startsWith("angles:char:" + c.displayName + ":") || u[0].startsWith("angles:char:" + keyFor(c) + ":")) dup = true;
                         if (!dup && seen.add(t)) all.add(new String[]{t, c.shown() + " (more angles)"});
                     }
+                    // v47.6: one row per place, as the Studio's places card shows them: the three parts of आखिरी चिट्ठी under
+                    // the same neem are one background to give (SheetSaver gives every part there the same picture)
+                    Set<String> placeKeys = new HashSet<String>();
                     for (Story.Scene sc : st.scenes) {
-                        String nm = sc.title.length() > 0 ? sc.title : "part " + sc.number;
+                        String placeName = null;
+                        for (String[] place : Bible.listedPlaces(st)) if (AutoLibrary.placeOf(sc, place[0])) { placeName = place[0]; break; }
+                        if (placeName == null) placeName = Bible.firstClauseOf(sc.setting);
+                        String placeKey = Bible.placeIdentity(placeName);
+                        boolean dup = placeKey.length() > 0 && !placeKeys.add(placeKey);
+                        String nm = placeName.length() > 0 ? placeName : sc.title.length() > 0 ? sc.title : "part " + sc.number;
                         String t = "angles:scene:" + sc.number + ":" + nm;
-                        boolean dup = false;
                         for (String[] u : all) if (u[0].startsWith("angles:scene:" + sc.number + ":")) dup = true;
-                        if (!dup && seen.add(t)) all.add(new String[]{t, "Part " + sc.number + ": " + nm + " (background)"});
+                        // (a place already in the list from the missing pictures above counts as listed too)
+                        for (String[] u : all) if (u[0].startsWith("angles:scene:") && placeKey.length() > 0 && Bible.placeIdentity(u[0].replaceFirst("^angles:scene:[^:]*:", "")).equals(placeKey)) dup = true;
+                        if (!dup && seen.add(t)) all.add(new String[]{t, nm + " (background)"});
                     }
                     for (com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
                         String t = "angles:scene:" + x.key + ":" + x.label;
@@ -4920,7 +4929,7 @@ public class MainActivity extends Activity {
         dir.addView(toggle("Make missing pictures with free AI (3D animated style, needs internet)", "autoArt", true));
         dir.addView(toggle("Ask me for my pictures first: the film waits for them before the 3D maker makes any (the 3D maker only for what I do not give)", "askUploads", true));
         dir.addView(toggle("Ask me before a picture made in 3D is used (✔ Use / ✖ Reject where pictures are chosen)", "ask3d", true));
-        dir.addView(toggle("Free pictures of the story's objects for inserts (Fluent Emoji 3D on GitHub, MIT)", "freeObjects", true));
+        dir.addView(toggle("Emoji stand-ins for listed objects with no picture (Fluent Emoji 3D, MIT)", "freeObjects", false));
         dir.addView(toggle("Human QC: show me every shot's first frame before the film is made", "humanQc", true));
         dir.addView(Ui.text(this, "🎞 Films are made at 24 frames per second, the animation standard.", 13, Ui.SUB, false));   // v47.4: fixed (the user)
         dir.addView(toggle("Reader looks up unknown words online (free Wikipedia summary; your cloud as a fallback) — slower first run; results cached", "lookUp", false));

@@ -44,6 +44,7 @@ public class MakeFilm {
         }
         System.out.println("art: sprites=" + art.sprites.size() + " scenes=" + art.scenes.size() + " shots=" + art.shots.size()
                 + " title=" + (art.title != null) + " end=" + (art.end != null) + "  (" + (System.currentTimeMillis() - t0) + "ms)");
+        for (String n : art.notes) System.out.println("  picture: " + n);
 
         Director.Options opt = new Director.Options();
         opt.aspect = aspect;

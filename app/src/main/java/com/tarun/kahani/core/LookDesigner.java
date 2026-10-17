@@ -812,8 +812,25 @@ public final class LookDesigner {
         l.anklets = Txt.has(all, "घंटियाँ", "पायल", "घुंघरू", "anklet");
         // v47: canonical traits for well-known Hindu deities and demons when the user names them without describing
         // their arms / heads / mount — the Reader fills what the name implies, never overwriting what the user wrote.
-        deityTraits(all, l);
+        // v47.6: from the name, or a phrase of the description that names the deity as one ("माँ काली", "भगवान शिव का रूप")
+        // — never from an adjective: "गहरी काली आँखें" (deep black eyes) gave परी, आखिरी चाय's रघु काका and 457 more ten
+        // arms and a tiger to ride (read as beasts, they never moved through their rigs). The role stays apart, as ever
+        // ("The Corporate Rakshas" is a man in a suit).
+        deityTraits(c.fullName + " " + c.displayName + "\n" + deityPhrases(c.description), l);
         return l;
+    }
+
+    /** v47.6: the clauses of a description that name a deity as one (a marker word with it): "माँ काली का रूप", "dressed
+     *  as Lord Shiva", "दुर्गा जैसी देवी"; a demon or a monster is always read ("राक्षस जैसा"). */
+    static String deityPhrases(String desc) {
+        if (desc == null) return "";
+        StringBuilder b = new StringBuilder();
+        for (String cl : desc.split("[,।.;\\n]")) {
+            if (Txt.has(cl, "माँ ", "मां ", "माता", "देवी", "भगवान", "प्रभु", "अवतार", "रूप में", "का रूप", "की तरह", "जैसा", "जैसी", "जैसे",
+                    "goddess", "god ", "lord ", "avatar", "dressed as", "like ", "राक्षस", "दानव", "दैत्य", "demon", "devil", "ogre", "rakshas"))
+                b.append(cl).append('\n');
+        }
+        return b.toString();
     }
 
     /** v47: canonical traits of well-known deities and demons (arms, heads, mount, hero flag). Only sets what the
@@ -826,8 +843,9 @@ public final class LookDesigner {
     public static void deityTraits(String all, Look l) {
         if (all == null) return;
         String t = all.toLowerCase(java.util.Locale.ROOT);
-        boolean durga = Txt.has(t, "दुर्गा", "durga", "दुर्गे", "अम्बा", "amba");
-        boolean kali = Txt.has(t, "काली", "kali", "महाकाली");
+        boolean durga = Txt.has(t, "दुर्गा", "durga", "दुर्गे") || Txt.hasWord(t, "अम्बा", "amba");
+        // (v47.6: "काली" is also "black" — as a whole word only, and only in a name or a phrase naming the goddess)
+        boolean kali = Txt.hasWord(t, "काली", "kali", "महाकाली");
         boolean shiva = Txt.has(t, "शिव", "shiv", "shiva", "महादेव", "mahadev", "भोले", "bholenath", "neelkanth");
         boolean ganesha = Txt.has(t, "गणेश", "ganesh", "गणपति", "ganpati", "विघ्नहर्ता", "vinayak");
         boolean hanuman = Txt.has(t, "हनुमान", "hanuman", "बजरंगबली", "bajrang");
@@ -839,7 +857,8 @@ public final class LookDesigner {
         boolean brahma = Txt.has(t, "ब्रह्मा", "brahma");
         boolean kartikeya = Txt.has(t, "कार्तिकेय", "kartikeya", "मुरुगन", "murugan", "subrahmanya");
         boolean krishna = Txt.has(t, "कृष्ण", "krishna", "गोविंद", "govind", "कन्हैया", "kanhaiya");
-        boolean rakshasa = Txt.has(t, "राक्षस", "rakshas", "दानव", "danav", "दैत्य", "daitya", "असुर", "asur", "demon", "devil", "ogre");
+        // (v47.6: whole words — "असुरक्षित" is "insecure", not a demon)
+        boolean rakshasa = Txt.has(t, "राक्षस", "rakshas", "दानव", "danav", "दैत्य", "daitya", "demon", "devil", "ogre") || Txt.hasWord(t, "असुर", "asur", "असुरों", "asura");
         if (durga)    { if (l.arms  < 8)  l.arms  = 8;  if (l.mount < 0) l.mount = Look.SP_LION;     l.hero = true; }
         if (kali)     { if (l.arms  < 10) l.arms  = 10; if (l.mount < 0) l.mount = Look.SP_TIGER;    l.hero = true; }
         if (ravana)   { if (l.heads < 10) l.heads = 10;                                              l.hero = false; }

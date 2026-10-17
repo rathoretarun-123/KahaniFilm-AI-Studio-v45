@@ -1,0 +1,45 @@
+# आखिरी चिट्ठी — the filmmaker's uploads (stills/), by role, for CastFromUploads (tools/jvm). The names are the
+# script's own (tools/testdata/aakhiri_chitthi/aakhiri_chitthi_numbered.txt); nothing here is invented.
+char|रघुवीर जी|stills/grandpa_standing_front.jpg
+view|रघुवीर जी|90|stills/grandpa_profile.jpg
+view|रघुवीर जी|180|stills/grandpa_back_view.jpg
+view|रघुवीर जी|-45|stills/grandpa_three_quarter_with_cane.jpg
+figure|रघुवीर जी|stills/grandpa_profile_alt.jpg
+figure|रघुवीर जी|stills/grandpa_with_cane.jpg
+figsheet|रघुवीर जी|stills/grandpa_at_bench_sheet.jpg
+figsheet|रघुवीर जी|stills/grandpa_upload_06.jpg
+figsheet|रघुवीर जी|stills/grandpa_pose_sheet_1.jpg
+figsheet|रघुवीर जी|stills/grandpa_pose_sheet_2.jpg
+figsheet|रघुवीर जी|stills/grandpa_pose_sheet_3.jpg
+figsheet|रघुवीर जी|stills/grandpa_pose_sheet_4.jpg
+figsheet|रघुवीर जी|stills/grandpa_pose_sheet_5.jpg
+figsheet|रघुवीर जी|stills/grandpa_action_sheet_1.jpg
+figsheet|रघुवीर जी|stills/grandpa_expression_sheet.jpg
+char|परी|stills/pari_standing_front.jpg
+view|परी|90|stills/pari_profile_right.jpg
+view|परी|180|stills/pari_back_view.jpg
+view|परी|-45|stills/pari_three_quarter.jpg
+figure|परी|stills/pari_profile_left.jpg
+figure|परी|stills/pari_front_single.jpg
+figsheet|परी|stills/pari_upload_14.jpg
+figsheet|परी|stills/pari_upload_16.jpg
+figsheet|परी|stills/pari_upload_17.jpg
+figsheet|परी|stills/pari_upload_18.jpg
+figsheet|परी|stills/pari_upload_19.jpg
+prop|दादाजी की लकड़ी की छड़ी|stills/grandpa_walking_stick.jpg
+prop|दादाजी का मोटे फ्रेम वाला चश्मा|stills/grandpa_glasses_single.jpg
+prop|परी का गुलाबी स्कूल बैग|stills/pari_backpack_single.jpg
+prop|परी के लाल रिबन|stills/old_red_cloth.jpg
+prop|परी की हवाई चप्पल|stills/blue_sandal_single.jpg
+prop|पुराना लाल डाक-बक्सा|stills/rusty_postbox_single.jpg
+prop|डाक-बक्से का छोटा ताला|stills/rusty_padlock_single.jpg
+prop|पीली पड़ी मुड़ी-तुड़ी चिट्ठी|stills/old_letter_single.jpg
+prop|नीम का पेड़|stills/neem_tree_single.jpg
+prop|लकड़ी की टूटी बेंच|stills/broken_bench.jpg
+prop|बेंच के नीचे लगी ईंट|stills/broken_brick.jpg
+prop|बंद पड़ा चाय का ठेला|stills/tea_cart_single.jpg
+prop|जमीन पर बिखरे सूखे पत्ते और धूल|stills/neem_ground_leaves.jpg
+# नीम के पेड़ के नीचे का कोना (all three scenes): the neem with the yellow post office behind it, ten steps away
+place|1|stills/neem_upload_22.jpg
+place|2|stills/neem_upload_22.jpg
+place|3|stills/neem_upload_22.jpg

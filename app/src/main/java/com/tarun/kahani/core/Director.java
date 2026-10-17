@@ -1448,6 +1448,19 @@ public final class Director {
     private static boolean bool(Boolean b) { return b != null && b; }
 
     /** v47: the furniture seat (bench, chair, sofa, log) of the nearest other character seated on one at t, or -1. */
+    /** v47.6: the nearest one seated on furniture (a bench, a sofa, a log) at t, or null. */
+    private Film.Actor seatedNeighbourActor(Film.Actor a, float t) {
+        Film.Actor best = null; float bd = 1e9f;
+        for (Film.Actor o : seg.actors) {
+            if (o == a) continue;
+            Film.Key k = o.stateAt(t);
+            if (!k.visible || k.body != Pose.SIT || k.seat < Film.SEAT_STOOL || k.seat == Film.SEAT_WHEELCHAIR || k.anchor != Film.A_GROUND) continue;
+            float d = Math.abs(xAt(o, t) - xAt(a, t));
+            if (d < bd) { bd = d; best = o; }
+        }
+        return best;
+    }
+
     private int seatedNeighbour(Film.Actor a, float t) {
         int best = -1; float bd = 1e9f;
         for (Film.Actor o : seg.actors) {
@@ -3540,6 +3553,8 @@ public final class Director {
     static final String[] SET_WORDS = {"खोख", "दुकान", "टपरी", "पेड़", "पेड", "बेंच", "स्टूल", "कुर्सी", "मेज़", "मेज", "अंगीठ", "चूल्ह", "बर्तन", "केतली", "मर्तबान", "दीवार", "दरवाज़", "दरवाज", "खिड़क", "बाल्टी", "बांस", "बाँस",
             "छात", "छतरी", "छड़ी", "छडी", "लाठी", "बैग", "थैल", "झोल", "बस्त", "ठेल", "डाक-बक्स", "डाकबक्स", "लेटरबॉक्स", "ईंट", "shop", "stall", "hut", "cart", "postbox", "mailbox", "brick", "tree", "bench", "stool", "chair", "table", "stove", "kettle", "jar", "wall", "door", "window", "bucket", "counter", "umbrella", "stick", "cane", "bag", "backpack", "satchel"};
     static final String[] CONTAINER_WORDS = {"डिब्ब", "बक्स", "संदूक", "box", "trunk", "chest", "carton"};
+    /** v47.6: words that only count or heap a thing (their stems): "जोड़ी", "ढेर", "गुच्छा", "टुकड़ा", "pair", "pile". */
+    static final String[] QUANTITY_HEADS = {"जोड", "जोड़", "ढेर", "गुच्छ", "गड्ड", "टुकड", "टुकड़", "pair", "pile", "bunch", "heap", "piece"};
     static final String[] THING_STOP = {"का", "की", "के", "को", "से", "में", "पर", "वाला", "वाली", "वाले", "हुआ", "हुई", "हुए", "एक", "सा", "सी", "ये", "यह", "वो", "वह", "और", "the", "a", "an", "of", "his", "her", "its", "with", "old", "new"};
     private static final int TK_NONE = -1, TK_DOWN = 4, TK_WEAR = 5;
     private static final boolean THING_DEBUG = System.getProperty("kahani.thingDebug") != null;
@@ -3627,24 +3642,37 @@ public final class Director {
             String key = Txt.norm(sh.keys[0]).trim();
             if (key.isEmpty()) continue;
             List<String> stems = new ArrayList<String>();
-            for (String w : key.split("[\\s,]+")) {
+            // v47.6: a word followed by का/की/के/पर/में/से only says whose or where ("दादाजी की छड़ी", "जमीन पर बिखरे पत्ते",
+            // "बेंच के नीचे लगी ईंट"): it never names the thing on its own ("छड़ी जमीन पर टिकी है" is not the leaves)
+            Set<String> mods = new java.util.HashSet<String>();
+            String[] kw = key.split("[\\s,]+");
+            for (int wi = 0; wi < kw.length; wi++) {
+                String w = kw[wi];
                 if (w.isEmpty() || Txt.has(" " + w + " ", spaced(THING_STOP))) continue;
                 if (story != null && ScriptParser.resolve(story, w) != null) continue;        // "आरव की नोटबुक": the name is the owner's, not the thing's
                 String st = stemHi(w);
-                if (st.length() >= 2) stems.add(st);
+                if (st.length() < 2) continue;
+                stems.add(st);
+                if (wi + 1 < kw.length && kw[wi + 1].matches("का|की|के|पर|में|से|ka|ki|ke")) mods.add(st);
             }
             if (stems.isEmpty()) continue;
             String head = stems.get(stems.size() - 1);
+            mods.remove(head);
+            // ("लाल जूतों की जोड़ी", "पत्तों का ढेर", "a pair of shoes": a pair, a pile, a bunch only counts the thing — the
+            // shoes are what is named, the pair is not something else)
+            if (Txt.has(" " + head + " ", spaced(QUANTITY_HEADS))) mods.clear();
             List<String> names = new ArrayList<String>(stems);
-            for (String st : stems) for (String[] syn : THING_SYNONYMS) if (java.util.Arrays.asList(syn).contains(st)) for (String o : syn) if (!names.contains(o)) names.add(o);
+            for (String st : stems) for (String[] syn : THING_SYNONYMS) if (java.util.Arrays.asList(syn).contains(st)) for (String o : syn) if (!names.contains(o)) { names.add(o); if (mods.contains(st)) mods.add(o); }
             int score = 0, at = -1; boolean headFound = false; int longest = 0;
             Set<Integer> places = new java.util.HashSet<Integer>();
             for (String st : names) {
                 int i = startOf(n, st);
                 if (i < 0) continue;
-                score++; places.add(i);
-                if (at < 0 || i < at) at = i;
+                places.add(i);
                 if (st.equals(head) || (stems.indexOf(st) < 0 && isSynonymOf(head, st))) headFound = true;
+                if (mods.contains(st)) continue;
+                score++;
+                if (at < 0 || i < at) at = i;
                 longest = Math.max(longest, st.length());
             }
             if (at < 0) continue;
@@ -3705,6 +3733,9 @@ public final class Director {
             if (kind == Film.THING_PLACE && heldNow(sh.pic, t) != null) continue;          // in someone's hand: it lies nowhere
             if (THING_DEBUG) System.out.println("THING " + key + " kind=" + kind + " who=" + (who == null ? "-" : who.c.shown()) + " win=[" + win + "] <- " + s);
             if (Txt.has(Txt.norm(key), SET_WORDS) || Bible.intangible(key)) continue;
+            // v47.6: dust, soil, sand, leaves scattered over the ground: set dressing, never in a hand ("धूल लगा हाथ आगे
+            // बढ़ा कर" is her dusty hand, not the ground's leaves held out)
+            if (Rigidity.groundCover(key) && kind != Film.THING_PLACE) continue;
             // v47.4: a book-like thing in the hands opens and closes as the words say (the user's reference: the book is
             // held closed at the chest in both hands, opened, read, closed, set down on the desk)
             if (Rigidity.bookLike(key)) {
@@ -3743,7 +3774,10 @@ public final class Director {
             // it was in the hand all along — from the holder's first moment in this part, never popping into the hand
             // at the sentence (the user: "the notebook is appearing from nowhere")
             float heldFrom = t;
-            if (kind == Film.THING_HOLD && !pickedUp) {
+            // v47.6: from another's hand ("परी के हाथ से चिट्ठी लेते हैं"): theirs until now, his from now — never two letters
+            boolean handedOver = false;
+            for (Film.Fx q : seg.fx) if (q.type == Film.FX_HELD && q.pic == sh.pic && q.a != who && q.kind != Film.THING_PLACE && q.t0 <= t && q.t1 >= t - 0.05f) handedOver = true;
+            if (kind == Film.THING_HOLD && !pickedUp && !handedOver) {
                 for (float tt = seg.t0; tt < t; tt += 0.25f) if (who.stateAt(tt).visible) { heldFrom = tt; break; }
                 for (Film.Fx q : seg.fx) if (q.type == Film.FX_HELD && q.a == who && q.kind != Film.THING_PLACE && q.pic != sh.pic && q.t1 > heldFrom && q.t0 < t) heldFrom = Math.max(heldFrom, q.t1);   // not while another thing was in that hand
             }
@@ -7326,12 +7360,30 @@ public final class Director {
             // v39: "पास आकर बैठती है" — they come first (the walk is staged after this rule) and sit there: never at the scene's start
             boolean comeThenSit = Txt.has(s, "आकर बैठ", "आ कर बैठ", "जाकर बैठ", "जा कर बैठ", "and sits", "and sat")
                     || COME_THEN_SIT.matcher(s).find();     // v44: "दरबार में आकर सिंहासन पर बैठती है"
+            // (the bench may be named too: "टूटी बेंच पर रघुवीर जी के बगल में बैठ जाती है")
+            boolean besideWords = (seat == -2 || seat >= Film.SEAT_STOOL) && Txt.has(s, "पास", "बगल", "साथ", "beside", "next to", "by his side", "by her side");
             for (Film.Actor a : who) {
                 // v41: "from the start" only for one with nothing staged yet in this part (not under a run already made)
                 float ta = comeThenSit ? t : tsFor(a, t);
                 // v41: one still walking in or across ("ट्रे लेकर आती है और … बैठ जाती है") sits once there, never on the way
                 float arrive = arrivalAfter(a, ta);
                 if (arrive > ta) ta = arrive + 0.1f;
+                // v47.6: "टूटी बेंच पर रघुवीर जी के बगल में बैठ जाती है": she goes to his side first and sits on his bench — not
+                // on a second bench where she stood (the user's reference: the two of them side by side on the one bench)
+                if (besideWords && a.look != null && a.look.isHumanoid() && a.stateAt(ta).body != Pose.SIT) {
+                    Film.Actor nb = seatedNeighbourActor(a, ta);
+                    if (nb != null && (seat == -2 || nb.stateAt(ta).seat == seat)) {
+                        // side by side on one plank: about a third of the taller one's height apart (the bench is
+                        // drawn as one under both from up to 0.68 of it — see Renderer.seatGroup)
+                        float hmax = Math.max(heightOf(nb), heightOf(a)), gap = 0.32f * hmax;
+                        float dist = Math.abs(xAt(nb, ta) - xAt(a, ta));
+                        if (dist > 0.55f * hmax) {
+                            moveNear(a, nb, ta, Math.max(0.9f, (dist - gap) / 150f), gap);
+                            float arr = arrivalAfter(a, ta);
+                            if (arr > ta) ta = arr + 0.15f;
+                        }
+                    }
+                }
                 // v43: one lying in bed who "उठ बैठता है" sits up in the bed (not on a chair from nowhere)
                 Film.Key was0 = a.stateAt(ta);
                 int lyingOn = was0.body == Pose.LIE ? Renderer.seatOf(a, ta) : -1;

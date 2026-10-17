@@ -3059,6 +3059,23 @@ public final class Renderer {
     /** v40: the part of a shared sofa the seat being drawn has (see sofaSpan), or null for a sofa of its own. */
     private float[] seatSpan;
 
+    /** v47.6: the user's picture of the bench the script lists (its name's head noun is the bench), or null. */
+    private Art.Backdrop benchPic;
+    private Art benchArt;
+    private Art.Backdrop benchPicture() {
+        if (art == benchArt) return benchPic;
+        benchArt = art; benchPic = null;
+        if (art == null) return null;
+        for (Art.Shot sh : art.shots) {
+            if (!sh.object || sh.pic == null || sh.pic.img == null || sh.pic.w <= 0 || sh.pic.h <= 0 || sh.keys == null || sh.keys.length == 0) continue;
+            String[] ws = Txt.norm(sh.keys[0]).trim().split("[\\s,]+");
+            String head = ws[ws.length - 1];
+            // the bench itself — "बेंच के नीचे लगी ईंट" is the brick under it
+            if (head.startsWith(Txt.norm("बेंच")) || head.startsWith(Txt.norm("बेन्च")) || head.equals("bench") || head.equals("benches")) { benchPic = sh.pic; break; }
+        }
+        return benchPic;
+    }
+
     /**
      * v40: one sofa for the people seated side by side on it: this seat's part of it, from half way to the
      * neighbour on the left to half way to the one on the right (its own end, with an armrest, where there is none).
@@ -3096,7 +3113,9 @@ public final class Renderer {
             if (d > 0 && (Float.isNaN(right) || d < right)) right = d;
         }
         if (Float.isNaN(left) && Float.isNaN(right)) return null;
-        return new float[]{Float.isNaN(left) ? -sw / 2 : left / 2 - 1, Float.isNaN(right) ? sw / 2 : right / 2 + 1, Float.isNaN(left) ? 1 : 0, Float.isNaN(right) ? 1 : 0, tall};
+        // (v47.6: and the whole group's ends, for a bench drawn once from the user's picture)
+        return new float[]{Float.isNaN(left) ? -sw / 2 : left / 2 - 1, Float.isNaN(right) ? sw / 2 : right / 2 + 1, Float.isNaN(left) ? 1 : 0, Float.isNaN(right) ? 1 : 0, tall,
+                lo - self.x, hi - self.x};
     }
 
     private void drawSeat(Gfx g, int seat, float h, boolean front) { drawSeat(g, seat, h, front, 1); }
@@ -3235,7 +3254,24 @@ public final class Renderer {
                 }
                 break;
             }
-            case Film.SEAT_STOOL:
+            case Film.SEAT_STOOL: {
+                // v47.6: the script lists the bench and the user gave its picture ("लकड़ी की टूटी बेंच"): that bench, one
+                // for everyone seated on it (drawn once, by the leftmost sitter, under the whole group), never a drawn one
+                // beside it — the user's reference has the old man and the girl side by side on the one broken bench
+                Art.Backdrop bp = benchPicture();
+                if (bp != null) {
+                    if (!front && (seatSpan == null || seatSpan[2] > 0)) {
+                        float gl = seatSpan != null && seatSpan.length > 6 ? seatSpan[5] : 0, gr = seatSpan != null && seatSpan.length > 6 ? seatSpan[6] : 0;
+                        float bh = h * 0.29f, bw = bh * bp.w / (float) bp.h;
+                        float need = (gr - gl) + h * 0.5f;
+                        if (bw < need) { bw = Math.min(need, bw * 1.35f); }          // a little wider, never pulled out of shape
+                        float cx = (gl + gr) / 2;
+                        g.color(0x30000000); g.oval(cx, h * 0.006f, bw * 0.5f, h * 0.022f);
+                        g.image(bp.img, cx - bw / 2, -bh, bw, bh);
+                    }
+                    break;
+                }
+            }
                 // v47.2: a bench or a stool a quarter of the sitter's height — where a front picture's hips come to
                 // when its rig folds the thighs (0.8 of the hip-to-knee run) with the feet on the ground. At 0.30 the
                 // plank crossed the belly of a seated picture, and with its front edge drawn right across the lap the

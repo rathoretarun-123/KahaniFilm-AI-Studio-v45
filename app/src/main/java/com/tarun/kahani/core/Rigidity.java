@@ -88,6 +88,52 @@ public final class Rigidity {
         return Txt.hasStart(t, OPENS_WORDS);
     }
 
+    /**
+     * v47.6: the material classes the technical director works by (the user: rigid, flexible — cloth, paper, bags —,
+     * liquid, granular — soil, dust —, soft, unknown). These are rules the director and renderer follow, not a physics
+     * simulation: a RIGID thing keeps its shape; a FLEXIBLE one (cloth, paper, a bag, a ribbon) bends and hangs with the
+     * hand and the wind; a LIQUID is poured or held in its vessel, never held on its own; a GRANULAR mass (dust, soil,
+     * sand, scattered dry leaves) lies on the ground and lifts only as a few motes in the wind — nobody holds it, gives
+     * it or takes it; SOFT is hair, fur, leaves on a branch, smoke, cloud and flame.
+     */
+    public static final int FLEXIBLE = 3, LIQUID = 4, GRANULAR = 5;
+    public static final String[] FLEXIBLE_WORDS = {"कपड़ा", "कपड़े", "कपडा", "कपडे", "रिबन", "फीता", "थैला", "थैली", "झोला", "बैग", "बस्ता", "बोरी", "कागज", "कागज़", "चिट्ठी", "ख़त", "खत", "पत्र",
+            "लिफ़ाफ़ा", "लिफाफा", "अख़बार", "अखबार", "रस्सी", "डोरी", "धागा", "चादर", "दुपट्टा", "साड़ी", "रूमाल", "तौलिया", "चप्पल", "पतंग", "झंडा",
+            "cloth", "fabric", "ribbon", "bag", "backpack", "satchel", "sack", "paper", "letter", "envelope", "newspaper", "rope", "string", "thread", "sheet", "scarf", "towel", "slipper", "flip-flop", "kite", "flag"};
+    public static final String[] LIQUID_WORDS = {"पानी", "दूध", "तेल", "शरबत", "रस", "स्याही", "आँसू", "आंसू", "पसीना", "बारिश", "water", "milk", "oil", "juice", "ink", "tears", "sweat", "rain"};
+    public static final String[] GRANULAR_WORDS = {"धूल", "मिट्टी", "रेत", "बालू", "कंकड़", "कंकड", "राख", "अनाज", "चावल", "आटा", "गेहूं", "गेहूँ", "dust", "soil", "dirt", "sand", "gravel", "ash", "grain", "rice", "flour"};
+    /** Words that say a thing is spread over the ground as a mass ("जमीन पर बिखरे सूखे पत्ते", "leaves strewn on the ground"). */
+    public static final String[] SCATTERED_WORDS = {"बिखरे", "बिखरी", "बिखरा", "फैले", "फैली", "पड़े सूखे", "scattered", "strewn", "littered", "spread over"};
+
+    /** The material class of a listed thing, by its head noun (the last word: "दादाजी की लकड़ी की छड़ी" is a छड़ी). */
+    public static int material(String name) {
+        if (name == null || name.trim().isEmpty()) return UNKNOWN;
+        String t = " " + name.toLowerCase(java.util.Locale.ROOT).replace('_', ' ') + " ";
+        if (groundCover(name)) return GRANULAR;
+        String[] ws = name.trim().split("[\\s,]+");
+        String head = " " + ws[ws.length - 1].toLowerCase(java.util.Locale.ROOT) + " ";
+        if (Txt.hasStart(head, GRANULAR_WORDS)) return GRANULAR;
+        if (Txt.hasStart(head, LIQUID_WORDS)) return LIQUID;
+        if (Txt.hasStart(head, FLEXIBLE_WORDS)) return FLEXIBLE;
+        int k = kind(head);
+        if (k != UNKNOWN) return k;
+        if (Txt.hasStart(t, FLEXIBLE_WORDS) && !Txt.hasStart(t, RIGID_WORDS)) return FLEXIBLE;
+        return kind(t);
+    }
+
+    /** A mass that lies over the ground (scattered leaves and dust, soil, sand): set dressing, never in a hand. */
+    public static boolean groundCover(String name) {
+        if (name == null) return false;
+        String t = " " + name.toLowerCase(java.util.Locale.ROOT) + " ";
+        if (Txt.has(t, SCATTERED_WORDS)) return true;
+        String[] ws = name.trim().split("[\\s,]+");
+        return ws.length > 0 && Txt.hasStart(" " + ws[ws.length - 1].toLowerCase(java.util.Locale.ROOT) + " ", GRANULAR_WORDS);
+    }
+
+    public static String materialName(int m) {
+        switch (m) { case RIGID: return "rigid"; case SOFT: return "soft"; case FLEXIBLE: return "flexible"; case LIQUID: return "liquid"; case GRANULAR: return "granular"; default: return "unknown"; }
+    }
+
     public static boolean isRigid(String text) { return kind(text) == RIGID; }
     public static boolean isSoft(String text) { return kind(text) == SOFT; }
 
@@ -119,6 +165,13 @@ public final class Rigidity {
         // v47.4: what opens and closes — rigid parts, but not one rigid piece while it opens (the book's leaves, the umbrella's canopy, the laptop's lid)
         List<String> opening = found(all.toString(), OPENS_WORDS);
         if (!opening.isEmpty()) sb.append(" Opens and closes (hinged or folding — not rigid while it moves): ").append(join(opening)).append('.');
+        // v47.6: each thing the script lists, by its material class
+        if (!story.things.isEmpty()) {
+            sb.append(" Listed things by material:");
+            int n = 0;
+            for (Story.PlaceDef th : story.things) sb.append(n++ == 0 ? " " : "; ").append(th.name).append(" — ").append(materialName(material(th.name)));
+            sb.append('.');
+        }
         return sb.toString();
     }
 
