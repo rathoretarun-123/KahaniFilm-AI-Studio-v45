@@ -51,6 +51,14 @@ public final class FrameAudit {
         m.put(frame(t), cycle ? "~cycle" : key);
     }
 
+    /** v47.7: this frame of it is inside a dissolve between two parts (it fades out of one and into the other): a transition, like a cut. */
+    public synchronized void transition(Film.Actor a, float t) {
+        java.util.Set<Integer> m = transitions.get(a.c.id);
+        if (m == null) { m = new java.util.HashSet<Integer>(); transitions.put(a.c.id, m); }
+        m.add(frame(t));
+    }
+    private final Map<String, java.util.Set<Integer>> transitions = new HashMap<String, java.util.Set<Integer>>();
+
     /** A face (eyes and mouth) drawn for it in this frame. */
     public synchronized void face(Film.Actor a, float t) {
         TreeMap<Integer, Integer> m = faces.get(a.c.id);
@@ -86,19 +94,20 @@ public final class FrameAudit {
         for (Map.Entry<String, TreeMap<Integer, float[]>> e : where.entrySet()) {
             String who = names.get(e.getKey());
             TreeMap<Integer, float[]> m = e.getValue();
+            java.util.Set<Integer> across = transitions.containsKey(e.getKey()) ? transitions.get(e.getKey()) : new java.util.HashSet<Integer>();
             all.addAll(m.keySet());
             r.characterFrames += m.size();
             int lastJolt = -100, lastJump = -100, lastSize = -100;
             for (Map.Entry<Integer, float[]> fe : m.entrySet()) {
                 int f = fe.getKey();
                 float[] b = fe.getValue(), a = m.get(f - 1), c = m.get(f + 1);
-                if (c == null || !sameShot(film, f, f + 1)) continue;
+                if (c == null || !sameShot(film, f, f + 1) || across.contains(f) || across.contains(f + 1)) continue;
                 r.pairs++;
                 float h = Math.max(1, b[2]);
                 float step = (float) Math.hypot(c[0] - b[0], c[1] - b[1]);
                 if (step > JUMP * h && f - lastJump > fps) { r.jumps++; lastJump = f; r.findings.add(String.format(Locale.US, "%s jumps %.0f px (%.0f%% of the height) between frames %d and %d (%s)", who, step, step * 100 / h, f, f + 1, stamp(f))); }
                 if (Math.abs(c[2] - b[2]) > SIZE * h && f - lastSize > fps) { r.sizePops++; lastSize = f; r.findings.add(String.format(Locale.US, "%s changes size by %.0f%% between frames %d and %d (%s)", who, Math.abs(c[2] - b[2]) * 100 / h, f, f + 1, stamp(f))); }
-                if (a != null && sameShot(film, f - 1, f)) {
+                if (a != null && sameShot(film, f - 1, f) && !across.contains(f - 1)) {
                     float ax = Math.abs(c[0] - 2 * b[0] + a[0]) / h, ay = Math.abs(c[1] - 2 * b[1] + a[1]) / h;
                     if (Math.max(ax, ay) > JOLT && step <= JUMP * h && f - lastJolt > fps / 2) {
                         r.jolts++; lastJolt = f;

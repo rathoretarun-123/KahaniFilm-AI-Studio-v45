@@ -1471,7 +1471,10 @@ public final class Renderer {
             Film.Seg other = s == dissolveOld ? dissolveNew : dissolveOld;
             boolean shared = false;
             for (Film.Actor o : other.actors) if (o.c == a.c && o.stateAt(t).visible) { shared = true; break; }
-            if (shared) k = s == dissolveOld ? Math.max(0, 1 - 2 * dissolveU) : (dissolveU > 0.001f ? Math.max(0, 2 * dissolveU - 1) / dissolveU : 0);
+            if (shared) {
+                k = s == dissolveOld ? Math.max(0, 1 - 2 * dissolveU) : (dissolveU > 0.001f ? Math.max(0, 2 * dissolveU - 1) / dissolveU : 0);
+                if (audit != null) audit.transition(a, t);
+            }
         }
         if (k <= 0.001f) return;
         if (k >= 0.999f) { drawActorNow(g, s, a, t); return; }
