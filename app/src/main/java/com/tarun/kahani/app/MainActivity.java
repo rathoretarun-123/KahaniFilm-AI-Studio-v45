@@ -219,13 +219,26 @@ public class MainActivity extends Activity {
     public void onBackPressed() {
         switch (screen) {
             case S_STORY: saveScript(); showHome(); break;
-            case S_PROGRESS: showHome(); break;                // the film goes on in the service; the home screen brings you back
-            case S_STUDIO: case S_PLAYER: case S_QC: showStory(); break;
+            // v47.8 (the user: "pressing back on the film making screen should first take me to the studio page, then
+            // a new press on back to the home page"): the film goes on in the service; the home screen brings you back
+            case S_PROGRESS: case S_QC: backToHome = true; showStudioFromMaking(); break;
+            case S_STUDIO: if (backToHome) { backToHome = false; showHome(); } else showStory(); break;
+            case S_PLAYER: showStory(); break;
             case S_FACE: case S_LINES: showStudio(); break;
             case S_LIBRARY: case S_SETTINGS: if (project != null) showStory(); else showHome(); break;
             case S_FILMS: showHome(); break;
             default: super.onBackPressed();
         }
+    }
+
+    /** v47.8: the studio was opened with back from the film being made — the next back goes home. */
+    private boolean backToHome;
+
+    private void showStudioFromMaking() {
+        FilmJob j = FilmJob.current;
+        if (project == null && j != null) project = j.project;
+        if (project == null) { backToHome = false; showHome(); return; }
+        showStudio();
     }
 
     /** Stops a recording that is still running (leaving the screen or the app) and throws it away. */
@@ -414,6 +427,7 @@ public class MainActivity extends Activity {
      * line at the bottom.
      */
     private void showHome() {
+        backToHome = false;
         project = null;
         LinearLayout body = page(S_HOME, "🎬 KahaniFilm", false);
 
@@ -1282,6 +1296,7 @@ public class MainActivity extends Activity {
     private void saveEdits(Edits e) { project.write("edits.json", e.toJson()); }
 
     private void showStory() {
+        backToHome = false;
         if (project == null) { showHome(); return; }
         LinearLayout body = page(S_STORY, project.name(), true);
 
@@ -4435,9 +4450,24 @@ public class MainActivity extends Activity {
         missingCard(body);
         try { picturesCard(body, loadStory()); } catch (Throwable ignored) { /* v34: the check itself matters more */ }
         LinearLayout c = Ui.card(this);
+        final TextView qcLeft = Ui.text(this, "", 15, Ui.BLUE, true);
+        c.addView(qcLeft);
         c.addView(Ui.button(this, "✔  Approve and make the film", Ui.GREEN, new View.OnClickListener() {
             public void onClick(View v) { j.approve(); showProgress(); }
         }));
+        c.addView(Ui.small(this, "⏸ Wait — I'm still looking (5 more minutes)", Ui.SUB, new View.OnClickListener() {
+            public void onClick(View v) { j.holdOn(300); }
+        }));
+        // v47.8: with no answer the shots are approved as planned after 30 seconds and the film goes on by itself
+        ui.post(new Runnable() {
+            public void run() {
+                if (screen != S_QC) return;
+                if (!j.qcWaiting) { showProgress(); return; }
+                int left = j.secondsLeft();
+                qcLeft.setText(left >= 0 && !j.paused ? "⏱ Approved as planned and made by itself in " + left + " s if you don't answer" : "");
+                ui.postDelayed(this, 500);
+            }
+        });
         c.addView(Ui.button(this, "■  Stop (change pictures or the story first)", Ui.RED, new View.OnClickListener() {
             public void onClick(View v) { j.cancel(); j.approve(); showStory(); }
         }));
@@ -4625,10 +4655,16 @@ public class MainActivity extends Activity {
         body.addView(c);
         // v34: the film waits for the user's pictures; the user may continue with the optional AI illustration path.
         final boolean shownWaiting = cur != null && cur.picturesWaiting;
+        final TextView countdown = Ui.text(this, "", 15, Ui.BLUE, true);
         if (shownWaiting) {
             LinearLayout ask = Ui.card(this);
             ask.addView(Ui.text(this, "📷 The director needs your pictures of: " + cur.picturesNeeded, 16, Ui.PRIMARY_DARK, true));
-            ask.addView(Ui.text(this, "Add them with the buttons below (up to 100 each; a sheet of several angles is split). The film continues when you finish adding pictures, or you can continue with free AI illustrations.", 14, Ui.SUB, false));
+            ask.addView(Ui.text(this, "Add them with the buttons below (up to 100 each; a sheet of several angles is split). The film goes on when every picture is there — or tap Continue. "
+                    + "If you don't answer, it goes on by itself after " + FilmJob.AUTO_CONTINUE_SECONDS + " seconds and the studio draws what has no picture.", 14, Ui.SUB, false));
+            ask.addView(Ui.button(this, "▶  Continue now — the studio draws what has no picture", Ui.GREEN, new View.OnClickListener() {
+                public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(3); }
+            }));
+            ask.addView(countdown);
             // v47.8 (the user: "the film making window is asking for more pictures but no place to upload them"): a button
             // for every picture the film waits on, here on its card — the list below leaves out things it counts optional
             try {
@@ -4638,13 +4674,10 @@ public class MainActivity extends Activity {
                     final String ft = uploadTarget(t, wst);
                     if (ft == null) continue;
                     ask.addView(Ui.small(this, "📷 Add a picture of " + t[1], Ui.PRIMARY, new View.OnClickListener() {
-                        public void onClick(View v) { anglesFor(ft, t[1]); }
+                        public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.holdOn(180); anglesFor(ft, t[1]); }      // choosing takes a while
                     }));
                 }
             } catch (Throwable ignored) { /* the buttons below still offer every picture */ }
-            ask.addView(Ui.small(this, "▶ Continue — the studio draws what has no picture", Ui.GREEN, new View.OnClickListener() {
-                public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(3); }
-            }));
             ask.addView(Ui.small(this, "Continue with free AI illustrations", Ui.SUB, new View.OnClickListener() {
                 public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(2); }
             }));
@@ -4661,6 +4694,8 @@ public class MainActivity extends Activity {
                 if (j.picturesWaiting != shownWaiting) { showProgress(); return; }      // v34: the pictures card comes and goes
                 if (j.qcWaiting) { showQc(j); return; }
                 stage.setText(j.paused ? "⏸ Paused — tap Resume to carry on" : j.stage);
+                int left = j.secondsLeft();
+                countdown.setText(left >= 0 && !j.paused ? "⏱ Going on by itself in " + left + " s if you don't answer" : "");
                 eta.setText(j.paused ? "" : j.eta());
                 bar.setProgress((int) (j.progress * 1000));
                 if (j.preview != null) preview.setImageBitmap(j.preview);
@@ -4679,8 +4714,8 @@ public class MainActivity extends Activity {
                     eta.setText("");
                     if (j.failed) warn.setText(j.error);
                     pause.setVisibility(View.GONE);
-                    stop.setText("← Back");
-                    stop.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { showStory(); } });
+                    stop.setText("← Back to the studio");
+                    stop.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { backToHome = true; showStudioFromMaking(); } });
                     return;
                 }
                 ui.postDelayed(this, 500);

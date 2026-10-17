@@ -28,11 +28,53 @@ public final class ProductionPlan {
         if (s.isEmpty()) s = "The production chair marked this plan not ready. Review the saved production report.";
         return s.length() > 1800 ? s.substring(0, 1800) + "…" : s;
     }
+    /**
+     * v47.8 (the user: "no independent reader should rewrite my script"): the report as plain notes for the user to
+     * read — its questions, asset requests, disagreements and the director's decision, one point a line, no JSON.
+     * Empty for a report that is not one.
+     */
+    public static String notesOf(String report) {
+        Object parsed = Json.parseLoose(report);
+        if (!(parsed instanceof Map)) return "";
+        Map<?, ?> root = (Map<?, ?>) parsed;
+        StringBuilder b = new StringBuilder();
+        String[][] parts = {{"human_questions", "Questions"}, {"technical_blockers", "Technical notes"}, {"asset_requests", "Pictures and things asked for"},
+                {"role_disagreements", "Where the roles disagreed"}, {"director_final_decision", "The director's decision"}};
+        for (String[] p : parts) {
+            Object v = root.get(p[0]);
+            List<String> lines = new ArrayList<String>();
+            plain(v, lines);
+            if (lines.isEmpty()) continue;
+            b.append(p[1]).append(":\n");
+            for (String l : lines) b.append("• ").append(l).append('\n');
+            b.append('\n');
+        }
+        return b.toString().trim();
+    }
+
+    /** One line for each item: a text as it is, a map as its values joined ("name — what — status"). */
+    private static void plain(Object v, List<String> out) {
+        if (v == null) return;
+        if (v instanceof List) { for (Object o : (List<?>) v) plain(o, out); return; }
+        if (v instanceof Map) {
+            StringBuilder l = new StringBuilder();
+            for (Object o : ((Map<?, ?>) v).values()) {
+                String t = o instanceof String ? ((String) o).trim() : o instanceof List || o instanceof Map ? "" : String.valueOf(o);
+                if (o instanceof List) { List<String> in = new ArrayList<String>(); plain(o, in); StringBuilder j = new StringBuilder(); for (String x : in) j.append(j.length() > 0 ? ", " : "").append(x); t = j.toString(); }
+                if (t.length() > 0) l.append(l.length() > 0 ? " — " : "").append(t);
+            }
+            if (l.length() > 0) out.add(l.toString());
+            return;
+        }
+        String t = String.valueOf(v).trim();
+        if (t.length() > 0 && !"[]".equals(t)) out.add(t);
+    }
+
     private static void appendField(StringBuilder b, String label, Object value) {
         if (value == null) return;
         String s = value instanceof String ? ((String) value).trim() : Json.write(value);
         if (s.isEmpty() || "[]".equals(s) || "{}".equals(s)) return;
-        if (b.length() > 0) b.append("\\n");
+        if (b.length() > 0) b.append("\n");
         b.append(label).append(": ").append(s);
     }
 

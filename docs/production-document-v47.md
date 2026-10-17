@@ -744,6 +744,40 @@ matches. The user's five room pictures (the fan from below, the clock over the s
 straight on, and a sheet of six fan and clock views) are kept in
 `docs/reference/user_uploads/sofe_wali_jadu_ki_baaten/places/`.
 
+### Your script is filmed as written; the film never waits on a sleeping user
+
+The user's phone, at 19:05 to 19:13 on 17 October, showed three problems.
+
+**1. The cloud review changed the script and then stopped the film.** The "independent reader" cloud review used to add
+direction lines, places, things and up to 8 scenes to the story. When its report said "not ready", the film stopped with
+"Production review needs resolution before rendering", followed by raw JSON with literal `\n` in it. The user said:
+"no independent reader should rewrite my script". Now:
+
+- The report is kept only as plain notes, one point a line (`ProductionPlan.notesOf`), in `production_review_notes.txt`.
+- Nothing in the report is added to the story, and nothing in it stops the film.
+- The progress line says "notes only — your script is never changed".
+- `ProductionPlan.apply` still exists and its tests still pass, but the film no longer calls it.
+
+**2. The film waited on the user with no end.** The user asked: "place a continue button, which should automatically be
+pressed if I do not answer for 30 seconds, as I may be asleep". Both waits now go on by themselves after 30 seconds
+without an answer (`FilmJob.AUTO_CONTINUE_SECONDS`).
+
+The waits run in the film's own job, so they work with the screen off. Each screen shows a live countdown.
+
+- **The pictures wait:** "Continue now" is a full-width button at the top of the card. With no answer, the studio draws
+  what has no picture.
+  - The wait holds for 3 minutes when an "Add a picture" button is tapped.
+  - It holds another 30 seconds each time a picture arrives.
+  - It does not count down while the film is paused.
+- **The shot check:** with no answer, the shots are approved as planned.
+  - "Wait — I'm still looking" holds the wait for 5 minutes.
+  - Each fix the user taps holds it another 30 seconds.
+
+**3. Back went straight home.** Back on the making screen, or on the shot check, now opens the Studio while the film goes
+on, and the next back goes home. A film that could not be made now offers "Back to the studio".
+
+`ProductionPlanTest.theReportIsPlainNotesForTheUser` covers the plain notes.
+
 ### What four debuggers found and fixed (each with tests; all merged)
 
 - **The app.** Nine fixes:

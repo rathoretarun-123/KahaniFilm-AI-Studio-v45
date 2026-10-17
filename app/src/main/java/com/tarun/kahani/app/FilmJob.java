@@ -312,9 +312,10 @@ public final class FilmJob implements Runnable {
             String productionKey = hash(productionFingerprint(script));
             String productionFile = "production_review_" + productionKey + ".json";
             // Independent reader pass: identify implied but necessary coverage and hand it to the directors.
-            // Proposals are cached as review notes, never silently inserted as canon or dialogue.
+            // v47.8 (the user: "no independent reader should rewrite my script"): its review is advice only — kept as
+            // notes, never added to the story (no scene, beat, place or thing), and it never stops the film
             if (Prefs.online(ctx) && !project.has(productionFile)) {
-                step("Independent reader is checking missing beats, places and objects…", 0.018f);
+                step("Independent reader is reading your script (notes only — your script is never changed)…", 0.018f);
                 try {
                     String review = ScriptAI.productionConference(Prefs.cloud(ctx), story);
                     Object parsedReview = com.tarun.kahani.core.Cloud.jsonIn(review);
@@ -338,13 +339,15 @@ public final class FilmJob implements Runnable {
                 }
             }
 
-            // Apply only reader/director/technical-director proposals explicitly marked auto_apply by the production chair.
-            // The report is script-hash scoped; original dialogue and original scene content are preserved.
+            // v47.8 (the user: "no independent reader should rewrite my script"): the production conference's report is
+            // kept as notes for the user to read; nothing in it changes the story the director films, and nothing in it
+            // stops the film (it used to add scenes and direction lines, and to stop with "needs resolution before rendering")
             if (project.has(productionFile)) {
-                com.tarun.kahani.core.ProductionPlan.Result plan = com.tarun.kahani.core.ProductionPlan.apply(story, project.read(productionFile));
-                if (!plan.valid) info = "Production conference report could not be validated; original story retained.";
-                else if (!plan.readyToRender) throw new IllegalStateException("Production review needs resolution before rendering:\n" + com.tarun.kahani.core.ProductionPlan.blockingSummary(project.read(productionFile)));
-                else if (plan.scenesAdded > 0) info = "Production conference added " + plan.scenesAdded + " approved connective/reaction shot scene(s); authored dialogue and story events were preserved.";
+                String notes = com.tarun.kahani.core.ProductionPlan.notesOf(project.read(productionFile));
+                if (notes.length() > 0) {
+                    project.write("production_review_notes.txt", notes);
+                    info = "The independent reader's notes are kept as advice only (production_review_notes.txt) — your script is filmed exactly as you wrote it";
+                }
             }
 
             // Respect upload-first intake: private-library reuse is explicit in Studio, never automatic during a render.
@@ -377,13 +380,22 @@ public final class FilmJob implements Runnable {
                     stage = "Waiting for you: please add pictures of " + picturesNeeded;
                     pictureChoice = 0;
                     picturesWaiting = true;
+                    boolean byItself = false;
+                    int left = needed.size();
+                    autoContinueAt = System.currentTimeMillis() + AUTO_CONTINUE_SECONDS * 1000L;
                     while (picturesWaiting && !cancelled) {
                         try { Thread.sleep(400); } catch (InterruptedException e) { break; }
-                        if (neededPictures(story).isEmpty()) break;
+                        int now = neededPictures(story).size();
+                        if (now == 0) break;
+                        // a picture was added, or the user paused: the wait holds; otherwise it goes on by itself
+                        if (now != left || paused) { left = now; holdOn(AUTO_CONTINUE_SECONDS); }
+                        if (System.currentTimeMillis() >= autoContinueAt) { pictureChoice = 3; byItself = true; break; }
                     }
+                    autoContinueAt = 0;
                     picturesWaiting = false;
                     check();
-                    if (pictureChoice == 0) info = "Thank you — every picture is there now";
+                    if (byItself) info = "No answer for " + AUTO_CONTINUE_SECONDS + " seconds — the film went on by itself; the studio draws what has no picture";
+                    else if (pictureChoice == 0) info = "Thank you — every picture is there now";
                     else if (pictureChoice == 3) info = "Going on — the studio draws what has no picture";
                 }
             }
@@ -789,6 +801,26 @@ public final class FilmJob implements Runnable {
     /** The user's answer to the pictures card: 1 make them with AI, 2 free AI illustrations, 3 go on — the studio draws what has no picture. */
     public void choosePictures(int choice) { pictureChoice = choice; picturesWaiting = false; }
 
+    /**
+     * v47.8 (the user: "place a continue button, which should automatically be pressed if I do not answer for 30
+     * seconds, as I may be asleep"): every wait for the user goes on by itself after this long without an answer.
+     */
+    public static final int AUTO_CONTINUE_SECONDS = 30;
+    /** When the wait goes on by itself (System.currentTimeMillis()); 0 when nothing waits. */
+    public volatile long autoContinueAt;
+
+    /** The user is answering (choosing a picture, looking at the shots): the wait holds at least this long from now. */
+    public void holdOn(int seconds) {
+        long until = System.currentTimeMillis() + seconds * 1000L;
+        if (autoContinueAt > 0 && until > autoContinueAt) autoContinueAt = until;
+    }
+
+    /** Seconds before the wait goes on by itself, or -1 when nothing waits. */
+    public int secondsLeft() {
+        long t = autoContinueAt;
+        return t <= 0 ? -1 : (int) Math.max(0, (t - System.currentTimeMillis() + 999) / 1000);
+    }
+
     /** Missing visual references that must be offered to the user before the director invents a substitute. */
     java.util.List<String> neededPictures(com.tarun.kahani.core.Story story) {
         java.util.List<String> out = new java.util.ArrayList<String>();
@@ -1022,9 +1054,16 @@ public final class FilmJob implements Runnable {
         // 4. wait for the user (the notification says so); then their fixes
         stage = "Waiting for you: check the animatic and the first frame of every shot";
         qcWaiting = true;
+        int seenFixes = qcFixes.size();
+        autoContinueAt = System.currentTimeMillis() + AUTO_CONTINUE_SECONDS * 1000L;
+        boolean approvedByItself = false;
         while (qcWaiting && !cancelled) {
             try { Thread.sleep(300); } catch (InterruptedException e) { break; }
+            if (qcFixes.size() != seenFixes || paused) { seenFixes = qcFixes.size(); holdOn(AUTO_CONTINUE_SECONDS); }
+            if (System.currentTimeMillis() >= autoContinueAt) { qcWaiting = false; approvedByItself = true; }
         }
+        autoContinueAt = 0;
+        if (approvedByItself) info = "No answer for " + AUTO_CONTINUE_SECONDS + " seconds — the shots were approved as planned and the film went on by itself";
         check();
         int fixed = 0;
         StringBuilder note = new StringBuilder();

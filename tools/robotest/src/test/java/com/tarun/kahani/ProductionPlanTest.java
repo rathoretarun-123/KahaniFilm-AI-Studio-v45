@@ -145,4 +145,16 @@ public class ProductionPlanTest {
         assertTrue(r.warnings.toString().contains("no usable scene-indexed"));
     }
 
+
+    /** v47.8 (the user: "no independent reader should rewrite my script"): the report is read as plain notes, never JSON. */
+    @Test public void theReportIsPlainNotesForTheUser() {
+        String report = "{\"asset_requests\":[{\"asset_name\":\"छत का पंखा (Ceiling Fan)\",\"category\":\"Set Dressing Prop\",\"status\":\"APPROVED_FOR_PIPELINE\"}],"
+                + "\"role_disagreements\":[{\"issue\":\"Moon dialogue\",\"roles_involved\":[\"Reader\",\"Director\"],\"resolution\":\"kept as written\"}],\"ready_to_render\":false}";
+        String n = com.tarun.kahani.core.ProductionPlan.notesOf(report);
+        assertTrue(n, n.contains("Pictures and things asked for:\n• छत का पंखा (Ceiling Fan) — Set Dressing Prop — APPROVED_FOR_PIPELINE"));
+        assertTrue(n, n.contains("Where the roles disagreed:\n• Moon dialogue — Reader, Director — kept as written"));
+        assertFalse("no JSON left: " + n, n.contains("{") || n.contains("\\n") || n.contains("\"asset_name\""));
+        assertEquals("", com.tarun.kahani.core.ProductionPlan.notesOf("not a report"));
+        assertFalse("the summary breaks lines for real", com.tarun.kahani.core.ProductionPlan.blockingSummary(report).contains("\\n"));
+    }
 }
