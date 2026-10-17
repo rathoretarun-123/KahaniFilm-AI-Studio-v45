@@ -1293,6 +1293,15 @@ public final class Renderer {
         return from + (to - from) * ease01((t - t0) / 0.33f);
     }
 
+    /**
+     * v47.8: whether one drawn at stage x, this tall, is inside the camera's frame at all — the frame audit reads only what
+     * is seen (a rider moved off the stage at x = -280 after the ride was counted as a 10% jolt nobody can see).
+     */
+    private boolean inView(float stageX, float hh) {
+        float sx = vw / 2 + (stageX - camX) * camZ, half = hh * camZ * 0.35f;
+        return sx + half > 0 && sx - half < vw;
+    }
+
     /** v47.8: the anchors whose place is a point in the frame that another can travel from or to. */
     private static boolean anchorBlends(int anchor) {
         return anchor == Film.A_GROUND || anchor == Film.A_BRANCH || anchor == Film.A_SHOULDER || anchor == Film.A_CARRIED || anchor == Film.A_ON_FACE;
@@ -1980,7 +1989,7 @@ public final class Renderer {
             break;
         }
         float px = x + mo.dx, py = y + mo.dy;
-        if (audit != null) audit.at(a, t, px, py, h * scale);
+        if (audit != null && inView(px, h * scale)) audit.at(a, t, px, py, h * scale);
         if (camStill && pixelStep > 0) { px = Math.round(px / pixelStep) * pixelStep; py = Math.round(py / pixelStep) * pixelStep; }
         g.translate(px, py);
         if (scale != 1f) g.scale(scale, scale);
@@ -2101,7 +2110,7 @@ public final class Renderer {
             if (chosen.pose == PoseSense.SIT && !Casting.seatOfItsOwn(chosen) && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing; v47.7: one with its own seat stands on its seat's legs; v47.8: a photograph of a sitter shows what they sit on — only a cut-out is lifted)
                 pys -= seatTopOf(p.seat) * h;
             if (camStill && pixelStep > 0) { pxs = Math.round(pxs / pixelStep) * pixelStep; pys = Math.round(pys / pixelStep) * pixelStep; }
-            if (audit != null) { audit.at(a, t, pxs, pys, hReal * scale); audit.picture(a, t, chosen.file == null ? "the front picture" : chosen.file, stepping); }
+            if (audit != null && inView(pxs, hReal * scale)) { audit.at(a, t, pxs, pys, hReal * scale); audit.picture(a, t, chosen.file == null ? "the front picture" : chosen.file, stepping); }
             g.save();
             g.translate(pxs, pys);
             if (scale != 1f) g.scale(scale, scale);
