@@ -183,6 +183,7 @@ public final class Film {
             G_STAGGER = 67,       // v44: unsteady on the feet after drinking: a sway, a stumble caught, a hand out for balance
             G_SNOW_PLAY = 68,     // v44: in the snow (Act.item: SNOW_*): a snowball made and thrown, a snowman built, flakes caught
             G_FALL = 69,          // v44: a fall (an accident): thrown down onto the ground, a moment there, then up holding the knee or the elbow
+            G_ANIMAL = 70,        // v47.7: an animal of the cast does its own thing (Act.item = AN_*): chews the cud, grazes, barks, holds its tail up…
             G_PULL = 50,          // a hard pull (a plug, a wire, a rope): lean back and yank
             G_LISTEN = 51;        // thought before action (handbook ch. 6): a pause, the head turns toward the sound, the body holds still
 
@@ -190,6 +191,13 @@ public final class Film {
     public static final int SEAT_FLOOR = 0, SEAT_STOOL = 1, SEAT_THRONE = 2, SEAT_ROCK = 3, SEAT_WHEELCHAIR = 4,   // v34: a wheelchair goes where its sitter goes
             SEAT_CHAIR = 5, SEAT_SOFA = 6, SEAT_BED = 7,     // v35: a chair with a back, a cushioned sofa, a bed (sat on, lain and slept in)
             SEAT_LOG = 8;     // v40: a log or a tree stump stood on end (round a campfire)
+
+    /**
+     * v47.7: what a G_ANIMAL act shows — the jaw chewing the cud, the head down to the grass (and chewing), the voice
+     * (a dog's barks snap the jaw in time with them, a moo or a neigh opens it through the call), the tail held up, the
+     * tail wagged, the ears flicked, the ears pricked up.
+     */
+    public static final int AN_CHEW = 1, AN_GRAZE = 2, AN_VOICE = 3, AN_TAIL_UP = 4, AN_WAG = 5, AN_EARS = 6, AN_EARS_UP = 7;
 
     /** v36: the everyday tasks a G_TASK act shows. */
     public static final int T_COOK = 1, T_SWEEP = 2, T_WASH = 3, T_READ = 4, T_WRITE = 5, T_PHONE = 6, T_BRUSH = 7, T_COMB = 8, T_WATER = 9, T_PAPER = 10,
