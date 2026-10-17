@@ -1213,6 +1213,8 @@ public final class Renderer {
      * final QC's floating check reads where the feet really went (FinalQc).
      */
     public List<float[]> feetLog;
+    /** v47.7: every character in every frame as drawn (where, with which picture, how many faces), read back after the film (FrameAudit). */
+    public FrameAudit audit;
 
     private static boolean acting(Film.Actor a, float t) {
         for (Film.Act ac : a.acts) if (t >= ac.t0 - 0.3f && t <= ac.t1 + 0.6f) return true;
@@ -1867,6 +1869,7 @@ public final class Renderer {
             break;
         }
         float px = x + mo.dx, py = y + mo.dy;
+        if (audit != null) audit.at(a, t, px, py, h * scale);
         if (camStill && pixelStep > 0) { px = Math.round(px / pixelStep) * pixelStep; py = Math.round(py / pixelStep) * pixelStep; }
         g.translate(px, py);
         if (scale != 1f) g.scale(scale, scale);
@@ -1987,6 +1990,7 @@ public final class Renderer {
             if (chosen.pose == PoseSense.SIT && chosen.ownSeat <= 0 && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing; v47.7: one with its own seat stands on its seat's legs)
                 pys -= seatTopOf(p.seat) * h;
             if (camStill && pixelStep > 0) { pxs = Math.round(pxs / pixelStep) * pixelStep; pys = Math.round(pys / pixelStep) * pixelStep; }
+            if (audit != null) { audit.at(a, t, pxs, pys, hReal * scale); audit.picture(a, t, chosen.file == null ? "the front picture" : chosen.file, stepping); }
             g.save();
             g.translate(pxs, pys);
             if (scale != 1f) g.scale(scale, scale);
@@ -2037,6 +2041,7 @@ public final class Renderer {
                 p.armL = 14 * in; p.armR = 14 * in; p.elbowL = Math.max(p.elbowL, 50 * in); p.elbowR = Math.max(p.elbowR, 50 * in);
             }
             Art.Sprite drawn = k.costume > 0 ? sp : viewOf(sp, a, s, p, k, spk != null, t);
+            if (audit != null) audit.picture(a, t, drawn == sp ? "the rigged front picture" : "a view (" + drawn.w + "x" + drawn.h + ")", false);
             // a side picture cannot turn its head to someone: while it walks it faces the way it goes
             if (drawn != sp && drawn == sp.view(1)) {
                 float dir = Math.signum(Director.xAt(a, t + 0.04f) - Director.xAt(a, t - 0.04f));
@@ -4310,6 +4315,7 @@ public final class Renderer {
         if (POSE_DEBUG) System.err.printf(java.util.Locale.US, "POSE t=%.2f %s body=%d emo=%d sit=%.2f lie=%.2f kneel=%.2f rigged=%b face=%b still=%b legs=%b stKneel=%.2f frown=%.2f legScale=%.2f sp=%dx%d%n",
                 p.time, actor == null || actor.c == null ? "?" : actor.c.displayName, p.body, p.emotion, p.sit, p.lie, p.kneel, rigged, rig != null && rig.face, rig != null && rig.still, rig != null && rig.legs,
                 st == null ? -1 : st.kneel, st == null ? -1 : st.frown, st == null ? -1 : st.legScale, sp.w, sp.h);
+        if (audit != null && actor != null && sp.faceKnown && !beast) audit.face(actor, curT);       // v47.7: a face drawn (two in one frame: a ghost of the eyes and lips)
         // v39: what the film's pictures really did (MakeFilm STATS=1, tests): drawn with a living face, and speaking
         // frames whose jaw moved
         if (actor != null) {

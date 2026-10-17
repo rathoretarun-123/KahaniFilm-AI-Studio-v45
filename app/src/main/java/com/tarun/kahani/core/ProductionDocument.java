@@ -1206,6 +1206,19 @@ public final class ProductionDocument {
         return r;
     }
 
+    /**
+     * v47.7: what the frame audit of the drawn film found (FrameAudit: every character in every frame as drawn) — each
+     * jolt, jump, size or picture pop and second face is a MAJOR issue of the technical director's, category "FRAMES",
+     * with its frame; the count of frames read goes into the summary.
+     */
+    public void frameAudit(FrameAudit.Result r) {
+        if (r == null) return;
+        framesAudited = r.frames;
+        for (String f : r.findings) issue(MAJOR, TECHNICAL_DIRECTOR, null, "every frame as drawn is smooth (no jolt, jump, pop or second face)", f,
+                "ease the motion there, keep one picture through the shot, draw one face", null).category = "FRAMES";
+    }
+    public int framesAudited;
+
     /** The film is complete only with a verified render of the approved revision and no open QC blocker. */
     public boolean complete() {
         if (render == null || !"VERIFIED".equals(render.status) || render.revision != revision) return false;
@@ -1299,9 +1312,10 @@ public final class ProductionDocument {
         for (Issue i : issues) if (!i.resolved) { open++; if (i.severity.equals(BLOCKER)) block++; }
         int planned = 0, seen = 0;
         for (Effect e : effects) if (e.evidence.equals(EXPLICIT) && !e.method.equals(NOT_FILMABLE)) { planned++; if (e.scheduled) seen++; }
-        int physics = 0;
-        for (Issue i : issues) if (!i.resolved && "PHYSICS".equals(i.category)) physics++;
-        return String.format(java.util.Locale.ROOT, "revision %d: %d characters, %d props, %d places, %d scenes, %d lines, %d steps, %d of %d environment requirements in the plan, %d shots, %d frames checked at %d fps (%d physics findings), %d open issues (%d blockers)%s",
-                revision, characters.size(), props.size(), locations.size(), scenes.size(), lines.size(), actions.size(), seen, planned, shots.size(), framesChecked, FPS, physics, open, block, approvedForRender() ? ", approved for rendering" : "");
+        int physics = 0, drawn = 0;
+        for (Issue i : issues) if (!i.resolved && "PHYSICS".equals(i.category)) physics++; else if (!i.resolved && "FRAMES".equals(i.category)) drawn++;
+        return String.format(java.util.Locale.ROOT, "revision %d: %d characters, %d props, %d places, %d scenes, %d lines, %d steps, %d of %d environment requirements in the plan, %d shots, %d frames checked at %d fps (%d physics findings)%s, %d open issues (%d blockers)%s",
+                revision, characters.size(), props.size(), locations.size(), scenes.size(), lines.size(), actions.size(), seen, planned, shots.size(), framesChecked, FPS, physics,
+                framesAudited > 0 ? String.format(java.util.Locale.ROOT, ", %d frames audited as drawn (%d findings)", framesAudited, drawn) : "", open, block, approvedForRender() ? ", approved for rendering" : "");
     }
 }

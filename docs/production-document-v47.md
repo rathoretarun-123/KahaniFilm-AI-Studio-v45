@@ -417,3 +417,56 @@ frame by frame with the film.
 
 **APK:** built and signed locally. aapt2, zipalign, apksigner and dx come from Ubuntu's own packages; `dl.google.com`
 stays blocked.
+
+## 8. Fourth round (17 October, afternoon): the user's pictures with objects, the brick, every frame as drawn
+
+The user's notes, in their words:
+
+- "some pictures of characters may appear with objects as per the story, use them completely, don't split object from
+  character";
+- "one side of bench is broken, the brick should be used to fix it";
+- "check every frame visually … no extra lips or eyes anywhere, no shaking or random movements";
+- animals and animated objects (cars, toys) act and speak.
+
+### A character's picture with its seat, used whole (`Art.ownSeat`, `Casting.ownSeatPicture`, `Renderer`)
+
+**Recognition.** The user's panels of रघुवीर जी on the bench show the old man, the bench and its bricks in one piece.
+Such a picture is recognised by its shape: a plank wider than the sitter across the lower part of the figure, standing
+on legs at both ends, with open ground under it. The test is set by shape, not by name.
+
+- **Detected in the user's cast:** 4 of the 110 pictures. Two front views and two back views from the bench sheet and
+  upload 06.
+- **Not detected:** none of the hunched or walking pose pictures (an earlier, looser test took 17).
+- **Not detected either:** the four three-quarter bench panels. Their bench does not spread across the figure.
+
+**Use.** Such a picture is a seated picture, whatever the upload's pose tag read; the old man on the bench was read as
+running. While he sits alone on the script's bench:
+
+- the most frontal of these pictures plays whole, and the bench's own picture steps aside;
+- the picture is not lifted onto a seat, not mirrored (its bricks stay under the broken leg), and not raised to a
+  standing face in close shots;
+- its face is read from the sitter alone, above the plank, so his lips and blinks live. Read from the whole picture,
+  the face finder put both eyes on one side of his face and read the front as a side;
+- a thing in his hands rests at his chest.
+
+**When the bench is shared.** When परी sits beside him, the bench in his picture is too short for two: she sat past
+its end, then inside him. So those shots go back to the bench's own picture, with him on his rig.
+
+### The brick under the broken leg (`Art.underBench`)
+
+A thing the script sets under the bench ("बेंच के नीचे लगी ईंट") is drawn at the foot of the leg the script names. Here that
+is the right leg ("दायें पैर के नीचे", "आगे वाला दायां पैर … टूटा"). The brick stays put while the bench rocks on it.
+
+### Every frame as drawn (`FrameAudit`)
+
+Every character in every frame is recorded as the renderer really drew it: where it stood, how tall, with which
+picture, and how many faces. The record is read back after the film. Inside a shot it reports:
+
+- a jolt: a change of speed over 2% of the height in one frame;
+- a jump: a move over 12% of the height in one frame;
+- a size pop: over 4% in one frame;
+- a picture swapped without a cross-fade;
+- a second face drawn in a frame.
+
+The audit runs on the phone (`FilmJob`, all render threads) and on the desktop (`MakeFilm`; `AUDIT=0` skips it).
+Its findings go into the shot list and into the production document as MAJOR issues in the category `FRAMES`.

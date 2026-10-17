@@ -717,6 +717,7 @@ public final class FilmJob implements Runnable {
             film.shotList += "\n" + review(film);
             // v47.6: the render recorded against the revision it made — verified only with its file there and not empty
             if (pdoc != null) {
+                pdoc.frameAudit(frameAudit);          // v47.7: every character in every frame as drawn
                 ProductionDocument.RenderRecord rr = pdoc.verifyRender(fin, "phone (MediaCodec)", film.duration);
                 project.write("production_document.json", pdoc.toJson());
                 film.shotList += "\nRENDER: " + rr.status + " — " + rr.detail + "\n";
@@ -762,6 +763,8 @@ public final class FilmJob implements Runnable {
     final java.util.List<String> stillQaNotes = new java.util.ArrayList<String>();
     /** The job waits for the user's decision on the pictures the studio made in 3D (proposals in the manifest). */
     public volatile boolean proposalsWaiting;
+    /** v47.7: what the frame audit of the last film found (every character in every frame as drawn), or null. */
+    public volatile com.tarun.kahani.core.FrameAudit.Result frameAudit;
     /** v34: started from the app: before any 3D picture is made, the user is asked for the missing pictures. */
     public boolean askForPictures;
     /** v34: the film waits for the user's pictures (picturesNeeded); pictureChoice: 0 waiting, 1 build the rest in 3D, 2 draw them. */
@@ -1323,6 +1326,8 @@ public final class FilmJob implements Runnable {
         for (int i = 0; i < slotFrame.length; i++) slotFrame[i] = -1;
         final Object lock = new Object();
         final int[] nextToEncode = {0};
+        // v47.7: every character in every frame as drawn (where, with which picture, how many faces), read back after
+        final com.tarun.kahani.core.FrameAudit audit = new com.tarun.kahani.core.FrameAudit(fps);
         final Throwable[] workerError = {null};
         final float fpsF = fps;
         Thread[] ts = new Thread[workers];
@@ -1336,6 +1341,7 @@ public final class FilmJob implements Runnable {
                         bmp = Bitmap.createBitmap(w, h, Bitmap.Config.ARGB_8888);
                         g = new AndroidGfx(bmp, 4);
                         Renderer r = new Renderer(film, art);
+                        r.audit = audit;
                         // the cinematic finish: filmic curve, bloom, colour script by mood
                         com.tarun.kahani.core.FilmLook look = new com.tarun.kahani.core.FilmLook(w, h);
                         com.tarun.kahani.core.FilmLook.Params lp = new com.tarun.kahani.core.FilmLook.Params();
@@ -1409,6 +1415,8 @@ public final class FilmJob implements Runnable {
             step("Saving the film…", 0.995f);
             vw.finish();
             film.shotList += meter.report();
+            frameAudit = audit.read(film);
+            film.shotList += "\n" + frameAudit.text();
             // this phone's speed, for the next film's time left
             long tookMs = System.currentTimeMillis() - t0 - pausedMs;
             if (frames > 30 && tookMs > 0) Prefs.put(ctx, "renderMsPerMpFrame", String.valueOf(tookMs / (float) frames / (w * (float) h / 1e6f)));

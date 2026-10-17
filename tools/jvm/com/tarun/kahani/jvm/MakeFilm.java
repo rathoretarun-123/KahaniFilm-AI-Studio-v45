@@ -182,6 +182,9 @@ public class MakeFilm {
         AwtGfx g = new AwtGfx(img);
         Renderer r = new Renderer(film, art);
         r.safeZoneOverlay = System.getenv("SAFEZONE") != null;
+        // v47.7: every character in every frame as drawn, read back after the film (AUDIT=0 skips it)
+        final com.tarun.kahani.core.FrameAudit audit = "0".equals(System.getenv("AUDIT")) ? null : new com.tarun.kahani.core.FrameAudit(fps);
+        r.audit = audit;
         if (stills != null) { lockSheets(dir, film, art, new File(stills), width, height); stillPages(dir, film, art, new File(stills)); }
         // pipeline step 6 (FinalQc): every shot played frame by frame at check size before the film; QC=0 skips it
         if (!"0".equals(System.getenv().getOrDefault("QC", "1")) && System.getenv("ONLY") == null) {
@@ -244,13 +247,16 @@ public class MakeFilm {
         ff.waitFor();
         long ms = System.currentTimeMillis() - tr;
         System.out.println("rendered " + frames + " frames in " + ms + "ms (" + (frames * 1000f / Math.max(1, ms)) + " fps) -> " + out);
+        com.tarun.kahani.core.FrameAudit.Result audited = audit != null ? audit.read(film) : null;
         if (pdoc != null) {
+            pdoc.frameAudit(audited);
             com.tarun.kahani.core.ProductionDocument.RenderRecord rr = pdoc.verifyRender(new File(out), "desktop (ffmpeg)", dur);
             Files.write(Paths.get(System.getenv("PRODDOC")), pdoc.toJson().getBytes("UTF-8"));
             System.out.println("render " + rr.status + ": " + rr.detail);
         }
         System.out.println("STATS " + com.tarun.kahani.core.Renderer.stats());
         if (meter != null) { film.shotList += meter.report(); System.out.print(meter.report()); }
+        if (audited != null) { String at = audited.text(); film.shotList += "\n" + at; System.out.print(at); }
         if (System.getenv("SHOTS") != null) Files.write(Paths.get(System.getenv("SHOTS")), film.shotList.getBytes("UTF-8"));
     }
 
