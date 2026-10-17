@@ -134,14 +134,16 @@ final class Backup {
 
     /**
      * Brings back library items from a backup folder the user picked (Downloads/tarunkahani, or the older Downloads/KahaniFilm/Library).
-     * Items already in the library are skipped. Returns how many were restored.
+     * Items already in the library are skipped. Returns {how many were restored, how many could not be read}.
+     * (v47.8: one unreadable or damaged file no longer stops the rest — it stopped the whole restore, and what was
+     * brought back before it was never saved to the library's index.)
      */
-    static int restore(Context c, Uri tree, Library lib) throws Exception {
+    static int[] restore(Context c, Uri tree, Library lib) throws Exception {
         ContentResolver cr = c.getContentResolver();
         Uri children = DocumentsContract.buildChildDocumentsUriUsingTree(tree, DocumentsContract.getTreeDocumentId(tree));
         Map<String, Uri> files = new HashMap<String, Uri>();
         Cursor cur = cr.query(children, new String[]{DocumentsContract.Document.COLUMN_DOCUMENT_ID, DocumentsContract.Document.COLUMN_DISPLAY_NAME}, null, null, null);
-        if (cur == null) return 0;
+        if (cur == null) return new int[]{0, 0};
         try {
             while (cur.moveToNext()) files.put(cur.getString(1), DocumentsContract.buildDocumentUriUsingTree(tree, cur.getString(0)));
         } finally {
@@ -149,27 +151,32 @@ final class Backup {
         }
         java.util.Set<String> have = new java.util.HashSet<String>();
         for (Library.Item it : lib.items) have.add(it.id);
-        int n = 0;
+        int n = 0, bad = 0;
         List<String> names = new ArrayList<String>(files.keySet());
         for (String name : names) {
             if (!name.endsWith(".json")) continue;
-            // MediaStore may add " (1)" to repeated names; the description tells the real file name
-            Object d = Json.parseLoose(new String(Project.readAll(cr.openInputStream(files.get(name))), "UTF-8"));
-            if (d == null) continue;
-            String id = Json.str(d, "id", ""), file = Json.str(d, "file", "");
-            if (id.length() == 0 || have.contains(id)) continue;
-            Uri media = files.get(file + PRIVATE);
-            if (media == null) media = files.get(file);          // backups made by older versions
-            if (media == null) continue;
-            String ext = file.contains(".") ? file.substring(file.lastIndexOf('.')) : ".bin";
-            byte[] data = Project.readAll(cr.openInputStream(media));
-            Library.Item it = lib.restoreItem(Json.str(d, "type", Library.PIC), id, data, ext);
-            it.kind = Json.str(d, "kind", ""); it.name = Json.str(d, "name", ""); it.tags = Json.str(d, "tags", "");
-            it.source = Json.str(d, "source", ""); it.meta = Json.str(d, "meta", "");
-            have.add(id);
-            n++;
+            try {
+                // MediaStore may add " (1)" to repeated names; the description tells the real file name
+                Object d = Json.parseLoose(new String(Project.readAll(cr.openInputStream(files.get(name))), "UTF-8"));
+                if (d == null) continue;
+                String id = Json.str(d, "id", ""), file = Json.str(d, "file", "");
+                if (id.length() == 0 || have.contains(id)) continue;
+                Uri media = files.get(file + PRIVATE);
+                if (media == null) media = files.get(file);          // backups made by older versions
+                if (media == null) continue;
+                String ext = file.contains(".") ? file.substring(file.lastIndexOf('.')) : ".bin";
+                byte[] data = Project.readAll(cr.openInputStream(media));
+                Library.Item it = lib.restoreItem(Json.str(d, "type", Library.PIC), id, data, ext);
+                it.kind = Json.str(d, "kind", ""); it.name = Json.str(d, "name", ""); it.tags = Json.str(d, "tags", "");
+                it.source = Json.str(d, "source", ""); it.meta = Json.str(d, "meta", "");
+                have.add(id);
+                n++;
+            } catch (Exception e) {
+                bad++;
+                System.err.println("Kahani: backup file " + name + " not restored: " + e);
+            }
         }
         lib.save();
-        return n;
+        return new int[]{n, bad};
     }
 }

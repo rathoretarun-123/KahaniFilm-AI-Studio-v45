@@ -3218,7 +3218,8 @@ public class MainActivity extends Activity {
                 }, new Done() {
                     public void done(Object r, Exception e) {
                         if (e != null) { toast("Could not restore: " + e.getMessage()); return; }
-                        toast("✅ " + r + " items restored to your library");
+                        int[] got = (int[]) r;
+                        toast("✅ " + got[0] + " items restored to your library" + (got[1] > 0 ? " (" + got[1] + " could not be read)" : ""));
                         showLibrary();
                     }
                 });
