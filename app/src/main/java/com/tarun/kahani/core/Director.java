@@ -9296,8 +9296,8 @@ public final class Director {
             // one walking it, on its lead (Renderer.animalFx, f.y = 3) — there with them from the part's start when they are
             boolean leash = sp == Look.SP_DOG && subj != null && subj.look != null && subj.look.isHumanoid() && Txt.has(s, DOG_WALK);
             if (leash) { f.y = 3; f.a = subj; f.t0 = Math.min(f.t0, tsFor(subj, t)); f.t2 = 1e6f; f.t1 = 1e6f; f.color = subj.stateAt(t).facing >= 0 ? 1 : -1; }
-            // walking across, running off
-            else if (Txt.has(s, "चलती", "चलता", "चलते", "घूम", "walks", "wanders", "strolls", "crosses", "पार")) { f.y = 2; f.t2 = t + 0.3f; f.t1 = Math.max(f.t1 == 1e6f ? 0 : f.t1, t + 6f); }
+            // walking across, running off (v47.8: "पार कर", not "पार" — every animal in a "पार्क" walked off across it)
+            else if (Txt.has(s, "चलती", "चलता", "चलते", "घूम", "walks", "wanders", "strolls", "crosses", "पार कर", "पार हो", "के पार", "उस पार")) { f.y = 2; f.t2 = t + 0.3f; f.t1 = Math.max(f.t1 == 1e6f ? 0 : f.t1, t + 6f); }
             if (Txt.has(s, "भाग", "भग", "runs away", "runs off", "flees", "bolts", "scampers", "darts", "छलाँग", "छलांग")) {
                 // v44: shot at as it flees ("तीर चलाता है पर हिरण भाग जाता है"): it bolts as the arrow leaves the bow
                 float shotAt = -1;
