@@ -76,3 +76,13 @@ reason, in the issue register.
 | Physics | The plan is checked frame by frame at 24 fps: nobody sits on nothing, nobody passes through anyone or through a set piece. All three user scripts: 0 findings (see `docs/production-document-v47.md` §7) |
 | 3D maker | Removed from the app's screens and from the film job. The library classes are still in the source, unreachable from any screen |
 | App compile | The whole app source tree compiles with javac against android-all-14 |
+
+## Research added in the afternoon (web search, nothing integrated)
+
+| Project | What it does | Why it is not in the app |
+|---|---|---|
+| Meta FAIR **Animated Drawings** (open source, models and code) | Rigs and animates a human figure found in a drawing | Python with neural models, so it runs only on a desktop or server, not on the phone. One directory says the repository was archived in September 2025 (not checked at the source) |
+| **Pencil2D**, **OpenToonz** | Hand-drawn and production 2D animation tools | Desktop applications for drawing frame by frame; no automatic animation |
+| **RVO / ORCA** crowd avoidance (open-source libraries exist) | Characters steer around each other | The studio's crossings are planned, not simulated. A walk is laid *in front of* the obstacle on a path towards the camera and drawn after it. This is the same idea as Y-based depth sorting, done in `Director.passInFront` |
+
+None of these was downloaded, built or tested here.
