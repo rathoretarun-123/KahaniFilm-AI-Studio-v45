@@ -933,3 +933,64 @@ It does not learn from the story's content.
   robotic.
 - Lip sync is mouth shapes timed to the voice's loudness, not to the sounds.
 - This is cut-out animation of the user's pictures, not Pixar rendering.
+
+## 12. Eighth round (18 October): acting, blinks, the place's light, the open sound library
+
+The user: "you can take one more day today but output must be pixer lever"; asked whether to add an outside AI-video
+service, the user chose the built-in engine only (nothing leaves the phone). Then: "save openly available sounds and
+voices in library".
+
+### Acting under the words (`Renderer.acting`, `ActingTest`)
+
+Measured first: a speaker's head moved by under half a degree and the body by nothing, so the pictures read as frozen
+with only the lips moving. Now, on a picture with a body rig:
+
+- **A key pose for every phrase** (1.6 s): the head tilts 2° to 4.5°, mostly across to the other side from the phrase
+  before. It moves into the pose in 0.45 s with a small overshoot (about 6%) and holds it.
+- **The stressed syllables** (the voice's loudness above the third of a second before it, averaged over a quarter of a
+  second, so it follows groups of syllables, never each one) bring a small nod and lift the brows.
+- **The speaker leans into the words**; the one listening nods now and then as the other's phrases end.
+- **Everyone breathes** (60% deeper than before) and shifts their weight slowly.
+- **A poised character acts less.** Everything is a function of time only, so frames drawn in parallel agree.
+- Measured on the sofa story: the head swings between −3° and +3° from phrase to phrase, at most 1.5° in one frame
+  while it moves.
+
+### Blinks
+
+They came every 3.9 s exactly and were all on or all off. Now they come at uneven intervals (2.2 s to 5.2 s, the same
+for the same character) and as the head moves into most new poses. The lid comes down in 0.07 s, stays shut to 0.12 s
+and opens by 0.25 s; on the user's pictures it descends over the eye instead of appearing.
+
+### The light of the place (`Renderer.pictureLight`, `Gfx.light`)
+
+The pictures of people are lit in plain studio light and the place's picture in its own (a room's warm evening, a
+night's blue), so the people sat on the place like stickers. The people and things from the user's pictures are now
+drawn in the place's light: every channel is multiplied by the picture's average colour, a third of the way from
+white, and a dark picture dims them by at most 16%. A drawn place leaves them as they are. The phone uses a colour
+filter, the desktop the same multiply in its mesh rasteriser.
+
+### The camera stays a tripod
+
+A slow push-in on dialogue was considered and left out: protocol P3 of the technical director's document keeps every
+shot on a locked tripod (moves made the cut-out pictures wobble). The acting carries the shot instead.
+
+### Open sounds in the library (`SoundLibraryTest`)
+
+81 recordings from Moodist (github.com/remvze/moodist, an MIT-licensed project; its sounds are CC0 or under the
+Pixabay Content License, per its README) are now bundled. Among them: a ceiling fan, boiling water, rain on an umbrella,
+a window and a tin roof, cows, chickens, crows, a barking dog, a horse, a temple, a village at night, a train, a rowing
+boat, a busy street, fireworks. They are mono Vorbis cut to 40 s with soft fades (19 MB in all), and each is indexed with
+English and Hindi words: the sofa story's "पंखा धीरे चल रहा है और हल्की घर-घर की आवाज" finds the fan. Each entry
+names its licence, and `sounds/CREDITS-moodist.txt` records the source. Words the old library already answered keep
+their old recording.
+
+### Not done (said, not hidden)
+
+- **Open voice recordings**: BLOCKED. Every open speech collection (OpenSLR, Mozilla Common Voice, archive.org,
+  Wikimedia, Hugging Face) is unreachable from the build machine, and no voice was added without a licence that could
+  be checked.
+- **A better desktop voice**: the MBROLA Hindi voices were tried and left out. Their diphone sets lack many consonant
+  pairs (न्द, स्त, ग्ल) and leave gaps inside words. Desktop films keep espeak-ng; the phone uses its own speech
+  engine.
+- **Pixar-level**: this remains 2D animation of the user's pictures on a mesh rig. These changes make it act and sit
+  in its light better; they do not make it a 3D film.

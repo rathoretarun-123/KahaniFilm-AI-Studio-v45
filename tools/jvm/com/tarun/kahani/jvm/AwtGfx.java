@@ -44,12 +44,13 @@ public class AwtGfx implements Gfx {
     public int width() { return img.getWidth(); }
     public int height() { return img.getHeight(); }
 
-    public void save() { stack.push(new Object[]{g.getTransform(), alpha, paint}); }
+    public void save() { stack.push(new Object[]{g.getTransform(), alpha, paint, lightRGB}); }
     public void restore() {
         Object[] s = stack.pop();
         g.setTransform((AffineTransform) s[0]);
         alpha = (Float) s[1];
         paint = (Paint) s[2];
+        lightRGB = (Integer) s[3];
     }
     public void translate(float x, float y) { g.translate(x, y); }
     public void scale(float sx, float sy) { g.scale(sx, sy); }
@@ -64,6 +65,31 @@ public class AwtGfx implements Gfx {
     public void color(int argb) { paint = new Color(argb, true); }
     private float shade;
     public void shading(float k) { shade = Math.max(0, Math.min(1, k)); }
+    private int lightRGB = 0xFFFFFF;
+    public void light(int rgb) { lightRGB = rgb & 0xFFFFFF; }
+    /** v47.10: the pictures drawn in a light (Gfx.light): a copy of each with its channels multiplied, the last 24 kept. */
+    private static final Map<String, BufferedImage> LIT = new LinkedHashMap<String, BufferedImage>(32, 0.75f, true) {
+        protected boolean removeEldestEntry(Map.Entry<String, BufferedImage> e) { return size() > 24; }
+    };
+    private BufferedImage lit(BufferedImage bi) {
+        if (lightRGB == 0xFFFFFF || bi == null) return bi;
+        String key = System.identityHashCode(bi) + ":" + bi.getWidth() + "x" + bi.getHeight() + ":" + lightRGB;
+        synchronized (LIT) {
+            BufferedImage c = LIT.get(key);
+            if (c != null) return c;
+        }
+        int w = bi.getWidth(), h = bi.getHeight();
+        int[] px = bi.getRGB(0, 0, w, h, null, 0, w);
+        int mr = (lightRGB >> 16) & 255, mg = (lightRGB >> 8) & 255, mb = lightRGB & 255;
+        for (int i = 0; i < px.length; i++) {
+            int c = px[i];
+            px[i] = (c & 0xFF000000) | ((((c >> 16) & 255) * mr / 255) << 16) | ((((c >> 8) & 255) * mg / 255) << 8) | ((c & 255) * mb / 255);
+        }
+        BufferedImage out = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB);
+        out.setRGB(0, 0, w, h, px, 0, w);
+        synchronized (LIT) { LIT.put(key, out); }
+        return out;
+    }
 
     /** v47.9: a solid fill with volume while shading is on (Shading: a ball for an oval, a lit-from-above column otherwise). */
     private void fill(Shape s, boolean ball) {
@@ -193,10 +219,12 @@ public class AwtGfx implements Gfx {
 
     public void image(Object im, float x, float y, float w, float h) {
         apply();
+        if (im instanceof BufferedImage) im = lit((BufferedImage) im);
         g.drawImage((Image) im, Math.round(x), Math.round(y), Math.round(w), Math.round(h), null);
     }
     public void imageRect(Object im, float sx, float sy, float sw, float sh, float dx, float dy, float dw, float dh) {
         apply();
+        if (im instanceof BufferedImage) im = lit((BufferedImage) im);
         AffineTransform saved = g.getTransform();
         g.translate(dx, dy);
         g.scale(dw / sw, dh / sh);
@@ -206,7 +234,7 @@ public class AwtGfx implements Gfx {
     /** Each mesh cell is drawn as two triangles, each an affine-mapped, clipped piece of the image. */
     public void imageMesh(Object im, int meshW, int meshH, float[] v) {
         apply();
-        BufferedImage bi = (BufferedImage) im;
+        BufferedImage bi = lit((BufferedImage) im);
         if (g.getClip() == null && rasterMesh(bi, meshW, meshH, v)) return;
         float cw = bi.getWidth() / (float) meshW, ch = bi.getHeight() / (float) meshH;
         AffineTransform saved = g.getTransform();

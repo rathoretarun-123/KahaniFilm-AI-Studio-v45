@@ -400,6 +400,30 @@ public final class Renderer {
     /** The shot on screen is a reverse shot (the listener's face): the place's reverse angle is drawn when the user gave one. */
     private boolean camReverse;
 
+    /** v47.10: how strongly the people match the light of the place's picture (0 not at all, 1 fully). */
+    public static float LIGHT_MATCH = 0.3f;
+
+    /**
+     * v47.10 (the user: "output must be pixer level"): the light of a place's own picture, as a colour each channel of a
+     * person or a thing from the user's pictures is multiplied by. The pictures of people are lit in plain studio light,
+     * the place in its own (a room's warm evening, a night's blue), so the people sat on it like stickers. Its hue is the
+     * picture's average colour, a third of the way from white; a dark picture (a night, a dim room) dims them, by at most
+     * 16%. A drawn place (no picture) leaves them as they are. Worked out once for each picture.
+     */
+    public static int pictureLight(Art.Backdrop b) {
+        if (b == null || b.small == null || b.small.length == 0 || LIGHT_MATCH <= 0) return 0xFFFFFF;
+        if (b.light >= 0) return b.light;
+        double r = 0, gr = 0, bl = 0; int n = 0;
+        for (int c : b.small) { if ((c >>> 24) < 128) continue; r += (c >> 16) & 255; gr += (c >> 8) & 255; bl += c & 255; n++; }
+        if (n == 0) return b.light = 0xFFFFFF;
+        r /= n; gr /= n; bl /= n;
+        double mx = Math.max(1, Math.max(r, Math.max(gr, bl)));
+        float lum = (float) ((0.299 * r + 0.587 * gr + 0.114 * bl) / 255);
+        float f = 0.84f + 0.16f * Math.min(1, lum / 0.45f), k = LIGHT_MATCH;
+        int R = Math.round(255 * f * (float) (1 - k * (1 - r / mx))), G = Math.round(255 * f * (float) (1 - k * (1 - gr / mx))), B = Math.round(255 * f * (float) (1 - k * (1 - bl / mx)));
+        return b.light = (Math.min(255, R) << 16) | (Math.min(255, G) << 8) | Math.min(255, B);
+    }
+
     /** The place picture behind this moment: the reverse angle in a reverse shot when there is one, else the plate. */
     private Art.Backdrop bd(Film.Seg s) {
         if (camReverse && s.backdropReverse != null) return s.backdropReverse;
@@ -1069,6 +1093,8 @@ public final class Renderer {
         // v44: snow on the ground — a snowy place, or snow that has been falling a while (it settles over 8 s)
         float cover = snowCover(s, t);
         if (cover > 0.01f) ActionProps.snowCover(g, -400, 1680, s.ground - 14, 900, cover, t);
+        // v47.10: the people and things from the user's pictures are drawn in the light of the place's picture
+        g.light(pictureLight(bd(s)));
         drawFxLayer(g, s, t, true);
         List<Film.Actor> list = new ArrayList<Film.Actor>(s.actors);
         final float tt = t;
@@ -1122,6 +1148,7 @@ public final class Renderer {
             else if (fa > 0.001f) { g.save(); g.setAlpha(fa); drawActor(g, s, a, t); g.restore(); }
             skipCarBack = null;
         }
+        g.light(0xFFFFFF);
         // v40: one walking behind the picture's fire is seen through its flames: they are drawn over them again
         float pfire = fireNow(s, t);
         if (pfire > 0 && someoneAtFire(s, t, picFireOnStage(s), -1)) {
@@ -1277,8 +1304,33 @@ public final class Renderer {
     // ================================================================== actors
 
     private float blink(float t, int seed) {
-        float p = (t + seed * 1.37f) % 3.9f;
-        return p < 0.13f ? 1f : 0f;
+        // v47.10: at uneven intervals (2.2 to 5.2 s, the same for the same character) and shaped as a lid moves —
+        // down in two frames, held, up in three (it was on or off, every 3.9 s exactly)
+        float at = 0.4f + (seed % 7) * 0.37f;
+        for (int i = 0; at <= t + 0.3f && i < 4000; i++) {
+            float b = blinkShape(t - at);
+            if (b > 0) return b;
+            at += 2.2f + 3.0f * (keyPose(seed, i, 5) * 0.5f + 0.5f);
+        }
+        return 0;
+    }
+
+    /** v47.10: the lid's closing over a blink started x seconds ago, 0..1: down by 0.07 s, shut to 0.12 s, open again by 0.25 s. */
+    public static float blinkShape(float x) {
+        if (x < 0 || x > 0.25f) return 0;
+        if (x < 0.07f) return Rig.smooth(0, 0.07f, x);
+        if (x < 0.12f) return 1;
+        return 1 - Rig.smooth(0.12f, 0.25f, x);
+    }
+
+    /** v47.10: a blink as the head moves into a new pose (an animator's habit): most phrases of a line begin with one. */
+    private float phraseBlink(Film.Actor a, float t) {
+        Film.Speak sp = speakingAt(a, t);
+        if (sp == null) return 0;
+        float u = t - sp.t0;
+        int n = (int) Math.floor(u / PHRASE_S);
+        if (n < 1 || keyPose(sp.line, n, 4) < -0.3f) return 0;
+        return blinkShape(u - n * PHRASE_S - 0.04f);
     }
 
     /** v40: running (not walking) at t. */
@@ -1609,7 +1661,7 @@ public final class Renderer {
             if (p.holdL == Pose.I_TEA || p.holdL == Pose.I_CUP) p.holdL = Pose.I_KULHAD;
         }
         p.eyesClosed = k.eyesShut;
-        p.blink = blink(tp, a.order);
+        p.blink = Math.max(blink(tp, a.order), ACTING > 0 ? phraseBlink(a, tp) : 0);
         // the eyes look (not behind dark glasses, a blindfold or an eye patch: nothing there to move)
         // (v35: a blind character's eyes do not follow anyone: the head turns to a sound, the eyes stay where they are)
         if (look.glasses != 2 && look.glasses != 4 && look.glasses != 5 && !look.cannotSee()) gaze(p, s, a, t);
@@ -3983,10 +4035,110 @@ public final class Renderer {
         } else {
             faceFor(p.emotion, st, 1f);
         }
+        if (person && p.body != Pose.LIE && p.body != Pose.HANG) acting(st, p, a, t, en, poise);
         // v34: the eyes (the picture is mirrored when facing left)
         st.gazeX = p.gazeX * mirror;
         st.gazeY = p.gazeY;
         return st;
+    }
+
+    /** v47.10: how strongly the acting layer plays (0 off); the tests and the desktop maker can change it. */
+    public static float ACTING = 1f;
+    private static final boolean ACT_DEBUG = System.getProperty("kahani.actDebug") != null;
+
+    /**
+     * v47.10 (the user: "output must be pixer level"): the acting under the words. An animator gives a speaker a key pose
+     * for every phrase: the head tilted one way, held, then moved into the next with a little overshoot. The stressed
+     * syllables bring a small nod and lift the brows, and the speaker leans into the words. The one listening nods now
+     * and then while the other talks, and everyone breathes and shifts their weight. Before, a speaker's head moved by
+     * under half a degree and the body by nothing: the pictures read as frozen with only the lips moving. A function of
+     * time only (frames drawn by different threads agree), gentler for a poised character.
+     */
+    private void acting(Rig.State st, Pose p, Film.Actor a, float t, float en, float poise) {
+        if (a == null || film == null || p.dead || ACTING <= 0) return;
+        float k = ACTING * (1 - 0.5f * Math.max(0, Math.min(1, poise)));
+        long sd = p.seed;
+        st.lean += (float) Math.sin(t * 0.55f + sd * 1.7f) * 0.8f * k;           // the weight shifts, slowly
+        st.breathe *= 1 + 0.6f * k;                                                // a breath you can see
+        Film.Speak sp = speakingAt(a, t);
+        if (sp != null && sp.line >= 0 && sp.line < film.lines.size()) {
+            Film.Line l = film.lines.get(sp.line);
+            float u = t - sp.t0, ph = PHRASE_S;
+            int n = (int) Math.floor(u / ph);
+            float e = backEase(Rig.smooth(0, 0.45f, u - n * ph));
+            float in = Rig.smooth(0, 0.35f, u) * Rig.smooth(0, 0.35f, sp.t1 - t);   // into the line and out of it
+            float tilt = keyTilt(sp.line, n - 1) + (keyTilt(sp.line, n) - keyTilt(sp.line, n - 1)) * e;
+            float nod = keyPose(sp.line, n - 1, 1) + (keyPose(sp.line, n, 1) - keyPose(sp.line, n - 1, 1)) * e;
+            st.headRot += tilt * 4.5f * en * k * in;
+            st.nod += nod * 0.16f * k * in;
+            st.lean += 1.3f * k * in;
+            float acc = accent(l, t);
+            st.nod += acc * 0.2f * en * k;
+            st.browUp += acc * 0.35f * k;
+            if (ACT_DEBUG) System.err.printf(java.util.Locale.US, "ACT %.3f %s tilt=%.2f nod=%.3f acc=%.2f%n", t, a.c.shown(), tilt * 4.5f * en * k * in, nod * 0.16f * k * in + acc * 0.2f * en * k, acc);
+            return;
+        }
+        // listening: a nod now and then as the other one's phrases end
+        Film.Seg s = curSeg;
+        if (s == null) return;
+        for (Film.Actor o : s.actors) {
+            if (o == a) continue;
+            Film.Speak os = speakingAt(o, t);
+            if (os == null) continue;
+            float u = t - os.t0;
+            int n = (int) Math.floor(u / PHRASE_S);
+            if (n < 1 || keyPose(os.line * 31 + a.order, n, 2) < 0.1f) return;    // about half of the phrase ends
+            float x = (u - n * PHRASE_S) / 0.6f;
+            if (x < 1) st.nod += (float) Math.sin(Math.PI * x) * 0.26f * k;
+            return;
+        }
+    }
+
+    /** v47.10: how long an acted phrase lasts (s): a new key pose of the head this often. */
+    public static final float PHRASE_S = 1.6f;
+
+    /** v47.10: a phrase's key pose, -1..1, the same for the same line, phrase and channel (0 the tilt, 1 the nod); 0 before the line. */
+    public static float keyPose(int line, int phrase, int ch) {
+        if (phrase < 0) return 0;
+        long h = (line * 0x9E3779B97F4A7C15L) ^ (phrase * 0xC2B2AE3D27D4EB4FL) ^ (ch * 0x165667B19E3779F9L);
+        h ^= h >>> 29; h *= 0xBF58476D1CE4E5B9L; h ^= h >>> 32;
+        return ((h & 0xFFFF) / 32767.5f) - 1f;
+    }
+
+    /**
+     * v47.10: a phrase's head tilt, -1..1: across to the other side from the phrase before, as an animator swings it
+     * (one phrase in four stays on the same side), by 45% to 100%; 0 before the line.
+     */
+    public static float keyTilt(int line, int phrase) {
+        if (phrase < 0) return 0;
+        float side = 1;
+        for (int q = 0; q <= phrase; q++) if (q == 0 ? keyPose(line, 0, 3) < 0 : keyPose(line, q, 3) > -0.5f) side = -side;
+        return side * (0.45f + 0.55f * Math.abs(keyPose(line, phrase, 0)));
+    }
+
+    /** v47.10: the ease of a move into a key pose: out of the old one, past the new one by about 6%, and back to it. */
+    public static float backEase(float x) {
+        float c1 = 1.2f, c3 = c1 + 1, y = x - 1;
+        return 1 + c3 * y * y * y + c1 * y * y;
+    }
+
+    /**
+     * v47.10: how much the voice is stressed now, 0..1: its loudness above the third of a second before it, averaged over
+     * a quarter of a second, so the head follows a group of syllables, never each one (a shake).
+     */
+    static float accent(Film.Line l, float t) {
+        if (l.env == null || l.env.length == 0) return 0;
+        float sum = 0;
+        for (int j = -4; j <= 4; j++) {
+            float tt = t + j * 0.03f;
+            int i = Math.round((tt - l.start) * 100);
+            if (i < 0 || i >= l.env.length) continue;
+            float mean = 0; int m = 0;
+            for (int q = Math.max(0, i - 35); q < i; q++) { mean += l.env[q]; m++; }
+            if (m > 0) mean /= m;
+            sum += Math.max(0, l.env[i] - mean) * (5 - Math.abs(j)) / 25f;
+        }
+        return Math.min(1, sum * 2.2f);
     }
 
     /**
@@ -4913,25 +5065,28 @@ public final class Renderer {
             float er = sp.eyeR * w;
             // blinking / closed eyes (v34: never painted over dark glasses, a blindfold or an eye patch)
             boolean covered = look != null && (look.glasses == 2 || look.glasses == 4 || look.glasses == 5);
-            if ((p.blink > 0.5f || p.eyesClosed) && !covered) {
+            float shut = p.eyesClosed ? 1 : Math.max(0, Math.min(1, p.blink));
+            if (shut > 0.08f && !covered) {
                 for (int i = 0; i < 2; i++) {
                     float ex = i == 0 ? ex1 : ex2, ey = i == 0 ? ey1 : ey2;
                     // v38: an eyelid the shape of the eye (an almond), its edge soft into the skin around it, the lashes
-                    // along its lower edge — not a flat disc over the eye
+                    // along its lower edge — not a flat disc over the eye. v47.10: it comes down over the eye as the
+                    // blink goes on (its lower edge from the top of the eye to the bottom), never popping shut
                     int lid = sp.lid | 0xFF000000;
-                    g.radial(ex, ey - er * 0.1f, er * 1.75f, lid, lid & 0x00FFFFFF);
+                    float lo = ey - er * 2.1f + er * 3.7f * shut, cy = ey - er * 0.9f * (1 - shut);
+                    g.radial(ex, ey - er * 0.1f, er * 1.75f, Puppet.alpha(lid, shut), lid & 0x00FFFFFF);
                     g.oval(ex, ey - er * 0.1f, er * 1.75f, er * 1.45f);
                     g.color(lid);
                     g.begin();
-                    g.moveTo(ex - er * 1.3f, ey);
-                    g.quadTo(ex, ey - er * 2.1f, ex + er * 1.3f, ey);
-                    g.quadTo(ex, ey + er * 1.6f, ex - er * 1.3f, ey);
+                    g.moveTo(ex - er * 1.3f, cy);
+                    g.quadTo(ex, ey - er * 2.1f, ex + er * 1.3f, cy);
+                    g.quadTo(ex, lo, ex - er * 1.3f, cy);
                     g.close();
                     g.fillPath();
                     g.color(0xE02A1A12);
                     g.begin();
-                    g.moveTo(ex - er * 1.25f, ey + er * 0.1f);
-                    g.quadTo(ex, ey + er * 0.85f, ex + er * 1.25f, ey + er * 0.1f);
+                    g.moveTo(ex - er * 1.25f, cy + er * 0.1f);
+                    g.quadTo(ex, lo - er * 0.75f * shut, ex + er * 1.25f, cy + er * 0.1f);
                     g.strokePath(Math.max(1.5f, er * 0.14f));
                 }
             }

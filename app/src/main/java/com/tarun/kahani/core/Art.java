@@ -215,6 +215,8 @@ public final class Art {
         /** v47.9: a small copy of the picture (at most 160 wide) for finding things in it; null when not read. */
         public int[] small;
         public int sw, sh;
+        /** v47.10: the light of this picture as a colour (Renderer.pictureLight), -1 until worked out. */
+        public int light = -1;
     }
 
     /** v47.9: the sofa's length the words give ("6 फुट लंबा", "तीन सीटर"), in feet; 6 when they give none. */

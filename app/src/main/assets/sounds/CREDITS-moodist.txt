@@ -1,0 +1,7 @@
+Ambient recordings named moodist_*.ogg come from Moodist (https://github.com/remvze/moodist, MIT-licensed project),
+public/sounds/. Per the Moodist README, its sounds are licensed under either the Creative Commons Zero licence (CC0,
+https://creativecommons.org/publicdomain/zero/1.0/) or the Pixabay Content License
+(https://pixabay.com/service/license-summary/); the README does not say which applies to each file. Both allow use in
+an app without payment or attribution. They were converted for KahaniFilm to mono Vorbis (44.1 kHz), cut to at most
+40 seconds with short fades, and indexed with English and Hindi words (index.json, "licence" field on each entry).
+Fetched 18 October 2026 from raw.githubusercontent.com/remvze/moodist/main.

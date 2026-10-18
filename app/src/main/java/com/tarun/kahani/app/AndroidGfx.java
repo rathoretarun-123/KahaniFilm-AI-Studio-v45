@@ -68,6 +68,7 @@ public final class AndroidGfx implements Gfx {
         alphaStack.add(new float[]{alpha});
         shaderStack.add(shader);
         colorStack.add(color);
+        lightStack.add(lightRGB);
     }
 
     public void restore() {
@@ -77,6 +78,8 @@ public final class AndroidGfx implements Gfx {
             alpha = alphaStack.remove(n)[0];
             shader = shaderStack.remove(n);
             color = colorStack.remove(n);
+            int l = lightStack.remove(n);
+            if (l != lightRGB) light(l);
         }
     }
 
@@ -89,6 +92,15 @@ public final class AndroidGfx implements Gfx {
     private float shade;
     private final android.graphics.Matrix mtx = new android.graphics.Matrix();
     public void shading(float k) { shade = Math.max(0, Math.min(1, k)); }
+    private int lightRGB = 0xFFFFFF;
+    private final ArrayList<Integer> lightStack = new ArrayList<Integer>();
+    /** v47.10: the light pictures are drawn in (Gfx.light): a colour filter multiplying each channel of the image paint. */
+    public void light(int rgb) {
+        lightRGB = rgb & 0xFFFFFF;
+        android.graphics.ColorFilter cf = lightRGB == 0xFFFFFF ? null : new android.graphics.LightingColorFilter(lightRGB, 0);
+        img.setColorFilter(cf);
+        meshPaint.setColorFilter(cf);
+    }
 
     /**
      * v47.9: the fill paint, with volume while shading is on (Shading: a ball for an oval, a lit-from-above column

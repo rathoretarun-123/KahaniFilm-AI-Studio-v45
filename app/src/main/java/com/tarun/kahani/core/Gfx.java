@@ -21,6 +21,11 @@ public interface Gfx {
     void color(int argb);
     /** v47.9: solid fills drawn from now on get volume at this strength (0 off, 1 full): see Shading. Kept through save/restore. */
     void shading(float k);
+    /**
+     * v47.10: the light pictures are drawn in from now on: each channel of every image drawn is multiplied by this
+     * colour's (0xRRGGBB; 0xFFFFFF draws them as they are). Kept through save/restore.
+     */
+    void light(int rgb);
     void linear(float x0, float y0, float x1, float y1, int c0, int c1);
     void radial(float cx, float cy, float r, int c0, int c1);
 

@@ -327,5 +327,653 @@
 "words": "festive, festival, celebration, wedding, dance, party, mela, diwali, holi, उत्सव, त्योहार, शादी, नाच, दिवाली, होली",
 "title": "Festive dhol",
 "seconds": 48.0
+},
+{
+"file": "moodist_animals_beehive.ogg",
+"type": "amb",
+"words": "bees, beehive, buzzing, honey, मधुमक्खी, छत्ता, भिनभिनाना",
+"title": "Beehive (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_birds.ogg",
+"type": "amb",
+"words": "birds, chirping, morning, garden, sparrow, चिड़िया, पक्षी, चहचहाना, सुबह, बगीचा",
+"title": "Birds (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_cat_purring.ogg",
+"type": "amb",
+"words": "cat, purring, purr, बिल्ली, घुरघुर",
+"title": "Cat Purring (Moodist)",
+"seconds": 38.7,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_chickens.ogg",
+"type": "amb",
+"words": "chickens, hens, rooster, farm, मुर्गी, मुर्गा, मुर्गियाँ",
+"title": "Chickens (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_cows.ogg",
+"type": "amb",
+"words": "cow, cows, moo, cattle, farm, गाय, गायें, रंभाना, बैल",
+"title": "Cows (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_crickets.ogg",
+"type": "amb",
+"words": "crickets, night, field, झींगुर, रात",
+"title": "Crickets (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_crows.ogg",
+"type": "amb",
+"words": "crow, crows, cawing, कौआ, कौवा, काँव",
+"title": "Crows (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_dog_barking.ogg",
+"type": "sfx",
+"words": "dog, barking, bark, कुत्ता, भौंकना, भौंक",
+"title": "Dog Barking (Moodist)",
+"seconds": 16.2,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_frog.ogg",
+"type": "amb",
+"words": "frog, frogs, pond, croak, मेंढक, तालाब",
+"title": "Frog (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_horse_gallop.ogg",
+"type": "sfx",
+"words": "horse, gallop, galloping, hooves, rider, घोड़ा, घोड़े, सरपट, टाप",
+"title": "Horse Gallop (Moodist)",
+"seconds": 9.1,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_owl.ogg",
+"type": "amb",
+"words": "owl, hoot, night forest, उल्लू",
+"title": "Owl (Moodist)",
+"seconds": 12.9,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_seagulls.ogg",
+"type": "amb",
+"words": "seagulls, gulls, beach, harbour, समुद्री पक्षी, बंदरगाह",
+"title": "Seagulls (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_sheep.ogg",
+"type": "amb",
+"words": "sheep, flock, bleat, goats, भेड़, बकरी, मेमना",
+"title": "Sheep (Moodist)",
+"seconds": 31.2,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_whale.ogg",
+"type": "amb",
+"words": "whale, deep sea, व्हेल, गहरा समुद्र",
+"title": "Whale (Moodist)",
+"seconds": 30.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_wolf.ogg",
+"type": "sfx",
+"words": "wolf, howl, wolves, भेड़िया, हुआँ",
+"title": "Wolf (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_animals_woodpecker.ogg",
+"type": "amb",
+"words": "woodpecker, pecking, कठफोड़वा",
+"title": "Woodpecker (Moodist)",
+"seconds": 15.3,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_campfire.ogg",
+"type": "amb",
+"words": "campfire, fire, crackling, bonfire, आग, अलाव, अंगीठी, चूल्हा",
+"title": "Campfire (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_droplets.ogg",
+"type": "amb",
+"words": "droplets, dripping, cave drips, बूँदें, टपकना, टप-टप",
+"title": "Droplets (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_howling_wind.ogg",
+"type": "amb",
+"words": "howling wind, gale, storm wind, desert wind, आँधी, सनसनाती हवा",
+"title": "Howling Wind (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_jungle.ogg",
+"type": "amb",
+"words": "jungle, forest, wild, जंगल, वन",
+"title": "Jungle (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_river.ogg",
+"type": "amb",
+"words": "river, stream, flowing water, नदी, धारा, बहता पानी",
+"title": "River (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_walk_in_snow.ogg",
+"type": "sfx",
+"words": "walking in snow, snow footsteps, बर्फ़ पर चलना, बर्फ",
+"title": "Walk in Snow (Moodist)",
+"seconds": 36.7,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_walk_on_gravel.ogg",
+"type": "sfx",
+"words": "walking on gravel, footsteps, path, कंकड़, बजरी, कदमों की आवाज़",
+"title": "Walk on Gravel (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_walk_on_leaves.ogg",
+"type": "sfx",
+"words": "walking on leaves, dry leaves, footsteps, सूखे पत्ते, पत्तों पर चलना",
+"title": "Walk on Leaves (Moodist)",
+"seconds": 20.6,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_waterfall.ogg",
+"type": "amb",
+"words": "waterfall, falls, cascade, झरना, प्रपात",
+"title": "Waterfall (Moodist)",
+"seconds": 23.5,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_waves.ogg",
+"type": "amb",
+"words": "waves, sea, ocean, beach, लहरें, समुद्र, सागर, तट",
+"title": "Waves (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_wind.ogg",
+"type": "amb",
+"words": "wind, breeze, हवा, पवन",
+"title": "Wind (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_nature_wind_in_trees.ogg",
+"type": "amb",
+"words": "wind in trees, rustling leaves, tree, पेड़, पत्ते सरसराना, सरसराहट",
+"title": "Wind in Trees (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_airport.ogg",
+"type": "amb",
+"words": "airport, terminal, announcements, हवाई अड्डा",
+"title": "Airport (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_cafe.ogg",
+"type": "amb",
+"words": "cafe, coffee shop, chatter, tea shop, कैफ़े, चाय की दुकान, बातचीत",
+"title": "Cafe (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_carousel.ogg",
+"type": "amb",
+"words": "carousel, fair, merry-go-round, mela, मेला, झूला",
+"title": "Carousel (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_church.ogg",
+"type": "amb",
+"words": "church, hall, choir echo, गिरजाघर, चर्च",
+"title": "Church (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_construction_site.ogg",
+"type": "amb",
+"words": "construction, building site, hammering, निर्माण, मज़दूर, हथौड़ा",
+"title": "Construction Site (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_crowded_bar.ogg",
+"type": "amb",
+"words": "crowded room, party, chatter, भीड़, दावत, शोर",
+"title": "Crowded Bar (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_laboratory.ogg",
+"type": "amb",
+"words": "laboratory, lab, machines, प्रयोगशाला",
+"title": "Laboratory (Moodist)",
+"seconds": 21.2,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_laundry_room.ogg",
+"type": "amb",
+"words": "laundry, washing, कपड़े धोना",
+"title": "Laundry Room (Moodist)",
+"seconds": 32.5,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_library.ogg",
+"type": "amb",
+"words": "library, quiet room, pages, पुस्तकालय, लाइब्रेरी, शांत",
+"title": "Library (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_night_village.ogg",
+"type": "amb",
+"words": "village at night, night village, गाँव, गांव, रात, देहात",
+"title": "Night Village (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_office.ogg",
+"type": "amb",
+"words": "office, typing, phones, दफ़्तर, ऑफिस",
+"title": "Office (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_restaurant.ogg",
+"type": "amb",
+"words": "restaurant, dining, plates, dhaba, रेस्टोरेंट, ढाबा, खाना",
+"title": "Restaurant (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_subway_station.ogg",
+"type": "amb",
+"words": "subway, metro station, platform, मेट्रो, स्टेशन",
+"title": "Subway Station (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_supermarket.ogg",
+"type": "amb",
+"words": "supermarket, shop, store, market, दुकान, बाज़ार, मॉल",
+"title": "Supermarket (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_temple.ogg",
+"type": "amb",
+"words": "temple, bells, prayer, मंदिर, घंटी, पूजा, आरती",
+"title": "Temple (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_places_underwater.ogg",
+"type": "amb",
+"words": "underwater, under water, diving, पानी के नीचे, गोता",
+"title": "Underwater (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_heavy_rain.ogg",
+"type": "amb",
+"words": "heavy rain, downpour, monsoon, मूसलाधार, तेज़ बारिश, बरसात",
+"title": "Heavy Rain (Moodist)",
+"seconds": 21.8,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_light_rain.ogg",
+"type": "amb",
+"words": "light rain, drizzle, rain, बूँदाबाँदी, हल्की बारिश, बारिश",
+"title": "Light Rain (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_rain_on_car_roof.ogg",
+"type": "amb",
+"words": "rain on car roof, car, कार पर बारिश",
+"title": "Rain on Car Roof (Moodist)",
+"seconds": 10.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_rain_on_leaves.ogg",
+"type": "amb",
+"words": "rain on leaves, forest rain, पत्तों पर बारिश",
+"title": "Rain on Leaves (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_rain_on_tent.ogg",
+"type": "amb",
+"words": "rain on tent, tent, shed, tin roof, तंबू, टीन की छत",
+"title": "Rain on Tent (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_rain_on_umbrella.ogg",
+"type": "amb",
+"words": "rain on umbrella, umbrella, छाता, छतरी",
+"title": "Rain on Umbrella (Moodist)",
+"seconds": 26.6,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_rain_on_window.ogg",
+"type": "amb",
+"words": "rain on window, window, glass, खिड़की पर बारिश",
+"title": "Rain on Window (Moodist)",
+"seconds": 33.1,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_rain_thunder.ogg",
+"type": "sfx",
+"words": "thunder, thunderstorm, storm, बिजली, गरज, कड़कना, तूफ़ान",
+"title": "Thunder (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_boiling_water.ogg",
+"type": "sfx",
+"words": "boiling water, kettle, tea, cooking, उबलता पानी, केतली, चाय, चूल्हा",
+"title": "Boiling Water (Moodist)",
+"seconds": 18.5,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_bubbles.ogg",
+"type": "sfx",
+"words": "bubbles, fish tank, water, बुलबुले",
+"title": "Bubbles (Moodist)",
+"seconds": 6.4,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_ceiling_fan.ogg",
+"type": "amb",
+"words": "ceiling fan, fan, whirring, पंखा, घर-घर, घरघर",
+"title": "Ceiling Fan (Moodist)",
+"seconds": 15.6,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_clock.ogg",
+"type": "amb",
+"words": "clock, ticking, tick tock, घड़ी, टिक-टिक",
+"title": "Clock (Moodist)",
+"seconds": 15.9,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_dryer.ogg",
+"type": "amb",
+"words": "dryer, machine hum, मशीन",
+"title": "Dryer (Moodist)",
+"seconds": 28.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_keyboard.ogg",
+"type": "sfx",
+"words": "keyboard, typing, computer, कंप्यूटर, टाइपिंग",
+"title": "Keyboard (Moodist)",
+"seconds": 12.1,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_morse_code.ogg",
+"type": "sfx",
+"words": "morse code, telegraph, signal, तार, संदेश",
+"title": "Morse Code (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_paper.ogg",
+"type": "sfx",
+"words": "paper, pages, turning pages, letter, book, काग़ज़, पन्ने, चिट्ठी, किताब",
+"title": "Paper (Moodist)",
+"seconds": 17.2,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_singing_bowl.ogg",
+"type": "sfx",
+"words": "singing bowl, meditation, prayer, ध्यान, कटोरा",
+"title": "Singing Bowl (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_slide_projector.ogg",
+"type": "sfx",
+"words": "projector, slides, clicking, प्रोजेक्टर",
+"title": "Slide Projector (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_tuning_radio.ogg",
+"type": "sfx",
+"words": "radio, tuning, static, रेडियो",
+"title": "Tuning Radio (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_typewriter.ogg",
+"type": "sfx",
+"words": "typewriter, typing letter, टाइपराइटर",
+"title": "Typewriter (Moodist)",
+"seconds": 21.8,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_vinyl_effect.ogg",
+"type": "amb",
+"words": "old record, gramophone, crackle, nostalgia, पुराना रिकॉर्ड, ग्रामोफ़ोन, यादें",
+"title": "Vinyl Effect (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_washing_machine.ogg",
+"type": "amb",
+"words": "washing machine, laundry, वॉशिंग मशीन",
+"title": "Washing Machine (Moodist)",
+"seconds": 22.5,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_wind_chimes.ogg",
+"type": "amb",
+"words": "wind chimes, chimes, magic, घंटियाँ, विंड चाइम",
+"title": "Wind Chimes (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_things_windshield_wipers.ogg",
+"type": "amb",
+"words": "windshield wipers, car in rain, वाइपर",
+"title": "Windshield Wipers (Moodist)",
+"seconds": 15.1,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_transport_airplane.ogg",
+"type": "amb",
+"words": "airplane, plane, flight, cabin, हवाई जहाज़, विमान",
+"title": "Airplane (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_transport_inside_a_train.ogg",
+"type": "amb",
+"words": "inside a train, train journey, compartment, रेल का डिब्बा, सफ़र",
+"title": "Inside a Train (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_transport_rowing_boat.ogg",
+"type": "amb",
+"words": "rowing boat, oars, boat, river, नाव, चप्पू, नाविक",
+"title": "Rowing Boat (Moodist)",
+"seconds": 25.5,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_transport_sailboat.ogg",
+"type": "amb",
+"words": "sailboat, boat, sea, sail, नाव, पाल, समुद्र",
+"title": "Sailboat (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_transport_submarine.ogg",
+"type": "amb",
+"words": "submarine, deep water, पनडुब्बी",
+"title": "Submarine (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_transport_train.ogg",
+"type": "amb",
+"words": "train, railway, passing train, रेल, रेलगाड़ी, ट्रेन",
+"title": "Train (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_urban_ambulance_siren.ogg",
+"type": "sfx",
+"words": "ambulance, siren, hospital, एम्बुलेंस, सायरन, अस्पताल",
+"title": "Ambulance Siren (Moodist)",
+"seconds": 22.6,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_urban_busy_street.ogg",
+"type": "amb",
+"words": "busy street, city, traffic, bazaar, शहर, भीड़भाड़, बाज़ार",
+"title": "Busy Street (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_urban_crowd.ogg",
+"type": "amb",
+"words": "crowd, people, gathering, market crowd, भीड़, लोग, मेला",
+"title": "Crowd (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_urban_fireworks.ogg",
+"type": "sfx",
+"words": "fireworks, diwali, crackers, celebration, पटाखे, आतिशबाज़ी, दिवाली",
+"title": "Fireworks (Moodist)",
+"seconds": 34.5,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_urban_highway.ogg",
+"type": "amb",
+"words": "highway, cars passing, हाईवे, राजमार्ग",
+"title": "Highway (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_urban_road.ogg",
+"type": "amb",
+"words": "road, street, cars, सड़क, गाड़ियाँ",
+"title": "Road (Moodist)",
+"seconds": 40.0,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+},
+{
+"file": "moodist_urban_traffic.ogg",
+"type": "amb",
+"words": "traffic, horns, city, ट्रैफ़िक, हॉर्न",
+"title": "Traffic (Moodist)",
+"seconds": 39.9,
+"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
 }
 ]
