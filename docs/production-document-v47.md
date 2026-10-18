@@ -994,3 +994,72 @@ their old recording.
   engine.
 - **Pixar-level**: this remains 2D animation of the user's pictures on a mesh rig. These changes make it act and sit
   in its light better; they do not make it a 3D film.
+
+## 13. Ninth round (18 October, later): the pages, the camera, lips on every side
+
+The user: "recheck your studio page and film making page as well they are very cluttered and not upto the mark have
+bugs, no continue button nothing"; "the films you are created are not animation, no motion, no lipsync no camera
+movement"; "also use freely available voices from GitHub … and save them in our library"; "hard code their api in apk".
+
+### The pages, seen as the phone shows them (`UiShotsTest`)
+
+A new test opens every page in a phone-sized window, draws it whole into `build/ui_shots`, and checks it.
+
+- **A real bug: invisible buttons.** `Ui.small` gives a button no width of its own and a share of its row; in a column
+  that share is of the height, so the button was 0 pixels wide. The six "+ Front / + Back …" places of every character
+  could not be seen or tapped, and the film page's "📷 Add" rows were blank. A column now takes such a child at full
+  width (`Ui.Column`), which mends every one of them.
+- **The Studio** was over 12,000 pixels tall (more than fifteen screens, 106 pieces of text), with Make film at the
+  very bottom. Now:
+  - Make film is at the top, under a short line saying what is ready and that everything is optional.
+  - Then the characters, the things, the places, and the title and end pages, in the user's order.
+  - The helpers, the extra views of each place, the references, the story board, the director's plan and the script
+    format are folded under "More". They are built only when opened, and stay open after an upload. The director's
+    plan used to be worked out every time the page opened.
+  - The empty picture places are tappable and their names read in full ("Left side", "¾ right").
+- **The film page** listed every character, thing and place twice under the progress. Now there is one button to the
+  studio. A stopped film loses the "keeps being made" note.
+- **Continue after the app was closed.** A film is marked as being made when it starts; the mark goes when it is done
+  or stopped. If the app was closed (or the phone closed it) in between, the film page says so and offers Continue,
+  which presses itself after 30 seconds once in ten minutes. The home page shows "Continue making your film" first.
+  Before, the page fell back to the story with no Continue at all.
+
+### The camera moves (the user's word over protocol P3)
+
+Each held shot makes one slow move from cut to cut, eased out of the cut and into the next:
+
+- a face or a pair talking: a push in, 6% closer by the cut (4% on a wider shot);
+- a wide: a drift across of 4% of the frame, alternating in direction, with a slight push.
+
+While the frame moves, nothing is snapped to its pixels. Scripted moves stay as written.
+
+### Lips on side and three-quarter pictures (`Cutout.sideMouth`, `LipFinderTest`)
+
+- **Why side views were silent.** A side or three-quarter picture's mouth point was on the cheek or the jaw, so the
+  jaw was kept shut. The user's side and three-quarter pictures, loaded as views, had no face read at all.
+- **The fix.** The mouth is now found by the lips' colour: redder and darker than the lighter half of the skin
+  (darker than a blush), the widest mark at least 1.4 times as wide as tall, never a large round blush or a nostril.
+  A point the face reader gave is kept when there are lips under it. Only a mouth really found opens; nothing is
+  guessed.
+- **On the sofa story's eight side and three-quarter pictures:** the lips were found on five, at the lips each time,
+  and nowhere wrong. The little one's left side and her two three-quarter views (very faint lips) stay closed.
+
+### Gestures
+
+In about half of a speaker's phrases one hand comes up and out with the words, more on the stressed syllables, and
+goes back as the phrase ends — never while the hands hold something.
+
+### Blinks, corrected
+
+The eyelid painted half way over a photographed eye read as a flat, sleepy line across the iris. The lid is drawn
+again only while the eye is mostly shut, a little larger and wider than the eye found; the uneven timing stays.
+
+### Voices from GitHub, and keys in the APK: not done (said, not hidden)
+
+- **Voices: BLOCKED.** Only raw files on GitHub can be reached from the build machine (its search, API and release
+  downloads are refused). No package found on the reachable registries (npm, PyPI) carries a Hindi voice of its own;
+  the voice packages fetch their models from Hugging Face, which is unreachable, and the Edge voices are an online
+  service under a non-commercial licence. No voice was added whose licence could not be checked.
+- **Keys in the APK: not done.** The sounds bundled need no key, and no key to a paid service exists here. A key put
+  inside an APK published on a public release can be read out by anyone and used against the account; a key the user
+  gets can be entered in Settings.

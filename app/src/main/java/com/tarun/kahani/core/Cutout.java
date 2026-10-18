@@ -457,6 +457,85 @@ public final class Cutout {
      * above it (between the nose and the lips), about one eye-distance below the eyes. Pixels: {x, y, half width,
      * score}, or null when there is no convincing patch.
      */
+    /**
+     * v47.10 (the user: "no lipsync"): the mouth of a face in profile or three-quarter, from its colour. The point the
+     * face reader gives such a face is often on the cheek or the jaw, so a side picture never moved its lips. Below the
+     * eyes (from a third to one and a half of the eye-to-eye span) the lips are redder and darker than the skin; so
+     * are the nostrils (small) and a blush on the cheek (large and round). The mouth is the widest mark among the rest —
+     * an eighth of the span wide or more, 1.4 times as wide as tall. Returns {x, y, half width} in pixels, or null.
+     */
+    private static final boolean SIDE_DEBUG = System.getProperty("kahani.mouthDebug") != null;
+    public static float[] sideMouth(int[] px, int w, int h, float exL, float exR, float ey) { return sideMouth(px, w, h, exL, exR, ey, Float.NaN, Float.NaN); }
+
+    /**
+     * v47.10: as above; and when no mark is wide enough, a smaller one of the lips' colour right at the point the face
+     * reader gave (mx, my) — within a quarter of the span — confirms that point as the mouth.
+     */
+    public static float[] sideMouth(int[] px, int w, int h, float exL, float exR, float ey, float mx, float my) {
+        float span = Math.max(Math.abs(exR - exL), w * 0.05f);
+        int x0 = Math.max(0, Math.round(Math.min(exL, exR) - 0.9f * span)), x1 = Math.min(w - 1, Math.round(Math.max(exL, exR) + 0.9f * span));
+        int y0 = Math.max(0, Math.round(ey + 0.35f * span)), y1 = Math.min(h - 1, Math.round(ey + 1.5f * span));
+        if (x1 - x0 < 8 || y1 - y0 < 8) return null;
+        int rw = x1 - x0 + 1, rh = y1 - y0 + 1;
+        // the skin: the middle of the warm, light pixels of the region
+        int[] hr = new int[256], hg = new int[256], hb = new int[256];
+        int ns = 0;
+        for (int y = y0; y <= y1; y++) for (int x = x0; x <= x1; x++) {
+            int c = px[y * w + x];
+            if ((c >>> 24) < 200) continue;
+            int r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255;
+            if (r > 120 && r > g && g > b) { hr[r]++; hg[g]++; hb[b]++; ns++; }
+        }
+        if (ns < 50) return null;
+        // (the lighter half of it: the blush of a cheek is skin too, and made the lips look like skin)
+        int sr = quantile(hr, ns, 0.65f), sg = quantile(hg, ns, 0.65f), sb = quantile(hb, ns, 0.65f);
+        float sl = 0.299f * sr + 0.587f * sg + 0.114f * sb;
+        boolean[] on = new boolean[rw * rh];
+        for (int y = y0; y <= y1; y++) for (int x = x0; x <= x1; x++) {
+            int c = px[y * w + x];
+            if ((c >>> 24) < 200) continue;
+            int r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255;
+            float lum = 0.299f * r + 0.587f * g + 0.114f * b;
+            on[(y - y0) * rw + (x - x0)] = (r - g) - (sr - sg) > 22 && lum < sl - 18 && lum > 60 && r > g + 30;     // (darker than a blush)
+        }
+        // the marks, and the widest flat one
+        int[] stack = new int[on.length];
+        boolean[] seen = new boolean[on.length];
+        float best = 0; float[] out = null, atPoint = null;
+        for (int i = 0; i < on.length; i++) {
+            if (!on[i] || seen[i]) continue;
+            int top = 0, n = 0, bx0 = rw, bx1 = -1, by0 = rh, by1 = -1; long sx = 0, sy = 0;
+            stack[top++] = i; seen[i] = true;
+            while (top > 0) {
+                int c = stack[--top]; n++;
+                int cx = c % rw, cy = c / rw;
+                sx += cx; sy += cy;
+                bx0 = Math.min(bx0, cx); bx1 = Math.max(bx1, cx); by0 = Math.min(by0, cy); by1 = Math.max(by1, cy);
+                for (int k = 0; k < 8; k++) {
+                    int nx = cx + (k == 0 || k == 4 || k == 5 ? 1 : k == 1 || k == 6 || k == 7 ? -1 : 0), ny = cy + (k == 2 || k == 4 || k == 6 ? 1 : k == 3 || k == 5 || k == 7 ? -1 : 0);
+                    if (nx < 0 || ny < 0 || nx >= rw || ny >= rh) continue;
+                    int j = ny * rw + nx;
+                    if (on[j] && !seen[j]) { seen[j] = true; stack[top++] = j; }
+                }
+            }
+            float bw = bx1 - bx0 + 1, bh = by1 - by0 + 1;
+            if (SIDE_DEBUG && n > 20) System.err.printf(java.util.Locale.US, "  blob n=%d bw=%.0f bh=%.0f at %.0f,%.0f (span %.0f, skin %d,%d,%d)%n", n, bw, bh, x0 + sx / (float) n, y0 + sy / (float) n, span, sr, sg, sb);
+            float bcx = x0 + sx / (float) n, bcy = y0 + sy / (float) n;
+            if (!Float.isNaN(mx) && n >= 0.001f * span * span && n <= 0.06f * span * span && bw >= 1.2f * bh
+                    && Math.abs(bcx - mx) < 0.25f * span && Math.abs(bcy - my) < 0.25f * span) atPoint = new float[]{mx, my, Math.max(bw / 2, 0.08f * span)};
+            // (a side view's mouth is short — 1.4 times as wide as tall is enough; a blush is large and round)
+            if (n < 0.002f * span * span || n > 0.06f * span * span || bw < 0.12f * span || bw < 1.4f * bh) continue;
+            if (bw > best) { best = bw; out = new float[]{bcx, bcy, bw / 2}; }
+        }
+        return out != null ? out : atPoint;
+    }
+
+    private static int quantile(int[] hist, int n, float q) {
+        int acc = 0;
+        for (int i = 0; i < 256; i++) { acc += hist[i]; if (acc >= n * q) return i; }
+        return 255;
+    }
+
     public static float[] findLips(int[] px, int w, int h, float exL, float exR, float ey, int skin) {
         if (px == null || w < 20 || h < 20) return null;
         if (exL > exR) { float tt = exL; exL = exR; exR = tt; }

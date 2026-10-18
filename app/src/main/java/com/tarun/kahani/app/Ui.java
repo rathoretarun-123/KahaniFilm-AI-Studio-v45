@@ -10,6 +10,7 @@ import android.text.TextUtils;
 import android.util.TypedValue;
 import android.view.Gravity;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
@@ -28,9 +29,31 @@ final class Ui {
     }
 
     static LinearLayout column(Context c) {
-        LinearLayout l = new LinearLayout(c);
+        LinearLayout l = new Column(c);
         l.setOrientation(LinearLayout.VERTICAL);
         return l;
+    }
+
+    /**
+     * v47.10 (the user: "studio page has bugs"): a column that takes a child sized for a row — no width of its own, a
+     * share of the row's width (Ui.small) — as full width. In a column the share is of the height, so such a child was
+     * 0 pixels wide: the six "+ Front / + Back …" places of a character could not be seen or tapped, and the film page's
+     * "📷 Add" rows were blank.
+     */
+    static final class Column extends LinearLayout {
+        Column(Context c) { super(c); }
+        @Override public void addView(View child, int index, ViewGroup.LayoutParams params) {
+            if (getOrientation() == VERTICAL && params instanceof LinearLayout.LayoutParams) {
+                LinearLayout.LayoutParams lp = (LinearLayout.LayoutParams) params;
+                if (lp.width == 0 && lp.weight > 0) {
+                    LinearLayout.LayoutParams full = new LinearLayout.LayoutParams(LayoutParams.MATCH_PARENT, lp.height == 0 ? LayoutParams.WRAP_CONTENT : lp.height);
+                    full.setMargins(lp.leftMargin, lp.topMargin, lp.rightMargin, lp.bottomMargin);
+                    full.gravity = lp.gravity;
+                    params = full;
+                }
+            }
+            super.addView(child, index, params);
+        }
     }
 
     static LinearLayout row(Context c) {

@@ -45,6 +45,8 @@ public final class Art {
         public boolean mouthOpen;
         /** v40: the mouth point was moved onto the lips found by their colour (it had no lips under it). */
         public boolean mouthMoved;
+        /** v47.10: a turned face whose mouth was found by its colour (Cutout.sideMouth): it may open its lips. */
+        public boolean mouthSeen;
         /**
          * v40: the way the picture itself faces: -1 turned to the picture's left, +1 to its right, 0 a front (or a
          * back). The film mirrors a picture by this, so a three-quarter or side picture never walks backwards.
@@ -690,8 +692,23 @@ public final class Art {
      * opening (a point left on the skin under the nose made the mesh open a second mouth there: the "new lips"), and
      * a mouth showing teeth or its dark inside is marked open — it is never painted open further.
      */
+    private static final boolean MOUTH_DEBUG = System.getProperty("kahani.mouthDebug") != null;
     public static void mouthFromPicture(Cutout.Result r, Sprite s) {
         s.mouthOpen = false;
+        // v47.10 (the user: "no lipsync"): the user's side and three-quarter pictures (views of the main one) had no
+        // face read at all, so they never moved their lips. The cut-out found the face: its eyes are taken, and the mouth
+        // is found by the lips' colour — only a mouth really found makes the face known (no lips guessed onto a cheek)
+        if (r != null && s != null && !s.faceKnown && r.faceFound && r.px != null && r.eyeRX > r.eyeLX) {
+            float[] sm = Cutout.sideMouth(r.px, r.w, r.h, r.eyeLX * r.w, r.eyeRX * r.w, r.eyeY * r.h, r.mouthX * r.w, r.mouthY * r.h);
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH view %dx%d found=%s%n", r.w, r.h, sm != null);
+            if (sm != null) {
+                s.eyeLX = r.eyeLX; s.eyeRX = r.eyeRX; s.eyeLY = s.eyeRY = r.eyeY;
+                s.mouthX = sm[0] / r.w; s.mouthY = sm[1] / r.h; s.mouthHW = sm[2] / r.w;
+                s.faceKnown = true; s.mouthSeen = true; s.mouthMoved = true;
+                s.faces = facingOf(r, s);
+                return;
+            }
+        }
         if (r == null || r.px == null || s == null || !s.faceKnown || s.mouthHW <= 0) return;
         // v40: a mouth point with no lips under it (on the jaw, the neck, the nose) moves onto the lips found by their
         // colour — the mesh opened "new lips" wherever the point was
@@ -702,6 +719,16 @@ public final class Art {
             s.mouthMoved = true;
         }
         s.faces = facingOf(r, s);
+        // v47.10: a face turned to the side (profile or three-quarter): its mouth found by its colour, and then it speaks
+        // with its own lips (before, a side picture's mouth was never moved — its point was on the cheek or the jaw)
+        if (s.faces != 0 || s.profile || s.userSide || s.userQuarter) {
+            float[] sm = Cutout.sideMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h);
+            if (sm != null) {
+                s.mouthX = sm[0] / r.w; s.mouthY = sm[1] / r.h; s.mouthHW = sm[2] / r.w;
+                s.mouthMoved = true; s.mouthSeen = true;
+            }
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH %dx%d faces=%d side=%b quarter=%b found=%s at %.3f,%.3f%n", r.w, r.h, s.faces, s.userSide, s.userQuarter, sm != null, s.mouthX, s.mouthY);
+        }
         int cx = Math.round(s.mouthX * r.w), cy = Math.round(s.mouthY * r.h), hw = Math.max(2, Math.round(s.mouthHW * r.w));
         // the skin's colourfulness around the mouth (the cheeks either side)
         int skinSat = 0, skinN = 0;

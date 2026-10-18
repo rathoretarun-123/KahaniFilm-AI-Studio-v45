@@ -433,7 +433,12 @@ public final class Renderer {
     /** v39: the user's other view of the place behind this close single (index into Seg.backdropViews), or -1. */
     private int camView = -1;
 
+    /** v47.10: how far the held shots move (0 a locked tripod, 1 the planned moves); see camera(). */
+    public static float CAMERA_MOVES = 1f;
+    private boolean camMoving;
+
     private void camera(Film.Seg s, float t) {
+        camMoving = false;
         Film.Cam cur = null, prev = null;
         for (Film.Cam c : s.cams) { if (c.t <= t) { prev = cur; cur = c; } else break; }
         camReverse = cur != null && cur.reverse;
@@ -467,9 +472,28 @@ public final class Renderer {
             camLight = cur.light < 0 ? moodLight : cur.light;
             camStill = cur.still;
         }
+        // v47.10 (the user: "no camera movement"): a held shot makes its one slow move — a push in (6% closer by the cut on
+        // a face, 4% on a wider one) or a drift across (4% of the frame), eased out of the cut and into the next; the
+        // direction of a drift alternates from shot to shot. While the frame moves nothing is snapped to its pixels.
+        if (camStill && CAMERA_MOVES > 0) {
+            Film.Shot sh = shotAt(t);
+            if (sh != null && sh.dur > 0.8f && sh.move != ShotPlanner.STATIC) {
+                float u = Math.max(0, Math.min(1, (t - sh.t) / sh.dur));
+                u = u * u * (3 - 2 * u);
+                if (sh.move == ShotPlanner.PUSH_IN) camZ *= 1 + (sh.size >= ShotPlanner.MCU ? 0.06f : 0.04f) * CAMERA_MOVES * u;
+                else if (sh.move == ShotPlanner.PULL_BACK) camZ *= 1 + 0.05f * CAMERA_MOVES * (1 - u);
+                else {
+                    float dir = (Math.round(sh.t * 10) % 2 == 0) ? 1 : -1;
+                    camZ *= 1 + 0.015f * CAMERA_MOVES * u;
+                    camX += dir * 0.04f * CAMERA_MOVES * (u - 0.5f) * vw / camZ;
+                }
+                camStill = false;
+                camMoving = true;
+            }
+        }
         // a living camera: very slow drift and breathing, like a camera operator holding the shot — but a strong
         // performance gets a camera that holds perfectly still (the performance comes first)
-        float live = camStill ? 0f : 1f;     // a locked tripod: no drift at all
+        float live = camStill || camMoving ? 0f : 1f;     // a locked tripod (or a planned move): no drift on top
         camX += live * (float) (Math.sin(t * 0.31) * 5 + Math.sin(t * 0.73) * 2) / camZ;
         camY += live * (float) (Math.cos(t * 0.27) * 3) / camZ;
         camZ *= 1f + live * 0.008f * (float) Math.sin(t * 0.21);
@@ -4075,6 +4099,13 @@ public final class Renderer {
             float acc = accent(l, t);
             st.nod += acc * 0.2f * en * k;
             st.browUp += acc * 0.35f * k;
+            // a gesture with the words: in about half the phrases one hand comes up and out, more on the stressed
+            // syllables, and goes back down as the phrase ends (never while the hands hold something)
+            if (p.heldPic == null && p.holdR == Pose.I_NONE && p.holdL == Pose.I_NONE && keyPose(sp.line, n, 6) > 0) {
+                float x = u - n * ph, gest = Rig.smooth(0, 0.35f, x) * (1 - Rig.smooth(ph - 0.4f, ph, x)) * in;
+                float lift = (7 + 9 * acc) * en * k * gest;
+                if (keyPose(sp.line, n, 7) > 0) st.armR += lift; else st.armL += lift;
+            }
             if (ACT_DEBUG) System.err.printf(java.util.Locale.US, "ACT %.3f %s tilt=%.2f nod=%.3f acc=%.2f%n", t, a.c.shown(), tilt * 4.5f * en * k * in, nod * 0.16f * k * in + acc * 0.2f * en * k, acc);
             return;
         }
@@ -4912,7 +4943,8 @@ public final class Renderer {
             g.imageRect(sp.img, 0, neck * sp.h, sp.w, sp.h * (1 - neck), left, top + neck * h, w, h * (1 - neck));
         } else if (rigged) {
             // v47.4: a profile's face mesh opens no jaw — its mouth point is not where its mouth is (a dark slit on the cheek)
-            if (isProfile(sp) && st != null) { st.jaw = 0; st.lipWide = 0; st.lipRound = 0; }
+            // (v47.10: unless its lips were found by their colour — then a side or three-quarter picture speaks too)
+            if (isProfile(sp) && !sp.mouthSeen && st != null) { st.jaw = 0; st.lipWide = 0; st.lipRound = 0; }
             // sitting / kneeling: the legs fold, so the picture comes down to keep the feet on the ground
             float rise = rig.feetRise(st, h);
             if (rise > 0) g.translate(0, rise);
@@ -5066,28 +5098,30 @@ public final class Renderer {
             // blinking / closed eyes (v34: never painted over dark glasses, a blindfold or an eye patch)
             boolean covered = look != null && (look.glasses == 2 || look.glasses == 4 || look.glasses == 5);
             float shut = p.eyesClosed ? 1 : Math.max(0, Math.min(1, p.blink));
-            if (shut > 0.08f && !covered) {
+            if (shut > 0.5f && !covered) {
+                // (v47.10: drawn only while the eye is mostly shut — a lid painted half way over a photographed eye read as
+                // a sleepy, flat line across the iris; the blink's timing gives it its life — and a little larger and wider
+                // than the eye found, which is often smaller than a big cartoon eye: a white crescent showed beside it)
+                float el = er * 1.2f;
                 for (int i = 0; i < 2; i++) {
                     float ex = i == 0 ? ex1 : ex2, ey = i == 0 ? ey1 : ey2;
                     // v38: an eyelid the shape of the eye (an almond), its edge soft into the skin around it, the lashes
-                    // along its lower edge — not a flat disc over the eye. v47.10: it comes down over the eye as the
-                    // blink goes on (its lower edge from the top of the eye to the bottom), never popping shut
+                    // along its lower edge — not a flat disc over the eye
                     int lid = sp.lid | 0xFF000000;
-                    float lo = ey - er * 2.1f + er * 3.7f * shut, cy = ey - er * 0.9f * (1 - shut);
-                    g.radial(ex, ey - er * 0.1f, er * 1.75f, Puppet.alpha(lid, shut), lid & 0x00FFFFFF);
-                    g.oval(ex, ey - er * 0.1f, er * 1.75f, er * 1.45f);
+                    g.radial(ex, ey - el * 0.1f, el * 1.9f, lid, lid & 0x00FFFFFF);
+                    g.oval(ex, ey - el * 0.1f, el * 1.9f, el * 1.5f);
                     g.color(lid);
                     g.begin();
-                    g.moveTo(ex - er * 1.3f, cy);
-                    g.quadTo(ex, ey - er * 2.1f, ex + er * 1.3f, cy);
-                    g.quadTo(ex, lo, ex - er * 1.3f, cy);
+                    g.moveTo(ex - el * 1.5f, ey);
+                    g.quadTo(ex, ey - el * 2.2f, ex + el * 1.5f, ey);
+                    g.quadTo(ex, ey + el * 1.6f, ex - el * 1.5f, ey);
                     g.close();
                     g.fillPath();
                     g.color(0xE02A1A12);
                     g.begin();
-                    g.moveTo(ex - er * 1.25f, cy + er * 0.1f);
-                    g.quadTo(ex, lo - er * 0.75f * shut, ex + er * 1.25f, cy + er * 0.1f);
-                    g.strokePath(Math.max(1.5f, er * 0.14f));
+                    g.moveTo(ex - el * 1.4f, ey + el * 0.1f);
+                    g.quadTo(ex, ey + el * 0.85f, ex + el * 1.4f, ey + el * 0.1f);
+                    g.strokePath(Math.max(1.5f, el * 0.14f));
                 }
             }
             if (p.flush > 0.03f && !p.redFace && (look == null || look.isHumanoid())) {

@@ -492,7 +492,14 @@ public final class Director {
             sg.cams.clear();
             sg.cams.addAll(out);
         }
-        for (Film.Shot sh : film.shots) sh.move = ShotPlanner.STATIC;
+        // v47.10 (the user: "no motion ... no camera movement"): the camera is no longer a dead tripod. Each held shot
+        // makes one slow move from cut to cut — a push in on a face or a pair talking (closer as the words go on), a slow
+        // drift across a wide; the shot's framing is where the move starts, so the cuts are as planned
+        for (Film.Shot sh : film.shots) {
+            if (sh.size <= ShotPlanner.WIDE) sh.move = ShotPlanner.DRIFT;
+            else if (sh.size >= ShotPlanner.MEDIUM || sh.reaction || sh.line >= 0) sh.move = ShotPlanner.PUSH_IN;
+            else sh.move = ShotPlanner.DRIFT;
+        }
     }
 
     /** v47.6: nothing cuts into a camera move the script wrote: from its first framing to its last it is one shot. */

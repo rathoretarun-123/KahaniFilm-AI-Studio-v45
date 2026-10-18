@@ -96,6 +96,9 @@ public final class FilmJob implements Runnable {
             return null;
         }
         current = new FilmJob(ctx, p);
+        // v47.10 (the user: "no continue button"): the film is marked as being made, so a film the phone or the user
+        // closed the app on is offered again (Continue) when the app comes back — the mark goes when it is done or stopped
+        try { p.setSetting(MAKING, String.valueOf(System.currentTimeMillis())); } catch (Throwable ignored) { }
         current.askForPictures = Prefs.askUploads(ctx);           // v34: the user is asked for pictures before any 3D one is made
         FilmService.start(ctx);
         thread = new Thread(current, "film-job");
@@ -105,6 +108,17 @@ public final class FilmJob implements Runnable {
     }
 
     public void cancel() { cancelled = true; }
+
+    /** v47.10: the project setting that marks a film being made (its start time), until it is done or stopped. */
+    public static final String MAKING = "making";
+
+    /** v47.10: a film of this project was being made, or stopped with an error, and nothing is making it now. */
+    public static boolean interrupted(Project p) {
+        if (p == null) return false;
+        FilmJob j = current;
+        if (j != null && j.project.dir.equals(p.dir) && !j.done && !j.cancelled && !j.failed) return false;
+        return p.setting(MAKING, "").length() > 0;
+    }
 
     /** Paused by the user: every stage waits (drawing, voices, saving) until resumed, nothing is lost. */
     public volatile boolean paused;
@@ -827,6 +841,7 @@ public final class FilmJob implements Runnable {
             MainActivity.deleteDir(tmp);
             // (v47.8: a film stopped or failed after its video was written leaves no half-saved film_new.mp4 behind)
             if (!done) { File half = new File(project.dir, "film_new.mp4"); if (half.exists()) half.delete(); }
+            if (done || cancelled) { try { project.setSetting(MAKING, ""); } catch (Throwable ignored) { } }
         }
     }
 

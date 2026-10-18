@@ -442,6 +442,17 @@ public class MainActivity extends Activity {
             });
         }
 
+        // v47.10: a film the app was closed on (or that stopped) is offered first — one tap goes on with it
+        if (job == null || job.done || job.failed || job.cancelled) {
+            for (final Project ip : Project.all(this)) {
+                if (!FilmJob.interrupted(ip)) continue;
+                tile(body, "▶", "Continue making your film", ip.name() + " · it stopped before it was finished", Ui.GREEN, new View.OnClickListener() {
+                    public void onClick(View v) { project = ip; startFilm(); }
+                });
+                break;
+            }
+        }
+
         tile(body, "🎬", "New film", "Paste a story → animated film", Ui.PRIMARY, new View.OnClickListener() {
             public void onClick(View v) { project = Project.create(MainActivity.this); showStory(); }
         });
@@ -1425,7 +1436,7 @@ public class MainActivity extends Activity {
 
         LinearLayout c4 = Ui.card(this);
         c4.addView(Ui.title(this, "3. Film"));
-        missingCard(body);
+        // (v47.10: the list of every picture the film could use is in the studio — here it stood between Open studio and Make film)
         c4.addView(Ui.button(this, "🎬  Make film", Ui.GREEN, new View.OnClickListener() {
             public void onClick(View v) { makeFilm(); }
         }));
@@ -1512,44 +1523,35 @@ public class MainActivity extends Activity {
         sum.addView(Ui.text(this, "Language: " + (st.hinglish ? "Hinglish (spoken in Hindi, ends with \"समाप्त\")" : st.hindi ? "Hindi (ends with \"समाप्त\")" : "English (ends with \"The End\")")
                 + "\nCharacters: " + st.characters.size() + "   •   Parts: " + st.scenes.size() + "   •   Lines: " + st.dialogueCount()
                 + (st.hasNarrator ? "\nNarrator voice: yes (the story has a narrator)" : ""), 15, Ui.TEXT, false));
-        String miss = "Still missing:\n• " + noPic + " character pictures  • " + noVoice + " voice samples  • " + noBg + " backgrounds"
-                + "\nUpload this film's references first. If you want to reuse an earlier asset, choose the explicit library button below."
-                + "\nAnything you don't add is drawn by the studio (or, if you allow it when you make the film, made as an AI illustration).";
-        sum.addView(Ui.text(this, miss, 14, noPic + noVoice + noBg == 0 ? Ui.GREEN : Ui.PRIMARY_DARK, false));
+        // v47.10 (the user: "studio page has bugs and very cluttered"): what is ready, said once and kindly — everything is
+        // optional (the studio draws what has no picture, the phone's voice speaks what has no voice) — and the film is
+        // made from the top of the page, not from under fifteen screens of cards
+        int nChar = st.cast().size(), nPlace = st.scenes.size();
+        String ready = "Pictures: " + (nChar - noPic) + " of " + nChar + " characters, " + (nPlace - noBg) + " of " + nPlace + " places"
+                + "\nAll optional — the studio draws what has no picture, and the phone's voice speaks every line that has no voice of its own.";
+        sum.addView(Ui.text(this, ready, 14, noPic + noBg == 0 ? Ui.GREEN : Ui.SUB, false));
+        if (noVoice < nChar) sum.addView(Ui.text(this, "🎙 Own voices: " + (nChar - noVoice) + " of " + nChar, 13, Ui.GREEN, false));
         // v47.6 (the user: "remove 3D maker, 3D doll entirely"): nothing is built in 3D any more — the film is made from the
         // user's own pictures (and, with the internet and the user's say, AI illustrations); the studio draws the rest
         int nProp = Studio3DArt.proposals(project).size();
         if (nProp > 0) sum.addView(Ui.text(this, "🧊 " + nProp + " picture(s) made in 3D are waiting for your ✔ Use / ✖ Reject on the cards below — the director uses none of them before you decide.", 14, Ui.PRIMARY_DARK, true));
         for (String w : st.warnings) sum.addView(Ui.text(this, "⚠ " + w, 13, Ui.RED, false));
-        if (st.dialogueCount() == 0) sum.addView(Ui.text(this, "⚠ No dialogue found. Tap \"Read with AI\" or write lines like — Name: \"dialogue\"", 14, Ui.RED, true));
-        sum.addView(Ui.button(this, "📄  Descriptions for other apps: characters, places, objects, every shot, sounds, voices", Ui.BLUE, new View.OnClickListener() {
-            public void onClick(View v) { productionFile(st); }
-        }));
-        sum.addView(Ui.button(this, "✨  Find pictures in my library for this story", Ui.GREEN, new View.OnClickListener() {
-            public void onClick(View v) { libraryMatches(false); }
-        }));
-        sum.addView(Ui.button(this, "📥  Add many pictures — the director places them", Ui.PRIMARY, new View.OnClickListener() {
-            public void onClick(View v) { pick("image/*", REQ_BULK, true); }
-        }));
-        sum.addView(Ui.button(this, "🎙  Find voices in my library for this story", Ui.GREEN, new View.OnClickListener() {
-            public void onClick(View v) { voiceMatches(false); }
-        }));
-        sum.addView(Ui.button(this, "🎙  Record lines in your own voice", Ui.GREEN, new View.OnClickListener() {
-            public void onClick(View v) { showLines(); }
+        if (st.dialogueCount() == 0) sum.addView(Ui.text(this, "⚠ No dialogue found — the narrator reads the story (write lines like — Name: \"dialogue\")", 14, Ui.RED, true));
+        sum.addView(Ui.button(this, "🎬  Make film", Ui.GREEN, new View.OnClickListener() {
+            public void onClick(View v) { makeFilm(); }
         }));
         body.addView(sum);
 
-        // ---- v47.4 (the user): first the characters, then the objects, then the places and backgrounds, then the
-        // reference images and clips of the story — nothing else asked for
+        // ---- v47.4 (the user): first the characters, then the objects, then the places and backgrounds — nothing else asked for
         // ---- characters
-        heading(body, "1. Characters (pictures and voices)");
+        heading(body, "1. Characters");
         for (Story.CharacterDef c : st.cast()) body.addView(characterCard(st, c));
         for (final Story.CharacterDef c : st.characters) {
             if (!c.voiceOnly) continue;
             // v34: a name that reads like a voice (a radio, a phone, an announcer) is still pictured when the user says so
             LinearLayout vr = Ui.row(this);
             vr.setGravity(Gravity.CENTER_VERTICAL);
-            vr.addView(Ui.text(this, "🔊 " + c.shown() + " — a voice only (heard, never pictured); its voice is chosen like the others' below", 13, Ui.SUB, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            vr.addView(Ui.text(this, "🔊 " + c.shown() + " — a voice only (heard, never pictured)", 13, Ui.SUB, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
             vr.addView(Ui.small(this, "📷 Picture it anyway", Ui.PRIMARY, new View.OnClickListener() {
                 public void onClick(View v) {
                     project.setSetting("pictured." + c.displayName, "1");
@@ -1563,27 +1565,102 @@ public class MainActivity extends Activity {
         }
         if (st.hasNarrator) body.addView(narratorCard());
 
-        // ---- parts of the story
-        heading(body, "2. Objects (the things the script lists)");
+        // ---- the things, then the places
+        heading(body, "2. Things in the story (optional)");
         body.addView(objectsCard(st));
-        heading(body, "3. Places and backgrounds (numbered as the script lists them)");
-        SoundLib sl = library.soundLib();
+        heading(body, "3. Places");
+        final SoundLib sl = library.soundLib();
         placeCards(body, st, sl);
-        // the order the user gave: characters, objects, places, (the story), the title page and the end page, then the
-        // reference pictures and clips the director, the technical director and the editor check the film against
         heading(body, "4. Title and end pages (optional — the studio makes them)");
         body.addView(pageCard("Title page", "title"));
         body.addView(pageCard(st.hindi ? "End page (समाप्त)" : "End page (The End)", "end"));
-        heading(body, "5. Reference images and videos for the director's checks (up to " + Project.MAX_REF_FRAMES + " each)");
-        body.addView(referenceCard());
-        heading(body, "6. Story board (up to " + Project.MAX_BOARD + " pictures, in the story's order)");
-        body.addView(boardCard());
-        heading(body, "7. Backgrounds — every view the script describes (as many pictures as you have, up to 100 a place)");
-        backgroundCards(body, st);
 
-        // ---- director plan
+        // ---- v47.10: everything else folded shut (built only when opened): the helpers, the references, the story
+        // board, the extra views of each place, the director's plan and the script's format
+        heading(body, "More (optional)");
+        folded(body, "🧰 Helpers — find in my library, add many pictures, voices, descriptions", new Fill() {
+            public void into(LinearLayout box) {
+                box.addView(Ui.button(MainActivity.this, "✨  Find pictures in my library for this story", Ui.GREEN, new View.OnClickListener() {
+                    public void onClick(View v) { libraryMatches(false); }
+                }));
+                box.addView(Ui.button(MainActivity.this, "📥  Add many pictures — the director places them", Ui.PRIMARY, new View.OnClickListener() {
+                    public void onClick(View v) { pick("image/*", REQ_BULK, true); }
+                }));
+                box.addView(Ui.button(MainActivity.this, "🎙  Find voices in my library for this story", Ui.GREEN, new View.OnClickListener() {
+                    public void onClick(View v) { voiceMatches(false); }
+                }));
+                box.addView(Ui.button(MainActivity.this, "🎙  Record lines in your own voice", Ui.GREEN, new View.OnClickListener() {
+                    public void onClick(View v) { showLines(); }
+                }));
+                box.addView(Ui.button(MainActivity.this, "📄  Descriptions for other apps (characters, places, shots, sounds)", Ui.BLUE, new View.OnClickListener() {
+                    public void onClick(View v) { productionFile(st); }
+                }));
+            }
+        });
+        folded(body, "🖼 More views of each place (wide, reverse, close)", new Fill() {
+            public void into(LinearLayout box) { backgroundCards(box, st); }
+        });
+        folded(body, "🎞 Reference images and videos for the director's checks (up to " + Project.MAX_REF_FRAMES + " each)", new Fill() {
+            public void into(LinearLayout box) { box.addView(referenceCard()); }
+        });
+        folded(body, "🗂 Story board (up to " + Project.MAX_BOARD + " pictures, in the story's order)", new Fill() {
+            public void into(LinearLayout box) { box.addView(boardCard()); }
+        });
+        folded(body, "🎬 The director's plan and the production check", new Fill() {
+            public void into(LinearLayout box) { box.addView(planCard(st, sl)); }
+        });
+        folded(body, "📝 Script format", new Fill() {
+            public void into(LinearLayout box) { box.addView(formatCard(st)); }
+        });
+    }
+
+    /** v47.10: a character picture place's name, short enough for its tile ("Left side" for "Side (facing left)"). */
+    static String slotShort(String id, String label) {
+        if ("sideL".equals(id)) return "Left side";
+        if ("sideR".equals(id)) return "Right side";
+        if ("qL".equals(id)) return "¾ left";
+        if ("qR".equals(id)) return "¾ right";
+        return label;
+    }
+
+    /** v47.10: what a folded section fills itself with, when it is first opened. */
+    private interface Fill { void into(LinearLayout box); }
+    /** v47.10: the folded sections the user left open (they stay open when the page is drawn again after an upload). */
+    private final java.util.Set<String> openFolds = new java.util.HashSet<String>();
+
+    /** v47.10: a section folded shut under its title: a tap opens it (its content made then) and closes it. */
+    private void folded(LinearLayout body, final String title, final Fill fill) {
+        final LinearLayout box = Ui.column(this);
+        final TextView head = Ui.text(this, "", 15, Ui.PRIMARY_DARK, true);
+        head.setPadding(Ui.dp(this, 16), Ui.dp(this, 12), Ui.dp(this, 16), Ui.dp(this, 12));
+        head.setBackground(Ui.round(0xFFF3EEFA, Ui.dp(this, 12), 0x22000000, Ui.dp(this, 1)));
+        LinearLayout.LayoutParams lp = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        lp.setMargins(Ui.dp(this, 12), Ui.dp(this, 4), Ui.dp(this, 12), Ui.dp(this, 4));
+        final Runnable open = new Runnable() {
+            public void run() {
+                if (box.getChildCount() == 0) {
+                    try { fill.into(box); } catch (Throwable e) { box.addView(Ui.text(MainActivity.this, "Could not show this: " + e, 13, Ui.RED, false)); }
+                }
+                box.setVisibility(View.VISIBLE);
+                head.setText("▾  " + title);
+            }
+        };
+        head.setText("▸  " + title);
+        box.setVisibility(View.GONE);
+        head.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                if (box.getVisibility() == View.VISIBLE) { box.setVisibility(View.GONE); head.setText("▸  " + title); openFolds.remove(title); }
+                else { open.run(); openFolds.add(title); }
+            }
+        });
+        body.addView(head, lp);
+        body.addView(box);
+        if (openFolds.contains(title)) open.run();
+    }
+
+    /** The director's plan of the film as the studio stands, and its production check (v47.10: made only when asked for). */
+    private LinearLayout planCard(Story st, SoundLib sl) {
         LinearLayout plan = Ui.card(this);
-        plan.addView(Ui.title(this, "🎬 Director's plan"));
         try {
             Director.Options po = new Director.Options();
             po.sounds = sl;      // shows where your own sounds will play
@@ -1611,16 +1688,16 @@ public class MainActivity extends Activity {
         } catch (Throwable e) {
             plan.addView(Ui.text(this, "Could not make the plan: " + e, 14, Ui.RED, false));
         }
-        plan.addView(Ui.button(this, "🎬  Make film", Ui.GREEN, new View.OnClickListener() {
-            public void onClick(View v) { makeFilm(); }
-        }));
-        body.addView(plan);
+        return plan;
+    }
 
-        // ---- v47.6: the script's format — the standard format's rules checked on the script as written, and the script in
-        // the standard format offered; it replaces the script only on the user's word (the old one is kept beside it), and
-        // never when it would change a line's words, its speaker or the scenes
+    /**
+     * v47.6: the script's format — the standard format's rules checked on the script as written, and the script in the
+     * standard format offered; it replaces the script only on the user's word (the old one is kept beside it), and never
+     * when it would change a line's words, its speaker or the scenes.
+     */
+    private LinearLayout formatCard(Story st) {
         LinearLayout fmt = Ui.card(this);
-        fmt.addView(Ui.title(this, "📝 Script format"));
         try {
             final String raw = project.read("script.txt");
             List<String> notes = new ArrayList<String>(com.tarun.kahani.core.ScreenplayFormat.validate(st));
@@ -1639,7 +1716,7 @@ public class MainActivity extends Activity {
         } catch (Throwable fe) {
             fmt.addView(Ui.text(this, "The format could not be checked: " + fe, 13, Ui.RED, false));
         }
-        body.addView(fmt);
+        return fmt;
     }
 
     /** v47.6: the script in the standard format, to read and to take (the old script kept as script_before_format.txt). */
@@ -1744,7 +1821,7 @@ public class MainActivity extends Activity {
         // v47.9 (the user: "on the character page you just take 6 pictures — side, front, back and three-quarter"):
         // six named places, each one picture, shown with what is there
         final String ck = keyFor(c);
-        card.addView(Ui.text(this, "📷 Six pictures of " + c.shown() + " — tap each place to add or change its picture (a picture with someone else or with a thing in it is kept whole)", 13, Ui.SUB, false));
+        card.addView(Ui.text(this, "📷 Six pictures of " + c.shown() + " — tap a place to add one", 13, Ui.SUB, false));
         LinearLayout g1 = Ui.row(this), g2 = Ui.row(this);
         for (int si = 0; si < SheetSaver.CHAR_SLOTS.length; si++) {
             final String[] sl = SheetSaver.CHAR_SLOTS[si];
@@ -1754,17 +1831,27 @@ public class MainActivity extends Activity {
             tv.setScaleType(ImageView.ScaleType.FIT_CENTER);
             String sf = SheetSaver.slotFile(project, ck, sl[0]);
             if (sf == null && sl[0].equals("front")) sf = file;
-            if (sf != null) tv.setImageBitmap(thumb(project.file(sf), 200)); else tv.setBackgroundColor(0xFFEDE7F6);
-            tile.addView(tv, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(this, 84)));
-            tile.addView(Ui.small(this, (sf != null ? "✓ " : "+ ") + sl[1], sf != null ? Ui.GREEN : Ui.PRIMARY, new View.OnClickListener() {
+            // v47.10: the whole place is tapped (the empty ones were blank boxes), its name short enough to read in full
+            View.OnClickListener pickSlot = new View.OnClickListener() {
                 public void onClick(View v) { anglesForSlot("angles:char:" + ck + ":" + c.shown(), c.shown() + " — " + sl[1], sl[0]); }
-            }));
+            };
+            View face;
+            if (sf != null) { tv.setImageBitmap(thumb(project.file(sf), 200)); face = tv; }
+            else {
+                TextView ph = Ui.text(this, "📷", 22, Ui.PRIMARY, false);
+                ph.setGravity(Gravity.CENTER);
+                ph.setBackground(Ui.round(0xFFEDE7F6, Ui.dp(this, 10), 0x00000000, 0));
+                face = ph;
+            }
+            face.setOnClickListener(pickSlot);
+            tile.addView(face, new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, Ui.dp(this, sf != null ? 84 : 56)));
+            tile.addView(Ui.small(this, (sf != null ? "✓ " : "+ ") + slotShort(sl[0], sl[1]), sf != null ? Ui.GREEN : Ui.PRIMARY, pickSlot));
             (si < 3 ? g1 : g2).addView(tile, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
         }
         card.addView(g1);
         card.addView(g2);
         LinearLayout r = Ui.row(this);
-        r.addView(Ui.small(this, "📷 All six at once", Ui.PRIMARY, new View.OnClickListener() {
+        r.addView(Ui.small(this, "📷 All six", Ui.PRIMARY, new View.OnClickListener() {
             public void onClick(View v) { anglesFor("angles:char:" + keyFor(c) + ":" + c.shown(), c.shown()); }          // v33: one button, several pictures at once
         }));
         if (Studio3DArt.realAngles(project, keyFor(c))) info.addView(Ui.text(this, "📷 " + countAngles(c.shown()) + " real pictures of " + c.shown() + " in the library (angles, poses) — the film is played by the rigged, animated picture made from them; angles you did not give are made from your front picture for you to approve", 13, Ui.GREEN, false));
@@ -2000,7 +2087,7 @@ public class MainActivity extends Activity {
         card.addView(Ui.text(this, "🔊 Background sound: " + (amb != null ? amb.label() + " (your choice)"
                 : auto != null ? auto.title + (auto.user ? " (yours — it fits the description)" : " (automatic)") : "Automatic"), 13, amb != null || (auto != null && auto.user) ? Ui.GREEN : Ui.SUB, false));
         LinearLayout r = Ui.row(this);
-        r.addView(Ui.small(this, "📷 Pictures (up to 100)", Ui.PRIMARY, new View.OnClickListener() {
+        r.addView(Ui.small(this, "📷 Pictures", Ui.PRIMARY, new View.OnClickListener() {
             public void onClick(View v) { anglesFor("angles:scene:" + key + ":" + (sc.title.length() > 0 ? sc.title : "part " + key), sc.title.length() > 0 ? sc.title : "part " + key); }   // v33
         }));
         r.addView(Ui.small(this, "🔊 Sound", Ui.GREEN, new View.OnClickListener() {
@@ -4692,6 +4779,7 @@ public class MainActivity extends Activity {
     }
 
     private void showProgress() {
+        if (FilmJob.current == null && FilmJob.interrupted(project)) { showInterrupted(); return; }
         LinearLayout body = page(S_PROGRESS, "⏳ Making your film", true);
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
         LinearLayout c = Ui.card(this);
@@ -4764,13 +4852,21 @@ public class MainActivity extends Activity {
             }));
             body.addView(ask);
         }
-        missingCard(body);
-        try { picturesCard(body, loadStory()); } catch (Throwable ignored) { /* the progress itself matters more */ }
+        // v47.10 (the user: "film making page ... very cluttered"): the two lists of every character, thing and place that
+        // were here (twice over, while the film was being made) are one button to the studio
+        if (!shownWaiting) {
+            LinearLayout more = Ui.card(this);
+            more.addView(Ui.text(this, "Pictures you add now are used the next time the film is made.", 13, Ui.SUB, false));
+            more.addView(Ui.small(this, "🎭 Add or change pictures in the studio", Ui.PRIMARY, new View.OnClickListener() {
+                public void onClick(View v) { showStudioFromMaking(); }
+            }));
+            body.addView(more);
+        }
         ui.post(new Runnable() {
             public void run() {
                 if (screen != S_PROGRESS) return;
                 FilmJob j = FilmJob.current;
-                if (j == null) { showStory(); return; }
+                if (j == null) { if (FilmJob.interrupted(project)) showInterrupted(); else showStory(); return; }
                 if (j.proposalsWaiting) { showProposals(j); return; }
                 if (j.picturesWaiting != shownWaiting) { showProgress(); return; }      // v34: the pictures card comes and goes
                 if (j.qcWaiting) { showQc(j); return; }
@@ -4793,6 +4889,9 @@ public class MainActivity extends Activity {
                     getWindow().clearFlags(WindowManager.LayoutParams.FLAG_KEEP_SCREEN_ON);
                     stage.setText(j.failed ? "❌ The film stopped — tap Continue to make it again" : "Stopped");
                     eta.setText("");
+                    note.setVisibility(View.GONE);
+                    bar.setVisibility(View.GONE);
+                    if (j.preview == null) preview.setVisibility(View.GONE);
                     if (j.failed) warn.setText(j.error);
                     pause.setVisibility(View.GONE);
                     stop.setText("← Back to the studio");
@@ -4832,6 +4931,41 @@ public class MainActivity extends Activity {
                 ui.postDelayed(this, 500);
             }
         });
+    }
+
+    /**
+     * v47.10 (the user: "no continue button nothing"): the film was being made when the app was closed (by the user, or
+     * by the phone to save memory) — the page says so and offers Continue, pressed by itself after 30 seconds once in ten
+     * minutes, as a film that stopped with an error does.
+     */
+    private void showInterrupted() {
+        LinearLayout body = page(S_PROGRESS, "⏳ Making your film", true);
+        LinearLayout c = Ui.card(this);
+        c.addView(Ui.title(this, "⏸ The film was not finished"));
+        c.addView(Ui.text(this, "\"" + project.name() + "\" was being made when the app was closed. Your pictures and the voices already made are kept.", 15, Ui.TEXT, false));
+        final Project jp = project;
+        final Button again = Ui.button(this, "▶  Continue — make it again", Ui.GREEN, null);
+        final Runnable go = new Runnable() {
+            public void run() { if (FilmJob.busy()) return; project = jp; startFilm(); }
+        };
+        again.setOnClickListener(new View.OnClickListener() { public void onClick(View v) { go.run(); } });
+        c.addView(again);
+        c.addView(Ui.button(this, "← Back to the studio", Ui.BLUE, new View.OnClickListener() {
+            public void onClick(View v) { backToHome = true; showStudioFromMaking(); }
+        }));
+        body.addView(c);
+        if (System.currentTimeMillis() - lastAutoRetry > 10 * 60 * 1000L) {
+            final long at = System.currentTimeMillis() + FilmJob.AUTO_CONTINUE_SECONDS * 1000L;
+            ui.post(new Runnable() {
+                public void run() {
+                    if (screen != S_PROGRESS || FilmJob.current != null || project != jp) return;
+                    long left = (at - System.currentTimeMillis() + 999) / 1000;
+                    if (left <= 0) { lastAutoRetry = System.currentTimeMillis(); go.run(); return; }
+                    again.setText("▶  Continue — make it again (by itself in " + left + " s)");
+                    ui.postDelayed(this, 500);
+                }
+            });
+        }
     }
 
     // ================================================================== preview, commands, saving
