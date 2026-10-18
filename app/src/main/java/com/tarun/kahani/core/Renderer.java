@@ -1773,6 +1773,15 @@ public final class Renderer {
                 p.walk = (float) Math.PI * dist / Math.max(1f, (run ? 0.42f : 0.3f) * h);
             }
             p.walkAmt = amt;
+            // v47.11: steps quicker than a film's frames can show (over five a second: a hurried move across the
+            // stage) rise and fall every two or three frames — a shiver; their rise fades out, the legs still stride
+            float bobFade = 1;
+            if (rigWalk) {
+                float d0 = mv != null ? Director.xAt(a, tp - 0.05f) : trk.walked(tp - 0.05f) / Math.max(0.3f, scale);
+                float d1 = mv != null ? Director.xAt(a, tp + 0.05f) : trk.walked(tp + 0.05f) / Math.max(0.3f, scale);
+                float steps = Math.abs(d1 - d0) / 0.1f / Math.max(1f, (run ? 0.42f : 0.3f) * h);
+                bobFade = 1 - Rig.smooth(5f, 7f, steps);
+            }
             p.facing = mv != null ? mv.facing : trk.facing(tp);
             // a calm, weighted step: a small rise and fall (no hopping) and a slight sway of the body
             mo.dy = -bump(p.walk) * (run ? 6 : 3.5f) * amt;
@@ -1783,7 +1792,7 @@ public final class Renderer {
                 // v40: the rig's own walk (Renderer.rigState): the body is highest as the legs pass each other and
                 // comes down onto each step (the rig lowers it so the planted foot stays on the floor); the arms swing
                 // against the legs there, so they rest here
-                mo.dy = -(1 - bump(p.walk)) * h * (run ? 0.022f : 0.011f) * amt;
+                mo.dy = -(1 - bump(p.walk)) * h * (run ? 0.022f : 0.011f) * amt * bobFade;
                 mo.rot = 0;
                 p.armL = 8; p.armR = 8;
             }
@@ -2080,11 +2089,13 @@ public final class Renderer {
         if (bath != null || scr != null) { mo.dx = 0; mo.dy = 0; mo.rot = 0; }
         // v47.3: on a bench shared with someone taller the shorter sitter sits at the bench's height (a child's feet
         // dangle) — each used to get a bench of their own height: two benches side by side under the two of them
-        if (p.seat == Film.SEAT_STOOL && p.sit > 0.35f && p.body != Pose.LIE) for (Film.Fx f : s.fx) {
+        if (p.seat == Film.SEAT_STOOL && p.sit > 0.05f && p.body != Pose.LIE) for (Film.Fx f : s.fx) {
             if (f.type != Film.FX_SEAT || f.a != a || f.kind != Film.SEAT_STOOL) continue;
             float own = h * seatScale(a);
             float[] sp2 = seatGroup(s, f, own, Film.SEAT_STOOL);
-            if (sp2 != null && sp2[4] > own + 1) mo.dy -= 0.25f * (sp2[4] - own) * Math.min(1, (p.sit - 0.35f) / 0.4f);
+            // (v47.11: eased over the whole sitting down — a straight ramp over part of it started and stopped the lift at
+            // full speed, a jolt the audit counted)
+            if (sp2 != null && sp2[4] > own + 1) mo.dy -= 0.25f * (sp2[4] - own) * Rig.smooth(0.05f, 1f, p.sit);
             break;
         }
         float px = x + mo.dx, py = y + mo.dy;
@@ -2251,6 +2262,11 @@ public final class Renderer {
             // change (no pop from the front to the side)
             float turn = k.costume == 0 && p.sit <= 0 && sideWalks(sp, k, spk != null, a, t) && p.walkAmt > 0.05f ? 0.45f + 0.55f * Math.min(1, Math.abs(p.walkAmt - 0.35f) / 0.33f) : 1;
             if (turn >= 0.999f && k.costume == 0 && astrideView(sp) != null) turn = astrideTurn(a, p, t);
+            // v47.11: sitting down onto a seat in the user's side picture (or getting up from it) changes the picture at
+            // sit 0.3 too: the figure turns through the change as it does onto a bike (it popped mid-shot)
+            if (turn >= 0.999f && k.costume == 0 && sp.views != null && sp.view(1) != null && sp.view(1).userSide && k.body == Pose.SIT
+                    && p.seat > Film.SEAT_FLOOR && p.seat != Film.SEAT_WHEELCHAIR && p.seat != Film.SEAT_BED && p.sit > 0.05f && p.sit < 0.6f)
+                turn = 0.45f + 0.55f * Math.min(1, Math.abs(p.sit - 0.3f) / 0.25f);
             if (turn < 0.999f) { g.save(); g.scale(turn, 1); }
             // v47.2: a front picture seated on a seat rests its hands in its lap (the passenger's idiom): with the
             // thighs folded but the arms still hanging straight at the sides, the sitter read as a shorter person
@@ -5114,24 +5130,42 @@ public final class Renderer {
                 // a sleepy, flat line across the iris; the blink's timing gives it its life — and a little larger and wider
                 // than the eye found, which is often smaller than a big cartoon eye: a white crescent showed beside it)
                 float el = er * 1.2f;
+                // (v47.11: as large as the eyes read from the picture — a big cartoon eye showed its white and its lashes
+                // round a lid sized from the radius alone)
                 for (int i = 0; i < 2; i++) {
                     float ex = i == 0 ? ex1 : ex2, ey = i == 0 ? ey1 : ey2;
+                    float lw = 1.5f * el, lu = 1.1f * el, ld = 0.8f * el;
+                    if (sp.eyeBox != null) {
+                        float bl = sp.eyeBox[i * 4] * w, br = sp.eyeBox[i * 4 + 1] * w;
+                        ex += (br - bl) / 2;
+                        lw = Math.max(lw, (bl + br) / 2 * 1.12f);
+                        lu = Math.max(lu, sp.eyeBox[i * 4 + 2] * w * 1.1f);
+                        ld = Math.max(ld, sp.eyeBox[i * 4 + 3] * w * 1.1f);
+                    }
                     // v38: an eyelid the shape of the eye (an almond), its edge soft into the skin around it, the lashes
                     // along its lower edge — not a flat disc over the eye
                     int lid = sp.lid | 0xFF000000;
-                    g.radial(ex, ey - el * 0.1f, el * 1.9f, lid, lid & 0x00FFFFFF);
-                    g.oval(ex, ey - el * 0.1f, el * 1.9f, el * 1.5f);
-                    g.color(lid);
+                    g.radial(ex, ey - lu * 0.1f, lw * 1.27f, lid, lid & 0x00FFFFFF);
+                    g.oval(ex, ey - lu * 0.1f, lw * 1.27f, (lu + ld) * 0.8f);
+                    // (v47.11: shaded as the skin round the eye is — from the skin under the brow to the cheek's)
+                    if (sp.lidTop != 0 && sp.lidBottom != 0) g.linear(ex, ey - lu, ex, ey + ld, sp.lidTop, sp.lidBottom);
+                    else g.color(lid);
                     g.begin();
-                    g.moveTo(ex - el * 1.5f, ey);
-                    g.quadTo(ex, ey - el * 2.2f, ex + el * 1.5f, ey);
-                    g.quadTo(ex, ey + el * 1.6f, ex - el * 1.5f, ey);
+                    g.moveTo(ex - lw, ey);
+                    g.quadTo(ex, ey - lu * 2, ex + lw, ey);
+                    g.quadTo(ex, ey + ld * 2, ex - lw, ey);
                     g.close();
                     g.fillPath();
+                    // the fold of the lid, faint, and the lashes along its edge
+                    g.color(0x1C000000);
+                    g.begin();
+                    g.moveTo(ex - lw * 0.8f, ey - lu * 0.55f);
+                    g.quadTo(ex, ey - lu * 1.25f, ex + lw * 0.8f, ey - lu * 0.55f);
+                    g.strokePath(Math.max(1f, lw * 0.06f));
                     g.color(0xE02A1A12);
                     g.begin();
-                    g.moveTo(ex - el * 1.4f, ey + el * 0.1f);
-                    g.quadTo(ex, ey + el * 0.85f, ex + el * 1.4f, ey + el * 0.1f);
+                    g.moveTo(ex - lw * 0.93f, ey + ld * 0.12f);
+                    g.quadTo(ex, ey + ld * 1.06f, ex + lw * 0.93f, ey + ld * 0.12f);
                     g.strokePath(Math.max(1.5f, el * 0.14f));
                 }
             }
@@ -5172,13 +5206,24 @@ public final class Renderer {
                 // the fine face mesh has parted the real lips: only the inside of the mouth shows between them
                 float mx = left + (sp.mouthX + (turns ? rig.yawShift(st, sp.mouthX, sp.mouthY) : 0)) * w, my = top + sp.mouthY * h, hw = sp.mouthHW * w;
                 float gap = Rig.jawDrop(hw) * st.jaw;
-                // only the dark inside between the parted real lips, and only once they are clearly apart: never a
-                // painted mouth shape of its own (it reads as a second pair of lips), no teeth bar
+                // only the inside between the parted real lips, and only once they are clearly apart: never painted
+                // lips of its own (they read as a second pair), no teeth bar
                 if (gap > hw * 0.10f) {
                     float ow = hw * (0.62f + 0.18f * st.lipWide - 0.28f * st.lipRound), cy = my + gap * 0.5f;
                     float oh = Math.max(0.5f, gap * 0.40f);
-                    g.color(0xB0200608);
-                    g.oval(mx, cy, ow, oh);
+                    // (v47.11: the shape of an open mouth — flatter under the upper lip, rounder above the lower one —
+                    // a deep red inside rather than a black oval, and the tongue low in it once it is wide open)
+                    g.color(0xC8501418);
+                    g.begin();
+                    g.moveTo(mx - ow, cy - oh * 0.35f);
+                    g.quadTo(mx, cy - oh * 1.05f, mx + ow, cy - oh * 0.35f);
+                    g.quadTo(mx + ow * 0.8f, cy + oh * 1.15f, mx, cy + oh * 1.1f);
+                    g.quadTo(mx - ow * 0.8f, cy + oh * 1.15f, mx - ow, cy - oh * 0.35f);
+                    g.close();
+                    g.fillPath();
+                    g.color(0x90200406);
+                    g.oval(mx, cy - oh * 0.25f, ow * 0.8f, oh * 0.45f);
+                    if (oh > 1.5f) { g.color(0xA0B4565C); g.oval(mx, cy + oh * 0.62f, ow * 0.5f, oh * 0.38f); }
                 }
             }
             if (p.wearsTurban && !drawRealHat(g, sp, p, left, top, w, h)) {

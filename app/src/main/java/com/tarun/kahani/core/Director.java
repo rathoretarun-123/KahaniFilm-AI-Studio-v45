@@ -1947,6 +1947,13 @@ public final class Director {
         cuesFrom(b.manner, start, sp, to, null);
         if (!mountLine) headwearFromWords(sp, to, b.text, start);
         if (line.emotion == Pose.SAD && !mountLine) { Film.Key k = sp.at(start); k.tears = true; }
+        // v47.11: a line of another feeling (glad, surprised, angry, scared) after the tears: they have dried — they ran on
+        // down her cheeks through her surprise
+        else if (line.emotion != Pose.NEUTRAL && !mountLine && sp.stateAt(start).tears) {
+            Film.Key k = sp.at(start);
+            k.tears = false;
+            for (int j = sp.keys.indexOf(k) + 1; j < sp.keys.size() && sp.keys.get(j).tears; j++) sp.keys.get(j).tears = false;
+        }
         if (line.emotion == Pose.LAUGH && sp.look.hero && Txt.has(b.text, "हा हा", "हँस")) {
             // the little princess' laugh makes flowers bloom (story magic) – only if the script says so later
         }

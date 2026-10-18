@@ -50,6 +50,20 @@ public class LipFinderTest {
         assertTrue("the mouth stays between the eyes: " + sp.mouthX, sp.mouthX > sp.eyeLX && sp.mouthX < sp.eyeRX);
     }
 
+    /** v47.11: a brown face whose mouth is a darker line of the skin's own colour (no redder): found at the reader's point. */
+    @Test public void aMouthLineNoRedderThanTheSkinIsFoundAtThePoint() {
+        int brown = 0xFFDC8B55, line = 0xFF8A4A30;
+        int[] px = new int[400 * 400];
+        java.util.Arrays.fill(px, brown);
+        box(px, 180, 218, 238, 224, line);                 // the mouth: a long flat darker line
+        box(px, 196, 188, 202, 194, line);                 // a nostril: small
+        float[] m = Cutout.sideMouth(px, 400, 400, 150, 250, 120, 205, 222);
+        assertNotNull("the mouth line is found at the point", m);
+        assertEquals("across", 209, m[0], 6);
+        assertEquals("down", 221, m[1], 4);
+        assertNull("without the reader's point nothing is guessed", Cutout.sideMouth(px, 400, 400, 150, 250, 120));
+    }
+
     @Test public void noLipsNoMouth() {
         int[] px = face();
         disc(px, 260, 190, 26, BLUSH);

@@ -187,6 +187,7 @@ jobs:
             --tests com.tarun.kahani.SoundLibraryTest \
             --tests com.tarun.kahani.LipFinderTest \
             --tests com.tarun.kahani.WalkSideTest \
+            --tests com.tarun.kahani.TearsDryTest \
             --tests com.tarun.kahani.UiShotsTest \
             --tests com.tarun.kahani.FrameAuditTest \
             --tests com.tarun.kahani.ObjectCharactersTest \

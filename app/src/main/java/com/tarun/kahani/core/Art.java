@@ -38,6 +38,13 @@ public final class Art {
         public int w, h;
         public float mouthX, mouthY, mouthHW;
         public float eyeLX, eyeLY, eyeRX, eyeRY, eyeR;
+        /**
+         * v47.11: each eye's own extent read from the picture, out from its point — {left, right, up, down} of the left
+         * eye then of the right, in fractions of the picture's width — or null when not read.
+         */
+        public float[] eyeBox;
+        /** v47.11: the skin just above and just below the eyes (0: not read): a closed lid shades from one to the other. */
+        public int lidTop, lidBottom;
         public float turbanY;       // bottom of turban (0 = none / unknown)
         public int skin = 0xFFD9A074, lip = 0xFF9C4A3E, lid = 0xFFC88A66;
         public boolean faceKnown;
@@ -687,6 +694,32 @@ public final class Art {
     }
 
     /**
+     * v47.11: how large the eyes really are, read from the picture around each eye point (out to where the skin
+     * begins). A blink's lid is drawn this size: from the eye radius alone it was smaller than a big cartoon eye, and
+     * the white and the lashes showed round the closed lid.
+     */
+    static void eyesFromPicture(Cutout.Result r, Sprite s) {
+        if (r == null || r.px == null || s == null || !s.faceKnown || s.eyeR <= 0) return;
+        float er = s.eyeR * r.w;
+        float[] box = new float[8];
+        int top = 0, bottom = 0;
+        for (int i = 0; i < 2; i++) {
+            float ex = (i == 0 ? s.eyeLX : s.eyeRX) * r.w, ey = (i == 0 ? s.eyeLY : s.eyeRY) * r.h;
+            float[] e = Cutout.eyeExtent(r.px, r.w, r.h, ex, ey, er, s.skin);
+            if (e == null) return;
+            for (int k = 0; k < 4; k++) box[i * 4 + k] = e[k] / r.w;
+            if (i == 0) {
+                int rr = Math.max(1, Math.round(er * 0.2f));
+                top = Cutout.skinAround(r.px, r.w, r.h, ex + (e[1] - e[0]) / 2, ey - e[2] - er * 0.3f, rr, s.skin);
+                bottom = Cutout.skinAround(r.px, r.w, r.h, ex + (e[1] - e[0]) / 2, ey + e[3] + er * 0.35f, rr, s.skin);
+            }
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "EYES %dx%d eye %d r=%.1f: left %.1f right %.1f up %.1f down %.1f px%n", r.w, r.h, i, er, e[0], e[1], e[2], e[3]);
+        }
+        s.eyeBox = box;
+        s.lidTop = top; s.lidBottom = bottom;
+    }
+
+    /**
      * v38: the picture's own mouth, read from its pixels before the face mesh is built. Teeth (light, and much less
      * coloured than the skin around them) found just below or around the mouth point move the point onto the real
      * opening (a point left on the skin under the nose made the mesh open a second mouth there: the "new lips"), and
@@ -706,6 +739,7 @@ public final class Art {
                 s.mouthX = sm[0] / r.w; s.mouthY = sm[1] / r.h; s.mouthHW = sm[2] / r.w;
                 s.faceKnown = true; s.mouthSeen = true; s.mouthMoved = true;
                 s.faces = facingOf(r, s);
+                eyesFromPicture(r, s);
                 return;
             }
         }
@@ -731,6 +765,7 @@ public final class Art {
             if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH moved onto the lips at %.3f,%.3f hw %.3f%n", s.mouthX, s.mouthY, s.mouthHW);
         }
         s.faces = facingOf(r, s);
+        eyesFromPicture(r, s);
         // v47.10: a face turned to the side (profile or three-quarter): its mouth found by its colour, and then it speaks
         // with its own lips (before, a side picture's mouth was never moved — its point was on the cheek or the jaw)
         if (s.faces != 0 || s.profile || s.userSide || s.userQuarter) {
@@ -1251,7 +1286,7 @@ public final class Art {
         Object[] mm = mips(L, px, cr.w, cr.h);
         v.imgHalf = mm[0]; v.imgQuarter = mm[1];
         v.mouthX = base.mouthX; v.mouthY = base.mouthY; v.mouthHW = base.mouthHW;
-        v.eyeLX = base.eyeLX; v.eyeRX = base.eyeRX; v.eyeLY = base.eyeLY; v.eyeRY = base.eyeRY; v.eyeR = base.eyeR;
+        v.eyeLX = base.eyeLX; v.eyeRX = base.eyeRX; v.eyeLY = base.eyeLY; v.eyeRY = base.eyeRY; v.eyeR = base.eyeR; v.eyeBox = base.eyeBox; v.lidTop = base.lidTop; v.lidBottom = base.lidBottom;
         v.faceKnown = base.faceKnown; v.skin = base.skin; v.lip = base.lip; v.lid = base.lid; v.turbanY = base.turbanY;
         int[] keep = cr.px;
         cr.px = px;

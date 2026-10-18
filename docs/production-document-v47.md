@@ -1109,3 +1109,49 @@ flick now gives way while an ear act plays.
 `AppTest` still looked for the studio's old open lists ("Still missing", the director's plan) and for the story page's
 missing-pictures card. It now opens the studio's folded sections the way a user taps them. It uploads through a
 character's own picture place, which replaced that card.
+
+## 15. Eleventh round (18 October, evening): mouths that open, lids that close, no jolts
+
+The user: "correct everything … pixer level". Each fault below was found on frames of the films, fixed in the
+universal code, and checked again on the same frames.
+
+### Lips on every side of a brown face (`Cutout.sideMouth`, `LipFinderTest`)
+
+The little one's three-quarter pictures had no lips found, so in those views her mouth never moved. Her mouth is a
+darker line of her own skin's colour, no redder than her brown skin, and the lip finder only took marks redder than
+the skin. Now a long, flat, dark line right at the face reader's own point confirms the mouth. It is never accepted
+anywhere else on the face, so brows and lashes stay out. All her views now find their lips except her back, where
+none is correct.
+
+### The inside of an open mouth (`Renderer`)
+
+The mouth opened as a flat, near-black oval that looked pasted on. Now it has the shape of an open mouth (flatter
+under the upper lip, rounder above the lower one), a deep red inside, and the tongue low in it once it opens wide.
+
+### A blink's lid the size of the eye (`Art.eyesFromPicture`, `Cutout.eyeExtent`)
+
+On the little one's big cartoon eyes the closed lid was smaller than the eye: the white and the lashes showed round
+it, and its flat colour read as a patch. Now each eye's own extent is read from the picture (out from its point to
+where the skin begins, at most 1.9 eye radii). The lid is centred on that eye, drawn its size, and shaded from the
+skin under the brow to the cheek's, both sampled from the picture.
+
+### No jolts in आखिरी चिट्ठी (`FrameAudit`)
+
+- **Sitting down into a side picture.** The front picture changed to the side picture in mid-shot. The figure now
+  turns through the change, as it already did onto a bike.
+- **A shorter sitter on a shared bench.** She was lifted to the bench's height along a straight ramp over part of
+  her sitting down. That ramp started and stopped at full speed. Now the lift is eased over the whole movement.
+- **A hurried move across the stage.** At over five steps a second the step's rise and fall came every two or three
+  frames: a shiver. That rise now fades out at such speeds; the legs still stride.
+
+### Tears dry (`TearsDryTest`)
+
+Tears came with a sad line and stayed for good: they ran on through her surprise. A line of another feeling now dries
+them. Another sad line keeps them.
+
+### Checked, nothing to change
+
+- **Arms.** In medium shots her arm visibly swings out with the words. The rig has no elbow, so a forearm cannot
+  rise to gesture; adding one would need new mesh regions and risks tearing the picture. That is not done.
+- **बाबू के लिए.** The girl kneels (lowered onto her knees), and only his photo's own bench shows in the two-shots.
+  The earlier notes on both were out of date.

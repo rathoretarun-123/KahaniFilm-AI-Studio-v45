@@ -499,12 +499,90 @@ public final class Cutout {
             on[(y - y0) * rw + (x - x0)] = (r - g) - (sr - sg) > 22 && lum < sl - 18 && lum > 60 && r > g + 30;     // (darker than a blush)
         }
         // the marks, and the widest flat one
+        float best = 0; float[] out = null, atPoint = null;
+        for (int[] m : marks(on, rw, rh)) {
+            int n = m[0];
+            float bw = m[2] - m[1] + 1, bh = m[4] - m[3] + 1, bcx = x0 + m[5] / (float) n, bcy = y0 + m[6] / (float) n;
+            if (SIDE_DEBUG && n > 20) System.err.printf(java.util.Locale.US, "  blob n=%d bw=%.0f bh=%.0f at %.0f,%.0f (span %.0f, skin %d,%d,%d)%n", n, bw, bh, bcx, bcy, span, sr, sg, sb);
+            if (!Float.isNaN(mx) && n >= 0.001f * span * span && n <= 0.06f * span * span && bw >= 1.2f * bh
+                    && Math.abs(bcx - mx) < 0.25f * span && Math.abs(bcy - my) < 0.25f * span) atPoint = new float[]{mx, my, Math.max(bw / 2, 0.08f * span)};
+            // (a side view's mouth is short — 1.4 times as wide as tall is enough; a blush is large and round)
+            if (n < 0.002f * span * span || n > 0.06f * span * span || bw < 0.12f * span || bw < 1.4f * bh) continue;
+            if (bw > best) { best = bw; out = new float[]{bcx, bcy, bw / 2}; }
+        }
+        // v47.11: lips no redder than the skin (a brown face's mouth is a darker line of its own colour): a long flat
+        // dark line right at the face reader's point confirms it — never anywhere else on the face (brows, lashes)
+        if (out == null && atPoint == null && !Float.isNaN(mx)) {
+            for (int y = y0; y <= y1; y++) for (int x = x0; x <= x1; x++) {
+                int c = px[y * w + x];
+                int r = (c >> 16) & 255, g = (c >> 8) & 255, b = c & 255;
+                float lum = 0.299f * r + 0.587f * g + 0.114f * b;
+                on[(y - y0) * rw + (x - x0)] = (c >>> 24) >= 200 && lum < sl - 40 && lum > 45 && r > b + 15
+                        && Math.abs(x - mx) < 0.4f * span && Math.abs(y - my) < 0.2f * span;
+            }
+            for (int[] m : marks(on, rw, rh)) {
+                int n = m[0];
+                float bw = m[2] - m[1] + 1, bh = m[4] - m[3] + 1, bcx = x0 + m[5] / (float) n, bcy = y0 + m[6] / (float) n;
+                if (SIDE_DEBUG && n > 10) System.err.printf(java.util.Locale.US, "  line n=%d bw=%.0f bh=%.0f at %.0f,%.0f%n", n, bw, bh, bcx, bcy);
+                if (bw < 0.15f * span || bw < 2.5f * bh || n > 0.08f * span * span || Math.abs(bcy - my) > 0.12f * span) continue;
+                if (atPoint == null || bw > 2 * atPoint[2]) atPoint = new float[]{bcx, bcy, bw / 2};
+            }
+        }
+        return out != null ? out : atPoint;
+    }
+
+    /**
+     * v47.11: an eye's extent around its point (ex, ey) in pixels — {left, right, above, below} — out to where the
+     * skin begins (three skin pixels in a row), each between 0.6 and 1.9 times the eye radius found; null when the
+     * point is not inside an eye (skin right at it).
+     */
+    public static float[] eyeExtent(int[] px, int w, int h, float ex, float ey, float er, int skin) {
+        int cx = Math.round(ex), cy = Math.round(ey);
+        if (px == null || cx < 1 || cy < 1 || cx >= w - 1 || cy >= h - 1 || er < 1) return null;
+        if (skinLike(px[cy * w + cx], skin)) return null;
+        int lim = Math.round(1.9f * er);
+        float[] d = new float[4];
+        int[][] dir = {{-1, 0}, {1, 0}, {0, -1}, {0, 1}};
+        for (int k = 0; k < 4; k++) {
+            int run = 0, i = 1;
+            for (; i <= lim; i++) {
+                int x = cx + dir[k][0] * i, y = cy + dir[k][1] * i;
+                if (x < 0 || y < 0 || x >= w || y >= h) break;
+                if (skinLike(px[y * w + x], skin)) { if (++run >= 3) { i -= 2; break; } } else run = 0;
+            }
+            d[k] = Math.max(0.6f * er, Math.min(1.9f * er, i));
+        }
+        return d;
+    }
+
+    /** v47.11: the mean colour of the skin-like pixels in a small box around (x, y), or 0 when there are too few. */
+    public static int skinAround(int[] px, int w, int h, float x, float y, int r, int skin) {
+        int cx = Math.round(x), cy = Math.round(y), n = 0; long sr = 0, sg = 0, sb = 0;
+        for (int yy = cy - r; yy <= cy + r; yy++) for (int xx = cx - r; xx <= cx + r; xx++) {
+            if (xx < 0 || yy < 0 || xx >= w || yy >= h) continue;
+            int c = px[yy * w + xx];
+            if ((c >>> 24) < 200 || !skinLike(c, skin)) continue;
+            sr += (c >> 16) & 255; sg += (c >> 8) & 255; sb += c & 255; n++;
+        }
+        int all = (2 * r + 1) * (2 * r + 1);
+        return n < all / 3 ? 0 : 0xFF000000 | (int) (sr / n) << 16 | (int) (sg / n) << 8 | (int) (sb / n);
+    }
+
+    /** Close to the face's skin colour (a lid, a cheek), not the white, the iris, the lashes or a dark outline. */
+    static boolean skinLike(int c, int skin) {
+        if ((c >>> 24) < 128) return true;          // (off the picture: the eye ends there too)
+        int dr = ((c >> 16) & 255) - ((skin >> 16) & 255), dg = ((c >> 8) & 255) - ((skin >> 8) & 255), db = (c & 255) - (skin & 255);
+        return dr * dr + dg * dg + db * db < 42 * 42;
+    }
+
+    /** The connected marks of a mask (8-neighbours): {pixels, x0, x1, y0, y1, sum of x, sum of y} each. */
+    static java.util.List<int[]> marks(boolean[] on, int rw, int rh) {
+        java.util.List<int[]> out = new java.util.ArrayList<int[]>();
         int[] stack = new int[on.length];
         boolean[] seen = new boolean[on.length];
-        float best = 0; float[] out = null, atPoint = null;
         for (int i = 0; i < on.length; i++) {
             if (!on[i] || seen[i]) continue;
-            int top = 0, n = 0, bx0 = rw, bx1 = -1, by0 = rh, by1 = -1; long sx = 0, sy = 0;
+            int top = 0, n = 0, bx0 = rw, bx1 = -1, by0 = rh, by1 = -1, sx = 0, sy = 0;
             stack[top++] = i; seen[i] = true;
             while (top > 0) {
                 int c = stack[--top]; n++;
@@ -518,16 +596,9 @@ public final class Cutout {
                     if (on[j] && !seen[j]) { seen[j] = true; stack[top++] = j; }
                 }
             }
-            float bw = bx1 - bx0 + 1, bh = by1 - by0 + 1;
-            if (SIDE_DEBUG && n > 20) System.err.printf(java.util.Locale.US, "  blob n=%d bw=%.0f bh=%.0f at %.0f,%.0f (span %.0f, skin %d,%d,%d)%n", n, bw, bh, x0 + sx / (float) n, y0 + sy / (float) n, span, sr, sg, sb);
-            float bcx = x0 + sx / (float) n, bcy = y0 + sy / (float) n;
-            if (!Float.isNaN(mx) && n >= 0.001f * span * span && n <= 0.06f * span * span && bw >= 1.2f * bh
-                    && Math.abs(bcx - mx) < 0.25f * span && Math.abs(bcy - my) < 0.25f * span) atPoint = new float[]{mx, my, Math.max(bw / 2, 0.08f * span)};
-            // (a side view's mouth is short — 1.4 times as wide as tall is enough; a blush is large and round)
-            if (n < 0.002f * span * span || n > 0.06f * span * span || bw < 0.12f * span || bw < 1.4f * bh) continue;
-            if (bw > best) { best = bw; out = new float[]{bcx, bcy, bw / 2}; }
+            out.add(new int[]{n, bx0, bx1, by0, by1, sx, sy});
         }
-        return out != null ? out : atPoint;
+        return out;
     }
 
     private static int quantile(int[] hist, int n, float q) {
