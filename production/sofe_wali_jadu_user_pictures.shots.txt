@@ -9,7 +9,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 001   at 0:07.7
+SHOT 001   at 0:04.2
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -34,7 +34,7 @@ STATE AT START: वृंदा centre, facing right, sitting, calm; वनु�
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a sofa, a sofa
 
-SHOT 002   at 0:10.6
+SHOT 002   at 0:07.1
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -57,7 +57,7 @@ STATE AT START: वृंदा centre, facing right, sitting, calm; वनु�
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 003   at 0:12.3
+SHOT 003   at 0:08.8
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -80,7 +80,7 @@ STATE AT START: वृंदा centre, facing right, sitting, calm; वनु�
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 004   at 0:14.1
+SHOT 004   at 0:10.6
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -103,7 +103,7 @@ STATE AT START: वृंदा centre, facing right, sitting, calm; वनु�
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 005   at 0:15.8
+SHOT 005   at 0:12.3
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -125,9 +125,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:15.8 for 3.2 s: "दीदी, ये चाँद दिन में" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:12.3 for 3.2 s: "दीदी, ये चाँद दिन में" | music: happy (ducked under the line)
 
-SHOT 006   at 0:17.6
+SHOT 006   at 0:14.1
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -149,9 +149,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:15.8 for 3.2 s: "कहाँ चला जाता है?" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:12.3 for 3.2 s: "कहाँ चला जाता है?" | music: happy (ducked under the line)
 
-SHOT 007   at 0:19.0
+SHOT 007   at 0:15.5
 PURPOSE: Reaction: the audience feels the line through वृंदा's face, over वनुषा's shoulder, and it is allowed to breathe
 SHOT SIZE: Close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -175,7 +175,7 @@ STATE AT START: वृंदा centre, facing right, sitting, calm; वनु�
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 008   at 0:20.4
+SHOT 008   at 0:16.9
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -197,9 +197,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:20.4 for 5.4 s: "दिन में भी वहीं होता" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:16.9 for 5.4 s: "दिन में भी वहीं होता" | music: happy (ducked under the line)
 
-SHOT 009   at 0:21.9
+SHOT 009   at 0:18.4
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -221,9 +221,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:20.4 for 5.4 s: "है, बस सूरज की रोशनी तेज" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:16.9 for 5.4 s: "है, बस सूरज की रोशनी तेज" | music: happy (ducked under the line)
 
-SHOT 010   at 0:23.8
+SHOT 010   at 0:20.3
 PURPOSE: Reaction (part 3 of 3): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen
 SHOT SIZE: Medium close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -248,7 +248,7 @@ STATE AT START: वृंदा centre, facing right, sitting, calm; वनु�
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 011   at 0:25.0
+SHOT 011   at 0:21.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -269,9 +269,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:20.4 for 5.4 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:16.9 for 5.4 s | music: happy (ducked under the line)
 
-SHOT 012   at 0:26.2
+SHOT 012   at 0:22.7
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -293,9 +293,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s: "तो क्या सूरज" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:22.7 for 4.0 s: "तो क्या सूरज" | music: happy (ducked under the line)
 
-SHOT 013   at 0:27.3
+SHOT 013   at 0:23.8
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -316,9 +316,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:22.7 for 4.0 s | music: happy (ducked under the line)
 
-SHOT 014   at 0:28.3
+SHOT 014   at 0:24.8
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -340,9 +340,9 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s: "हैं कि कौन ज्यादा" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:22.7 for 4.0 s: "हैं कि कौन ज्यादा" | music: happy (ducked under the line)
 
-SHOT 015   at 0:29.8
+SHOT 015   at 0:26.3
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -363,7 +363,7 @@ ASSETS: CHAR_001 वृंदा (the master picture); CHAR_002 वनुषा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
 STATE AT END: वृंदा centre, facing right, sitting, calm; वनुषा right third, facing left, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:26.2 for 4.0 s | music: happy (ducked under the line) | effects: effect 21
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:22.7 for 4.0 s | music: happy (ducked under the line) | effects: effect 21
 
 ────────── दृश्य 2: room
 SCENE BRIEF (training guide §7)
@@ -373,7 +373,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 016   at 0:31.6
+SHOT 016   at 0:28.1
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -398,7 +398,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 017   at 0:34.5
+SHOT 017   at 0:31.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -421,7 +421,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 018   at 0:36.1
+SHOT 018   at 0:32.6
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -444,7 +444,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, curious; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 019   at 0:37.8
+SHOT 019   at 0:34.3
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -467,7 +467,7 @@ STATE AT START: वनुषा right third, facing left, sitting, curious; व�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 020   at 0:39.5
+SHOT 020   at 0:36.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -490,7 +490,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 021   at 0:41.1
+SHOT 021   at 0:37.6
 PURPOSE: Lip-sync close-up: front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -512,9 +512,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:41.1 for 2.4 s: "नहीं पगली, वो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:37.6 for 2.4 s: "नहीं पगली, वो" | music: happy (ducked under the line)
 
-SHOT 022   at 0:42.4
+SHOT 022   at 0:38.9
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -535,9 +535,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:41.1 for 2.4 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:37.6 for 2.4 s | music: happy (ducked under the line)
 
-SHOT 023   at 0:43.6
+SHOT 023   at 0:40.1
 PURPOSE: Reaction: the audience feels the line through वनुषा's face, over वृंदा's shoulder, and it is allowed to breathe
 SHOT SIZE: Medium close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -561,7 +561,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 024   at 0:45.1
+SHOT 024   at 0:41.6
 PURPOSE: Show what वनुषा does
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -584,7 +584,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: wind
 
-SHOT 025   at 0:46.7
+SHOT 025   at 0:43.2
 PURPOSE: Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -606,9 +606,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s: "सूरज दिन में रोशनी देता है" | music: happy (ducked under the line) | effects: wind
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:43.2 for 7.3 s: "सूरज दिन में रोशनी देता है" | music: happy (ducked under the line) | effects: wind
 
-SHOT 026   at 0:48.6
+SHOT 026   at 0:45.1
 PURPOSE: Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -630,9 +630,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s: "ताकि हम स्कूल जा सकें, और" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:43.2 for 7.3 s: "ताकि हम स्कूल जा सकें, और" | music: happy (ducked under the line)
 
-SHOT 027   at 0:50.5
+SHOT 027   at 0:47.0
 PURPOSE: Reaction (part 3 of 4): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen
 SHOT SIZE: Medium close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -657,7 +657,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 028   at 0:52.3
+SHOT 028   at 0:48.8
 PURPOSE: Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -679,9 +679,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s: "देता है ताकि डर" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:43.2 for 7.3 s: "देता है ताकि डर" | music: happy (ducked under the line)
 
-SHOT 029   at 0:53.4
+SHOT 029   at 0:49.9
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -702,9 +702,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 0:46.7 for 7.3 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:43.2 for 7.3 s | music: happy (ducked under the line)
 
-SHOT 030   at 0:54.5
+SHOT 030   at 0:51.0
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -726,9 +726,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s: "अच्छा! तो जैसे आप दिन" | music: happy (ducked under the line) | effects: clap
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:51.0 for 6.0 s: "अच्छा! तो जैसे आप दिन" | music: happy (ducked under the line) | effects: clap
 
-SHOT 031   at 0:56.2
+SHOT 031   at 0:52.7
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -750,9 +750,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s: "में मेरी होमवर्क" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:51.0 for 6.0 s: "में मेरी होमवर्क" | music: happy (ducked under the line)
 
-SHOT 032   at 0:57.3
+SHOT 032   at 0:53.8
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -773,9 +773,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:51.0 for 6.0 s | music: happy (ducked under the line)
 
-SHOT 033   at 0:58.5
+SHOT 033   at 0:55.0
 PURPOSE: Reaction (part 3 of 3): वृंदा listens, seen over वनुषा's shoulder; the line goes on off-screen
 SHOT SIZE: Medium close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -800,7 +800,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 034   at 0:59.7
+SHOT 034   at 0:56.2
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -821,9 +821,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 0:54.5 for 6.0 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 0:51.0 for 6.0 s | music: happy (ducked under the line)
 
-SHOT 035   at 1:00.9
+SHOT 035   at 0:57.4
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -845,9 +845,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 1:00.9 for 3.7 s: "बिल्कुल सही!" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:57.4 for 3.7 s: "बिल्कुल सही!" | music: happy (ducked under the line)
 
-SHOT 036   at 1:02.0
+SHOT 036   at 0:58.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -868,9 +868,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 1:00.9 for 3.7 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:57.4 for 3.7 s | music: happy (ducked under the line)
 
-SHOT 037   at 1:03.0
+SHOT 037   at 0:59.5
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -892,9 +892,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 1:00.9 for 3.7 s: "समझदार हो गई है।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 0:57.4 for 3.7 s: "समझदार हो गई है।" | music: happy (ducked under the line)
 
-SHOT 038   at 1:05.0
+SHOT 038   at 1:01.5
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -916,9 +916,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 1:05.0 for 3.8 s: "तो आज रात की कहानी में" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 1:01.5 for 3.8 s: "तो आज रात की कहानी में" | music: happy (ducked under the line)
 
-SHOT 039   at 1:06.8
+SHOT 039   at 1:03.3
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -940,9 +940,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 1:05.0 for 3.8 s: "चाँद और सूरज दोस्त" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 1:01.5 for 3.8 s: "चाँद और सूरज दोस्त" | music: happy (ducked under the line)
 
-SHOT 040   at 1:08.1
+SHOT 040   at 1:04.6
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -963,9 +963,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_002 (वनुषा) at 1:05.0 for 3.8 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (वनुषा) at 1:01.5 for 3.8 s | music: happy (ducked under the line)
 
-SHOT 041   at 1:09.3
+SHOT 041   at 1:05.8
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -987,9 +987,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 1:09.3 for 4.8 s: "हाँ, और उसमें एक छोटी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:05.8 for 4.8 s: "हाँ, और उसमें एक छोटी" | music: happy (ducked under the line)
 
-SHOT 042   at 1:11.1
+SHOT 042   at 1:07.6
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1011,9 +1011,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 1:09.3 for 4.8 s: "वनुषा भी होगी जो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:05.8 for 4.8 s: "वनुषा भी होगी जो" | music: happy (ducked under the line)
 
-SHOT 043   at 1:12.5
+SHOT 043   at 1:09.0
 PURPOSE: Reaction (part 3 of 3): वनुषा listens, seen over वृंदा's shoulder; the line goes on off-screen
 SHOT SIZE: Medium close-up (Over the shoulder)
 CAMERA HEIGHT: Eye level
@@ -1038,7 +1038,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 044   at 1:13.5
+SHOT 044   at 1:10.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1059,9 +1059,9 @@ ASSETS: CHAR_002 वनुषा (the master picture); CHAR_001 वृंदा 
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
 STATE AT END: वनुषा right third, facing left, sitting, calm; वृंदा centre, facing right, sitting, calm
-VOICE / MUSIC: VOICE_001 (वृंदा) at 1:09.3 for 4.8 s | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (वृंदा) at 1:05.8 for 4.8 s | music: happy (ducked under the line)
 
-SHOT 045   at 1:14.5
+SHOT 045   at 1:11.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1084,7 +1084,7 @@ STATE AT START: वनुषा right third, facing left, sitting, calm; वृ�
 STATE AT END: वनुषा right third, facing left, sitting, laughing; वृंदा centre, facing right, sitting, laughing
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 046   at 1:16.2
+SHOT 046   at 1:12.7
 PURPOSE: Show what वनुषा does
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1107,7 +1107,7 @@ STATE AT START: वनुषा right third, facing left, sitting, laughing; व
 STATE AT END: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 047   at 1:17.8
+SHOT 047   at 1:14.3
 PURPOSE: Show what वनुषा does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1130,7 +1130,7 @@ STATE AT START: वनुषा right third, facing left, sitting, happy; वृ
 STATE AT END: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 048   at 1:19.5
+SHOT 048   at 1:16.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1140,7 +1140,7 @@ FACIAL PERFORMANCE: Laughing, eyes squeezed
 LIGHTING: Natural light of the place
 FOCUS: वनुषा
 SOUND: Ambience of room
-DURATION: 1.6 s
+DURATION: 1.5 s
 CUT WHEN: the action moves on
 EMOTIONAL PURPOSE: Keep the story readable
 SHOT ID: KAHANI_SC02_SH048_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
@@ -1153,7 +1153,7 @@ STATE AT START: वनुषा right third, facing left, sitting, laughing; व
 STATE AT END: वनुषा right third, facing left, sitting, laughing; वृंदा centre, facing right, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 049   at 1:21.0
+SHOT 049   at 1:17.5
 PURPOSE: Show what वनुषा does
 SHOT SIZE: Medium (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1176,7 +1176,7 @@ STATE AT START: वनुषा right third, facing left, sitting, laughing; व
 STATE AT END: वनुषा right third, facing left, sitting, happy; वृंदा centre, facing right, sitting, happy
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 050   at 1:22.3
+SHOT 050   at 1:18.8
 PURPOSE: Show what वनुषा does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -1217,7 +1217,7 @@ QUALITY CHECK
 • Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
 • First-frame checks: 0 shots reframed for a cut head, 0 for feet out of the frame (feet in the bottom 85-98% with their shadow)
 • Lip-sync framing (8.3): the face fills 25% of the frame on average in 9 lip-sync shots (65-75% where the picture and the frame allow it; the whole head always inside; a narrow frame keeps the face in its centre 60%); reframed on the face: 9
-• Objective (small films of 30-90 s): this film is 1:32 — the script decides the length; it is made as 50 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
+• Objective (small films of 30-90 s): this film is 1:25 — the script decides the length; it is made as 50 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
 • Miyazaki ma pauses after two fast beats: 1; Russo / Gunn comic beats: 1; Gunn shadow passes in funny scenes: 0
 • Story spine filled before any shot was planned (R4, hardcoded): yes — hero वृंदा; the ending was read first (R3)
 • Spider-Verse animation on twos: off (every character moves every frame; switch it on in Settings)
@@ -1263,11 +1263,11 @@ BRAINTRUST (every 5 shots, 10 rounds) — AUTHORITY: the Braintrust suggests onl
 • suggestion: shots 36-40: five shots of talk — the story should read without the words (an action, a look, an object)
 
 CONTINUITY LEDGER (ch. 12)
-— दृश्य 1: room, evening, Key: orange sunset from the right, 15 deg, 0:07.5–0:31.4
+— दृश्य 1: room, evening, Key: orange sunset from the right, 15 deg, 0:04.0–0:27.9
    वृंदा: centre, facing right → centre, facing right; costume: as the lock sheet
    वनुषा: right third, facing left → right third, facing left; costume: as the lock sheet
    axis: वृंदा left, वनुषा right — kept in every shot of the scene (180-degree principle)
-— दृश्य 2: room, day, Key: daylight from the window, right, 0:31.4–1:23.7
+— दृश्य 2: room, day, Key: daylight from the window, right, 0:27.9–1:20.2
    वनुषा: right third, facing left → right third, facing left; costume: as the lock sheet
    वृंदा: centre, facing right → centre, facing right; costume: as the lock sheet
    axis: वृंदा left, वनुषा right — kept in every shot of the scene (180-degree principle)
@@ -1342,7 +1342,7 @@ LOCATION RECORDS (director's manual 1.6)
   LOC_001 — room: interior; reference: your picture (the location plate, feet on its floor line)
      layout: the stage is 1280 wide, the floor line at the plate's ground; entrances none written (everyone present from the first frame)
      time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg), day (Key: daylight from the window, right)  |  scenes: SC_01, SC_02
-• Step 8 — the finished film metered frame by frame as it was written (2200 frames; 1729 pairs of frames in a row compared in 50 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 8.4 per cell at 0:51.2 (limit 14), the largest share of the frame changed 10% (limit 50%)
+• Step 8 — the finished film metered frame by frame as it was written (2044 frames; 1729 pairs of frames in a row compared in 50 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 0, whole-frame story effects left out 0 moments; the largest change between two frames 7.7 per cell at 0:47.7 (limit 14), the largest share of the frame changed 10% (limit 50%)
 
 FRAME AUDIT — every character in every frame as drawn (1852 frames, 3508 character-frames, 3310 frame pairs inside shots)
 • Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0

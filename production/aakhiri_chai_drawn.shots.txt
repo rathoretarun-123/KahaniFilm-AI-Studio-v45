@@ -9,7 +9,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 001   at 0:08.1
+SHOT 001   at 0:04.6
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -34,7 +34,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a bicycle bell, effect 33, thunder (+1)
 
-SHOT 002   at 0:11.5
+SHOT 002   at 0:08.0
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Low angle (power)
@@ -57,7 +57,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 003   at 0:12.6
+SHOT 003   at 0:09.1
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -80,7 +80,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 004   at 0:14.5
+SHOT 004   at 0:11.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -103,7 +103,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 005   at 0:16.5
+SHOT 005   at 0:13.0
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -126,7 +126,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: steps
 
-SHOT 006   at 0:18.5
+SHOT 006   at 0:15.0
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -148,9 +148,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "अरे ओ लेखक" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:15.0 for 7.0 s: "अरे ओ लेखक" | music: happy (ducked under the line)
 
-SHOT 007   at 0:19.5
+SHOT 007   at 0:16.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -171,9 +171,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "बाबू! धीरे" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:15.0 for 7.0 s: "बाबू! धीरे" | music: happy (ducked under the line)
 
-SHOT 008   at 0:20.6
+SHOT 008   at 0:17.1
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -195,9 +195,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "भाग। गिरेगा तो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:15.0 for 7.0 s: "भाग। गिरेगा तो" | music: happy (ducked under the line)
 
-SHOT 009   at 0:22.0
+SHOT 009   at 0:18.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -218,9 +218,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "तेरी कहानी के" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:15.0 for 7.0 s: "तेरी कहानी के" | music: happy (ducked under the line)
 
-SHOT 010   at 0:23.4
+SHOT 010   at 0:19.9
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -244,7 +244,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 011   at 0:24.5
+SHOT 011   at 0:21.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -265,9 +265,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 0:18.5 for 7.0 s: "भीग जाएगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:15.0 for 7.0 s: "भीग जाएगा।" | music: happy (ducked under the line)
 
-SHOT 012   at 0:25.5
+SHOT 012   at 0:22.0
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -277,7 +277,7 @@ FACIAL PERFORMANCE: Brows up, eyes wide, mouth open
 LIGHTING: Soft, warm light (warmth, safety)
 FOCUS: आरव
 SOUND: Dialogue in the room of city street, शहर की सड़क ambience
-DURATION: 1.5 s
+DURATION: 1.6 s
 CUT WHEN: the feeling has landed (0.0 s of silence)
 EMOTIONAL PURPOSE: Let the reaction breathe before the scene goes on
 SHOT ID: KAHANI_SC01_SH012_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
@@ -290,23 +290,22 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 013   at 0:27.1
-PURPOSE: Ma (Miyazaki): a quiet breath after two fast beats
-SHOT SIZE: Medium wide (Single)
+SHOT 013   at 0:23.6
+PURPOSE: Show what आरव does
+SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
 CAMERA MOVEMENT: Static
-CHARACTER ACTION: रघु काका stands still, breathing; nothing else moves
-FACIAL PERFORMANCE: The feeling settles on the face
-BODY LANGUAGE: Weight on both feet, shoulders down
+CHARACTER ACTION: आरव in the scene
+FACIAL PERFORMANCE: Calm, listening
 LIGHTING: Soft, warm light (warmth, safety)
-FOCUS: रघु काका
-SOUND: Dialogue in the room of city street, शहर की सड़क ambience
+FOCUS: आरव
+SOUND: Ambience of city street
 DURATION: 1.6 s
-CUT WHEN: the breath is over (1.8 s)
-EMOTIONAL PURPOSE: The audience catches up with the moment
-SHOT ID: KAHANI_SC01_SH013_V001   LENS: 40mm   ANGLE: eye level: natural, neutral, intimate
+CUT WHEN: the action moves on
+EMOTIONAL PURPOSE: Keep the story readable
+SHOT ID: KAHANI_SC01_SH013_V001   LENS: 85mm   ANGLE: eye level: natural, neutral, intimate
 PICTURES USED: रघु काका: drawn puppet; आरव: drawn puppet
-FIVE QUESTIONS: see — रघु काका stands still, breathing; nothing else moves | feel — The audience catches up with the moment | attention first — रघु काका's face and hands | reveals — Ma (Miyazaki): a quiet breath after two fast beats | why this camera — full: whole-body action and posture
+FIVE QUESTIONS: see — आरव in the scene | feel — Keep the story readable | attention first — the face of आरव — the eyes, then the mouth | reveals — Show what आरव does | why this camera — extreme close-up: a meaningful detail (the eyes, the mouth, a thing in the hand)
 GAZE: on the thing of the action (eyes first, the head a moment later); never vacant, never at the camera
 ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (drawn puppet) holding something | LOC_001 city street (painted set), evening
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
@@ -314,7 +313,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: wind
 
-SHOT 014   at 0:28.6
+SHOT 014   at 0:25.1
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -336,9 +335,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "काका... सब भीग" | music: happy (ducked under the line) | effects: wind
+VOICE / MUSIC: VOICE_002 (आरव) at 0:25.1 for 6.3 s: "काका... सब भीग" | music: happy (ducked under the line) | effects: wind
 
-SHOT 015   at 0:29.9
+SHOT 015   at 0:26.4
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -359,9 +358,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "गया... मेरी पूरी" | music: tense (low drone) (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:25.1 for 6.3 s: "गया... मेरी पूरी" | music: tense (low drone) (ducked under the line)
 
-SHOT 016   at 0:31.3
+SHOT 016   at 0:27.8
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -383,9 +382,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "नोटबुक... देखो... पन्ने" | music: tense (low drone) (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:25.1 for 6.3 s: "नोटबुक... देखो... पन्ने" | music: tense (low drone) (ducked under the line)
 
-SHOT 017   at 0:33.1
+SHOT 017   at 0:29.6
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -406,9 +405,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:28.6 for 6.3 s: "फूल गए... स्याही..." | music: tense (low drone) (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:25.1 for 6.3 s: "फूल गए... स्याही..." | music: tense (low drone) (ducked under the line)
 
-SHOT 018   at 0:34.9
+SHOT 018   at 0:31.4
 PURPOSE: Reaction: the audience feels the line through रघु काका's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -431,7 +430,7 @@ STATE AT START: रघु काका left third, facing right, sitting, scared
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, standing, something in the right hand, something in the left hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone)
 
-SHOT 019   at 0:36.7
+SHOT 019   at 0:33.2
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -454,7 +453,7 @@ STATE AT START: रघु काका left third, facing right, sitting, scared
 STATE AT END: रघु काका left third, facing right, sitting, scared; आरव right third, facing left, sitting, something in the right hand, something in the left hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: tense (low drone) | effects: a chair
 
-SHOT 020   at 0:38.1
+SHOT 020   at 0:34.6
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -485,7 +484,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 021   at 0:40.1
+SHOT 021   at 0:36.6
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -510,7 +509,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, walking, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 022   at 0:40.7
+SHOT 022   at 0:37.2
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -533,7 +532,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: thunder
 
-SHOT 023   at 0:42.4
+SHOT 023   at 0:38.9
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -556,7 +555,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 47
 
-SHOT 024   at 0:44.1
+SHOT 024   at 0:40.6
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -579,7 +578,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 025   at 0:45.7
+SHOT 025   at 0:42.2
 PURPOSE: Show what आरव does
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: High angle (vulnerable)
@@ -602,7 +601,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, happy | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 026   at 0:46.8
+SHOT 026   at 0:43.3
 PURPOSE: Show what आरव does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -625,7 +624,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, happy | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 027   at 0:47.9
+SHOT 027   at 0:44.4
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -647,9 +646,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, happy | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "फिर भीग गए" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:44.4 for 6.1 s: "फिर भीग गए" | music: happy (ducked under the line)
 
-SHOT 028   at 0:49.1
+SHOT 028   at 0:45.6
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -670,9 +669,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "तुम? मैंने कहा" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:44.4 for 6.1 s: "तुम? मैंने कहा" | music: happy (ducked under the line)
 
-SHOT 029   at 0:50.2
+SHOT 029   at 0:46.7
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -694,9 +693,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "था ना, इस गली में" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:44.4 for 6.1 s: "था ना, इस गली में" | music: happy (ducked under the line)
 
-SHOT 030   at 0:51.8
+SHOT 030   at 0:48.3
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -720,7 +719,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 031   at 0:53.0
+SHOT 031   at 0:49.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -741,9 +740,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 0:47.9 for 6.1 s: "मत आया करो।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 0:44.4 for 6.1 s: "मत आया करो।" | music: happy (ducked under the line)
 
-SHOT 032   at 0:54.1
+SHOT 032   at 0:50.6
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -766,7 +765,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 033   at 0:55.4
+SHOT 033   at 0:51.9
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -788,9 +787,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "मैडम, मैं तो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:51.9 for 4.5 s: "मैडम, मैं तो" | music: happy (ducked under the line)
 
-SHOT 034   at 0:56.5
+SHOT 034   at 0:53.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -811,9 +810,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "बस... कहानी का" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:51.9 for 4.5 s: "बस... कहानी का" | music: happy (ducked under the line)
 
-SHOT 035   at 0:57.7
+SHOT 035   at 0:54.2
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -835,9 +834,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "आखिरी हिस्सा लिखने" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:51.9 for 4.5 s: "आखिरी हिस्सा लिखने" | music: happy (ducked under the line)
 
-SHOT 036   at 0:59.0
+SHOT 036   at 0:55.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -858,9 +857,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 0:55.4 for 4.5 s: "आया था..." | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 0:51.9 for 4.5 s: "आया था..." | music: happy (ducked under the line)
 
-SHOT 037   at 1:00.4
+SHOT 037   at 0:56.9
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -882,9 +881,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "ये मैडम रोज" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:56.9 for 7.2 s: "ये मैडम रोज" | music: happy (ducked under the line)
 
-SHOT 038   at 1:01.5
+SHOT 038   at 0:58.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -905,9 +904,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "इसी टाइम आती" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:56.9 for 7.2 s: "इसी टाइम आती" | music: happy (ducked under the line)
 
-SHOT 039   at 1:02.6
+SHOT 039   at 0:59.1
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -929,9 +928,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "है। इसकी चाय" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:56.9 for 7.2 s: "है। इसकी चाय" | music: happy (ducked under the line)
 
-SHOT 040   at 1:03.7
+SHOT 040   at 1:00.2
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -952,9 +951,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "में चीनी कम।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:56.9 for 7.2 s: "में चीनी कम।" | music: happy (ducked under the line)
 
-SHOT 041   at 1:04.9
+SHOT 041   at 1:01.4
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -978,7 +977,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 042   at 1:06.8
+SHOT 042   at 1:03.3
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -999,7 +998,7 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:00.4 for 7.2 s: "ज्यादा।" | music: happy (ducked under the line) | effects: effect 21
+VOICE / MUSIC: VOICE_001 (रघु काका) at 0:56.9 for 7.2 s: "ज्यादा।" | music: happy (ducked under the line) | effects: effect 21
 
 ────────── दृश्य 3: city street
 SCENE BRIEF (training guide §7)
@@ -1009,7 +1008,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Extreme wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 043   at 1:09.0
+SHOT 043   at 1:05.5
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Extreme wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1034,7 +1033,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 48
 
-SHOT 044   at 1:10.0
+SHOT 044   at 1:06.5
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1057,7 +1056,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 47
 
-SHOT 045   at 1:11.5
+SHOT 045   at 1:08.0
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1080,7 +1079,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 046   at 1:12.5
+SHOT 046   at 1:09.0
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1103,7 +1102,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 047   at 1:13.6
+SHOT 047   at 1:10.1
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1126,7 +1125,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 048   at 1:15.2
+SHOT 048   at 1:11.7
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1149,7 +1148,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 049   at 1:16.8
+SHOT 049   at 1:13.3
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1172,7 +1171,7 @@ STATE AT START: रघु काका left third, facing right, standing, calm;
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 050   at 1:18.4
+SHOT 050   at 1:14.9
 PURPOSE: Lip-sync close-up (part 1 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1194,9 +1193,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "लो, पकड़ो।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.9 for 9.1 s: "लो, पकड़ो।" | music: happy (ducked under the line)
 
-SHOT 051   at 1:19.6
+SHOT 051   at 1:16.1
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1217,9 +1216,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "गरम है। कहानी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.9 for 9.1 s: "गरम है। कहानी" | music: happy (ducked under the line)
 
-SHOT 052   at 1:20.9
+SHOT 052   at 1:17.4
 PURPOSE: Lip-sync close-up (part 2 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1241,9 +1240,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "कागज पर" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.9 for 9.1 s: "कागज पर" | music: happy (ducked under the line)
 
-SHOT 053   at 1:22.0
+SHOT 053   at 1:18.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1264,9 +1263,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "नहीं, इस गरमी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.9 for 9.1 s: "नहीं, इस गरमी" | music: happy (ducked under the line)
 
-SHOT 054   at 1:23.1
+SHOT 054   at 1:19.6
 PURPOSE: Reaction (part 3 of 4): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1290,7 +1289,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 055   at 1:25.1
+SHOT 055   at 1:21.6
 PURPOSE: Lip-sync close-up (part 4 of 4): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1312,9 +1311,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: match cut — the same frame size on the next character (connect similar shapes or movements)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "सोचोगे तो हाथ" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.9 for 9.1 s: "सोचोगे तो हाथ" | music: happy (ducked under the line)
 
-SHOT 056   at 1:26.5
+SHOT 056   at 1:23.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1335,9 +1334,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 1:18.4 for 9.1 s: "जल जाएगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:14.9 for 9.1 s: "जल जाएगा।" | music: happy (ducked under the line)
 
-SHOT 057   at 1:27.9
+SHOT 057   at 1:24.4
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1359,9 +1358,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "हम्म... यही" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:24.4 for 6.3 s: "हम्म... यही" | music: happy (ducked under the line)
 
-SHOT 058   at 1:29.0
+SHOT 058   at 1:25.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1382,9 +1381,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "तो चाहिए था।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:24.4 for 6.3 s: "तो चाहिए था।" | music: happy (ducked under the line)
 
-SHOT 059   at 1:30.1
+SHOT 059   at 1:26.6
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1406,9 +1405,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "काका, तुम्हारी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:24.4 for 6.3 s: "काका, तुम्हारी" | music: happy (ducked under the line)
 
-SHOT 060   at 1:31.1
+SHOT 060   at 1:27.6
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1429,9 +1428,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "चाय में" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:24.4 for 6.3 s: "चाय में" | music: happy (ducked under the line)
 
-SHOT 061   at 1:32.2
+SHOT 061   at 1:28.7
 PURPOSE: Reaction (part 3 of 3): रघु काका listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1455,7 +1454,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 062   at 1:33.2
+SHOT 062   at 1:29.7
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1476,9 +1475,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:27.9 for 6.3 s: "स्वाद आता है।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:24.4 for 6.3 s: "स्वाद आता है।" | music: happy (ducked under the line)
 
-SHOT 063   at 1:34.2
+SHOT 063   at 1:30.7
 PURPOSE: Reaction: the audience feels the line through रघु काका's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1501,7 +1500,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 064   at 1:35.6
+SHOT 064   at 1:32.1
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1523,9 +1522,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "...अरे... ये कड़वी" | music: happy (ducked under the line) | effects: a sip
+VOICE / MUSIC: VOICE_002 (आरव) at 1:32.1 for 4.4 s: "...अरे... ये कड़वी" | music: happy (ducked under the line) | effects: a sip
 
-SHOT 065   at 1:36.9
+SHOT 065   at 1:33.4
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1546,9 +1545,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "नहीं है... ये" | music: happy (ducked under the line) | effects: a cup set down
+VOICE / MUSIC: VOICE_002 (आरव) at 1:32.1 for 4.4 s: "नहीं है... ये" | music: happy (ducked under the line) | effects: a cup set down
 
-SHOT 066   at 1:38.2
+SHOT 066   at 1:34.7
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1570,9 +1569,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "तो... मीठी लग" | music: happy (ducked under the line) | effects: a cup set down
+VOICE / MUSIC: VOICE_002 (आरव) at 1:32.1 for 4.4 s: "तो... मीठी लग" | music: happy (ducked under the line) | effects: a cup set down
 
-SHOT 067   at 1:39.2
+SHOT 067   at 1:35.7
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1593,9 +1592,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet) holding something; CHAR_0
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:35.6 for 4.4 s: "रही है।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:32.1 for 4.4 s: "रही है।" | music: happy (ducked under the line)
 
-SHOT 068   at 1:40.3
+SHOT 068   at 1:36.8
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1618,7 +1617,7 @@ STATE AT START: रघु काका left third, facing right, standing, somet
 STATE AT END: रघु काका left third, facing right, standing, something in the right hand, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, standing, something in the right hand, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: a sip, a sip, a sip
 
-SHOT 069   at 1:42.1
+SHOT 069   at 1:38.6
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1649,7 +1648,7 @@ SCENE BRIEF (training guide §7)
   Lighting and mood: the natural light of the place; mood happy
   Camera: Wide first, static; locked tripod
   Constraints: identity locked to the master pictures; no outfit change unless the script says so; every named character and prop present; screen direction kept
-SHOT 070   at 1:44.2
+SHOT 070   at 1:40.7
 PURPOSE: Establish the place, its scale and the time of day before going closer
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1674,7 +1673,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy | effects: effect 47, a chair, a chair (+1)
 
-SHOT 071   at 1:47.1
+SHOT 071   at 1:43.6
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1697,7 +1696,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 072   at 1:48.8
+SHOT 072   at 1:45.3
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1720,7 +1719,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 073   at 1:50.4
+SHOT 073   at 1:46.9
 PURPOSE: Follow the action: everyone who moves stays in the frame
 SHOT SIZE: Medium wide (Two-shot)
 CAMERA HEIGHT: Eye level
@@ -1743,7 +1742,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 074   at 1:51.9
+SHOT 074   at 1:48.4
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1765,9 +1764,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "तो अब घर" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:48.4 for 4.8 s: "तो अब घर" | music: happy (ducked under the line)
 
-SHOT 075   at 1:53.1
+SHOT 075   at 1:49.6
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1788,9 +1787,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "जाओगे? या यहीं" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:48.4 for 4.8 s: "जाओगे? या यहीं" | music: happy (ducked under the line)
 
-SHOT 076   at 1:54.2
+SHOT 076   at 1:50.7
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1812,9 +1811,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "बैठ कर आखिरी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:48.4 for 4.8 s: "बैठ कर आखिरी" | music: happy (ducked under the line)
 
-SHOT 077   at 1:55.5
+SHOT 077   at 1:52.0
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1835,9 +1834,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_003 (मीरा) at 1:51.9 for 4.8 s: "पन्ना लिखोगे?" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_003 (मीरा) at 1:48.4 for 4.8 s: "पन्ना लिखोगे?" | music: happy (ducked under the line)
 
-SHOT 078   at 1:56.8
+SHOT 078   at 1:53.3
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1860,7 +1859,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 079   at 1:58.1
+SHOT 079   at 1:54.6
 PURPOSE: Lip-sync close-up (part 1 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1882,9 +1881,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "नहीं। आज" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:54.6 for 4.1 s: "नहीं। आज" | music: happy (ducked under the line)
 
-SHOT 080   at 1:59.2
+SHOT 080   at 1:55.7
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1905,9 +1904,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "नहीं लिखूंगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:54.6 for 4.1 s: "नहीं लिखूंगा।" | music: happy (ducked under the line)
 
-SHOT 081   at 2:00.4
+SHOT 081   at 1:56.9
 PURPOSE: Lip-sync close-up (part 2 of 2): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1929,9 +1928,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "आज बस याद" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:54.6 for 4.1 s: "आज बस याद" | music: happy (ducked under the line)
 
-SHOT 082   at 2:01.6
+SHOT 082   at 1:58.1
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1952,9 +1951,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing right, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_002 (आरव) at 1:58.1 for 4.1 s: "रखूंगा।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_002 (आरव) at 1:54.6 for 4.1 s: "रखूंगा।" | music: happy (ducked under the line)
 
-SHOT 083   at 2:02.7
+SHOT 083   at 1:59.2
 PURPOSE: Lip-sync close-up (part 1 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1976,9 +1975,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut on the line — the speaker changes (the dialogue axis is kept)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, calm; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "बस! यही तो" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:59.2 for 8.4 s: "बस! यही तो" | music: happy (ducked under the line)
 
-SHOT 084   at 2:04.0
+SHOT 084   at 2:00.5
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -1999,9 +1998,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "मैं कहता हूँ।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:59.2 for 8.4 s: "मैं कहता हूँ।" | music: happy (ducked under the line)
 
-SHOT 085   at 2:05.3
+SHOT 085   at 2:01.8
 PURPOSE: Lip-sync close-up (part 2 of 3): front-facing, head still, only the mouth and jaw move
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -2023,9 +2022,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "बारिश रुक गई," | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:59.2 for 8.4 s: "बारिश रुक गई," | music: happy (ducked under the line)
 
-SHOT 086   at 2:06.8
+SHOT 086   at 2:03.3
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -2046,9 +2045,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "चाय खत्म, कहानी" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:59.2 for 8.4 s: "चाय खत्म, कहानी" | music: happy (ducked under the line)
 
-SHOT 087   at 2:08.4
+SHOT 087   at 2:04.9
 PURPOSE: Reaction (part 3 of 3): आरव listens; the line goes on off-screen
 SHOT SIZE: Medium close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -2072,7 +2071,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 088   at 2:09.8
+SHOT 088   at 2:06.3
 PURPOSE: A cut-in / cut-out on the speaker so no shot is longer than about 3 seconds
 SHOT SIZE: Extreme close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -2093,9 +2092,9 @@ ASSETS: CHAR_001 रघु काका (drawn puppet); CHAR_002 आरव (draw
 TRANSITION IN: cut — an ordinary cut (the manual: ordinary cuts are often more effective than elaborate effects)
 STATE AT START: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
-VOICE / MUSIC: VOICE_001 (रघु काका) at 2:02.7 for 8.4 s: "कल फिर आना।" | music: happy (ducked under the line)
+VOICE / MUSIC: VOICE_001 (रघु काका) at 1:59.2 for 8.4 s: "कल फिर आना।" | music: happy (ducked under the line)
 
-SHOT 089   at 2:11.1
+SHOT 089   at 2:07.6
 PURPOSE: Reaction: the audience feels the line through आरव's face, and it is allowed to breathe
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Low angle (power)
@@ -2118,7 +2117,7 @@ STATE AT START: रघु काका left third, facing right, sitting, calm; 
 STATE AT END: रघु काका left third, facing right, sitting, calm; आरव right third, facing left, sitting, happy; मीरा right third, facing left, sitting, calm | everyone wet (rain)
 VOICE / MUSIC: no line in this shot (listeners' mouths at rest) | music: happy
 
-SHOT 090   at 2:12.7
+SHOT 090   at 2:09.2
 PURPOSE: Show what रघु काका does
 SHOT SIZE: Close-up (Single)
 CAMERA HEIGHT: Eye level
@@ -2158,7 +2157,7 @@ QUALITY CHECK
 • Pixar-Lead protocol v4.0: format YOUTUBE_MAIN_16_9 (face in the centre 80%, eyes on the top-third line, 20% headroom, 10% empty left and right), character scale lock 60% of the frame height, two lights only (key + bounce), colour script per act
 • First-frame checks: 4 shots reframed for a cut head, 4 for feet out of the frame (feet in the bottom 85-98% with their shadow)
 • Lip-sync framing (8.3): the face fills 20% of the frame on average in 38 lip-sync shots (65-75% where the picture and the frame allow it; the whole head always inside; a narrow frame keeps the face in its centre 60%); reframed on the face: 27
-• Objective (small films of 30-90 s): this film is 2:31 — the script decides the length; it is made as 90 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
+• Objective (small films of 30-90 s): this film is 2:25 — the script decides the length; it is made as 90 shots of about 3 s, each one checked on its own (the Pixar Test is passed shot by shot, not by the minute)
 • Miyazaki ma pauses after two fast beats: 1; Russo / Gunn comic beats: 0; Gunn shadow passes in funny scenes: 0
 • Story spine filled before any shot was planned (R4, hardcoded): yes — hero रघु काका; the ending was read first (R3)
 • Spider-Verse animation on twos: off (every character moves every frame; switch it on in Settings)
@@ -2211,24 +2210,24 @@ BRAINTRUST (every 5 shots, 18 rounds) — AUTHORITY: the Braintrust suggests onl
 • suggestion: shots 81-85: five shots of talk — the story should read without the words (an action, a look, an object)
 
 CONTINUITY LEDGER (ch. 12)
-— दृश्य 1: city street, evening, Key: orange sunset from the right, 15 deg, 0:07.5–0:39.5
+— दृश्य 1: city street, evening, Key: orange sunset from the right, 15 deg, 0:04.0–0:36.0
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet
    आरव: enters later → right third, facing left; costume: as the lock sheet; holds something
    axis: रघु काका left, आरव right — kept in every shot of the scene (180-degree principle)
    state: everyone wet by the end (rain)
-— दृश्य 2: city street, evening, Key: orange sunset from the right, 15 deg, 0:39.5–1:08.8
+— दृश्य 2: city street, evening, Key: orange sunset from the right, 15 deg, 0:36.0–1:05.3
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet; holds something
    आरव: right third, facing left → right third, facing left; costume: as the lock sheet
    मीरा: enters later → right third, facing left; costume: as the lock sheet
    axis: रघु काका left, आरव right — kept in every shot of the scene (180-degree principle)
    state: everyone wet by the end (rain)
-— दृश्य 3: city street, evening, Key: orange sunset from the right, 15 deg, 1:08.8–1:44.0
+— दृश्य 3: city street, evening, Key: orange sunset from the right, 15 deg, 1:05.3–1:40.5
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet; holds something
    आरव: right third, facing left → right third, facing right; costume: as the lock sheet
    मीरा: right third, facing left → right third, facing left; costume: as the lock sheet; holds something
    axis: रघु काका left, आरव right — kept in every shot of the scene (180-degree principle)
    state: everyone wet by the end (rain)
-— दृश्य 4: city street, evening, Key: orange sunset from the right, 15 deg, 1:44.0–2:23.5
+— दृश्य 4: city street, evening, Key: orange sunset from the right, 15 deg, 1:40.5–2:20.0
    रघु काका: left third, facing right → left third, facing right; costume: as the lock sheet
    आरव: right third, facing right → right third, facing left; costume: as the lock sheet
    मीरा: right third, facing left → right third, facing left; costume: as the lock sheet
@@ -2324,18 +2323,18 @@ SCENE-COVERAGE REPORT (director's manual 3.2 — genuine gaps against intentiona
 
 PROP LEDGER (director's manual 1.6 — owner, state and location scene by scene)
   • something — owner: whoever holds it first
-      SC_01: आरव — held in the right hand from 0:17.0
-      SC_01: आरव — held in the left hand from 0:28.7
+      SC_01: आरव — held in the right hand from 0:13.5
+      SC_01: आरव — held in the left hand from 0:25.2
   • something — owner: whoever holds it first
-      SC_02: रघु काका — held in the right hand from 1:00.5
-      SC_03: रघु काका — held in the right hand from 1:16.9
-      SC_03: मीरा — held in the right hand from 1:28.0
+      SC_02: रघु काका — held in the right hand from 0:57.0
+      SC_03: रघु काका — held in the right hand from 1:13.4
+      SC_03: मीरा — held in the right hand from 1:24.5
 
 LOCATION RECORDS (director's manual 1.6)
   LOC_001 — city street: exterior; reference: the painted set with its 2.5D depth
      layout: the stage is 1280 wide, the floor line at the plate's ground; entrances heroes enter from the left
      time-of-day and lighting variants: evening (Key: orange sunset from the right, 15 deg)  |  scenes: SC_01, SC_02, SC_03, SC_04
-• Step 8 — the finished film metered frame by frame as it was written (3635 frames; 2991 pairs of frames in a row compared in 89 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 2, whole-frame story effects left out 52 moments; the largest change between two frames 8.6 per cell at 0:10.8 (limit 14), the largest share of the frame changed 13% (limit 50%)
+• Step 8 — the finished film metered frame by frame as it was written (3479 frames; 2992 pairs of frames in a row compared in 89 shots): morphing / boiling 0 shots, camera shake 0 shots, shakes the story asks for 2, whole-frame story effects left out 51 moments; the largest change between two frames 9.5 per cell at 1:06.8 (limit 14), the largest share of the frame changed 16% (limit 50%)
 
-FRAME AUDIT — every character in every frame as drawn (3287 frames, 6177 character-frames, 5729 frame pairs inside shots)
+FRAME AUDIT — every character in every frame as drawn (3287 frames, 6175 character-frames, 5727 frame pairs inside shots)
 • Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0
