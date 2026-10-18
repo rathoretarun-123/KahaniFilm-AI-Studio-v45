@@ -291,7 +291,7 @@ public final class Director {
         title.text1 = story.title;
         title.text2 = story.subtitle;
         title.backdrop = this.art.title;
-        float tdur = 7.5f;
+        float tdur = 4f;            // v47.10 (the user: "just … joining them"): the title is a beat, not 7.5 s of a still page
         if (titleLine >= 0) {
             Film.Line l = film.lines.get(titleLine);
             l.start = 2.2f;
@@ -395,7 +395,7 @@ public final class Director {
         Film.Seg end = new Film.Seg();
         end.type = Film.S_END;
         end.t0 = t;
-        end.t1 = t + 8f;
+        end.t1 = t + 5f;            // v47.10: 5 s (was 8)
         end.text1 = story.hindi ? "समाप्त" : "The End";
         end.text2 = story.title;
         end.backdrop = this.art.end;
@@ -4228,6 +4228,13 @@ public final class Director {
         return d;
     }
 
+    /** The side a sentence names: 1 the right ("दाईं तरफ", "दायीं ओर", "to the right"), -1 the left, 0 neither ("she left", "right now" name no side). */
+    static int side(String s) {
+        if (Txt.has(s, "दायीं", "दाईं", "दायें", "दाएं", "दाएँ", "दांयी", "दाहिन", "the right", "right side", "right-hand", "walks right", "moves right")) return 1;
+        if (Txt.has(s, "बायीं", "बाईं", "बायें", "बाएं", "बाएँ", "बांयी", "the left", "left side", "left-hand", "walks left", "moves left")) return -1;
+        return 0;
+    }
+
     /** v45: words of walking (or rolling) to a place or a thing. */
     static final String[] WALK_TO = {"walks to the", "walks over to", "goes to the", "heads to the", "heads for the", "makes his way to", "makes her way to", "wheels himself",
             "wheels herself", "की ओर जाता", "की ओर जाती", "की तरफ़ जाता", "की तरफ़ जाती", "की तरफ जाता", "की तरफ जाती", "तक जाता", "तक जाती"};
@@ -4405,6 +4412,9 @@ public final class Director {
         // v47.4: plain walking — with a stick, on foot, setting off ("छड़ी लेकर चलता है", "चल पड़ती है"); the wind "चलती है" names no one, so it never fires
         {new String[]{"लेकर चलता", "लेकर चलती", "लेकर चलते", "पैदल चल", "पैदल जा", "चलने लगता", "चलने लगती", "चलने लगते", "चल पड़ता", "चल पड़ती", "चल पड़ते", "चल देता", "चल देती", "चल देते",
                 "starts walking", "sets off", "walks on", "walks ahead", "walks with a stick", "walks with his stick", "walks with her stick", "on foot"}, -1, -1, 2.6f, EV_WALK},
+        // v47.10: a walk across the room to one side ("कमरे में दाईं तरफ चलकर जाती है", "walks to the left")
+        {new String[]{"चलकर जा", "चल कर जा", "चलते हुए जा", "चलती हुई जा", "चलता हुआ जा", "तरफ चल", "तरफ़ चल", "ओर चल",
+                "walks to the right", "walks to the left", "walks right", "walks left", "moves to the right", "moves to the left", "crosses the room"}, -1, -1, 2.6f, EV_WALK},
         {new String[]{"सहला", "पुचकार", "थपथपा", " pats", " pets", "strokes"}, Pose.HAPPY, Film.G_PAT, 1.8f, EV_NEAR},
         {new String[]{"दाना डाल", "दाना खिला", "scatters", "feeds the birds"}, Pose.HAPPY, Film.G_THROW, 1.6f, EV_NONE},
         // v43: food served, a thing shown, a thing taken from someone
@@ -4927,7 +4937,8 @@ public final class Director {
                     if (!human || now.anchor != Film.A_GROUND) break;
                     float x = xAt(a, t);
                     float far = ev == EV_RUN ? 420 : 280;
-                    float dest = x < 640 ? Math.min(1100, x + far) : Math.max(180, x - far);
+                    int side = side(w);              // (v47.10: the side the script names, else across the stage)
+                    float dest = side > 0 || side == 0 && x < 640 ? Math.min(1100, x + far) : Math.max(180, x - far);
                     // to a free spot (never onto someone standing there)
                     List<Film.Actor> me = new ArrayList<Film.Actor>();
                     me.add(a);
@@ -8093,7 +8104,7 @@ public final class Director {
                 float[] sofaP = st == Film.SEAT_SOFA ? photoSofa(seg) : null;
                 if (sofaP != null && a.look != null && a.look.isHumanoid() && seatedNeighbourActor(a, ta) == null) {
                     float span = sofaP[1] - sofaP[0], m = 0.15f * span;
-                    boolean right = Txt.has(s, "दायीं", "दायें", "दाएं", "दाएँ", "दाहिन", "right"), left = Txt.has(s, "बायीं", "बायें", "बाएं", "बाएँ", "left");
+                    boolean right = side(s) > 0, left = side(s) < 0;
                     float want = left ? sofaP[0] + 0.33f * span : right ? sofaP[0] + 0.67f * span : Math.max(sofaP[0] + m, Math.min(sofaP[1] - m, xAt(a, ta)));
                     if (Math.abs(want - xAt(a, ta)) > 4) {
                         if (ta <= seg.t0 + 0.3f) { k.x = want; k.moveDur = 0; }
@@ -8112,7 +8123,7 @@ public final class Director {
                         Film.Actor nb = seatedNeighbourActor(a, ta);
                         if (nb != null && a.look != null && a.look.isHumanoid()) {
                             float hmax = Math.max(heightOf(nb), heightOf(a)), gap = 0.55f * hmax, nx = xAt(nb, ta);
-                            int side = Txt.has(s, "दायीं", "दायें", "दाएं", "दाएँ", "दाहिन", "right") ? 1 : Txt.has(s, "बायीं", "बायें", "बाएं", "बाएँ", "left") ? -1 : (xAt(a, ta) >= nx ? 1 : -1);
+                            int side = side(s) != 0 ? side(s) : (xAt(a, ta) >= nx ? 1 : -1);
                             if (Math.abs(xAt(a, ta) - (nx + side * gap)) > 0.15f * hmax) {
                                 if (ta <= seg.t0 + 0.3f) { Film.Key k0 = a.at(ta); k0.x = nx + side * gap; k0.moveDur = 0; }
                                 else moveNear(a, nb, ta, 0.9f, gap);

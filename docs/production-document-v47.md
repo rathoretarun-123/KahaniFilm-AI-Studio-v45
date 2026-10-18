@@ -1049,6 +1049,19 @@ While the frame moves, nothing is snapped to its pixels. Scripted moves stay as 
 In about half of a speaker's phrases one hand comes up and out with the words, more on the stressed syllables, and
 goes back as the phrase ends — never while the hands hold something.
 
+### Expressions and pacing (the user: "no expressions, just copying pictures … and joining them")
+
+Checked on a test of one girl speaking five lines in five feelings, close up:
+
+- **Faces.** The feelings were there but faint. A picture's face now plays each feeling at 1.25× its old strength: a
+  smile with soft eyes, sad inner brows, lowered angry brows, wide surprised eyes. At 1.45× the smile and the anger
+  went lopsided: the eyes are found on a picture only roughly, and a full squint closed one eye and not the other. So
+  a squint is capped at half.
+- **Body language.** The slump of sadness, the lean of anger and the step back of fear play at 1.6×. The gestures
+  with the words are about twice as large.
+- **Pacing.** The title page held 7.5 s and the end page 8 s of a 35-second film. Now they hold 4 s and 5 s; a title
+  read aloud still keeps its line.
+
 ### Blinks, corrected
 
 The eyelid painted half way over a photographed eye read as a flat, sleepy line across the iris. The lid is drawn
@@ -1063,3 +1076,36 @@ again only while the eye is mostly shut, a little larger and wider than the eye 
 - **Keys in the APK: not done.** The sounds bundled need no key, and no key to a paid service exists here. A key put
   inside an APK published on a public release can be read out by anyone and used against the account; a key the user
   gets can be entered in Settings.
+
+## 14. Tenth round (18 October, later still): walking where the script says, the mouth on the lips
+
+The user: "no expressions, just copying pictures … leg and body movements". A test film of one girl in a room (five
+feelings and a walk), looked at frame by frame, showed three faults.
+
+### A walk to one side (`Director.side`, `WalkSideTest`)
+
+"(वृंदा कमरे में दाईं तरफ चलकर जाती है)" was not read as a walk at all: she stood still while the sentence went by. The
+walk words now include "चलकर जा", "चलते हुए जा", "तरफ चल", "ओर चल", "walks to the right", "crosses the room", and the walk
+goes to the side the sentence names. "दाईं" is the right, "बाईं" the left, in every common spelling. "She left" and
+"right now" name no side. The same reading places someone on the side of a sofa. On the frames she turns to her side
+view, strides across with her legs swinging, the camera follows her, and she turns back to the front.
+
+### The mouth on the lips, not on a cheek (`Art.mouthFromPicture`, `LipFinderTest`)
+
+As she spoke, a dark slit opened on her cheek. The face reader had put her mouth correctly under the middle of her
+eyes. Then the older "lips by colour" check moved it onto her deeply blushed left cheek, beyond her eye: her thin,
+skin-coloured lips showed less lip colour than the blush did. Now lips found beyond an eye are taken only on a face
+turned that way. On a face seen from the front the point stays, and the lip line between the eyes is used when it is
+found. On the frames her own lips part as she speaks.
+
+### An animal's ears (`AnimalActionsTest`)
+
+A dog's idle ear flick and the flick of a scripted ear act ("कान हिलाता है") added together and jumped 0.65 in one
+frame. The shorter title page moved every frame to a new time, so one frame now landed where both peaked. The idle
+flick now gives way while an ear act plays.
+
+### The pages' tests follow the new pages
+
+`AppTest` still looked for the studio's old open lists ("Still missing", the director's plan) and for the story page's
+missing-pictures card. It now opens the studio's folded sections the way a user taps them. It uploads through a
+character's own picture place, which replaced that card.

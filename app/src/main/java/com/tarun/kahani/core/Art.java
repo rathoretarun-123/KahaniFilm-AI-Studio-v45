@@ -710,13 +710,25 @@ public final class Art {
             }
         }
         if (r == null || r.px == null || s == null || !s.faceKnown || s.mouthHW <= 0) return;
+        if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH face %dx%d eyes %.3f,%.3f / %.3f,%.3f mouth %.3f,%.3f hw %.3f%n", r.w, r.h, s.eyeLX, s.eyeLY, s.eyeRX, s.eyeRY, s.mouthX, s.mouthY, s.mouthHW);
         // v40: a mouth point with no lips under it (on the jaw, the neck, the nose) moves onto the lips found by their
         // colour — the mesh opened "new lips" wherever the point was
         float[] lips = Cutout.betterMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h,
                 s.mouthX * r.w, s.mouthY * r.h, s.mouthHW * r.w, s.skin);
+        // v47.10: lips beyond an eye only on a face turned that way — on a face seen from the front that patch is a
+        // blushed cheek (the mouth went onto it, and a dark slit opened on the cheek as she spoke)
+        if (lips != null && Math.abs(lips[0] / r.w - (s.eyeLX + s.eyeRX) / 2) > 0.5f * Math.abs(s.eyeRX - s.eyeLX) && facingOf(r, s) == 0) {
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH kept: lips at %.3f are beyond an eye of a face seen from the front%n", lips[0] / r.w);
+            lips = null;
+            // the lip line itself (darker and redder than the skin, wide and flat), between the eyes
+            float[] line = Cutout.sideMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h, s.mouthX * r.w, s.mouthY * r.h);
+            if (line != null && line[0] > s.eyeLX * r.w && line[0] < s.eyeRX * r.w) lips = line;
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH lip line %s%n", line == null ? "not found" : String.format(java.util.Locale.US, "at %.3f,%.3f", line[0] / r.w, line[1] / r.h));
+        }
         if (lips != null) {
             s.mouthX = lips[0] / r.w; s.mouthY = lips[1] / r.h; s.mouthHW = Math.max(lips[2], s.mouthHW * r.w * 0.6f) / r.w;
             s.mouthMoved = true;
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH moved onto the lips at %.3f,%.3f hw %.3f%n", s.mouthX, s.mouthY, s.mouthHW);
         }
         s.faces = facingOf(r, s);
         // v47.10: a face turned to the side (profile or three-quarter): its mouth found by its colour, and then it speaks

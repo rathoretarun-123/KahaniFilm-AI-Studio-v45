@@ -4041,30 +4041,40 @@ public final class Renderer {
         if (a != null) {
             int n = 8;
             float r0 = st.headRot, l0 = st.lean;
-            for (int i = 0; i < n; i++) bodyFor(emotionAt(a, t - i * 0.06f), st, 1f / n, t);
+            for (int i = 0; i < n; i++) bodyFor(emotionAt(a, t - i * 0.06f), st, BODY_LANGUAGE / n, t);
             float rNow = st.headRot - r0, lNow = st.lean - l0;
             Rig.State lag = rsLag;
             lag.reset();
-            for (int i = 0; i < n; i++) bodyFor(emotionAt(a, t - 0.25f - i * 0.06f), lag, 1f / n, t - 0.25f);
+            for (int i = 0; i < n; i++) bodyFor(emotionAt(a, t - 0.25f - i * 0.06f), lag, BODY_LANGUAGE / n, t - 0.25f);
             st.follow = rNow - lag.headRot;
             st.followLean = lNow - lag.lean;
         } else {
-            bodyFor(p.emotion, st, 1f, t);
+            bodyFor(p.emotion, st, BODY_LANGUAGE, t);
         }
         // the face: an average over the last 0.3 s, so expressions melt into each other
         // (a function of time only, so frames drawn by different threads agree)
         if (a != null) {
             int samples = 6;
-            for (int i = 0; i < samples; i++) faceFor(emotionAt(a, t - i * 0.06f), st, 1f / samples);
+            for (int i = 0; i < samples; i++) faceFor(emotionAt(a, t - i * 0.06f), st, EXPRESSION / samples);
         } else {
-            faceFor(p.emotion, st, 1f);
+            faceFor(p.emotion, st, EXPRESSION);
         }
+        // (v47.10: a squint is never more than half — the eyes are found on a picture only roughly, and a full squint
+        // closed one eye and not the other: a lopsided wink, not a smile)
+        st.squint = Math.min(st.squint, 0.5f);
         if (person && p.body != Pose.LIE && p.body != Pose.HANG) acting(st, p, a, t, en, poise);
         // v34: the eyes (the picture is mirrored when facing left)
         st.gazeX = p.gazeX * mirror;
         st.gazeY = p.gazeY;
         return st;
     }
+
+    /**
+     * v47.10 (the user: "no expressions"): a picture's face and body play each feeling this much more than the first
+     * rigs did (the smile, the sad brows, the anger, the surprise read only up close; the slump of sadness, the lean of
+     * anger, the step back of fear hardly at all).
+     */
+    public static float EXPRESSION = 1.25f, BODY_LANGUAGE = 1.6f;
 
     /** v47.10: how strongly the acting layer plays (0 off); the tests and the desktop maker can change it. */
     public static float ACTING = 1f;
@@ -4103,7 +4113,7 @@ public final class Renderer {
             // syllables, and goes back down as the phrase ends (never while the hands hold something)
             if (p.heldPic == null && p.holdR == Pose.I_NONE && p.holdL == Pose.I_NONE && keyPose(sp.line, n, 6) > 0) {
                 float x = u - n * ph, gest = Rig.smooth(0, 0.35f, x) * (1 - Rig.smooth(ph - 0.4f, ph, x)) * in;
-                float lift = (7 + 9 * acc) * en * k * gest;
+                float lift = (13 + 14 * acc) * en * k * gest;
                 if (keyPose(sp.line, n, 7) > 0) st.armR += lift; else st.armL += lift;
             }
             if (ACT_DEBUG) System.err.printf(java.util.Locale.US, "ACT %.3f %s tilt=%.2f nod=%.3f acc=%.2f%n", t, a.c.shown(), tilt * 4.5f * en * k * in, nod * 0.16f * k * in + acc * 0.2f * en * k, acc);
@@ -4224,7 +4234,8 @@ public final class Renderer {
         st.jaw = Math.max(st.jaw, p.animalJaw);
         // an ear flick now and then (eased in and out: before, it flicked in a single frame), more when listening
         float flick = (float) Math.sin(t * 0.83f + seed * 3.1f);
-        st.ear = Rig.smooth(0.86f, 0.95f, flick) * 0.8f * (float) Math.sin(t * 13);
+        // (v47.10: not on top of an ear act's own flicking — the two together jumped 0.65 in a frame)
+        st.ear = Rig.smooth(0.86f, 0.95f, flick) * 0.8f * (float) Math.sin(t * 13) * (1 - p.earAct);
         st.ear += curious * (-0.8f + 0.2f * (float) Math.sin(t * 9) - st.ear);
         // v47.7: pricked up, flicked
         st.ear += p.earsUp * (-0.85f - st.ear);
@@ -4266,7 +4277,7 @@ public final class Renderer {
                 case Film.AN_VOICE: p.animalJaw = Math.max(p.animalJaw, voiceJaw(a.look != null ? a.look.species : -1, u, dur)); break;
                 case Film.AN_TAIL_UP: p.tailUp = Math.max(p.tailUp, Rig.smooth(0, 0.5f, u) * Rig.smooth(0, 0.5f, act.t1 - t)); break;     // (raised over half a second)
                 case Film.AN_WAG: p.wag = Math.max(p.wag, env); break;
-                case Film.AN_EARS: p.earFlick = Math.max(-1, Math.min(1, p.earFlick + env * 0.8f * (float) Math.sin(u * 2 * Math.PI * 2.2f))); break;
+                case Film.AN_EARS: p.earFlick = Math.max(-1, Math.min(1, p.earFlick + env * 0.8f * (float) Math.sin(u * 2 * Math.PI * 2.2f))); p.earAct = Math.max(p.earAct, env); break;
                 case Film.AN_EARS_UP: p.earsUp = Math.max(p.earsUp, env); break;
                 default:
             }

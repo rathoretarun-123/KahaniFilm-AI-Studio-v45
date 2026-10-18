@@ -119,6 +119,8 @@ public final class Pose {
      * and pricked up (0..1). Every one eases in and out — never a jump from one frame to the next.
      */
     public float graze, animalJaw, tailUp, wag, earFlick, earsUp;
+    /** v47.10: how far into an ear act ("कान हिलाता है") the animal is (0..1): its own idle flick gives way to it. */
+    public float earAct;
     public String turbanOwner;         // whose turban / cap is being worn (its real picture is used when there is one)              // a sword is being swung right now (otherwise a held sword rests calmly)
     public long seed;
 
@@ -147,6 +149,6 @@ public final class Pose {
         gazeX = 0; gazeY = 0; gazeHeld = 0; turnBody = 0; turnHead = 0;
         kajal = 0; lipstick = 0; bindi = 0; mehndi = 0; powder = 0; facePaint = 0; towel = 0; flush = 0;
         bowDraw = 0; arrowOn = false; pedal = 0; pedalAmt = 0;
-        graze = 0; animalJaw = 0; tailUp = 0; wag = 0; earFlick = 0; earsUp = 0;
+        graze = 0; animalJaw = 0; tailUp = 0; wag = 0; earFlick = 0; earsUp = 0; earAct = 0;
     }
 }

@@ -268,10 +268,18 @@ public class AppTest {
         List<String> st = texts(root, new ArrayList<String>());
         System.out.println("STUDIO: " + st);
         assertTrue(st.toString().contains("वानुषा"));
+        // v47.10 (the user: "studio page … very cluttered"): what is wanted and Make film at the top, the helpers and
+        // the director's plan folded under "More (optional)" — a tap opens each
+        assertTrue(st.toString().contains("Pictures:") && st.toString().contains("Make film"));
+        assertFalse("folded until opened", st.toString().contains("Descriptions for other apps"));
+        byText(root, "▸  🧰 Helpers", new int[]{0}).performClick();
+        idle();
+        byText(root, "▸  🎬 The director's plan", new int[]{0}).performClick();
+        idle();
+        st = texts(root, new ArrayList<String>());
         assertTrue(st.toString().contains("Descriptions for other apps"));
         assertTrue(st.toString().contains("Find pictures in my library"));
-        assertTrue(st.toString().contains("Still missing"));
-        assertTrue(st.toString().contains("Director's plan"));
+        assertTrue(st.toString().contains("Estimated length"));
 
         // picture chooser shows 4 at a time with "next 4"
         call(a, "choosePicture", new Class<?>[]{String.class, String.class}, "char:वृंदा", "वृंदा");
@@ -1395,7 +1403,7 @@ public class AppTest {
 
     /**
      * v33: pictures can be given everywhere, several at once — the Studio cards of a character, a place and a thing,
-     * the story screen's missing-pictures card with the director's added scenes, the make-film popup's "Pictures
+     * a character's picture place (v47.10: the story screen's missing-pictures card is gone), the make-film popup's "Pictures
      * first", the progress screen's rows — every button opens the multi-picture picker.
      */
     @Test
@@ -1436,17 +1444,16 @@ public class AppTest {
         nd.getButton(android.content.DialogInterface.BUTTON_POSITIVE).performClick(); idle();
         firstDialogItem();
         rep.append("studio thing: ").append(pickerStarted(a)).append('\n');
-        // 2. the story screen: the director's plan — a missing picture or an added scene, and a thing
-        call(a, "showStory", new Class<?>[0]);
+        // 2. (v47.10: the story screen no longer lists the missing pictures — the studio does, each a tile of its own)
+        // one picture place of a character, tapped: its own picker
+        call(a, "showStudio", new Class<?>[0]);
         idle();
         root = a.findViewById(android.R.id.content);
-        View mb = byText(root, "📷 ", new int[]{0});
-        View xb = byText(root, "🎬 ", new int[]{0});
-        if (xb == null) xb = byText(root, "✅ ", new int[]{0});
-        assertTrue("a plan row to upload for (missing: " + (mb != null) + ", added scene: " + (xb != null) + ")", mb != null || xb != null);
-        (xb != null ? xb : mb).performClick(); idle();
+        View slot = byText(root, "+ Front", new int[]{0});
+        assertNotNull("a character's front picture place", slot);
+        slot.performClick(); idle();
         firstDialogItem();
-        rep.append("story plan row: ").append(pickerStarted(a)).append('\n');
+        rep.append("studio picture place: ").append(pickerStarted(a)).append('\n');
         // 3. the make-film popup: "Pictures first"
         call(a, "makeFilm", new Class<?>[0]);
         idle();
