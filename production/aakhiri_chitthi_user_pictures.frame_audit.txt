@@ -1,7 +1,4 @@
 FRAME AUDIT — every character in every frame as drawn (3138 frames, 5548 character-frames, 5280 frame pairs inside shots)
-• Jolts (a change of speed over 2% of the height in one frame): 2; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 1; extra faces: 0
-  - परी jolts (2.1% of the height per frame, up and down) at frame 1033 (0:43.0)
-  - परी jolts (2.1% of the height per frame, up and down) at frame 2730 (1:53.8)
-  - परी's picture changes from the rigged front picture to a view (382x900) between frames 2729 and 2730 (1:53.7) without a cross-fade
+• Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0
 exit 0
 VOICES: 7 of 7 lines spoken (espeak-ng)

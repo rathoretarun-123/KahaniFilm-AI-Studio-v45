@@ -1,0 +1,4 @@
+FRAME AUDIT ? every character in every frame as drawn (519 frames, 519 character-frames, 477 frame pairs inside shots)
+? Jolts (a change of speed over 2% of the height in one frame): 0; jumps (a move over 12% of the height in one frame): 0; size pops (over 4% in one frame): 0; picture pops inside a shot: 0; extra faces: 0
+exit 0
+VOICES: 5 of 5 lines spoken (espeak-ng)
