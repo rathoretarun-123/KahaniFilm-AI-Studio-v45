@@ -5392,6 +5392,7 @@ public final class Director {
             Film.Act rest = new Film.Act(t, t + Math.max(2.4f, d), Film.G_HEAD_REST);
             rest.target = target;
             subj.acts.add(rest);
+            d = Math.max(d, 2.4f);
         }
         boolean focusSet = false;
         // thought before action (handbook ch. 6): a sound or a sudden sight is perceived first — a pause, the head
