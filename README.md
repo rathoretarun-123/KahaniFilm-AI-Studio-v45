@@ -14,13 +14,12 @@ only the quoted lines written for the narrator.
 | [बाबू के लिए](babu_ke_liye_user_pictures.mp4) | the bundled reference pack | 1:54 | 4 of 4 | 0 findings |
 | [नीम के नीचे](neem_ke_neeche_user_pictures.mp4) | the user's pictures | 0:37 | 4 of 4 | 0 findings |
 | [भाव — a test of feelings and a walk](bhaav_feelings_and_walk_test.mp4) | the user's pictures of the older girl | 0:28 | 5 of 5 | 0 findings |
+| [आखिरी चाय](aakhiri_chai_user_pictures.mp4) | the bundled reference pack | 3:00 | 10 of 10 | 0 findings |
 | [आखिरी जोड़ी](aakhiri_jodi_drawn.mp4) | drawn by the studio | 0:59 | 6 of 6 | 0 findings |
 | [आखिरी चाय](aakhiri_chai_drawn.mp4) | drawn by the studio | 2:20 | 11 of 11 | 0 findings |
 | [The Rainy Day Dog](rainy_day_dog_drawn.mp4) | drawn by the studio | 0:44 | 5 of 5 | 0 findings |
 | [गौरी की घंटी](gauri_ki_ghanti_drawn.mp4) | drawn by the studio | 0:48 | 4 of 4 | 0 findings |
 
-`aakhiri_chai_user_pictures.mp4` is from the previous round (espeak voices). This round's render of it ran past its
-time limit and is not published.
 
 The audit checks every frame for jolts (a change of speed over 2% of the height between frames), jumps (a move over
 12% in one frame), size pops (over 4%), a picture swapped inside a shot, and more than one face for one character.
