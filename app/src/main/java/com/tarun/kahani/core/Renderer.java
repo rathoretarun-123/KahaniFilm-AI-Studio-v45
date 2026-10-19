@@ -2238,11 +2238,14 @@ public final class Renderer {
             float lean = stepping ? mo.rot * 0.6f : 0;
             // in a close shot the camera was aimed at the front picture's face: the chosen picture's face goes
             // exactly there (its feet are out of frame anyway); in a wide shot the feet stay on the ground
-            if (camZ > 1.6f && sp != null && sp.faceKnown && real.faceKnown && Math.abs(chosen.angle) < 100 && chosen.pose != PoseSense.LIE && chosen.ownSeat <= 0) {     // (v47.7: one on their own bench stays on its legs: lifted to a standing face, the bench left the ground and the head left the frame)
+            if (camZ > 1.6f && sp != null && sp.faceKnown && real.faceKnown && Math.abs(chosen.angle) < 100 && chosen.pose != PoseSense.LIE && chosen.ownSeat <= 0
+                    && !(chosen.pose == PoseSense.SIT && (k.body == Pose.SIT || p.sit > 0.5f))) {     // (v47.7: one on their own bench stays on its legs: lifted to a standing face, the bench left the ground and the head left the frame)
                 float wMain = sp.w * (h / sp.h), wReal = real.w * (hReal / real.h);
                 pys += (-h + sp.mouthY * h) - (-hReal + real.mouthY * hReal);
                 pxs += ((sp.mouthX - 0.5f) * wMain - (real.mouthX - 0.5f) * wReal) * (p.facing < 0 ? -1 : 1);
             }
+            // (v47.13: a picture of them seated stays on its legs as in a wide shot — lifted to the standing face, the old man
+            // and his bench rose out of the top of the frame once the face detector found faces in seated pictures)
             // v39: a sitting picture on a sofa, a chair or a bed sits on its cushion, not on the floor in front of it
             if (chosen.pose == PoseSense.SIT && !Casting.seatOfItsOwn(chosen) && (k.body == Pose.SIT || p.sit > 0.5f) && p.seat > 0 && p.seat != Film.SEAT_WHEELCHAIR && camZ <= 1.6f)     // (a floor sit lifts nothing; v47.7: one with its own seat stands on its seat's legs; v47.8: a photograph of a sitter shows what they sit on — only a cut-out is lifted)
                 pys -= seatTopOf(p.seat) * h;

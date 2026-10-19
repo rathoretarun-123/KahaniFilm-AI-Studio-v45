@@ -540,6 +540,9 @@ public final class FilmJob implements Runnable {
                     float[] pcm = AudioIO.decode(ctx, it.path, 60);
                     if (pcm != null) { k.sample = VoiceFx.profile(pcm, Synth.SR); k.sampleId = it.id; }
                 }
+                // v47.13: one of the studio's narrator voices chosen for the character: its pitch and pace on the phone
+                com.tarun.kahani.core.NarratorVoices.Voice cnv = lib.narrator(Library.NARRATOR + project.setting("nvoice." + c.displayName, ""));
+                if (cnv != null && k.sample == null) { k.pitch = cnv.phonePitch; k.rate = cnv.phoneRate; }
                 if (natural) {
                     EdgeVoice.Cast chosen = EdgeVoice.Cast.parse(project.setting("evoice." + c.displayName, ""));
                     k.edge = k.sample != null ? EdgeVoice.forSample(k.sample.pitch, story.hindi)
@@ -588,6 +591,12 @@ public final class FilmJob implements Runnable {
             narratorCast.pitch = 1.0f; narratorCast.rate = 0.92f;
             if (aiVoices) narratorCast.gemini = "Charon";
             if (natural) narratorCast.edge = EdgeVoice.narrator(story.hindi);
+            // v47.13: the narrator voice chosen in the studio — one of its narrator voices (pitch and pace on the phone,
+            // its neural voice online) or a studio preset; the preset chosen for the narrator was saved and never used
+            com.tarun.kahani.core.NarratorVoices.Voice nnv = lib.narrator(Library.NARRATOR + project.setting("nvoice.narrator", ""));
+            if (nnv != null) { narratorCast.pitch = nnv.phonePitch; narratorCast.rate = nnv.phoneRate; }
+            EdgeVoice.Cast narratorChosen = EdgeVoice.Cast.parse(project.setting("evoice.narrator", ""));
+            if (natural && narratorChosen != null) narratorCast.edge = narratorChosen;
             if (elv != null) {
                 com.tarun.kahani.core.Look nl = new com.tarun.kahani.core.Look();
                 nl.kind = com.tarun.kahani.core.Look.MAN;

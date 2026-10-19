@@ -41,4 +41,6 @@ tools/testdata/fixture_inventory.json
 tools/robotest/voices/
 tools/robotest/build/
 voices/
+# (the studio's narrator voice library ships in the APK)
+!app/src/main/assets/voices/
 release/

@@ -222,7 +222,7 @@ final class Picker {
                         } else {
                             r.addView(t, new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
                         }
-                        if (it.path.startsWith("preset:") && presetPlayer != null) r.addView(Ui.small(a, "▶", Ui.BLUE, new View.OnClickListener() {
+                        if ((it.path.startsWith("preset:") || it.path.startsWith(Library.NARRATOR)) && presetPlayer != null) r.addView(Ui.small(a, "▶", Ui.BLUE, new View.OnClickListener() {
                             public void onClick(View v) { presetPlayer.play(it); }
                         }));
                         else r.addView(controls(a, it.path));

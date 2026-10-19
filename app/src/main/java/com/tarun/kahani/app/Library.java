@@ -25,6 +25,10 @@ import java.security.MessageDigest;
  */
 public final class Library {
     public static final String PIC = "pic", VOICE = "voice", SOUND = "sound", SCRIPT = "script";
+    /** v47.13: the id (and path) prefix of the studio's narrator voices (assets/voices/narrators.json). */
+    public static final String NARRATOR = "narrator:";
+    /** v47.13: the studio's narrator voices, with their metadata (also listed as built-in voices of the library). */
+    public final List<com.tarun.kahani.core.NarratorVoices.Voice> narrators = new ArrayList<com.tarun.kahani.core.NarratorVoices.Voice>();
 
     public static final class Item {
         public String id, type, kind = "", name = "", tags = "", path = "", source = "", meta = "";
@@ -204,6 +208,10 @@ public final class Library {
                 it.kind = Json.str(x, "type", "sfx"); it.name = Json.str(x, "title", ""); it.tags = Json.str(x, "words", ""); it.source = "app";
                 items.add(it);
             }
+            // v47.13: the studio's narrator voices, each with its metadata (language, gender, age, tone, pace, use)
+            narrators.clear();
+            narrators.addAll(com.tarun.kahani.core.NarratorVoices.parse(Project.readAsset(ctx.getAssets(), com.tarun.kahani.core.NarratorVoices.ASSET)));
+            for (com.tarun.kahani.core.NarratorVoices.Voice v : narrators) items.add(narratorItem(v));
         } catch (IOException ignored) {
         }
     }
@@ -258,6 +266,35 @@ public final class Library {
             }
         }
         prefs.edit().putBoolean("bundledFilmReferencesV1", true).apply();
+    }
+
+    /** v47.13: the library entry of one of the studio's narrator voices, its metadata kept with it. */
+    public static Item narratorItem(com.tarun.kahani.core.NarratorVoices.Voice v) {
+        Item it = new Item();
+        it.id = NARRATOR + v.id;
+        it.path = it.id;
+        it.type = VOICE;
+        it.kind = "narrator";
+        it.builtIn = true;
+        it.source = "app";
+        it.name = v.name + (v.nameEn.length() > 0 && !v.nameEn.equals(v.name) ? " — " + v.nameEn : "");
+        it.tags = "narrator, कथावाचक, " + v.describe();
+        it.setMeta("vdesc", v.describe());
+        it.setMeta("language", v.language);
+        it.setMeta("gender", v.gender);
+        it.setMeta("age", v.age);
+        it.setMeta("tone", v.tone);
+        it.setMeta("pace", v.pace);
+        it.setMeta("bestFor", v.bestFor);
+        it.setMeta("sample", v.sample);
+        it.setMeta("natural", v.natural().key());
+        it.setMeta("phone", v.phonePitch + "|" + v.phoneRate);
+        return it;
+    }
+
+    /** v47.13: the narrator voice of a library entry (by its id), or null. */
+    public com.tarun.kahani.core.NarratorVoices.Voice narrator(String id) {
+        return id == null || !id.startsWith(NARRATOR) ? null : com.tarun.kahani.core.NarratorVoices.byId(narrators, id.substring(NARRATOR.length()));
     }
 
     /** Story-specific reference images shipped in the APK and exposed as read-only library items. */

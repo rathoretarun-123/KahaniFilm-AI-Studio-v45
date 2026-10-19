@@ -1237,6 +1237,24 @@ every spoken line. One frame a second is kept.
   body that end is guessed from an adult's proportions, and the little girl's hanging arms read as held: she never
   moved them. On a small child (a head over a quarter of her height) a guessed end no longer holds the arms still.
   Checked on the rig sheets of परी and the toddler of the sofa story (pointing, walking, angry).
+- **Narrator voices in the library.** The studio's narrator voices now ship in the APK as a library with their
+  metadata (`assets/voices/narrators.json`, 13 voices: seven Hindi — दादी माँ, नाना जी, कथावाचक, गंभीर सूत्रधार, माँ,
+  चुलबुली दीदी, बाल कथावाचक — and six English): names in Hindi and English, language, gender, age, tone, pace, what
+  each suits, a sample line, and how it speaks — offline by the phone's speech engine at its pitch and pace, online by
+  its neural voice. They are listed in the library and in the narrator's (and every character's) voice picker, with
+  a ▶ to hear the sample. No recording is bundled (every licensed source of narrator recordings was out of reach;
+  none was made up); a recorded voice from the user's library can still be chosen. The voice chosen for the narrator
+  was saved and never used — the film always spoke with the default narrator; it is used now (`NarratorVoicesTest`).
+- **What the face detector changed, checked frame by frame.** बाबू के लिए rendered with the detector showed three
+  faults the old readings had hidden, all fixed and checked on the same frames (24, 38, 62, 90 and 110 s):
+  the seated old man rose out of the top of the frame with his bench — a seated picture, now with a face, was lifted
+  to put that face where the standing one's is; it stays on its own legs now, as in a wide shot (`Renderer`). The
+  over-the-shoulder shot showed his knees instead of his face for the same reason; it shows his face again. The
+  sheets' big-headed poses have their eyes further apart than the slender front picture, so परी and the old man
+  shrank to three quarters of themselves from one standing picture to the next; a whole figure on its feet is the
+  character's own height now (`Art.sizeBy`). And परी sat on the bench with her legs hanging straight down — the
+  detector's two eyes of a profile lie almost on one another, and the side view's rig sized by them folded her
+  wrongly; a side view's face is read as before (`Art.makeSprite`).
 - **Blinks behind glasses.** The old man's eyes are read at the lower rims of his glasses, and his lids closed there.
   No lid is painted behind glasses now.
 - **The audit and the camera's cut.** The camera's own cut can fall a frame away from the shot list's start. Two frames

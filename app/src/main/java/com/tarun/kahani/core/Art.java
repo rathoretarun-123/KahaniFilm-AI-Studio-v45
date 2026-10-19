@@ -1161,7 +1161,10 @@ public final class Art {
     }
 
     /** animal: the background showing between the legs is cut out too. */
-    public static Sprite makeSprite(Loader L, String file, int maxSide, boolean animal) {
+    public static Sprite makeSprite(Loader L, String file, int maxSide, boolean animal) { return makeSprite(L, file, maxSide, animal, true); }
+
+    /** detect: the face is found by the face detector (when there is one); else read from the picture's colours. */
+    static Sprite makeSprite(Loader L, String file, int maxSide, boolean animal, boolean detect) {
         int[] d = L.decode(file, maxSide);
         if (d == null) return null;
         int w = d[0], h = d[1];
@@ -1207,7 +1210,7 @@ public final class Art {
         s.faceKnown = r.faceFound;
         // v47.13: the face where the face detector sees it (its eyes and the corners of its mouth), else none for a
         // picture where it sees none; without the detector, as read from the picture's colours
-        if (!animal && FaceModel.available()) {
+        if (!animal && detect && FaceModel.available()) {
             FaceModel.Face f = FaceModel.face(r.px, r.w, r.h);
             if (f != null) faceFromModel(s, r, f); else s.noFaceByModel = true;
         }
@@ -2466,7 +2469,9 @@ public final class Art {
                     float viewAspect = dd != null && dd[0] > 0 ? Math.max(dd[1] / (float) dd[0], figureAspect(dd)) : 0;
                     if (!beastC && mainAspect >= 1.3f && dd != null && dd[0] > 0 && viewAspect < 0.7f * mainAspect) { art.notes.add("view of " + f[1] + " at " + f[2].trim() + "° left out: a close-up or a half figure"); continue; }
                 } catch (RuntimeException ignored) { }
-                Sprite v = makeSprite(L, f[3], spriteSide, false);
+                // (v47.13: a side view's face is read as before — the detector's eyes of a profile lie almost on one
+                // another, and the rig sized by them folded परी's legs straight down off the bench)
+                Sprite v = makeSprite(L, f[3], spriteSide, false, idx != 1);
                 if (v == null) continue;
                 v.faceKnown = v.faceByModel;      // (v47.13: the face the detector saw stays; else found by the lips below)
                 if (f.length >= 12) {
@@ -2687,6 +2692,10 @@ public final class Art {
         boolean seated = pose == PoseSense.SIT || pose == PoseSense.CROUCH;
         float lo = bust ? 0.18f : seated ? 0.42f : pose == PoseSense.LIE ? 0.25f : 0.75f, hi = bust ? (cut == 1 ? 0.7f : 0.55f) : seated ? 0.82f : pose == PoseSense.LIE ? 0.6f : 1.12f;
         float typical = bust ? (cut == 1 && eyeY > 0 && eyeY <= 0.28f ? 0.5f : 0.34f) : seated ? 0.62f : pose == PoseSense.LIE ? 0.4f : 1f;
+        // v47.13: a whole figure on its feet is the character's own height — the eyes, now found in every picture, are
+        // drawn further apart in a sheet's big-headed poses than in the slender front picture (परी and the old man
+        // shrank to three quarters of themselves from one picture to the next)
+        if (!bust && !seated && pose != PoseSense.LIE && pose != PoseSense.BEND) return 1f;
         if (mainEye > 0 && eyeHere > 0.005f && faceGeo > 0.45f && faceGeo < 1.7f) {
             float r = mainEye / eyeHere;
             if (r >= lo && r <= hi) return r;

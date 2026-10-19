@@ -1975,7 +1975,9 @@ public class MainActivity extends Activity {
         LinearLayout card = Ui.card(this);
         card.addView(Ui.text(this, "🎙 Narrator (voice only)", 17, Ui.TEXT, true));
         Library.Item vs = library.byId(project.setting("vsample.narrator", ""));
-        card.addView(Ui.text(this, vs != null ? "Your sample: " + vs.label() : "Studio voice", 13, Ui.SUB, false));
+        com.tarun.kahani.core.NarratorVoices.Voice nv = library.narrator(Library.NARRATOR + project.setting("nvoice.narrator", ""));
+        card.addView(Ui.text(this, vs != null ? "Your sample: " + vs.label()
+                : nv != null ? "Studio narrator: " + nv.name + "\n" + nv.describe() : "Studio voice", 13, Ui.SUB, false));
         card.addView(Ui.small(this, "🎙 Choose voice", Ui.GREEN, new View.OnClickListener() {
             public void onClick(View v) { chooseVoice("narrator", castStory, null); }
         }));
@@ -2788,17 +2790,31 @@ public class MainActivity extends Activity {
         }
         final String line = sampleLine(st, c);
         p.presetPlayer = new Picker.Player() {
-            public void play(final Library.Item it) { speakPreset(it.path.substring(7), line, st == null || st.hindi); }
+            public void play(final Library.Item it) {
+                com.tarun.kahani.core.NarratorVoices.Voice nv = library.narrator(it.path);
+                if (nv != null) speakPreset(nv.natural().key(), nv.sample.length() > 0 ? nv.sample : line, nv.hindi());
+                else speakPreset(it.path.substring(7), line, st == null || st.hindi);
+            }
         };
         p.show("Voice: " + (name.equals("narrator") ? "Narrator" : c != null ? c.shown() : name), Library.VOICE, name,
                 new String[]{"record", "phone"}, new Picker.Listener() {
                     public void picked(Library.Item it) {
-                        if (it.path.startsWith("preset:")) {
+                        com.tarun.kahani.core.NarratorVoices.Voice nv = library.narrator(it.path);
+                        if (nv != null) {
+                            // v47.13: one of the studio's narrator voices — its pitch and pace on the phone, its neural voice online
                             project.setSetting("vsample." + name, "");
+                            project.setSetting("nvoice." + name, nv.id);
+                            project.setSetting("evoice." + name, nv.natural().key());
+                            project.setSetting("evoiceIdx." + name, "");
+                            toast("✅ " + (c != null ? c.shown() : "Narrator") + " will speak with: " + it.label());
+                        } else if (it.path.startsWith("preset:")) {
+                            project.setSetting("vsample." + name, "");
+                            project.setSetting("nvoice." + name, "");
                             project.setSetting("evoice." + name, it.path.substring(7));
                             project.setSetting("evoiceIdx." + name, "");
                             toast("✅ " + (c != null ? c.shown() : "Narrator") + " will speak with: " + it.label());
                         } else {
+                            project.setSetting("nvoice." + name, "");
                             project.setSetting("vsample." + name, it.id);
                             toast("✅ All of " + (c != null ? c.shown() : "the narrator") + "'s lines will be made in your voice \"" + it.label() + "\"");
                             if (c != null) previewVoice(st, c, true);
@@ -5371,11 +5387,16 @@ public class MainActivity extends Activity {
                 if (!it.builtIn && Library.SOUND.equals(it.type)) {
                     String ws = Library.meaningful(it.name + "," + it.tags);
                     sub = "\n" + Library.soundKindLabel(it) + (ws.length() > 0 ? " • " + ws : it.meta("sl") != null && it.meta("sl").length() > 0 ? " • sounds like " + it.meta("sl") : "");
-                } else if (!it.builtIn && Library.VOICE.equals(it.type) && it.meta("vdesc") != null) {
+                } else if ((!it.builtIn || it.path.startsWith(Library.NARRATOR)) && Library.VOICE.equals(it.type) && it.meta("vdesc") != null) {
                     sub = "\n" + it.meta("vdesc");
                 }
                 r.addView(Ui.text(this, it.label() + (it.builtIn ? "  (app)" : "") + sub, 14, Ui.TEXT, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-                if (!it.path.startsWith("preset:")) r.addView(Picker.controls(this, it.path));
+                if (it.path.startsWith(Library.NARRATOR)) {
+                    final com.tarun.kahani.core.NarratorVoices.Voice lnv = library.narrator(it.path);
+                    if (lnv != null) r.addView(Ui.small(this, "▶", Ui.BLUE, new View.OnClickListener() {
+                        public void onClick(View v) { speakPreset(lnv.natural().key(), lnv.sample, lnv.hindi()); }
+                    }));
+                } else if (!it.path.startsWith("preset:")) r.addView(Picker.controls(this, it.path));
                 if (!it.builtIn && Library.SOUND.equals(it.type)) r.addView(Ui.small(this, "✎", Ui.GREEN, new View.OnClickListener() {
                     public void onClick(View v) { describeSound(it, new Runnable() { public void run() { showLibrary(); } }); }
                 }));
