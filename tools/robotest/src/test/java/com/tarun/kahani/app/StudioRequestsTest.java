@@ -149,6 +149,12 @@ public class StudioRequestsTest {
         assertTrue("the physical action's door is requested", bathroomRequests.contains("obj:door"));
         assertFalse("a substring of bathroom is not a prop", bathroomRequests.contains("obj:bat"));
 
+        // Hindi material adjectives describe a prop, not a second object asset of raw wood/metal.
+        Project woodenDoor = project(HINDI.replace("[राहुल छड़ी उठाता है।]", "[राहुल लकड़ी का दरवाज़ा खोलता है।]"));
+        Set<String> woodenRequests = requests(FilmJob.storyOf(woodenDoor));
+        assertFalse("लकड़ी is the door's material, not a separate prop", woodenRequests.contains("obj:लकड़ी"));
+        assertFalse("लोहे is a material adjective, not a separate prop", woodenRequests.contains("obj:लोहे"));
+
         // the Studio page shows one picture card per request and none for the narrator
         ActivityController<MainActivity> ac = Robolectric.buildActivity(MainActivity.class).setup();
         MainActivity a = ac.get();

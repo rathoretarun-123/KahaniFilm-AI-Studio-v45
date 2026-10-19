@@ -120,7 +120,8 @@ final class StudioPlan {
         for (String word : com.tarun.kahani.core.Rigidity.RIGID_WORDS) vocabulary.add(word);
         for (String word : com.tarun.kahani.core.Rigidity.SOFT_WORDS) vocabulary.add(word);
         // Material adjectives describe an object's appearance; they are not props by themselves.
-        String[] materialOnly = {"wooden", "wood", "iron", "brass", "copper", "steel", "metal"};
+        String[] materialOnly = {"wooden", "wood", "iron", "brass", "copper", "steel", "metal",
+                "लकड़ी", "लोहा", "लोहे", "पीतल", "तांबा", "ताँबा", "स्टील", "धातु"};
         List<String> actionObjects = new ArrayList<String>();
         Set<String> actionSeen = new HashSet<String>();
         for (Story.Scene scene : st.scenes) for (Story.Beat beat : scene.beats) {
