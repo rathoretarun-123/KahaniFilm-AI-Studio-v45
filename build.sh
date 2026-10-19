@@ -90,7 +90,7 @@ echo "[1/6] resources"
 aapt2 compile --dir app/src/main/res -o $B/res.zip
 aapt2 link -o $B/base.apk -I "$ALL_JAR" --manifest app/src/main/AndroidManifest.xml \
   -A app/src/main/assets $EXTRA_A --java $B/gen --min-sdk-version 26 --target-sdk-version 34 \
-  --version-code "$VERSION_CODE" --version-name "$VERSION_NAME" -0 jpg -0 png -0 onnx -0 bin -0 ogg $B/res.zip
+  --replace-version --version-code "$VERSION_CODE" --version-name "$VERSION_NAME" -0 jpg -0 png -0 onnx -0 bin -0 ogg $B/res.zip
 echo "[2/6] compile java"
 if ! javac -nowarn -source 8 -target 8 -encoding UTF-8 -bootclasspath "$BOOT" -classpath $B/ort/classes.jar -d $B/classes \
   $(find app/src/main/java -name '*.java') $(find $B/gen -name '*.java') > $B/javac.log 2>&1; then
