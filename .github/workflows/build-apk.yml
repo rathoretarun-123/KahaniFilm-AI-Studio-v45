@@ -197,6 +197,7 @@ jobs:
             --tests com.tarun.kahani.WetIndoorsTest \
             --tests com.tarun.kahani.InArmsTest \
             --tests com.tarun.kahani.FaceTrustTest \
+            --tests com.tarun.kahani.FaceModelTest \
             --tests com.tarun.kahani.UiShotsTest \
             --tests com.tarun.kahani.FrameAuditTest \
             --tests com.tarun.kahani.ObjectCharactersTest \

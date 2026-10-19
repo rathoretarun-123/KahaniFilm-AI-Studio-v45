@@ -1219,6 +1219,24 @@ every spoken line. One frame a second is kept.
   found (a mouth guessed under the middle of the "eyes" lay on the cheek, one "eye" on the ear). Checked by eye on all
   84 pictures of आखिरी चिट्ठी and the pictures of the other stories (`FaceTrustTest`). A picture whose face is not
   animated is drawn as it is, and the casting prefers a living one wherever it fits.
+- **Faces found by a trained face detector.** Reading faces from the pictures' colours could not be made reliable
+  (the kurta's beige passes for skin; a hand beside a turned face looks like an eye and a mouth). The studio now runs
+  YuNet — the face detector of OpenCV's model zoo (MIT licence, 230 KB, `assets/models/face_yunet_2023mar.onnx`) —
+  through ONNX Runtime 1.20 (the same Java API on the phone and the desktop; its Android libraries for arm64 and armv7
+  are packed into the APK). It gives the two eyes, the nose and the two corners of the mouth of every face it sees. Of
+  the faces it reports at a score of 0.6 or more, the largest is the figure's (a hand held up beside a turned face, or
+  the knob of a stick, scores as high but is smaller). A face it found keeps its mouth where it saw it; a picture of a
+  pose where it sees no face (a back, a face hidden in the hands) gets no living face. Without the model or the runtime
+  the studio reads faces as before. Checked by eye on all 84 pictures of आखिरी चिट्ठी, the 12 of the sofa story and
+  the 6 of भाव: the eyes and the mouth are on the eyes and the mouth in all but three (the little girl's two near
+  profiles, where the mouth point sits back on the cheek, and the old man wiping his mouth, where it is on the hand).
+  The skeleton model of the same zoo (MediaPipe BlazePose) was tried too: right on the old man's whole figures, wrong
+  on the little girl (her big head and short body put its shoulders on her face) — not used (`FaceModelTest`).
+- **A little girl's arms that never moved.** The rig decides from where the hands end whether they are held up
+  (a tray, a toy: kept still) or hang (swung as she walks and gestures). Where the arms were not seen apart from the
+  body that end is guessed from an adult's proportions, and the little girl's hanging arms read as held: she never
+  moved them. On a small child (a head over a quarter of her height) a guessed end no longer holds the arms still.
+  Checked on the rig sheets of परी and the toddler of the sofa story (pointing, walking, angry).
 - **Blinks behind glasses.** The old man's eyes are read at the lower rims of his glasses, and his lids closed there.
   No lid is painted behind glasses now.
 - **The audit and the camera's cut.** The camera's own cut can fall a frame away from the shot list's start. Two frames

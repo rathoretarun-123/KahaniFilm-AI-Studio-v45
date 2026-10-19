@@ -17,6 +17,8 @@ public final class Rig {
     public boolean legs;          // two separate legs (trousers, bare legs) — otherwise a skirt / robe
     public float armEnd;          // where the hands end (fraction of the picture height)
     public float armInner;        // distance from the middle where the arms start (fraction of shoulderHalf)
+    /** v47.13: the arms were seen apart from the body in the picture (armEnd and armInner are read, not guessed). */
+    public boolean armsMeasured;
     public final boolean[] armUp = new boolean[2];   // an arm raised beside the face (e.g. a hand on the moustache)
     /** v34: the arms never swing — a many-armed character (Durga) keeps her fan of arms as drawn. */
     public boolean armsFixed;
@@ -262,6 +264,7 @@ public final class Rig {
             innerSum += Math.min(cxPx - arm[0], arm[1] - cxPx) / (g.shoulderHalf * w);
         }
         if (found > 0.04f * body * h) {
+            g.armsMeasured = true;
             g.armEnd = last / (float) h + 0.015f;
             g.armInner = Math.max(0.35f, Math.min(0.85f, innerSum / found - 0.08f));
         } else {

@@ -12,6 +12,8 @@ dependencies {
     // API types must exist on the worker classpath. Use the instrumented framework, never the
     // pristine android-all jar: Robolectric's bytecode hooks are required for real graphics.
     testRuntimeOnly 'org.robolectric:android-all-instrumented:14-robolectric-10818077-i7'
+    // v47.13: ONNX Runtime for the face detector (core/FaceModel), the desktop build of the same Java API as the phone's
+    implementation 'com.microsoft.onnxruntime:onnxruntime:1.20.0'
     testImplementation 'junit:junit:4.13.2'
     testImplementation('org.robolectric:robolectric:4.14.1') { exclude group: 'androidx.test'; exclude group: 'androidx.test.espresso' }
 }

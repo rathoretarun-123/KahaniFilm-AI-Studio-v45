@@ -48,6 +48,10 @@ public final class Art {
         public float turbanY;       // bottom of turban (0 = none / unknown)
         public int skin = 0xFFD9A074, lip = 0xFF9C4A3E, lid = 0xFFC88A66;
         public boolean faceKnown;
+        /** v47.13: the face was found by the face detector (FaceModel): its eyes and mouth are where it saw them. */
+        public boolean faceByModel;
+        /** v47.13: the face detector looked and saw no face in this picture (a back, a face hidden in the hands). */
+        public boolean noFaceByModel;
         /** v47.13: the face as found in the picture, small and grey, brightness evened out (null: none) — see facePatch. */
         public float[] facePatch;
         /** v38: the picture's own mouth is open (teeth or the dark inside show between the lips): it is never painted open further. */
@@ -155,7 +159,7 @@ public final class Art {
             Sprite v = makeSprite(loader, file, spriteSide, beast);
             if (v == null) return null;
             v.profile = Math.abs(angle) >= 60 && Math.abs(angle) <= 120;
-            if (facePoints != null && facePoints[0] > 0) {
+            if (facePoints != null && facePoints[0] > 0 && !(facePointsRead && v.faceByModel)) {
                 v.mouthX = facePoints[0]; v.mouthY = facePoints[1]; v.mouthHW = facePoints[2];
                 v.eyeLX = facePoints[3]; v.eyeLY = facePoints[4]; v.eyeRX = facePoints[5]; v.eyeRY = facePoints[6]; v.eyeR = facePoints[7];
                 v.faceKnown = true;
@@ -175,7 +179,12 @@ public final class Art {
             // from a picture of a pose (none given with it) is the character's face only where it is — the eyes in the
             // head, on skin of the face's own colour. The kurta's beige was taken for skin, and the old man blinked on
             // his chest and spoke from his knees in the pictures of him sitting and bending
-            if (v.faceKnown && (facePoints == null || facePoints[0] <= 0 || facePointsRead) && main != null && main.faceKnown
+            boolean read = facePoints == null || facePoints[0] <= 0 || facePointsRead;
+            if (read && v.noFaceByModel && v.faceKnown) {
+                v.faceKnown = false; v.mouthSeen = false; v.mouthMoved = false;
+                facesDoubted++;
+            }
+            if (v.faceKnown && read && !v.faceByModel && main != null && main.faceKnown
                     && !faceTrusted(v.pixelsForSampling, v, main)) {
                 v.faceKnown = false; v.mouthSeen = false; v.mouthMoved = false;
                 facesDoubted++;
@@ -879,37 +888,10 @@ public final class Art {
         }
         if (r == null || r.px == null || s == null || !s.faceKnown || s.mouthHW <= 0) return;
         if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH face %dx%d eyes %.3f,%.3f / %.3f,%.3f mouth %.3f,%.3f hw %.3f%n", r.w, r.h, s.eyeLX, s.eyeLY, s.eyeRX, s.eyeRY, s.mouthX, s.mouthY, s.mouthHW);
-        // v40: a mouth point with no lips under it (on the jaw, the neck, the nose) moves onto the lips found by their
-        // colour — the mesh opened "new lips" wherever the point was
-        float[] lips = Cutout.betterMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h,
-                s.mouthX * r.w, s.mouthY * r.h, s.mouthHW * r.w, s.skin);
-        // v47.10: lips beyond an eye only on a face turned that way — on a face seen from the front that patch is a
-        // blushed cheek (the mouth went onto it, and a dark slit opened on the cheek as she spoke)
-        if (lips != null && Math.abs(lips[0] / r.w - (s.eyeLX + s.eyeRX) / 2) > 0.5f * Math.abs(s.eyeRX - s.eyeLX) && facingOf(r, s) == 0) {
-            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH kept: lips at %.3f are beyond an eye of a face seen from the front%n", lips[0] / r.w);
-            lips = null;
-            // the lip line itself (darker and redder than the skin, wide and flat), between the eyes
-            float[] line = Cutout.sideMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h, s.mouthX * r.w, s.mouthY * r.h);
-            if (line != null && line[0] > s.eyeLX * r.w && line[0] < s.eyeRX * r.w) lips = line;
-            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH lip line %s%n", line == null ? "not found" : String.format(java.util.Locale.US, "at %.3f,%.3f", line[0] / r.w, line[1] / r.h));
-        }
-        if (lips != null) {
-            s.mouthX = lips[0] / r.w; s.mouthY = lips[1] / r.h; s.mouthHW = Math.max(lips[2], s.mouthHW * r.w * 0.6f) / r.w;
-            s.mouthMoved = true;
-            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH moved onto the lips at %.3f,%.3f hw %.3f%n", s.mouthX, s.mouthY, s.mouthHW);
-        }
-        s.faces = facingOf(r, s);
-        eyesFromPicture(r, s);
-        // v47.10: a face turned to the side (profile or three-quarter): its mouth found by its colour, and then it speaks
-        // with its own lips (before, a side picture's mouth was never moved — its point was on the cheek or the jaw)
-        if (s.faces != 0 || s.profile || s.userSide || s.userQuarter) {
-            float[] sm = Cutout.sideMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h);
-            if (sm != null) {
-                s.mouthX = sm[0] / r.w; s.mouthY = sm[1] / r.h; s.mouthHW = sm[2] / r.w;
-                s.mouthMoved = true; s.mouthSeen = true;
-            }
-            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH %dx%d faces=%d side=%b quarter=%b found=%s at %.3f,%.3f%n", r.w, r.h, s.faces, s.userSide, s.userQuarter, sm != null, s.mouthX, s.mouthY);
-        }
+        // v47.13: a face found by the face detector keeps its mouth where it was seen (the colours' guesses moved it
+        // onto a cheek or a collar); otherwise the mouth is found by the lips' colour
+        if (s.faceByModel) { s.faces = facingOf(r, s); eyesFromPicture(r, s); }
+        else mouthByColour(r, s);
         int cx = Math.round(s.mouthX * r.w), cy = Math.round(s.mouthY * r.h), hw = Math.max(2, Math.round(s.mouthHW * r.w));
         // the skin's colourfulness around the mouth (the cheeks either side)
         int skinSat = 0, skinN = 0;
@@ -958,6 +940,41 @@ public final class Art {
         if (m > 20 && dark > m * 0.2f) s.mouthOpen = true;
     }
 
+    /** The mouth moved onto the lips found by their colour, and a turned face's mouth found by its colour (mouthFromPicture). */
+    private static void mouthByColour(Cutout.Result r, Sprite s) {
+        // v40: a mouth point with no lips under it (on the jaw, the neck, the nose) moves onto the lips found by their
+        // colour — the mesh opened "new lips" wherever the point was
+        float[] lips = Cutout.betterMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h,
+                s.mouthX * r.w, s.mouthY * r.h, s.mouthHW * r.w, s.skin);
+        // v47.10: lips beyond an eye only on a face turned that way — on a face seen from the front that patch is a
+        // blushed cheek (the mouth went onto it, and a dark slit opened on the cheek as she spoke)
+        if (lips != null && Math.abs(lips[0] / r.w - (s.eyeLX + s.eyeRX) / 2) > 0.5f * Math.abs(s.eyeRX - s.eyeLX) && facingOf(r, s) == 0) {
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH kept: lips at %.3f are beyond an eye of a face seen from the front%n", lips[0] / r.w);
+            lips = null;
+            // the lip line itself (darker and redder than the skin, wide and flat), between the eyes
+            float[] line = Cutout.sideMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h, s.mouthX * r.w, s.mouthY * r.h);
+            if (line != null && line[0] > s.eyeLX * r.w && line[0] < s.eyeRX * r.w) lips = line;
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH lip line %s%n", line == null ? "not found" : String.format(java.util.Locale.US, "at %.3f,%.3f", line[0] / r.w, line[1] / r.h));
+        }
+        if (lips != null) {
+            s.mouthX = lips[0] / r.w; s.mouthY = lips[1] / r.h; s.mouthHW = Math.max(lips[2], s.mouthHW * r.w * 0.6f) / r.w;
+            s.mouthMoved = true;
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH moved onto the lips at %.3f,%.3f hw %.3f%n", s.mouthX, s.mouthY, s.mouthHW);
+        }
+        s.faces = facingOf(r, s);
+        eyesFromPicture(r, s);
+        // v47.10: a face turned to the side (profile or three-quarter): its mouth found by its colour, and then it speaks
+        // with its own lips (before, a side picture's mouth was never moved — its point was on the cheek or the jaw)
+        if (s.faces != 0 || s.profile || s.userSide || s.userQuarter) {
+            float[] sm = Cutout.sideMouth(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h);
+            if (sm != null) {
+                s.mouthX = sm[0] / r.w; s.mouthY = sm[1] / r.h; s.mouthHW = sm[2] / r.w;
+                s.mouthMoved = true; s.mouthSeen = true;
+            }
+            if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH %dx%d faces=%d side=%b quarter=%b found=%s at %.3f,%.3f%n", r.w, r.h, s.faces, s.userSide, s.userQuarter, sm != null, s.mouthX, s.mouthY);
+        }
+    }
+
     /**
      * v40: which way a picture of a person faces, from its face: in the rows from the eyes to the mouth, where the
      * skin lies within the head's outline. A front shows its skin in the middle of the head (hair round it on both
@@ -982,6 +999,10 @@ public final class Art {
      */
     public static boolean handsHeld(Rig r) {
         if (r == null || r.still || r.animal || r.armsFixed || r.hipY <= r.shoulderY + 0.05f) return false;
+        // v47.13: where the arms were not seen apart from the body the hands' end is a guess from an adult's proportions:
+        // on a small child (a head over a quarter of the figure's height) her arms, hanging at her sides, read as held
+        // and never moved
+        if (!r.armsMeasured && r.chinY - r.top > 0.28f) return false;
         return r.armEnd - r.shoulderY < 1.3f * (r.hipY - r.shoulderY);
     }
 
@@ -1184,11 +1205,31 @@ public final class Art {
         s.mouthX = r.mouthX; s.mouthY = r.mouthY; s.mouthHW = r.mouthW;
         s.eyeLX = r.eyeLX; s.eyeRX = r.eyeRX; s.eyeLY = r.eyeY; s.eyeRY = r.eyeY; s.eyeR = r.eyeR;
         s.faceKnown = r.faceFound;
-        if (r.faceFound) s.facePatch = facePatch(r.px, r.w, r.h, r.eyeLX * r.w, r.eyeRX * r.w, r.eyeY * r.h);
+        // v47.13: the face where the face detector sees it (its eyes and the corners of its mouth), else none for a
+        // picture where it sees none; without the detector, as read from the picture's colours
+        if (!animal && FaceModel.available()) {
+            FaceModel.Face f = FaceModel.face(r.px, r.w, r.h);
+            if (f != null) faceFromModel(s, r, f); else s.noFaceByModel = true;
+        }
+        if (r.faceFound) s.facePatch = facePatch(r.px, r.w, r.h, s.eyeLX * r.w, s.eyeRX * r.w, (s.eyeLY + s.eyeRY) / 2 * r.h);
         s.skin = r.skin; s.lip = r.lip;
         s.lid = r.skin;
         s.pixelsForSampling = r;
         return s;
+    }
+
+    /** v47.13: the face points of a face the detector found (in r's pixels), on the sprite and on the cut-out's readings. */
+    static void faceFromModel(Sprite s, Cutout.Result r, FaceModel.Face f) {
+        float w = r.w, h = r.h;
+        float d = (float) Math.hypot(f.eyeRX - f.eyeLX, f.eyeRY - f.eyeLY);
+        s.eyeLX = f.eyeLX / w; s.eyeLY = f.eyeLY / h; s.eyeRX = f.eyeRX / w; s.eyeRY = f.eyeRY / h;
+        s.eyeR = Math.max(1.5f, 0.17f * d) / w;
+        s.mouthX = (f.mouthLX + f.mouthRX) / 2 / w; s.mouthY = (f.mouthLY + f.mouthRY) / 2 / h;
+        s.mouthHW = Math.max(1.5f, Math.abs(f.mouthRX - f.mouthLX) / 2) / w;
+        s.faceKnown = true; s.faceByModel = true; s.mouthSeen = true; s.mouthMoved = true;
+        r.faceFound = true; r.eyesSeen = true;
+        r.eyeLX = s.eyeLX; r.eyeRX = s.eyeRX; r.eyeY = (s.eyeLY + s.eyeRY) / 2; r.eyeR = s.eyeR;
+        r.mouthX = s.mouthX; r.mouthY = s.mouthY; r.mouthW = s.mouthHW;
     }
 
     /** The pixels of the rod found by findRod (set for the caller, then dropped). */
@@ -2427,7 +2468,7 @@ public final class Art {
                 } catch (RuntimeException ignored) { }
                 Sprite v = makeSprite(L, f[3], spriteSide, false);
                 if (v == null) continue;
-                v.faceKnown = false;
+                v.faceKnown = v.faceByModel;      // (v47.13: the face the detector saw stays; else found by the lips below)
                 if (f.length >= 12) {
                     float[] p = new float[8];
                     for (int i = 0; i < 8; i++) p[i] = Float.parseFloat(f[4 + i].trim());

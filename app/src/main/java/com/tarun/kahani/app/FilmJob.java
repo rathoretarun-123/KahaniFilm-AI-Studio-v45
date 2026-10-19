@@ -465,6 +465,13 @@ public final class FilmJob implements Runnable {
             int[] sides = Art.sizesFor(ed.height, Runtime.getRuntime().maxMemory(), pictureMemory(), counts[0], counts[1]);
             Art.spriteSide = sides[0];
             Art.backdropSide = sides[1];
+            // v47.13: the face detector reads its model from the app's assets (the faces of the user's pictures)
+            if (com.tarun.kahani.core.FaceModel.source == null) {
+                final android.content.res.AssetManager am = ctx.getAssets();
+                com.tarun.kahani.core.FaceModel.source = new com.tarun.kahani.core.FaceModel.Source() {
+                    @Override public byte[] bytes() throws Exception { return Project.readAll(am.open(com.tarun.kahani.core.FaceModel.ASSET)); }
+                };
+            }
             Art art = Art.fromManifest(castText, story, project.loader());
             // v47.8: the user's story board (the title, the 3×2 sheets of the story's moments, the end)
             art.readBoard(project.loader(), project.boardNames(), story);
