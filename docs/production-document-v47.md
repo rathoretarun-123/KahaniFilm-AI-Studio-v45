@@ -1210,6 +1210,17 @@ every spoken line. One frame a second is kept.
   went 12% of its height a frame). A step's rise and fall is kept low enough that its turn at each step changes the
   speed by under 1.5% of the height a frame — a small body's quick steps jolted. A run's pace is 1.6 heights a second
   (1.8 eased up to 11% of the height a frame, at the edge of a jump).
+- **Faces on chests and knees.** Every one of the user's pictures was drawn with the eyes and the mouth the studio
+  found in it, and the face finder took the old man's beige kurta for skin: in most of his pictures of sitting and
+  bending the "face" was on his chest, his knees or his back, and a living face (blinks, lips) was laid there. A face
+  read from a picture of a pose is now animated only when it is a face — closely like the main picture's face, or else
+  skin of a face's hue round the eyes, the lips found under them by their colour and only a forehead and hair above
+  them — and its mouth is under its eyes (not at a hand, a collar or a foot). Turned faces speak only with their lips
+  found (a mouth guessed under the middle of the "eyes" lay on the cheek, one "eye" on the ear). Checked by eye on all
+  84 pictures of आखिरी चिट्ठी and the pictures of the other stories (`FaceTrustTest`). A picture whose face is not
+  animated is drawn as it is, and the casting prefers a living one wherever it fits.
+- **Blinks behind glasses.** The old man's eyes are read at the lower rims of his glasses, and his lids closed there.
+  No lid is painted behind glasses now.
 - **The audit and the camera's cut.** The camera's own cut can fall a frame away from the shot list's start. Two frames
   with a camera cut between them are now two shots for the frame audit, not a character jumping.
 

@@ -48,6 +48,8 @@ public final class Art {
         public float turbanY;       // bottom of turban (0 = none / unknown)
         public int skin = 0xFFD9A074, lip = 0xFF9C4A3E, lid = 0xFFC88A66;
         public boolean faceKnown;
+        /** v47.13: the face as found in the picture, small and grey, brightness evened out (null: none) — see facePatch. */
+        public float[] facePatch;
         /** v38: the picture's own mouth is open (teeth or the dark inside show between the lips): it is never painted open further. */
         public boolean mouthOpen;
         /** v40: the mouth point was moved onto the lips found by their colour (it had no lips under it). */
@@ -117,6 +119,8 @@ public final class Art {
         public float hRatio = 1f;
         /** The face points given with it (mouth x, y, half-width, eyes), or null to find them in the picture. */
         public float[] facePoints;
+        /** v47.13: the face points were read from the picture by the studio (not given by the user): they are checked. */
+        public boolean facePointsRead;
         public boolean beast;
         /** v39: a picture of the face and shoulders only (a close-up of the sheet): used in face shots, never in a wide one. */
         public boolean closeUp;
@@ -167,6 +171,15 @@ public final class Art {
             // the rig only where the face must speak (a front or three-quarter with a face); a picture of a pose is drawn as it is
             boolean frontish = Math.abs(angle) < 46;
             mouthFromPicture(v.pixelsForSampling, v);
+            // v47.13 (the user: "finding proper lips and other body parts must be perfect on all the poses"): a face read
+            // from a picture of a pose (none given with it) is the character's face only where it is — the eyes in the
+            // head, on skin of the face's own colour. The kurta's beige was taken for skin, and the old man blinked on
+            // his chest and spoke from his knees in the pictures of him sitting and bending
+            if (v.faceKnown && (facePoints == null || facePoints[0] <= 0 || facePointsRead) && main != null && main.faceKnown
+                    && !faceTrusted(v.pixelsForSampling, v, main)) {
+                v.faceKnown = false; v.mouthSeen = false; v.mouthMoved = false;
+                facesDoubted++;
+            }
             if (frontish && v.faceKnown && pose == PoseSense.STAND && !cut) {
                 try { v.rig = Rig.build(v.pixelsForSampling, v, main == null ? new Look() : mainLook, loader); } catch (RuntimeException e) { v.rig = null; }
             }
@@ -189,6 +202,127 @@ public final class Art {
             return v;
         }
         Look mainLook;
+    }
+
+    /** v47.13: how alike a face of a pose must be to the main picture's face to be taken for it at once (see likeness). */
+    public static float FACE_SAME = 0.4f;
+    static final int PATCH_W = 20, PATCH_H = 24;
+
+    /**
+     * v47.13: the face round these eyes, small and grey: from an eye-distance beside the eyes, half of one above them to
+     * one and a half below (the mouth), PATCH_W x PATCH_H, its brightness evened out (mean 0, spread 1); see-through
+     * pixels are left out (NaN). Null when too little of it is there.
+     */
+    public static float[] facePatch(int[] px, int w, int h, float eL, float eR, float ey) {
+        float d = Math.abs(eR - eL), ex = (eL + eR) / 2;
+        if (d < 3) return null;
+        float x0 = ex - 1.1f * d, y0 = ey - 0.6f * d, sw = 2.2f * d / PATCH_W, sh = 2.1f * d / PATCH_H;
+        float[] p = new float[PATCH_W * PATCH_H];
+        double sum = 0, sq = 0;
+        int n = 0;
+        for (int j = 0; j < PATCH_H; j++) for (int i = 0; i < PATCH_W; i++) {
+            float lum = 0;
+            int k = 0;
+            for (int dy = 0; dy < 2; dy++) for (int dx = 0; dx < 2; dx++) {
+                int x = (int) (x0 + (i + 0.25f + dx * 0.5f) * sw), y = (int) (y0 + (j + 0.25f + dy * 0.5f) * sh);
+                if (x < 0 || y < 0 || x >= w || y >= h) continue;
+                int c = px[y * w + x];
+                if ((c >>> 24) < 128) continue;
+                lum += 0.3f * ((c >> 16) & 255) + 0.59f * ((c >> 8) & 255) + 0.11f * (c & 255);
+                k++;
+            }
+            if (k == 0) { p[j * PATCH_W + i] = Float.NaN; continue; }
+            float v = lum / k;
+            p[j * PATCH_W + i] = v; sum += v; sq += v * v; n++;
+        }
+        if (n < PATCH_W * PATCH_H / 2) return null;
+        float mean = (float) (sum / n), sd = (float) Math.sqrt(Math.max(1e-6, sq / n - mean * mean));
+        if (sd < 4) return null;
+        for (int i = 0; i < p.length; i++) if (!Float.isNaN(p[i])) p[i] = (p[i] - mean) / sd;
+        return p;
+    }
+
+    /** v47.13: how alike two face patches are (their correlation, -1..1), the second mirrored if asked; NaN: too little overlap. */
+    static float likeness(float[] a, float[] b, boolean mirror) {
+        double s = 0;
+        int n = 0;
+        for (int j = 0; j < PATCH_H; j++) for (int i = 0; i < PATCH_W; i++) {
+            float x = a[j * PATCH_W + i], y = b[j * PATCH_W + (mirror ? PATCH_W - 1 - i : i)];
+            if (Float.isNaN(x) || Float.isNaN(y)) continue;
+            s += x * y;
+            n++;
+        }
+        return n < PATCH_W * PATCH_H / 3 ? Float.NaN : (float) (s / n);
+    }
+
+    /** v47.13: faces read from pictures of poses and found not to be the face (see faceTrusted). */
+    public static int facesDoubted;
+
+    /**
+     * v47.13: the face read from this picture (v) is the character's face — closely like the face of the main picture;
+     * or else shown by itself: skin of a face's hue round the eyes, the lips found under them by their colour, and above
+     * the eyes only a forehead and hair (an eye-distance and a half), not a chest and a head over it. A face of a pose
+     * not shown so is not animated (its body is drawn as it is).
+     */
+    /**
+     * v47.13: the hue of a face's skin in any light and of any people — red well over green and green over blue, as
+     * shares of the brightness; the beige or khaki of a kurta (red hardly over green) and grey or white hair are not.
+     */
+    static boolean skinHue(int c) {
+        int cr = (c >> 16) & 255, cg = (c >> 8) & 255, cb = c & 255;
+        float lum = 0.3f * cr + 0.59f * cg + 0.11f * cb;
+        if (lum < 35 || lum > 240) return false;
+        float rg = (cr - cg) / lum, gb = (cg - cb) / lum;
+        return rg > 0.14f && rg < 0.75f && gb > -0.05f && gb < 0.6f;
+    }
+
+    public static boolean faceTrusted(Cutout.Result r, Sprite v, Sprite main) {
+        if (r == null || r.px == null || r.w < 20) return true;
+        int w = r.w, h = r.h;
+        float d = Math.abs(v.eyeRX - v.eyeLX) * w;
+        if (d < 3) return false;
+        float ex = (v.eyeLX + v.eyeRX) / 2 * w, ey = (v.eyeLY + v.eyeRY) / 2 * h;
+        int n = 0, like = 0;
+        for (int y = (int) (ey - 0.25f * d); y <= (int) (ey + 0.95f * d); y++) {
+            if (y < 0 || y >= h) continue;
+            for (int x = (int) (ex - 0.9f * d); x <= (int) (ex + 0.9f * d); x++) {
+                if (x < 0 || x >= w) continue;
+                int c = r.px[y * w + x];
+                if ((c >>> 24) < 160) continue;
+                n++;
+                if (skinHue(c)) like++;
+            }
+        }
+        // the main picture's face, closely (or its mirror: a face turned the other way) — the same face in another pose
+        float[] here = facePatch(r.px, w, h, v.eyeLX * w, v.eyeRX * w, ey);
+        float same = here != null && main.facePatch != null ? Math.max(likeness(here, main.facePatch, false), likeness(here, main.facePatch, true)) : Float.NaN;
+        if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "TRUST n=%d skin=%.2f d=%.1f lips=%b same=%.2f%n", n, like / (float) Math.max(1, n), d, v.mouthSeen, same);
+        if (n < 12) return false;
+        // the mouth under the eyes, not at a hand, a collar or a foot beside or far below them
+        float mdx = Math.abs(v.mouthX * w - ex) / d, mdy = (v.mouthY * h - ey) / d;
+        if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "TRUST mouth %.2f across, %.2f down (eye-distances)%n", mdx, mdy);
+        if (mdx > 0.9f || mdy < 0.4f || mdy > 1.2f) return false;
+        // a mouth not seen is put under the middle of the eyes: right on a face seen from the front, on the cheek of a
+        // face turned aside (and there one "eye" is often the ear) — a turned face speaks only with its lips found
+        if (!v.mouthSeen && facingOf(r, v) != 0) return false;
+        // (closer still when the lips were not seen: a turned face with one "eye" on its ear is less alike)
+        if (same >= (v.mouthSeen ? FACE_SAME : FACE_SAME + 0.08f) && like >= n * 0.3f) return true;
+        // else (a main picture whose face reads poorly: glasses, a turn) the face shown by itself: skin round the eyes,
+        if (like < n * 0.48f) return false;
+        // the lips found where the mouth is (their colour, under the nose): on a chest or a knee there are none
+        if (!v.mouthSeen) return false;
+        // above the eyes: the forehead and the hair, then the picture's background (or its top edge: a close-up)
+        int up = 0;
+        int cx = Math.round(ex);
+        boolean toTheTop = true;
+        for (int y = Math.round(ey); y >= 0; y--) {
+            boolean solid = false;
+            for (int x = cx - 1; x <= cx + 1; x++) if (x >= 0 && x < w && (r.px[y * w + x] >>> 24) >= 128) solid = true;
+            if (!solid) { toTheTop = false; break; }
+            up++;
+        }
+        if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "TRUST up=%d (%.1f d) ey=%.0f%n", up, up / d, ey);
+        return up <= 1.5f * d || toTheTop;
     }
 
     public static final class Backdrop {
@@ -1050,6 +1184,7 @@ public final class Art {
         s.mouthX = r.mouthX; s.mouthY = r.mouthY; s.mouthHW = r.mouthW;
         s.eyeLX = r.eyeLX; s.eyeRX = r.eyeRX; s.eyeLY = r.eyeY; s.eyeRY = r.eyeY; s.eyeR = r.eyeR;
         s.faceKnown = r.faceFound;
+        if (r.faceFound) s.facePatch = facePatch(r.px, r.w, r.h, r.eyeLX * r.w, r.eyeRX * r.w, r.eyeY * r.h);
         s.skin = r.skin; s.lip = r.lip;
         s.lid = r.skin;
         s.pixelsForSampling = r;
@@ -2436,7 +2571,7 @@ public final class Art {
                         // a side — the face did not live (no lips, no blinks)
                         float[] fp = null;
                         try { fp = sitterFace(d, os); } catch (RuntimeException e) { fp = null; }
-                        if (fp != null) { p.facePoints = new float[]{fp[0], fp[1], fp[2], fp[3], fp[4], fp[5], fp[6], fp[7]}; p.ownSeatFace = fp[8]; p.angle = fp[8]; }
+                        if (fp != null) { p.facePoints = new float[]{fp[0], fp[1], fp[2], fp[3], fp[4], fp[5], fp[6], fp[7]}; p.facePointsRead = true; p.ownSeatFace = fp[8]; p.angle = fp[8]; }
                         else p.ownSeatFace = 999;
                         p.hRatio = Math.max(0.2f, Math.min(1.5f, BENCH_TOP / os));
                         art.notes.add("pose picture " + p.file + " of " + f[1] + ": seated on a seat of its own — used whole, with its seat, on the script's bench");

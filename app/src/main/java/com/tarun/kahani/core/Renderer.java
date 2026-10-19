@@ -5168,8 +5168,9 @@ public final class Renderer {
             float ex1 = left + (sp.eyeLX + (turns ? rig.yawShift(st, sp.eyeLX, sp.eyeLY) : 0)) * w, ey1 = top + sp.eyeLY * h;
             float ex2 = left + (sp.eyeRX + (turns ? rig.yawShift(st, sp.eyeRX, sp.eyeRY) : 0)) * w, ey2 = top + sp.eyeRY * h;
             float er = sp.eyeR * w;
-            // blinking / closed eyes (v34: never painted over dark glasses, a blindfold or an eye patch)
-            boolean covered = look != null && (look.glasses == 2 || look.glasses == 4 || look.glasses == 5);
+            // blinking / closed eyes (v34: never painted over dark glasses, a blindfold or an eye patch; v47.13: nor
+            // behind any glasses — the frames are read for eyes, and the old man's lids closed on his lower rims)
+            boolean covered = look != null && look.glasses != 0;
             float shut = p.eyesClosed ? 1 : Math.max(0, Math.min(1, p.blink));
             if (shut > 0.5f && !covered) {
                 // (v47.10: drawn only while the eye is mostly shut — a lid painted half way over a photographed eye read as
