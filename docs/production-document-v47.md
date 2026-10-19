@@ -1199,6 +1199,19 @@ every spoken line. One frame a second is kept.
 - **Everyone wet indoors.** Once rain began anywhere in the film, everyone on screen was drawn dripping, including
   the family who had sat dry inside the house all along. Indoors, only one who came in from the rain while it fell is
   wet now (the puppy at the door). The room's window shows the rain outside.
+- **Into her arms.** "Bruno … jumps into Maya's arms" left the puppy standing beside her. One small enough (up to
+  0.65 of the holder's height) who is taken into a standing character's arms — "jumps into Maya's arms", "Papa picks
+  up Riya", "मोती दादी की गोद में कूद जाता है", "माँ मुन्नी को गोद में उठा लेती हैं" — now comes to them and is held in
+  front of their chest (`Film.A_IN_ARMS`), going where they go, until the part ends or they are put down ("puts Bruno
+  down", "मुन्नी को नीचे उतार"). A ball picked up near the puppy leaves the puppy where it is (`InArmsTest`).
+- **A puppy the size of a dog.** "A small brown puppy" was drawn as tall as the girl's chest. A young or small animal
+  (puppy, kitten, cub, calf, पिल्ला, बछड़ा, मेमना; small, little, छोटा, नन्हा) is now drawn at 0.7 of its kind's size.
+- **Steps and hops in proportion.** The hop into the arms is paced like a run of its length (over 0.6 s the puppy
+  went 12% of its height a frame). A step's rise and fall is kept low enough that its turn at each step changes the
+  speed by under 1.5% of the height a frame — a small body's quick steps jolted. A run's pace is 1.6 heights a second
+  (1.8 eased up to 11% of the height a frame, at the edge of a jump).
+- **The audit and the camera's cut.** The camera's own cut can fall a frame away from the shot list's start. Two frames
+  with a camera cut between them are now two shots for the frame audit, not a character jumping.
 
 ### Results
 

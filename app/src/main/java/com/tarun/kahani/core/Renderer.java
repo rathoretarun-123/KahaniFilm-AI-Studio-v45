@@ -1300,12 +1300,14 @@ public final class Renderer {
     }
 
     private static int layerOf(Film.Key k) {
-        if (k.anchor == Film.A_SHOULDER || k.anchor == Film.A_CARRIED || k.anchor == Film.A_ON_FACE) return 3;
+        if (k.anchor == Film.A_SHOULDER || k.anchor == Film.A_CARRIED || k.anchor == Film.A_ON_FACE || k.anchor == Film.A_IN_ARMS) return 3;
         if (k.depth > 0) return 0;
         return 1;
     }
 
     static final float BRANCH_UP = 470;
+    /** v47.13: one held in the arms — forward of the holder's middle and up from the ground, in the holder's heights. */
+    static final float IN_ARMS_FORWARD = 0.1f, IN_ARMS_UP = 0.3f;
 
     private void branch(Gfx g, Film.Seg s, float x) {
         float y = s.ground - BRANCH_UP;
@@ -1393,7 +1395,8 @@ public final class Renderer {
 
     /** v47.8: the anchors whose place is a point in the frame that another can travel from or to. */
     private static boolean anchorBlends(int anchor) {
-        return anchor == Film.A_GROUND || anchor == Film.A_BRANCH || anchor == Film.A_SHOULDER || anchor == Film.A_CARRIED || anchor == Film.A_ON_FACE;
+        return anchor == Film.A_GROUND || anchor == Film.A_BRANCH || anchor == Film.A_SHOULDER || anchor == Film.A_CARRIED || anchor == Film.A_ON_FACE
+                || anchor == Film.A_IN_ARMS;
     }
 
     /** v47.8: where one held by this key's anchor is drawn at t: {x, ground y, size factor} (as the placement by anchor draws it). */
@@ -1405,6 +1408,7 @@ public final class Renderer {
             case Film.A_SHOULDER: if (t2 != null) return new float[]{Director.xAt(t2, t) + facingEased(t2, t) * th * 0.12f, s.ground - th * 0.74f, 0.62f}; break;
             case Film.A_CARRIED: if (t2 != null) return new float[]{Director.xAt(t2, t), s.ground - th * 0.86f, 0.85f}; break;
             case Film.A_ON_FACE: if (t2 != null) return new float[]{Director.xAt(t2, t), s.ground - th * 0.72f, 0.7f}; break;
+            case Film.A_IN_ARMS: if (t2 != null) return new float[]{Director.xAt(t2, t) + facingEased(t2, t) * th * IN_ARMS_FORWARD, s.ground - th * IN_ARMS_UP, 1}; break;
             default:
         }
         return new float[]{x, s.ground, 1};
@@ -1778,17 +1782,19 @@ public final class Renderer {
             p.walkAmt = amt;
             // v47.11: steps quicker than a film's frames can show (over five a second: a hurried move across the
             // stage) rise and fall every two or three frames — a shiver; their rise fades out, the legs still stride
-            float bobFade = 1;
+            float bobFade = 1, stepRate = 0;
             if (rigWalk) {
                 float d0 = mv != null ? Director.xAt(a, tp - 0.05f) : trk.walked(tp - 0.05f) / Math.max(0.3f, scale);
                 float d1 = mv != null ? Director.xAt(a, tp + 0.05f) : trk.walked(tp + 0.05f) / Math.max(0.3f, scale);
                 float steps = Math.abs(d1 - d0) / 0.1f / Math.max(1f, (run ? 0.42f : 0.3f) * h);
                 bobFade = 1 - Rig.smooth(5f, 7f, steps);
+                stepRate = steps;
             }
             p.facing = mv != null ? mv.facing : trk.facing(tp);
             // a calm, weighted step: a small rise and fall (no hopping) and a slight sway of the body
             // (v47.12: in proportion to the body — the same rise on a puppy jolted it up and down every step)
-            mo.dy = -bump(p.walk) * (run ? 6 : 3.5f) * amt * Math.min(1, h / 300f);
+            // (v47.13: and kept low enough that its turn at each step changes the speed by under 1.5% of the height a frame)
+            mo.dy = -bump(p.walk) * Math.min((run ? 6 : 3.5f) * Math.min(1, h / 300f), 0.18f * h / speed) * amt;
             mo.rot = (float) Math.sin(p.walk) * (run ? 1.8f : 1.1f) * amt;
             p.armL = 8 + (17 + (float) Math.sin(p.walk) * 25) * amt;
             p.armR = 8 + (17 - (float) Math.sin(p.walk) * 25) * amt;
@@ -1796,7 +1802,11 @@ public final class Renderer {
                 // v40: the rig's own walk (Renderer.rigState): the body is highest as the legs pass each other and
                 // comes down onto each step (the rig lowers it so the planted foot stays on the floor); the arms swing
                 // against the legs there, so they rest here
-                mo.dy = -(1 - bump(p.walk)) * h * (run ? 0.022f : 0.011f) * amt * bobFade;
+                // (v47.13: at each step the rise turns over sharply; it is kept low enough that the turn changes the
+                // speed by under 1.5% of the height a frame — a puppy's quick steps jolted it 2.7% a frame)
+                float bob = run ? 0.022f : 0.011f;
+                if (stepRate > 0) bob = Math.min(bob, 0.015f * 24 / (2 * (float) Math.PI * stepRate));
+                mo.dy = -(1 - bump(p.walk)) * h * bob * amt * bobFade;
                 mo.rot = 0;
                 p.armL = 8; p.armR = 8;
             }
@@ -1927,6 +1937,19 @@ public final class Renderer {
                     scale *= 0.85f;
                     Film.Key mv2 = moving(t2, t);
                     if (mv2 != null) y -= bump(t * 9) * 8;
+                }
+                break;
+            }
+            case Film.A_IN_ARMS: {
+                // v47.13: held in front of the chest, the feet at the holder's waist, going where they go (a bounce
+                // with their steps); the legs still
+                Film.Actor t2 = k.anchorActor;
+                if (t2 != null) {
+                    float th = actorHeight(t2.look, t2.c, art, s);
+                    x = Director.xAt(t2, t) + facingEased(t2, t) * th * IN_ARMS_FORWARD;
+                    y = s.ground - th * IN_ARMS_UP;
+                    p.walkAmt = 0;
+                    if (moving(t2, t) != null) y -= bump(t * 9) * 4;
                 }
                 break;
             }

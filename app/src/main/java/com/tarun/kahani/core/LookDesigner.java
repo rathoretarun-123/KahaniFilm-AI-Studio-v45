@@ -429,6 +429,10 @@ public final class LookDesigner {
             case Look.SP_DUCK: fur = 0xFFF8F8F0; h = 0.26f; break;
             default: fur = 0xFF9C7A5E; h = 0.45f;
         }
+        // v47.13: a young or a small one ("a small brown puppy", "पिल्ला", "नन्हा खरगोश", "a kitten") is smaller — the
+        // puppy was drawn as tall as the girl's chest, and hid her when she took it in her arms
+        if (Txt.has(all, "puppy", "puppies", "kitten", "cub", "calf", "baby", "पिल्ला", "पिल्ले", "बछड़ा", "बछिया", "मेमना", "शावक")
+                || Txt.hasWord(all, "small", "little", "tiny") || Txt.has(all, "छोटा", "छोटी", "छोटे", "नन्हा", "नन्ही", "नन्हे")) h *= 0.7f;
         List<Integer> cols = colorsIn(all);
         if (!cols.isEmpty() && l.species != Look.SP_CROW) fur = cols.get(0);
         l.furColor = fur;

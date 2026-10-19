@@ -1467,6 +1467,7 @@ public final class Director {
                 float tb = tc;
                 tc = direction(si, bi, b, tc, bi == b0 && pi == 0, where);
                 if (!awaitingHelp.isEmpty() && helpUp(b.text)) tc = liftTheFallen(tb, tc);
+                tc = intoArms(b.text, tb, tc);
             }
             for (Film.Actor a : seg.actors) orderKeys(a);
             unstack(tc);
@@ -1490,6 +1491,8 @@ public final class Director {
         // (v47.12: nobody came for the fallen in this part — they get up by themselves, as before)
         for (java.util.Map.Entry<Film.Actor, Float> e : awaitingHelp.entrySet()) standUp(e.getKey(), e.getValue() + 1.6f);
         awaitingHelp.clear();
+        for (Film.Act cl : holding) cl.t1 = Math.min(cl.t1, tc + 0.8f);       // (v47.13: held until the part ends)
+        holding.clear();
         paceTracks(tc + 0.8f);
         playUntil(tc + 0.8f);
         seg.t1 = tc + 0.8f;
@@ -5160,6 +5163,108 @@ public final class Director {
         return end;
     }
 
+    /** v47.13: the holders' clutch of one held in their arms in this part (ended with the part, or when put down). */
+    private final List<Film.Act> holding = new ArrayList<Film.Act>();
+    public int heldInArms;
+
+    /**
+     * v47.13: one small enough is taken into someone's arms — "Bruno … jumps into Maya's arms", "Papa picks up Riya",
+     * "मोती दादी की गोद में कूद जाता है", "माँ मुन्नी को गोद में उठा लेती है": they come to the one standing who holds
+     * them, and from then on are held in front of their chest (Film.A_IN_ARMS), going where they go, the holder's arms
+     * round them. "puts Riya down", "मुन्नी को नीचे उतार" sets them down beside. The direction ran from tb to tc; the
+     * time it ends.
+     */
+    private float intoArms(String s, float tb, float tc) {
+        if (s == null || !Txt.has(s, "arms", "pick", "scoop", "lift", "put", "set", "गोद", "बाहों", "बांहों", "बाँहों", "उतार")) return tc;
+        float end = tc;
+        for (Film.Actor h : seg.actors) for (Film.Actor big : seg.actors) {
+            if (h == big || h.c == null || big.c == null) continue;
+            Film.Key hk = h.stateAt(tc), bk = big.stateAt(tc);
+            if (!hk.visible || !bk.visible) continue;
+            if (hk.anchor == Film.A_IN_ARMS && hk.anchorActor == big) {
+                if (!putDown(s, h.c)) continue;
+                Film.Key dn = keyAt(h, tc + 0.1f); dn.anchor = Film.A_GROUND; dn.anchorActor = null;
+                dn.x = xAt(big, tc) + bk.facing * heightOf(big) * 0.3f; dn.moveDur = 0;
+                for (Film.Act cl : holding) if (big.acts.contains(cl) && cl.t1 > tc + 0.1f) cl.t1 = tc + 0.3f;
+                end = Math.max(end, tc + 0.8f);
+                continue;
+            }
+            if (hk.anchor != Film.A_GROUND || bk.anchor != Film.A_GROUND || bk.body != Pose.STAND) continue;
+            if (heightOf(h) > heightOf(big) * 0.65f || !takenUp(s, h.c, big.c)) continue;
+            float t0 = tc, hx = xAt(big, tc), dist = Math.abs(xAt(h, tc) - hx);
+            // (near enough, one hop takes them from where they are into the arms; from further, they run up first)
+            if (dist > heightOf(big) * 0.8f) {
+                Film.Key mk = keyAt(h, t0);
+                mk.x = hx + (xAt(h, tc) < hx ? -1 : 1) * heightOf(big) * 0.2f;
+                mk.moveDur = leastMoveTime(dist, heightOf(h), true); mk.run = true;
+                mk.facing = xAt(h, tc) < hx ? 1 : -1;
+                t0 += mk.moveDur;
+            }
+            // (the "jumps" of "jumps into Maya's arms" is the hop into them, not a jump on the spot before it)
+            for (java.util.Iterator<Film.Act> it = h.acts.iterator(); it.hasNext(); ) {
+                Film.Act j = it.next();
+                if (j.type == Film.G_JUMP && j.t0 >= tb - 0.01f && j.t0 <= tc + 0.01f) it.remove();
+            }
+            Film.Key in = keyAt(h, t0 + 0.05f); in.anchor = Film.A_IN_ARMS; in.anchorActor = big; in.body = Pose.STAND; in.seat = -1;
+            // (the hop paced like a run of its length, across and up into the arms — over 0.6 s the puppy went 12% of
+            // its height a frame)
+            float hopX = Math.min(dist, heightOf(big) * 0.8f), hopY = heightOf(big) * Renderer.IN_ARMS_UP;
+            in.moveDur = Math.max(0.45f, leastMoveTime((float) Math.sqrt(hopX * hopX + hopY * hopY), heightOf(h), true));
+            Film.Act cl = new Film.Act(t0, t0 + 600, Film.G_CLUTCH);
+            big.acts.add(cl);
+            holding.add(cl);
+            heldInArms++;
+            film.notes.add("    ↳ " + h.c.shown() + " — held in " + big.c.shown() + "'s arms");
+            end = Math.max(end, t0 + in.moveDur + 0.5f);
+        }
+        return end;
+    }
+
+    /** v47.13: the place in s where one of c's names begins, -1 if none (a name of two letters or more, as a word). */
+    private static int nameAt(String s, Story.CharacterDef c) {
+        int best = -1;
+        for (String a : c.aliases) {
+            if (a == null || a.length() < 2) continue;
+            java.util.regex.Matcher m = java.util.regex.Pattern.compile("(?<![\\p{L}\\p{M}])" + java.util.regex.Pattern.quote(a) + "(?![\\p{L}])",
+                    java.util.regex.Pattern.CASE_INSENSITIVE | java.util.regex.Pattern.UNICODE_CASE).matcher(s);
+            if (m.find() && (best < 0 || m.start() < best)) best = m.start();
+        }
+        return best;
+    }
+
+    /** v47.13: names as the regex alternatives of c's names (two letters or more). */
+    private static String names(Story.CharacterDef c) {
+        StringBuilder b = new StringBuilder();
+        for (String a : c.aliases) if (a != null && a.length() >= 2) b.append(b.length() > 0 ? "|" : "").append(java.util.regex.Pattern.quote(a));
+        return b.length() == 0 ? null : "(?:" + b + ")";
+    }
+
+    private static boolean finds(String s, String re) {
+        return java.util.regex.Pattern.compile(re, java.util.regex.Pattern.CASE_INSENSITIVE | java.util.regex.Pattern.UNICODE_CASE).matcher(s).find();
+    }
+
+    /** v47.13: in s, small is taken into big's arms (big's lap, standing). */
+    static boolean takenUp(String s, Story.CharacterDef small, Story.CharacterDef big) {
+        String h = names(small), b = names(big);
+        if (h == null || b == null || nameAt(s, small) < 0 || nameAt(s, big) < 0) return false;
+        String gap = "[^.!?।]{0,40}?";
+        return finds(s, "into " + b + "(?:'s|’s) arms")
+                || finds(s, h + gap + "into (?:his|her|their) arms") && nameAt(s, big) >= 0
+                || finds(s, b + gap + "\\b(?:picks|picked|scoops|scooped|lifts|lifted|sweeps|swept)\\s+(?:up\\s+)?(?:little\\s+)?" + h + "(?![\\p{L}])")
+                || finds(s, b + gap + "\\b(?:picks|picked|scoops|scooped|lifts|lifted)\\s+" + h + "\\s+up\\b")
+                || finds(s, b + " की (?:गोद|गोदी|बाहों|बांहों|बाँहों) में" + gap + "(?:कूद|आ |आकर|आ जा|चढ़|उछल|समा|छलांग|छलाँग)")
+                || finds(s, h + " को" + gap + "(?:गोद|गोदी|बाहों|बांहों|बाँहों) में (?:उठा|ले|भर)")
+                || finds(s, h + " को (?:उठाकर|उठा कर) (?:गोद|सीने)");
+    }
+
+    /** v47.13: in s, the held one is set down ("puts Riya down", "मुन्नी को नीचे उतार", "Bruno jumps down"). */
+    static boolean putDown(String s, Story.CharacterDef held) {
+        String h = names(held);
+        if (h == null) return false;
+        return finds(s, "\\b(?:puts|put|sets|set|lowers)\\s+" + h + "\\s+down\\b") || finds(s, "\\b(?:puts|sets)\\s+down\\s+" + h + "(?![\\p{L}])")
+                || finds(s, h + " को (?:नीचे|ज़मीन पर|जमीन पर) (?:उतार|रख)") || finds(s, h + "[^.!?।]{0,30}?(?:jumps down|hops down|नीचे कूद)");
+    }
+
     /** v47.12: up from the ground at t, the pain easing a second later. */
     private static void standUp(Film.Actor a, float t) {
         Film.Key up = keyAt(a, t); up.body = Pose.STAND; up.seat = -1; up.emotion = Pose.PAIN;
@@ -7614,7 +7719,7 @@ public final class Director {
     private int passesInFront;
 
     /** v47.8: how fast a body walks or runs on average over a move, in heights a second (a run's eased peak, 1.5×, stays under the frame audit's jump: 12% of the height a frame). */
-    public static final float WALK_SPEED = 1.0f, RUN_SPEED = 1.8f;
+    public static final float WALK_SPEED = 1.0f, RUN_SPEED = 1.6f;     // (v47.13: 1.8 — a run eases to 1.5 times its pace, 11% of the height a frame: a small puppy crossed the 12% of a jump)
     /** v47.8: the most a body speeds up or slows down between two frames at 24 fps, as a share of its height. */
     public static final float MOVE_ACCEL = 0.010f;
     /**
@@ -11869,7 +11974,7 @@ public final class Director {
 
     private float finalX(Film.Actor a, float t) {
         Film.Key k = a.stateAt(t);
-        if ((k.anchor == Film.A_SHOULDER || k.anchor == Film.A_CARRIED || k.anchor == Film.A_ON_FACE) && k.anchorActor != null) return finalX(k.anchorActor, t);
+        if ((k.anchor == Film.A_SHOULDER || k.anchor == Film.A_CARRIED || k.anchor == Film.A_ON_FACE || k.anchor == Film.A_IN_ARMS) && k.anchorActor != null) return finalX(k.anchorActor, t);
         return k.x;
     }
 

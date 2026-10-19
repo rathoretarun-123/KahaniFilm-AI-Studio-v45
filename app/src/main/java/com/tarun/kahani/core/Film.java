@@ -126,7 +126,8 @@ public final class Film {
 
     // -------------------------------------------------------------- actors
     public static final int A_GROUND = 0, A_BRANCH = 1, A_SHOULDER = 2, A_CARRIED = 3, A_HIDDEN = 4, A_ROCK_HIDE = 5,
-            A_ON_FACE = 6, A_CAGE = 7;
+            A_ON_FACE = 6, A_CAGE = 7,
+            A_IN_ARMS = 8;     // v47.13: held in front of someone's chest, in their arms (a puppy, a toddler)
 
     public static final class Key {
         public float t, moveDur;

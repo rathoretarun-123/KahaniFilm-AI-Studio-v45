@@ -139,7 +139,12 @@ public final class FrameAudit {
     private boolean sameShot(Film film, int f0, int f1) {
         float t0 = f0 / (float) fps, t1 = f1 / (float) fps;
         Film.Shot s0 = shotAt(film, t0), s1 = shotAt(film, t1);
-        return s0 != null && s0 == s1 && film.segAt(t0) == film.segAt(t1);
+        if (s0 == null || s0 != s1 || film.segAt(t0) != film.segAt(t1)) return false;
+        // v47.13: the camera's own cut may fall a frame away from the shot list's start — two frames with a cut of the
+        // camera between them are two shots (the new framing was counted as a puppy jumping 12% of its height)
+        Film.Seg sg = film.segAt(t0);
+        if (sg != null) for (Film.Cam c : sg.cams) if (c.ease <= 0 && c.t > t0 && c.t <= t1) return false;
+        return true;
     }
 
     private static Film.Shot shotAt(Film film, float t) {
