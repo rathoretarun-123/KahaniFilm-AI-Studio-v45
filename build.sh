@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 # Builds the Kahani Film APK without Gradle (works offline with Debian/Ubuntu android tools).
 #   sudo apt-get install -y android-sdk-platform-23 aapt dalvik-exchange zipalign apksigner openjdk-17-jdk
-# Output: release/KahaniFilm-v47.apk (and a KahaniFilm.apk symlink for older automation)
+# Output: release/KahaniFilm-v48.apk (and a KahaniFilm.apk symlink for older automation)
 set -euo pipefail
 trap 'echo "::error::build.sh failed at line $LINENO: $BASH_COMMAND"' ERR
 cd "$(dirname "$0")"
@@ -131,8 +131,8 @@ zipalign -f 4 $B/unsigned.apk $B/aligned.apk
 echo "[6/6] sign"
 mkdir -p release
 apksigner sign --ks tools/debug.keystore --ks-pass pass:android --key-pass pass:android --ks-key-alias kahani \
-  --out release/KahaniFilm-v47.apk $B/aligned.apk
-apksigner verify release/KahaniFilm-v47.apk
+  --out release/KahaniFilm-v48.apk $B/aligned.apk
+apksigner verify release/KahaniFilm-v48.apk
 # v47: a stable alias so older scripts and the CI step that still looks for KahaniFilm.apk keep working
-cp -f release/KahaniFilm-v47.apk release/KahaniFilm.apk
-ls -la release/KahaniFilm-v47.apk release/KahaniFilm.apk
+cp -f release/KahaniFilm-v48.apk release/KahaniFilm.apk
+ls -la release/KahaniFilm-v48.apk release/KahaniFilm.apk

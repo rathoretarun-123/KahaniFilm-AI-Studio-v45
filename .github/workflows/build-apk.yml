@@ -99,8 +99,8 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: KahaniFilm-v47-apk
-          path: release/KahaniFilm-v47.apk
+          name: KahaniFilm-v48-apk
+          path: release/KahaniFilm-v48.apk
           if-no-files-found: error
 
       - name: Upload APK (legacy name alias)
@@ -269,15 +269,15 @@ jobs:
         run: |
           set -euo pipefail
           short=${GITHUB_SHA::7}
-          tag="v47-build-${GITHUB_RUN_NUMBER}-${short}"
-          cp release/KahaniFilm-v47.apk "release/KahaniFilm-v47-${short}.apk"
+          tag="v48-build-${GITHUB_RUN_NUMBER}-${short}"
+          cp release/KahaniFilm-v48.apk "release/KahaniFilm-v48-${short}.apk"
           size=$(du -h release/KahaniFilm.apk | cut -f1)
           printf 'KahaniFilm debug APK built and tested by CI run %s from commit %s on %s (%s).\n\nInstalls over the earlier KahaniFilm install (same package and signing key, higher version code).\n\nDirect download (always the newest passing build): https://github.com/%s/releases/latest/download/KahaniFilm.apk\nThis build: https://github.com/%s/releases/download/%s/KahaniFilm.apk\nSource of this build: https://github.com/%s/archive/%s.zip\nAPK size: %s\n' \
             "$GITHUB_RUN_ID" "$GITHUB_SHA" "$GITHUB_REF_NAME" "$(date -u +%Y-%m-%dT%H:%MZ)" \
             "$GITHUB_REPOSITORY" "$GITHUB_REPOSITORY" "$tag" "$GITHUB_REPOSITORY" "$GITHUB_SHA" "$size" > release/notes.md
-          gh release create "$tag" release/KahaniFilm.apk "release/KahaniFilm-v47-${short}.apk" \
+          gh release create "$tag" release/KahaniFilm.apk "release/KahaniFilm-v48-${short}.apk" \
             --repo "$GITHUB_REPOSITORY" --target "$GITHUB_SHA" \
-            --title "KahaniFilm v47 build ${GITHUB_RUN_NUMBER} (${short})" \
+            --title "KahaniFilm v48 build ${GITHUB_RUN_NUMBER} (${short})" \
             --notes-file release/notes.md --latest
           echo "::notice title=apk::https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/KahaniFilm.apk"
 
