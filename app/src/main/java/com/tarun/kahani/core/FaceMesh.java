@@ -35,6 +35,8 @@ public final class FaceMesh {
     private static OrtEnvironment env;
     private static OrtSession session;
     private static boolean failed;
+    public static volatile int asked, found;
+    public static String status() { return (session != null ? "FaceMesh loaded" : failed ? "FaceMesh NOT loaded" : "FaceMesh not used") + ": " + found + " of " + asked + " faces gave lips and lids"; }
 
     /** The points in the picture's pixels. */
     public static final class Marks {
@@ -49,6 +51,7 @@ public final class FaceMesh {
 
     private static synchronized OrtSession session() {
         if (session != null || failed) return session;
+        if (Boolean.getBoolean("kahani.noMesh")) { failed = true; return null; }
         try {
             byte[] m = source != null ? source.bytes() : null;
             if (m == null) {
@@ -75,6 +78,7 @@ public final class FaceMesh {
     public static Marks find(int[] argb, int w, int h, FaceModel.Face f) {
         OrtSession s = session();
         if (s == null || f == null || argb == null || argb.length < w * h) return null;
+        asked++;
         float cx = f.x + f.w / 2, cy = f.y + f.h / 2, side = Math.max(f.w, f.h) * 1.5f;
         if (side < 12) return null;
         float sc = IN / side;
@@ -115,6 +119,7 @@ public final class FaceMesh {
                 Marks m = new Marks();
                 m.flag = flag[0];
                 if (m.flag < MIN_FLAG) return null;
+                found++;
                 for (int j = 0; j < 468; j++) {
                     m.x[j] = (mesh[3 * j] - IN / 2f) / sc + cx;
                     m.y[j] = (mesh[3 * j + 1] - IN / 2f) / sc + cy;

@@ -635,7 +635,7 @@ public final class FilmJob implements Runnable {
             File vdir = new File(project.dir, "voices");
             vdir.mkdirs();
             final File[] lineFiles = new File[film.lines.size()];
-            int failedLines = 0, aiLines = 0, naturalLines = 0;
+            int failedLines = 0, aiLines = 0, naturalLines = 0, kokoroLines = 0;
             String[] err = new String[1];
             for (int i = 0; i < film.lines.size(); i++) {
                 check();
@@ -660,11 +660,13 @@ public final class FilmJob implements Runnable {
                 File cached = new File(vdir, hash(who + "|" + l.text + "|" + l.emotion + "|" + l.manner + "|" + (k == null ? "" : k.signature())) + ".wav");
                 if (v == null && cached.exists()) v = AudioIO.readRaw(cached);
                 // 3) speak it now
-                if (v == null && (ttsOk || aiVoices || natural)) {
+                // (v47.13: the bundled Kokoro voices speak with no phone engine and no internet)
+                if (v == null && (ttsOk || aiVoices || natural || Kokoro.bundled(ctx))) {
                     v = voices.speak(l, k, tmp, i, aiVoices ? cloud : null, err);
                     if (v != null) {
                         if (voices.lastEngine.startsWith("AI")) aiLines++;
                         if (voices.lastEngine.startsWith("natural")) naturalLines++;
+                        if (voices.lastEngine.startsWith("kokoro")) kokoroLines++;
                         // a fallback voice is not kept, so the next "Make again" tries the natural voice again
                         if (!voices.usedFallback) try { AudioIO.writeRaw(cached, v); } catch (IOException ignored) {}
                     }
@@ -694,7 +696,8 @@ public final class FilmJob implements Runnable {
                 warning = failedLines + " lines could not be spoken — check the phone's Text-to-Speech settings.";
             // v47.9 (the user: "no voices are appearing"): how many lines have a voice, and from where, on the screen
             voiceNote = "🔊 Voices: " + (film.lines.size() - failedLines) + " of " + film.lines.size() + " lines spoken"
-                    + (naturalLines > 0 ? " — " + naturalLines + " in the natural voice" : "") + (aiLines > 0 ? " — " + aiLines + " in the AI voice" : "")
+                    + (naturalLines > 0 ? " — " + naturalLines + " in the natural voice" : "")
+                    + (kokoroLines > 0 ? " — " + kokoroLines + " in the offline Kokoro voice" : Kokoro.bundled(ctx) ? " — offline Kokoro voice not used (" + Kokoro.why + ")" : "") + (aiLines > 0 ? " — " + aiLines + " in the AI voice" : "")
                     + (ttsOk ? " — phone engine: " + voices.engineUsed + (voices.spokeLanguage ? "" : " (no " + (story.hindi ? "Hindi" : "English") + " voice: read in Latin letters)") : "")
                     + (voices.romanizedLines > 0 ? " — " + voices.romanizedLines + " read in Latin letters" : "");
             if (failedLines == film.lines.size() && film.lines.size() > 0)
@@ -866,6 +869,9 @@ public final class FilmJob implements Runnable {
             if (aiLines > 0) project.setSetting("aiLines", String.valueOf(aiLines));
             // the thumbnail and the poster, made separately in their own formats (extras: the film is done without them)
             try { stillPages(film, art, dir); } catch (CancelledException e) { throw e; } catch (Throwable e) { android.util.Log.w("Kahani", "still pages: " + e); }
+            // v47.13: whether the pose and face models really ran on this phone, on the film's own note
+            voiceNote = voiceNote + "\n🦴 " + com.tarun.kahani.core.PoseModel.status() + "; " + com.tarun.kahani.core.FaceMesh.status();
+            android.util.Log.i("Kahani", "MODELS: " + com.tarun.kahani.core.PoseModel.status() + "; " + com.tarun.kahani.core.FaceMesh.status() + "; voices: " + voiceNote);
             // v47.9: the team keeps what this film taught it (the shot fixes, the frame audit, the voices) for the next one
             try {
                 com.tarun.kahani.core.FrameAudit.Result fa = frameAudit;

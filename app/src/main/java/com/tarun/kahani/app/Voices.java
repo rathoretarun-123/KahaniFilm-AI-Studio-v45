@@ -59,6 +59,7 @@ public final class Voices {
      */
     public boolean init(Context ctx, boolean hindi) {
         appCtx = ctx.getApplicationContext() != null ? ctx.getApplicationContext() : ctx;
+        storyHindi = hindi;      // (before any engine: the offline Kokoro voices need it even with no phone engine)
         List<String> engines = new ArrayList<String>();
         engines.add(null);                                   // the phone's default engine
         engines.add("com.google.android.tts");

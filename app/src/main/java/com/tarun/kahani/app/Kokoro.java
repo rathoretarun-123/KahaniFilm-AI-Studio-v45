@@ -21,10 +21,21 @@ final class Kokoro {
     static final long MIN_RAM = 3500L * 1024 * 1024;
 
     static final String PKG = "com.k2fsa.sherpa.onnx.";
+    /** Why the last open gave no engine ("" when it opened): shown on the film's note, never a silent fallback. */
+    static volatile String why = "not tried";
     private final Object tts;
     final boolean hindi;
 
     private Kokoro(Object tts, boolean hindi) { this.tts = tts; this.hindi = hindi; }
+
+    /** The model is in this APK. */
+    static boolean bundled(Context ctx) {
+        try {
+            String[] files = ctx.getAssets().list(DIR);
+            if (files != null) for (String f : files) if (f.equals("model.onnx")) return true;
+        } catch (Exception ignored) { }
+        return false;
+    }
 
     /** The engine for the story's language, or null (no model in the app, too little memory, no native library). */
     static Kokoro open(Context ctx, boolean hindi) {
@@ -33,12 +44,12 @@ final class Kokoro {
             String[] files = am.list(DIR);
             boolean has = false;
             if (files != null) for (String f : files) if (f.equals("model.onnx")) has = true;
-            if (!has) return null;
+            if (!has) { why = "no model in this APK"; return null; }
             ActivityManager act = (ActivityManager) ctx.getSystemService(Context.ACTIVITY_SERVICE);
             if (act != null) {
                 ActivityManager.MemoryInfo mi = new ActivityManager.MemoryInfo();
                 act.getMemoryInfo(mi);
-                if (mi.totalMem > 0 && mi.totalMem < MIN_RAM) return null;
+                if (mi.totalMem > 0 && mi.totalMem < MIN_RAM) { why = "the phone has " + (mi.totalMem >> 20) + " MB of memory, the model needs 3500"; return null; }
             }
             // the phonemiser's data must be files on the phone: copied out of the app once
             File data = new File(ctx.getFilesDir(), DIR + "/espeak-ng-data");
@@ -62,8 +73,12 @@ final class Kokoro {
             Object c = make("OfflineTtsConfig");
             set(c, "setModel", m.getClass(), m);
             Object tts = Class.forName(PKG + "OfflineTts").getConstructor(AssetManager.class, c.getClass()).newInstance(am, c);
+            why = "";
+            android.util.Log.i("Kahani", "Kokoro opened (" + (hindi ? "hi" : "en-us") + ")");
             return new Kokoro(tts, hindi);
         } catch (Throwable e) {
+            why = "could not open: " + e;
+            android.util.Log.w("Kahani", "Kokoro: " + why);
             // (an emulator without the native library, a phone the model does not fit: the film goes on without it)
             return null;
         }

@@ -39,6 +39,9 @@ public final class PoseModel {
     private static OrtEnvironment env;
     private static OrtSession session;
     private static boolean failed;
+    /** How many pictures were asked and how many gave a pose (the film's log shows them: nothing fails unseen). */
+    public static volatile int asked, found;
+    public static String status() { return (session != null ? "MoveNet loaded" : failed ? "MoveNet NOT loaded" : "MoveNet not used") + ": " + found + " of " + asked + " pictures gave joints"; }
 
     /** The 17 joints in the picture's pixels (the person's own left and right) and how sure the model is of each. */
     public static final class Pose {
@@ -52,6 +55,8 @@ public final class PoseModel {
 
     private static synchronized OrtSession session() {
         if (session != null || failed) return session;
+        // (-Dkahani.noPose=true: the film made without the model, to see what the model changes)
+        if (Boolean.getBoolean("kahani.noPose")) { failed = true; return null; }
         try {
             byte[] m = source != null ? source.bytes() : null;
             if (m == null) {
@@ -81,6 +86,7 @@ public final class PoseModel {
      */
     public static Pose find(int[] argb, int w, int h) {
         OrtSession s = session();
+        if (s != null) asked++;
         if (s == null || argb == null || w < 16 || h < 16 || argb.length < w * h) return null;
         int x0 = w, y0 = h, x1 = -1, y1 = -1;
         for (int y = 0; y < h; y++) for (int x = 0; x < w; x++) if ((argb[y * w + x] >>> 24) > 128) {
@@ -125,6 +131,7 @@ public final class PoseModel {
                     p.x[j] = (o[3 * j + 1] * IN - IN / 2f) / sc + cx;
                     p.score[j] = o[3 * j + 2];
                 }
+                if (p.mean() >= MIN_SCORE) found++;
                 return p;
             }
         } catch (Throwable e) {

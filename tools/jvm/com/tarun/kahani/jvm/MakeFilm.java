@@ -103,7 +103,7 @@ public class MakeFilm {
             sampleProfile = VoiceFx.profile(readWav(new File(sv[1])), Synth.SR);
         }
         // v47.13: KOKORO=<model dir>:<espeak-ng-data dir>[:<python>] — the lines spoken by Kokoro-82M (Apache-2.0)
-        float[][] natural = System.getenv("KOKORO") != null ? kokoro(film, tmp) : null;
+        float[][] natural = System.getenv("KOKORO") != null && System.getenv("KOKORO").contains(":") ? kokoro(film, tmp) : null;
         int byKokoro = 0;
         for (int i = 0; i < film.lines.size(); i++) {
             Film.Line l = film.lines.get(i);
@@ -265,6 +265,7 @@ public class MakeFilm {
                 ImageIO.write(img, png ? "png" : "jpg", new File(stills, String.format(png ? "t_%08.3f.png" : "t_%08.3f.jpg", t)));
             }
             System.out.println("frames written");
+            System.out.println("MODELS: " + com.tarun.kahani.core.PoseModel.status() + "; " + com.tarun.kahani.core.FaceMesh.status());
             System.out.println("STATS " + com.tarun.kahani.core.Renderer.stats());
             return;
         }
@@ -308,6 +309,7 @@ public class MakeFilm {
         int ph = Math.max(120, Math.round(640f * height / width)) & ~1;
         for (Object[] p : dir.locationPlates()) writeSeg(film, art, (Film.Seg) p[1], 640, ph, new File(stills, "lock_place_" + m++ + ".jpg"));
         System.out.println("lock sheets: " + n + " characters, " + m + " places -> " + stills);
+        System.out.println("MODELS: " + com.tarun.kahani.core.PoseModel.status() + "; " + com.tarun.kahani.core.FaceMesh.status());
     }
 
     /** One part on its own (a lock sheet, a plate) as a JPEG with the film's look. */
