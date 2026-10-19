@@ -142,6 +142,13 @@ public class StudioRequestsTest {
         for (StudioPlan.Request r : StudioPlan.requests(FilmJob.storyOf(spokenOnly)))
             assertFalse("dialogue alone must not request a stick: " + r, r.kind.equals(StudioPlan.OBJECT) && r.shown.equals("छड़ी"));
 
+        // Match complete prop names: "bat" must not be extracted from "bathroom".
+        Project bathroom = project(ENGLISH.replace("[Rahul flies the kite on the roof. He picks up a stick.]",
+                "[Rahul opens the bathroom door.]"));
+        Set<String> bathroomRequests = requests(FilmJob.storyOf(bathroom));
+        assertTrue("the physical action's door is requested", bathroomRequests.contains("obj:door"));
+        assertFalse("a substring of bathroom is not a prop", bathroomRequests.contains("obj:bat"));
+
         // the Studio page shows one picture card per request and none for the narrator
         ActivityController<MainActivity> ac = Robolectric.buildActivity(MainActivity.class).setup();
         MainActivity a = ac.get();

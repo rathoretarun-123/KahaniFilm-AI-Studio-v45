@@ -127,7 +127,7 @@ final class StudioPlan {
             if (beat.type != Story.Beat.DIRECTION || !hasPhysicalAction(beat.text)) continue;
             for (String word : vocabulary) {
                 String key = Txt.norm(word);
-                if (key.length() < 2 || !Txt.hasStart(beat.text, word) || Bible.intangible(word)) continue;
+                if (key.length() < 2 || !Txt.hasWholeWord(beat.text, word) || Bible.intangible(word)) continue;
                 boolean material = false;
                 for (String m : materialOnly) if (key.equals(Txt.norm(m))) { material = true; break; }
                 if (material || names.contains(key) || actionSeen.contains(key)) continue;

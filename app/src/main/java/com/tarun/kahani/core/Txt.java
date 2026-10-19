@@ -55,6 +55,24 @@ public final class Txt {
         return false;
     }
 
+    /** True when a complete word or phrase occurs, with Hindi combining marks treated as word characters. */
+    public static boolean hasWholeWord(String hay, String... needles) {
+        String h = norm(hay);
+        for (String n : needles) {
+            String x = norm(n).trim();
+            if (x.isEmpty()) continue;
+            int i = h.indexOf(x);
+            while (i >= 0) {
+                int e = i + x.length();
+                boolean left = i == 0 || !wordChar(h.charAt(i - 1));
+                boolean right = e >= h.length() || !wordChar(h.charAt(e));
+                if (left && right) return true;
+                i = h.indexOf(x, i + 1);
+            }
+        }
+        return false;
+    }
+
     /**
      * v43: true if any needle begins a word of the text (a stem may go on into its endings: "गिर" in "गिरता"), never
      * from inside another word — "गाता" is not in "लगाता", "राहत" not in "कराहता", "टन" not in "घुटने", "wind" not
