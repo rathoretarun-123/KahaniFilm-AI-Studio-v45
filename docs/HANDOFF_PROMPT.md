@@ -2,6 +2,7 @@
 
 Paste everything below the line into the other assistant, together with the source zip
 (https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/archive/refs/heads/ccr-a5fc4eef-d2p2nm.zip).
+Final tested APK (v48, CI run 371): https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45/releases/download/v48-build-371-14b417e/KahaniFilm.apk.
 
 ---
 
@@ -89,10 +90,13 @@ popping). Be honest that this is 2D cut-out animation, not Pixar 3D.
 
 ## State at handoff (19 October 2026)
 
-- CI run 367 (fb74e57) passed every step; v48 build is commit `ac9a23c`.
+- CI run 371 (14b417e, v48) passed every step; the plain suite is 213/213 PASS; the Robolectric tests PASS.
+- Fixed in the last round: Kokoro speaks with no phone TTS and no internet; the story's language is set before any
+  engine; model and Kokoro failures are shown on the film's note; the version code rises with every build; a thing's
+  rigidity is read from its scene.
 - Verified by actual rendering: MoveNet finds joints in 12/12 pictures of बाबू के लिए and changes staging and framing
   (28% of pixels differ with it off); FaceMesh changes mouths and lids; all lines of the 9 published films
-  (branch `films-v47`) are spoken by Kokoro on the desktop; frame audit 0 findings.
+  (branch `films-v47`, 10 films) are spoken by Kokoro on the desktop; frame audit 0 findings.
 - **Not verified on a real Android device:** Kokoro, MoveNet, FaceMesh on the phone (sherpa-onnx's ONNX Runtime 1.28.2
   replaces 1.20's native library — check that the face/pose models still load on the phone).
 
@@ -103,7 +107,7 @@ popping). Be honest that this is 2D cut-out animation, not Pixar 3D.
 2. Body mesh to 0.06 px without the 3.5× slowdown (adaptive cells only where the bend is).
 3. Objects mentioned only in the action (e.g. छड़ी) are not yet requested by the Studio.
 4. Held animals (a puppy jumping into arms) are not drawn; one body resting on another (head on a shoulder) has no gesture.
-5. आखिरी चाय with the user's pictures needs a render longer than 75 minutes (it timed out).
+5. A film of 3 minutes takes over an hour to render on the desktop: profile and speed up the renderer.
 6. espeak-ng data (GPL-3.0) is now in the APK for Kokoro's Hindi; keep its notice (`assets/kokoro/NOTICE.txt`).
 
 Work in small, tested steps; after each, report exactly what changed, which tests ran and their results, and what is
