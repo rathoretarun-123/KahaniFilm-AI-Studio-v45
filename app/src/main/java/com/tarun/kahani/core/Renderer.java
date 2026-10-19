@@ -4010,6 +4010,9 @@ public final class Renderer {
         // v44: a weapon in hand — the arm raised much further than everyday gestures (a sword up, a bow held out)
         if (weapon(p.holdR)) st.armR = armReach(8 + (p.armR - 8) * en);
         if (weapon(p.holdL) || p.holdR == Pose.I_BOW) st.armL = armReach(8 + (p.armL - 8) * en);
+        // v47.13: the forearm bends at the elbow on a rig with bones (PoseModel) — the gestures, a cup, a plate held up
+        st.elbowL = Math.max(0, Math.min(45, (p.elbowL - 10) * 0.45f * en));
+        st.elbowR = Math.max(0, Math.min(45, (p.elbowR - 10) * 0.45f * en));
         st.headRot = p.headTilt * 0.8f + (float) Math.sin(t * 0.7f * en + p.seed) * 0.6f * en;
         st.lean = p.tilt;
         st.breathe = p.dead ? 0 : (float) Math.sin(t * 2.1f + p.seed);
@@ -5175,7 +5178,7 @@ public final class Renderer {
             // behind any glasses — the frames are read for eyes, and the old man's lids closed on his lower rims)
             boolean covered = look != null && look.glasses != 0;
             float shut = p.eyesClosed ? 1 : Math.max(0, Math.min(1, p.blink));
-            if (shut > 0.5f && !covered) {
+            if (shut > 0.5f && !covered && !sp.eyesShut) {     // (v47.13: nor over eyes already shut in the picture)
                 // (v47.10: drawn only while the eye is mostly shut — a lid painted half way over a photographed eye read as
                 // a sleepy, flat line across the iris; the blink's timing gives it its life — and a little larger and wider
                 // than the eye found, which is often smaller than a big cartoon eye: a white crescent showed beside it)

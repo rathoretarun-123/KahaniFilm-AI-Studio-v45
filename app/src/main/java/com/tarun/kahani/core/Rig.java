@@ -19,6 +19,16 @@ public final class Rig {
     public float armInner;        // distance from the middle where the arms start (fraction of shoulderHalf)
     /** v47.13: the arms were seen apart from the body in the picture (armEnd and armInner are read, not guessed). */
     public boolean armsMeasured;
+    /**
+     * v47.13: the joints read by the pose model (PoseModel): the knees' height (fraction of the picture height; -1 =
+     * not read, the knee taken halfway down the legs), and — bones — each arm's shoulder, elbow and wrist (picture
+     * fractions; index 0 the picture's left arm), so the forearm bends at the elbow.
+     */
+    public float kneeY = -1;
+    public boolean bones;
+    public final float[] elX = new float[2], elY = new float[2], wrX = new float[2], wrY = new float[2];
+    /** The knee's height: read from the joints, else halfway down the legs. */
+    public float knee() { return kneeY > hipY && kneeY < bottom ? kneeY : hipY + (bottom - hipY) * 0.5f; }
     public final boolean[] armUp = new boolean[2];   // an arm raised beside the face (e.g. a hand on the moustache)
     /** v34: the arms never swing — a many-armed character (Durga) keeps her fan of arms as drawn. */
     public boolean armsFixed;
@@ -65,6 +75,8 @@ public final class Rig {
         public float headRot, nod;           // nod: +1 looks down, -1 looks up
         public float lean;                   // upper body
         public float armL, armR;             // outward swing of the arm on the picture's left / right side
+        /** v47.13: the forearm's bend at the elbow (degrees, the hand coming up and in) on a rig with bones. */
+        public float elbowL, elbowR;
         public float legLAng, legRAng, legLLift, legRLift;
         /** v41: a side view's legs swing as one block about the hip by this many degrees (a profile stride; 0 = none). */
         public float stride;
@@ -106,7 +118,7 @@ public final class Rig {
             follow = followLean = 0;
             turn = headTurn = 0;
             gazeX = gazeY = 0;
-            headRot = nod = lean = armL = armR = legLAng = legRAng = legLLift = legRLift = breathe = wind = time = stride = 0;
+            headRot = nod = lean = armL = armR = elbowL = elbowR = legLAng = legRAng = legLLift = legRLift = breathe = wind = time = stride = 0;
             tail = jaw = ear = earBack = walkPhase = walkAmt = mountJaw = 0;
             lipWide = lipRound = 0;
             legScale = 1; sit = 0; sitSide = 0; kneel = 0; twirl = false; floor = false;
@@ -143,6 +155,46 @@ public final class Rig {
      * waving, a half-length picture: the body is drawn exactly as it is (it never bends), the face speaks, blinks,
      * looks and shows the feeling through its own mesh. Null when no face was found.
      */
+    /**
+     * v47.13: the joints the pose model finds in the picture: the hips at the hip joints (an outline's narrowest row
+     * is the waist of a kurta, or nowhere at all on a long robe), the knees where they bend, and each arm's elbow and
+     * wrist for the forearm to bend — only joints the model is sure of, and only where they make a body: the hips in
+     * the middle of it, the knees between the hips and the feet, an arm hanging down from its shoulder.
+     */
+    static void bonesFromPose(Rig g, Cutout.Result r, float body) {
+        if (!PoseModel.available()) return;
+        PoseModel.Pose p = PoseModel.find(r.px, r.w, r.h);
+        if (p == null) return;
+        float H = r.h, W = r.w;
+        if (p.has(PoseModel.HIP_L, PoseModel.HIP_R) && p.has(PoseModel.SHOULDER_L, PoseModel.SHOULDER_R)) {
+            float hy = p.midY(PoseModel.HIP_L, PoseModel.HIP_R) / H;
+            if (hy > g.chinY + 0.25f * body && hy < g.chinY + 0.68f * body) g.hipY = hy;
+        }
+        if (p.has(PoseModel.KNEE_L, PoseModel.KNEE_R)) {
+            float ky = p.midY(PoseModel.KNEE_L, PoseModel.KNEE_R) / H, legs = g.bottom - g.hipY;
+            if (ky > g.hipY + 0.3f * legs && ky < g.hipY + 0.75f * legs) g.kneeY = ky;
+        }
+        int[][] arm = {{PoseModel.SHOULDER_L, PoseModel.ELBOW_L, PoseModel.WRIST_L}, {PoseModel.SHOULDER_R, PoseModel.ELBOW_R, PoseModel.WRIST_R}};
+        int ok = 0;
+        float[] ex = new float[2], ey = new float[2], wx = new float[2], wy = new float[2], sx = new float[2];
+        for (int k = 0; k < 2; k++) {
+            int[] j = arm[k];
+            if (!p.has(j[0]) || !p.has(j[1]) || !p.has(j[2])) continue;
+            float sy = p.y[j[0]] / H, ely = p.y[j[1]] / H, wry = p.y[j[2]] / H;
+            // hanging: the elbow well below the shoulder, the wrist below the elbow
+            if (ely < sy + 0.08f * body || wry < ely + 0.05f * body) continue;
+            sx[k] = p.x[j[0]] / W; ex[k] = p.x[j[1]] / W; ey[k] = ely; wx[k] = p.x[j[2]] / W; wy[k] = wry;
+            ok++;
+        }
+        if (ok == 2) {
+            // the picture's left arm first (the person's right in a front picture)
+            int a = sx[0] <= sx[1] ? 0 : 1, b = 1 - a;
+            g.elX[0] = ex[a]; g.elY[0] = ey[a]; g.wrX[0] = wx[a]; g.wrY[0] = wy[a];
+            g.elX[1] = ex[b]; g.elY[1] = ey[b]; g.wrX[1] = wx[b]; g.wrY[1] = wy[b];
+            g.bones = true;
+        }
+    }
+
     public static Rig buildStill(Cutout.Result r, Art.Sprite s, Look look, Art.Loader L) {
         if (s == null || !s.faceKnown) return null;
         return build(r, s, look, L, true);
@@ -241,6 +293,8 @@ public final class Rig {
         g.hipY = best > 0 ? best / (float) h : hip;
         // (a view: the front's hips as they are — a profile's belly or a turned back has no narrowest row there)
         if (prior) g.hipY = hip;
+        // v47.13: where the pose model sees the hips, knees, elbows and wrists, the rig has them there
+        if (!still && (look == null || look.kind != Look.OBJECT)) bonesFromPose(g, r, body);
         // legs: two separate runs below the hips for a good part of the way down
         int two = 0, rows = 0;
         float gapSum = 0, halfSum = 0;
@@ -544,7 +598,7 @@ public final class Rig {
         float L0, T0, W0, H0;
         float nX, nY, hipCX, hipCY;          // neck pivot, hip centre
         float hCos = 1, hSin, lCos = 1, lSin, nodS = 1, nodDy;
-        final float[] armC = new float[2], armS = new float[2], legC = new float[3], legS = new float[3];
+        final float[] armC = new float[2], armS = new float[2], foreC = {1, 1}, foreS = new float[2], legC = new float[3], legS = new float[3];
         final float[] tmp = new float[2], legTmp = new float[2], o = new float[2], bumps = new float[5 * 40];
         public final float[] body = new float[(MAX_ROWS / 2 + 1) * (MAX_ROWS + 1) * 2];
         /** The mesh size used in this frame (pass these to Gfx.imageMesh). */
@@ -576,6 +630,10 @@ public final class Rig {
             }
             double a = Math.toRadians(ang);   // outward: the left arm turns clockwise
             f.armC[side] = (float) Math.cos(a); f.armS[side] = (float) Math.sin(a);
+            // v47.13: the forearm about the elbow — the hand comes up and in towards the body (the other way round)
+            float el = !bones || armsFixed || armUp[side] ? 0 : side == 0 ? -s.elbowL : s.elbowR;
+            double e = Math.toRadians(el);
+            f.foreC[side] = (float) Math.cos(e); f.foreS[side] = (float) Math.sin(e);
         }
         float[] la = {s.legLAng, s.legRAng, s.stride != 0 ? s.stride : (s.legLAng - s.legRAng) * 0.15f};
         for (int i = 0; i < 3; i++) { double a = Math.toRadians(la[i]); f.legC[i] = (float) Math.cos(a); f.legS[i] = (float) Math.sin(a); }
@@ -744,8 +802,20 @@ public final class Rig {
                 float sx = f.L0 + (cx + (side == 0 ? -1 : 1) * shoulderHalf * 0.62f) * f.W0;
                 float c = f.armC[side], sn = f.armS[side];
                 float dx = px - sx, dy = py - sy;
-                qx += wa * (sx + c * dx - sn * dy - px);
-                qy += wa * (sy + sn * dx + c * dy - py);
+                float ax = sx + c * dx - sn * dy, ay = sy + sn * dx + c * dy;
+                // v47.13: below the elbow, the forearm turns about the elbow (carried by the arm's swing)
+                if (f.foreS[side] != 0) {
+                    float wf = smooth(elY[side] - 0.015f, elY[side] + 0.03f, v);
+                    if (wf > 0) {
+                        float ex = f.L0 + elX[side] * f.W0 - sx, ey = f.T0 + elY[side] * f.H0 - sy;
+                        float ex2 = sx + c * ex - sn * ey, ey2 = sy + sn * ex + c * ey;
+                        float fc = f.foreC[side], fs = f.foreS[side];
+                        float bx = ex2 + fc * (ax - ex2) - fs * (ay - ey2), by = ey2 + fs * (ax - ex2) + fc * (ay - ey2);
+                        ax += wf * (bx - ax); ay += wf * (by - ay);
+                    }
+                }
+                qx += wa * (ax - px);
+                qy += wa * (ay - py);
             }
         }
         lean(f, qx, qy, f.tmp);
@@ -760,7 +830,7 @@ public final class Rig {
         if (s.sit > 0 && s.sitSide != 0) {
             // v43: seated in profile: the thighs swing forward about the hip to the horizontal (their front comes up),
             // the shins are carried by the knee and hang straight down from it; across the knee the two are blended
-            float knee = hipY + (bottom - hipY) * 0.5f, ky = f.T0 + knee * f.H0;
+            float knee = knee(), ky = f.T0 + knee * f.H0;
             // (v44: pedalling — the knee rises as the pedal comes up, falls as it goes down)
             // (v47.3: to SIDE_THIGH degrees, not the full horizontal: seen a little from above the thigh slopes down to the
             // knee, and the seated lap no longer reads as a flat shelf)
@@ -780,7 +850,7 @@ public final class Rig {
             sx2 = tx + (shx - tx) * w;
             sy2 = ty + (shy - ty) * w;
         } else if (s.sit > 0) {
-            float knee = hipY + (bottom - hipY) * 0.5f;
+            float knee = knee();
             // v35: on the floor the shins fold under as well (three quarters) and the knees part wider
             float shin = s.floor ? 0.75f * s.sit : 0, ky = f.T0 + knee * f.H0;
             if (legs) {
@@ -805,7 +875,7 @@ public final class Rig {
             // back under (the feet are behind), so the picture ends at the knees and the whole of it comes down to
             // put them on the ground (feetRise). The knees part a little. (Scaling the whole leg to half, as before,
             // read as a shorter person standing.)
-            float knee = hipY + (bottom - hipY) * 0.5f, ky = f.T0 + knee * f.H0;
+            float knee = knee(), ky = f.T0 + knee * f.H0;
             if (v > knee) sy2 = ky + (y - ky) * (1 - KNEEL_FOLD * s.kneel);
             if (legs) sx2 = x + (u < gapX ? -1 : 1) * 0.04f * f.W0 * s.kneel * smooth(hipY, knee, v);
         }
@@ -1064,16 +1134,16 @@ public final class Rig {
         if (still) return 0;
         if (animal) return 0.8f * s.sit * (bottom - legTop) * h;
         float rise = (1 - s.legScale) * (bottom - hipY) * h;
-        if (s.kneel > 0 && s.sit <= 0) rise += KNEEL_FOLD * s.kneel * 0.5f * (bottom - hipY) * h;      // v47.3: the shins folded under
+        if (s.kneel > 0 && s.sit <= 0) rise += KNEEL_FOLD * s.kneel * (bottom - knee()) * h;      // v47.3: the shins folded under
         if (legs && s.sit <= 0 && (s.legLAng != 0 || s.legRAng != 0)) {
             // v40: in a stride the legs are spread: the body comes down until the planted foot is on the floor
             float L = (bottom - hipY) * h * s.legScale;
             float fl = L * (float) Math.cos(Math.toRadians(s.legLAng)) * (1 - s.legLLift), fr = L * (float) Math.cos(Math.toRadians(s.legRAng)) * (1 - s.legRLift);
             rise += L - Math.max(fl, fr);
         }
-        if (s.sit > 0 && s.sitSide != 0) rise += (1 - (float) Math.cos(Math.toRadians(SIDE_THIGH * Math.min(1, s.sit)))) * 0.5f * (bottom - hipY) * h;   // v43: the thighs swung up
-        else if (s.sit > 0) rise += 0.8f * 0.5f * s.sit * (bottom - hipY) * h;      // v35: a skirt folds at the knees like legs
-        if (s.sit > 0 && s.floor) rise += 0.75f * 0.5f * s.sit * (bottom - hipY) * h;     // v35: and on the floor the shins fold under
+        if (s.sit > 0 && s.sitSide != 0) rise += (1 - (float) Math.cos(Math.toRadians(SIDE_THIGH * Math.min(1, s.sit)))) * (knee() - hipY) * h;   // v43: the thighs swung up
+        else if (s.sit > 0) rise += 0.8f * s.sit * (knee() - hipY) * h;      // v35: a skirt folds at the knees like legs
+        if (s.sit > 0 && s.floor) rise += 0.75f * s.sit * (bottom - knee()) * h;     // v35: and on the floor the shins fold under
         return rise;
     }
 

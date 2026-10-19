@@ -17,7 +17,7 @@ public class RigSheet {
         Story story = ScriptParser.parse(new String(Files.readAllBytes(Paths.get(assets, "..", "sample_story.txt")), "UTF-8"));
         Art art = Art.fromManifest(new String(Files.readAllBytes(Paths.get(assets, "cast.txt")), "UTF-8"), story, new MakeFilm.AwtLoader(assets));
         Renderer r = new Renderer(null, art);
-        String[] cols = {"neutral", "happy", "laugh", "sad", "angry", "scared", "surprised", "talk", "talk ee", "talk oo", "point", "walk A", "walk B", "sit", "bow", "wave", "twirl"};
+        String[] cols = {"neutral", "happy", "laugh", "sad", "angry", "scared", "surprised", "talk", "talk ee", "talk oo", "point", "walk A", "walk B", "sit", "bow", "wave", "twirl", "explain", "hold up"};
         int cw = 230, ch = 520;
         java.util.List<Story.CharacterDef> who = new java.util.ArrayList<Story.CharacterDef>();
         for (int i = 2; i < a.length; i++) {
@@ -36,7 +36,7 @@ public class RigSheet {
             Art.Sprite sp = art.sprites.get(c.id);
             Rig rig = sp == null ? null : sp.rig;
             System.out.println(c.displayName + " rig=" + (rig == null ? "none" : String.format("chin=%.2f shoulder=%.2f/%.2f hip=%.2f legs=%b gap=%.2f face=%b armEnd=%.2f armInner=%.2f",
-                    rig.chinY, rig.shoulderY, rig.shoulderHalf, rig.hipY, rig.legs, rig.gapX, rig.face, rig.armEnd, rig.armInner) + " armUp=" + rig.armUp[0] + "/" + rig.armUp[1]));
+                    rig.chinY, rig.shoulderY, rig.shoulderHalf, rig.hipY, rig.legs, rig.gapX, rig.face, rig.armEnd, rig.armInner) + String.format(" knee=%.2f bones=%b", rig.knee(), rig.bones) + " armUp=" + rig.armUp[0] + "/" + rig.armUp[1]));
             for (int col = 0; col < cols.length; col++) {
                 p.reset();
                 p.time = 2.0f; p.seed = 3; p.facing = 1;
@@ -57,6 +57,8 @@ public class RigSheet {
                     case 14: p.tilt = 18; p.nod = 0.8f; p.armL = 55; p.armR = 55; break;
                     case 15: p.wave = 1; p.armR = 150; p.emotion = Pose.HAPPY; break;
                     case 16: p.twirl = true; p.time = 2.45f; p.emotion = Pose.PROUD; break;
+                    case 17: p.mouth = 0.5f; p.armL = 20; p.armR = 26; p.elbowL = 70; p.elbowR = 90; break;
+                    case 18: p.armR = 26; p.elbowR = 110; p.elbowL = 40; break;
                     default:
                 }
                 g.save();

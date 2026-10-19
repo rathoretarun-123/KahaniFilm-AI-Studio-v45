@@ -1245,6 +1245,22 @@ every spoken line. One frame a second is kept.
   a ▶ to hear the sample. No recording is bundled (every licensed source of narrator recordings was out of reach;
   none was made up); a recorded voice from the user's library can still be chosen. The voice chosen for the narrator
   was saved and never used — the film always spoke with the default narrator; it is used now (`NarratorVoicesTest`).
+- **The body's joints (MoveNet).** A trained pose model (MoveNet Thunder, Apache 2.0, 12.6 MB in the APK) finds the
+  shoulders, elbows, wrists, hips, knees and ankles in every rigged picture. The rig's hips and knees are put at the
+  joints — a long kurta hides them from the outline — so a seated picture folds where the legs bend; the forearm
+  bends at the elbow (a gesture, a cup or a plate held up) where both arms hang free; a side picture looks the way its
+  nose is ahead of its ear. Checked on rig sheets of परी and रघुवीर जी (sitting, walking, the new "explain" and "hold
+  up" bends) and by `PoseModelTest`.
+- **The lips and the eyelids (FaceMesh).** 468 points of the face (MediaPipe FaceMesh, Apache 2.0, 3 MB) inside the
+  face the detector found: the mouth on the opening between the lips, a mouth already open in the picture never opened
+  further, each eye's lid sized to its corners and lids, and no lid painted over eyes already shut. Checked by eye on
+  all the old man's pictures; profiles are left to the detector alone.
+- **The narrator speaks only what the script gives the narrator.** A story with no dialogue was read aloud by the
+  narrator in its own words; now it is acted out from its directions with no narration, and only lines written for
+  the narrator (कथावाचक: "…") are spoken (`NarratorOnlyWrittenTest`).
+- **The flying bench.** In the films sent earlier, the old man's bench hung in the air beside परी in the two-shots of
+  बाबू के लिए (0:48–1:02): his seated picture was lifted to put its face where a standing face would be. A seated
+  picture stays on its own legs now (the fix below); checked on the same frames.
 - **What the face detector changed, checked frame by frame.** बाबू के लिए rendered with the detector showed three
   faults the old readings had hidden, all fixed and checked on the same frames (24, 38, 62, 90 and 110 s):
   the seated old man rose out of the top of the frame with his bench — a seated picture, now with a face, was lifted

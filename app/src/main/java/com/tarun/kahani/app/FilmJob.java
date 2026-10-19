@@ -238,6 +238,12 @@ public final class FilmJob implements Runnable {
     }
 
     /** The script to film: the AI's screenplay when the user chose it, else what they wrote. */
+    /** The story has a stage direction to act out (a story with neither lines nor directions has nothing to film). */
+    static boolean hasDirections(Story st) {
+        for (Story.Scene sc : st.scenes) for (Story.Beat b : sc.beats) if (b.type == Story.Beat.DIRECTION && b.text.trim().length() >= 3) return true;
+        return false;
+    }
+
     static String scriptOf(Project p) {
         if ("1".equals(p.setting("useAi", "0")) && p.has("script_ai.txt")) {
             String ai = p.read("script_ai.txt");
@@ -330,12 +336,12 @@ public final class FilmJob implements Runnable {
             if (script.trim().length() < 10) throw new IllegalStateException("The story is empty. Write or paste a story first.");
             Story story = overrides(project, ScriptParser.parse(script));
             // v47.9 (the user: "it's not making film for any simple story … it should not stop"): a story told without
-            // lines (prose, or a story in a few sentences) is read out by the narrator in its own words — the film is
-            // made, never refused
+            // lines (prose, or a story in a few sentences) is still made — v47.13 (the user: "make sure narrator only
+            // speaks if written in script"): it is acted out from its directions, with no narration; the narrator
+            // speaks only the lines the script gives the narrator
             if (story.dialogueCount() == 0) {
-                int told = com.tarun.kahani.core.ScriptParser.narrateProse(story);
-                if (told == 0) throw new IllegalStateException("The story has no words to film yet. Write a few sentences or lines like  Name: \"dialogue\".");
-                info = "No dialogue in the story — the narrator reads it in your own words (" + told + " parts)";
+                if (!hasDirections(story)) throw new IllegalStateException("The story has no words to film yet. Write a few sentences or lines like  Name: \"dialogue\".");
+                info = "No dialogue in the story — it is acted out from its directions, without narration (write  कथावाचक: \"…\"  for a narrator)";
             }
             Edits ed = Edits.fromJson(project.read("edits.json"));
             // v33: a remake after an instruction (the story and the pictures unchanged) keeps every picture and every
@@ -470,6 +476,12 @@ public final class FilmJob implements Runnable {
                 final android.content.res.AssetManager am = ctx.getAssets();
                 com.tarun.kahani.core.FaceModel.source = new com.tarun.kahani.core.FaceModel.Source() {
                     @Override public byte[] bytes() throws Exception { return Project.readAll(am.open(com.tarun.kahani.core.FaceModel.ASSET)); }
+                };
+                com.tarun.kahani.core.PoseModel.source = new com.tarun.kahani.core.FaceModel.Source() {
+                    @Override public byte[] bytes() throws Exception { return Project.readAll(am.open(com.tarun.kahani.core.PoseModel.ASSET)); }
+                };
+                com.tarun.kahani.core.FaceMesh.source = new com.tarun.kahani.core.FaceModel.Source() {
+                    @Override public byte[] bytes() throws Exception { return Project.readAll(am.open(com.tarun.kahani.core.FaceMesh.ASSET)); }
                 };
             }
             Art art = Art.fromManifest(castText, story, project.loader());

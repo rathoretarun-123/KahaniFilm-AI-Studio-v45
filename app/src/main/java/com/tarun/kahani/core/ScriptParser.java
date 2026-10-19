@@ -503,46 +503,6 @@ public final class ScriptParser {
         }
     }
 
-    /**
-     * v47.9: a story with no dialogue at all is read out by the narrator: each stage direction of a scene becomes a line
-     * of the narrator in the script's own words (the direction stays, for the staging). Returns how many lines were made.
-     */
-    public static int narrateProse(Story st) {
-        int n = 0;
-        for (Story.Scene sc : st.scenes) {
-            List<Story.Beat> out = new ArrayList<Story.Beat>();
-            for (Story.Beat b : sc.beats) {
-                out.add(b);
-                if (b.type != Story.Beat.DIRECTION) continue;
-                String t = b.text.replaceFirst("^\\s*(?:पर्यावरण|वातावरण|environment|setting)\\s*[-–—:：]\\s*", "").replaceAll("[\"“”]", "").trim();
-                if (t.length() < 3) continue;
-                // one line a sentence (or two short ones), so the pictures change with the telling
-                StringBuilder cur = new StringBuilder();
-                java.util.regex.Matcher m = java.util.regex.Pattern.compile("[^।.!?]+[।.!?]*").matcher(t);
-                List<String> parts = new ArrayList<String>();
-                while (m.find()) {
-                    String one = m.group().trim();
-                    if (one.length() == 0) continue;
-                    cur.append(cur.length() > 0 ? " " : "").append(one);
-                    if (cur.length() >= 40) { parts.add(cur.toString()); cur.setLength(0); }
-                }
-                if (cur.length() > 0) { if (!parts.isEmpty() && cur.length() < 20) parts.set(parts.size() - 1, parts.get(parts.size() - 1) + " " + cur); else parts.add(cur.toString()); }
-                for (String one : parts) {
-                    Story.Beat l = new Story.Beat();
-                    l.type = Story.Beat.DIALOGUE;
-                    l.narrator = true;
-                    l.speakerRaw = st.hindi ? "कथावाचक" : "Narrator";
-                    l.text = one;
-                    out.add(l);
-                    n++;
-                }
-            }
-            sc.beats.clear();
-            sc.beats.addAll(out);
-        }
-        if (n > 0) st.hasNarrator = true;
-        return n;
-    }
 
     /** v47.9: the sentence names the character only as the owner of something ("X की आँखें", "X का हाथ"). */
     static boolean possessed(String normSentence, Story.CharacterDef c) {

@@ -8472,9 +8472,10 @@ public final class Director {
             // swing to the horizontal); on the floor the shins fold under as well
             Art.Sprite s = art == null ? null : art.sprites.get(a.c.id);
             if (s != null && s.rig != null && !s.rig.still && !s.rig.animal && s.rig.bottom > s.rig.hipY) {
-                float run = s.rig.bottom - s.rig.hipY;
+                // (v47.13: the thighs from the hips to the knees the pose model found, else half the legs)
+                float thigh = s.rig.knee() - s.rig.hipY, shin = s.rig.bottom - s.rig.knee();
                 boolean profile = seat > Film.SEAT_FLOOR && seat != Film.SEAT_WHEELCHAIR && seat != Film.SEAT_BED && s.view(1) != null && s.view(1).userSide;
-                float drop = seat == Film.SEAT_FLOOR ? 0.4f * run + 0.75f * 0.5f * run * 0.5f : (profile ? 0.45f : 0.4f) * run;
+                float drop = seat == Film.SEAT_FLOOR ? 0.8f * thigh + 0.375f * shin : (profile ? 0.9f : 0.8f) * thigh;
                 return Math.max(0.45f, 0.8f - drop);
             }
             return seat == Film.SEAT_FLOOR ? 0.5f : 0.72f;      // v47: 0.5 on the floor (measured against the rig's fold: 0.55 aimed a little high)

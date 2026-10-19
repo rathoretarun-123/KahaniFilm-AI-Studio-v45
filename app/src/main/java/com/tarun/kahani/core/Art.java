@@ -50,6 +50,10 @@ public final class Art {
         public boolean faceKnown;
         /** v47.13: the face was found by the face detector (FaceModel): its eyes and mouth are where it saw them. */
         public boolean faceByModel;
+        /** v47.13: the face's 468 points (FaceMesh) — the lips' opening and each eye's corners and lids — or null. */
+        public FaceMesh.Marks marks;
+        /** v47.13: the eyes are closed in the picture itself (FaceMesh: the lids meet) — no lid is painted over them. */
+        public boolean eyesShut;
         /** v47.13: the face detector looked and saw no face in this picture (a back, a face hidden in the hands). */
         public boolean noFaceByModel;
         /** v47.13: the face as found in the picture, small and grey, brightness evened out (null: none) — see facePatch. */
@@ -890,7 +894,11 @@ public final class Art {
         if (MOUTH_DEBUG) System.err.printf(java.util.Locale.US, "MOUTH face %dx%d eyes %.3f,%.3f / %.3f,%.3f mouth %.3f,%.3f hw %.3f%n", r.w, r.h, s.eyeLX, s.eyeLY, s.eyeRX, s.eyeRY, s.mouthX, s.mouthY, s.mouthHW);
         // v47.13: a face found by the face detector keeps its mouth where it was seen (the colours' guesses moved it
         // onto a cheek or a collar); otherwise the mouth is found by the lips' colour
-        if (s.faceByModel) { s.faces = facingOf(r, s); eyesFromPicture(r, s); }
+        if (s.faceByModel) {
+            s.faces = facingOf(r, s); eyesFromPicture(r, s);
+            // v47.13: with the face's points the eyes' lids and the lips' opening are known, not guessed from colours
+            if (s.marks != null) { eyesFromMarks(s, r.w); s.mouthOpen = s.marks.gap > 0.12f; return; }
+        }
         else mouthByColour(r, s);
         int cx = Math.round(s.mouthX * r.w), cy = Math.round(s.mouthY * r.h), hw = Math.max(2, Math.round(s.mouthHW * r.w));
         // the skin's colourfulness around the mouth (the cheeks either side)
@@ -1008,6 +1016,15 @@ public final class Art {
 
     static int turnedFacing(Cutout.Result r, int skin) {
         if (r == null) return 0;
+        // v47.13: the pose model's nose before its ear — the way a profile looks, whatever its colours
+        if (PoseModel.available()) {
+            PoseModel.Pose p = PoseModel.find(r.px, r.w, r.h);
+            if (p != null && p.score[PoseModel.NOSE] >= 0.4f) {
+                int ear = p.score[PoseModel.EAR_L] >= p.score[PoseModel.EAR_R] ? PoseModel.EAR_L : PoseModel.EAR_R;
+                float dx = p.x[PoseModel.NOSE] - p.x[ear];
+                if (p.has(ear) && Math.abs(dx) > 0.02f * r.w) return dx > 0 ? 1 : -1;
+            }
+        }
         float off = Angles.headFeatures(r)[2];
         if (!Float.isNaN(off) && Math.abs(off) >= 0.03f) return off > 0 ? 1 : -1;
         int f = facingOf(r);
@@ -1233,6 +1250,35 @@ public final class Art {
         r.faceFound = true; r.eyesSeen = true;
         r.eyeLX = s.eyeLX; r.eyeRX = s.eyeRX; r.eyeY = (s.eyeLY + s.eyeRY) / 2; r.eyeR = s.eyeR;
         r.mouthX = s.mouthX; r.mouthY = s.mouthY; r.mouthW = s.mouthHW;
+        // v47.13: the lips' opening and the eyes' lids from the face's 468 points, where they agree with the detector's
+        FaceMesh.Marks mk = FaceMesh.available() ? FaceMesh.find(r.px, r.w, r.h, f) : null;
+        if (mk != null && d > 2) {
+            float mx = (f.mouthLX + f.mouthRX) / 2, my = (f.mouthLY + f.mouthRY) / 2;
+            boolean eyesAgree = Math.hypot(mk.eyeX[0] - f.eyeLX, mk.eyeY[0] - f.eyeLY) < 0.3f * d && Math.hypot(mk.eyeX[1] - f.eyeRX, mk.eyeY[1] - f.eyeRY) < 0.3f * d;
+            if (eyesAgree && Math.hypot(mk.mouthX - mx, mk.mouthY - my) < 0.35f * d) {
+                s.marks = mk;
+                s.mouthX = mk.mouthX / w; s.mouthY = mk.mouthY / h;
+                s.mouthHW = Math.max(1.5f, mk.mouthHW) / w;
+                r.mouthX = s.mouthX; r.mouthY = s.mouthY; r.mouthW = s.mouthHW;
+                float open = 0, wide = 0;
+                for (int k = 0; k < 2; k++) { open += mk.eye[k][2] + mk.eye[k][3]; wide += mk.eye[k][0] + mk.eye[k][1]; }
+                s.eyesShut = wide > 0 && open < 0.12f * wide;
+            }
+        }
+    }
+
+    /** v47.13: each eye's box (its corners and lids about the eye's middle) from the face's points. */
+    static void eyesFromMarks(Sprite s, int w) {
+        FaceMesh.Marks mk = s.marks;
+        float[] box = new float[8];
+        float[] ex = {s.eyeLX * w, s.eyeRX * w};
+        for (int k = 0; k < 2; k++) {
+            // (about the detector's eye, which the lid is drawn on: the mesh's eye middle shifts it)
+            float dx = mk.eyeX[k] - ex[k];
+            box[k * 4] = Math.max(0, mk.eye[k][0] - dx) / w; box[k * 4 + 1] = Math.max(0, mk.eye[k][1] + dx) / w;
+            box[k * 4 + 2] = mk.eye[k][2] / w; box[k * 4 + 3] = mk.eye[k][3] / w;
+        }
+        s.eyeBox = box;
     }
 
     /** The pixels of the rod found by findRod (set for the caller, then dropped). */
@@ -1465,7 +1511,7 @@ public final class Art {
         Object[] mm = mips(L, px, cr.w, cr.h);
         v.imgHalf = mm[0]; v.imgQuarter = mm[1];
         v.mouthX = base.mouthX; v.mouthY = base.mouthY; v.mouthHW = base.mouthHW;
-        v.eyeLX = base.eyeLX; v.eyeRX = base.eyeRX; v.eyeLY = base.eyeLY; v.eyeRY = base.eyeRY; v.eyeR = base.eyeR; v.eyeBox = base.eyeBox; v.lidTop = base.lidTop; v.lidBottom = base.lidBottom;
+        v.eyeLX = base.eyeLX; v.eyeRX = base.eyeRX; v.eyeLY = base.eyeLY; v.eyeRY = base.eyeRY; v.eyeR = base.eyeR; v.eyeBox = base.eyeBox; v.lidTop = base.lidTop; v.lidBottom = base.lidBottom; v.eyesShut = base.eyesShut;
         v.faceKnown = base.faceKnown; v.skin = base.skin; v.lip = base.lip; v.lid = base.lid; v.turbanY = base.turbanY;
         int[] keep = cr.px;
         cr.px = px;

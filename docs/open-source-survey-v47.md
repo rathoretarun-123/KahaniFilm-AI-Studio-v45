@@ -10,7 +10,8 @@ models, papers) that could take each part of the engine closer to a Pixar-like f
 |---|---|---|---|
 | YuNet face detector (OpenCV zoo), 230 KB | MIT | eyes, nose and mouth corners right on every visible face but three, none on backs or things | **in the app** (`core/FaceModel`, ONNX Runtime 1.20) |
 | MediaPipe BlazePose (OpenCV zoo ONNX) | Apache-2.0 | right on the old man's whole figures; wrong on the little girl (her big head put its shoulders on her face) | not used |
-| MoveNet Thunder (from the MIT `@vladmandic/human-models` package, converted to ONNX here, 25 MB) | Apache-2.0 model, MIT package | 17 joints right on the old man standing, sitting, bending and crouching, and sensible on the little girl's whole figures (rougher on half figures) | **next**: drive the rig's shoulders, elbows, hips and knees from it |
+| MoveNet Thunder (from the MIT `@vladmandic/human-models` package, converted to ONNX here; half-precision weights, 12.6 MB — the 8-bit version moved joints by 100 px and was dropped) | Apache-2.0 model, MIT package | 17 joints right on the old man standing, sitting, bending and crouching, and sensible on the little girl's whole figures (rougher on half figures); a profile's nose ahead of its ear on all four side pictures | **in the app** (`core/PoseModel`): the rig's hips and knees at the joints, the forearm bending at the elbow, a side picture's facing from nose and ear (`PoseModelTest`) |
+| MediaPipe FaceMesh (same package, converted to ONNX here, 3 MB) | Apache-2.0 model, MIT package | the lips' outline and opening and each eye's corners and lids right on every front and three-quarter face of the old man (glasses too); profiles score low and are left out | **in the app** (`core/FaceMesh`): the mouth on the lips' opening, a mouth already open never opened further, the blink's lid sized to the eye, no lid over eyes already shut |
 
 Researched on 2026-10-19. Format for each item: licence; what it improves; how to use it from Java; size; effort (S/M/L). **(?)** marks anything I could not fully verify.
 
@@ -101,6 +102,23 @@ Researched on 2026-10-19. Format for each item: licence; what it improves; how t
 - **Kokoro-82M**: Apache-2.0, has Hindi voices hf_alpha, hf_beta, hm_omega and hm_psi. Its Hindi G2P uses **espeak-ng (GPL-3)**, so you would need your own Devanagari-to-IPA G2P. Roughly 80–300 MB **(?)**.
 - **Piper**: the original rhasspy/piper is MIT but archived. Its successor piper1-gpl is GPL. Voices need espeak-ng (GPL). hi_IN-rohan-medium exists, and each voice's licence is in its MODEL_CARD **(?)**.
 - **sherpa-onnx** (Apache-2.0, Java/Android API): https://github.com/k2-fsa/sherpa-onnx. Usable, but its Piper and Kokoro paths bundle espeak-ng data (GPL). Since the app already runs ORT Java, calling the ONNX models directly avoids it.
+
+## What of the top 10 is in the app now (19 October, evening)
+
+1. Anticipation, overshoot and follow-through — already in the renderer before this survey (the body dips and leans
+   before setting off and settles after arriving; the head's phrase moves overshoot; hair and hems lag): kept.
+2. Auto-skeleton at import — **done with MoveNet** (RTMPose's weights are on hosts this machine cannot reach).
+3. Smooth bending limbs — **the forearm now bends at the elbow** on the mesh (hips and knees from the joints); a full
+   ARAP re-mesh was not attempted.
+4. Face landmarks — **done with FaceMesh** (468 points) on top of YuNet.
+5. Rhubarb's rules — already in `Mixer.envelope` (the lips lead the sound by 40 ms, never flap shut inside a word,
+   glide at most a quarter opening a frame); a Hindi letter-to-viseme mapper was not added.
+6. Verlet hair and cloth chains — not done (the pictures' hair is not separated from the head).
+7. 180° rule and continuity cuts — every shot looks at the stage from the same side, so each speaker keeps their
+   screen side by construction (the bible lists the axis per scene); no new cut-cost model.
+8. Depth or normal maps — not done (Depth Anything's weights are on Hugging Face, out of reach here).
+9. Grid fluid smoke and 3D LUT — not done; the existing grade (`FilmLook`) and steam are kept.
+10. Offline Hindi TTS — see the voices note in the production document.
 
 ## Top 10 (most impact per effort first)
 1. **Cartoon Animation Filter on every motion curve** (S). Instant anticipation, overshoot and follow-through, the core of a "Pixar feel".
