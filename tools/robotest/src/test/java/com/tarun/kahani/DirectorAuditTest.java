@@ -120,6 +120,19 @@ public class DirectorAuditTest {
     }
 
     /** "Nikhil goes down the slide" ended on top of his mother before; walks now stop a body's width beside the still. */
+    @Test public void aGirlRestsHerHeadOnTheOldMansShoulder() throws Exception {
+        Film film = plan("tools/testdata/aakhiri_chitthi/aakhiri_chitthi_numbered.txt");
+        boolean found = false;
+        for (Film.Seg sg : film.segs) for (Film.Actor a : sg.actors) {
+            if (a.c == null || !a.c.displayName.equals("परी")) continue;
+            for (Film.Act act : a.acts) {
+                if (act.type == Film.G_HEAD_REST && act.target != null && act.target.c != null
+                        && act.target.c.displayName.contains("रघुवीर")) found = true;
+            }
+        }
+        assertTrue("the screenplay's head-on-shoulder direction becomes a targeted animation action", found);
+    }
+
     @Test public void aWalkStopsBesideSomeoneStandingStill() throws Exception {
         Film film = plan("tools/testdata/aakhiri_chai/aakhiri_chai_numbered.txt");
         int arrivals = 0;

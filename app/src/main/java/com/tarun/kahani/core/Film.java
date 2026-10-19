@@ -188,6 +188,7 @@ public final class Film {
             G_FALL = 69,          // v44: a fall (an accident): thrown down onto the ground, a moment there, then up holding the knee or the elbow
             G_ANIMAL = 70,        // v47.7: an animal of the cast does its own thing (Act.item = AN_*): chews the cud, grazes, barks, holds its tail up…
             G_SPIN = 80,          // v47.8 daily B: a whole turn on the spot (the user's reference: "जगह पर 360 डिग्री घूमता व्यक्ति")
+            G_HEAD_REST = 81,  // the head settles onto another character's shoulder
             G_PULL = 50,          // a hard pull (a plug, a wire, a rope): lean back and yank
             G_LISTEN = 51;        // thought before action (handbook ch. 6): a pause, the head turns toward the sound, the body holds still
 

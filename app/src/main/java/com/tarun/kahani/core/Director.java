@@ -5298,6 +5298,13 @@ public final class Director {
         return FINITE.matcher(before.substring(from)).find();
     }
 
+    /** A direction that describes a head actually resting against a shoulder, not someone sitting on it. */
+    private static boolean headRestOnShoulder(String s) {
+        return Txt.has(s, "सिर", "head")
+                && Txt.has(s, "कंधे", "कन्धे", "कंधों", "कन्धों", "shoulder")
+                && Txt.has(s, "रख", "टिक", "rest", "lean", "lay", "laid");
+    }
+
     /** Stages one sentence of a stage direction; returns its duration. */
     private float sentence(String s, float t, boolean establishing) {
         int cams0 = seg != null ? seg.cams.size() : 0;
@@ -5314,6 +5321,12 @@ public final class Director {
         List<Film.Actor> others = new ArrayList<Film.Actor>();
         for (Story.CharacterDef c : ms) { Film.Actor a = actor(c); if (a != null && a != subj) others.add(a); }
         Film.Actor target = others.isEmpty() ? null : others.get(0);
+        // In a second clause ("the girl rests her head on his shoulder"), the shoulder's owner is often
+        // referred to only as "his/her" and was the subject of the preceding clause.
+        if (target == null && subj != null && headRestOnShoulder(s) && lastSubject != null) {
+            Film.Actor previous = actor(lastSubject);
+            if (previous != null && previous != subj) target = previous;
+        }
         List<Film.Actor> group = new ArrayList<Film.Actor>();
         if (subj != null) group.add(subj);
         group.addAll(others);
@@ -5369,6 +5382,16 @@ public final class Director {
             }
         } else if (group.size() > 1 && joinedPlural(s)) groupSubject = true;
         float d = 1.4f;
+        // The resting character's head tilts toward the named/previously named shoulder owner.
+        if (subj != null && target != null && target != subj && headRestOnShoulder(s)
+                && subj.stateAt(t).visible && target.stateAt(t).visible) {
+            Film.Key posture = subj.stateAt(t);
+            if (posture.body != Pose.SIT && posture.body != Pose.LIE && posture.body != Pose.KNEEL)
+                moveNear(subj, target, t, 0.45f);
+            Film.Act rest = new Film.Act(t, t + Math.max(2.4f, d), Film.G_HEAD_REST);
+            rest.target = target;
+            subj.acts.add(rest);
+        }
         boolean focusSet = false;
         // thought before action (handbook ch. 6): a sound or a sudden sight is perceived first — a pause, the head
         // turns toward it, the body holds still — and only then comes the action of the sentence

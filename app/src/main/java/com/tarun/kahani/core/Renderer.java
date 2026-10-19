@@ -3148,6 +3148,16 @@ public final class Renderer {
                     p.armL = 40; p.armR = 40; p.elbowL = 110; p.elbowR = 110;
                     mo.rot += (float) Math.sin(u * 2) * 2;
                     break;
+                case Film.G_HEAD_REST: {
+                    // A quiet, sustained lean into the other person's shoulder; ease in/out, no snapping.
+                    float duration = Math.max(0.3f, act.t1 - act.t0);
+                    float settle = Rig.smooth(0, 0.35f, u) * Rig.smooth(0, 0.35f, duration - u);
+                    float side = act.target != null && Director.xAt(act.target, t) < Director.xAt(a, t) ? -1f : 1f;
+                    p.headTilt += 18 * side * settle;
+                    p.tilt += 2 * side * settle;
+                    p.nod += 0.18f * settle;
+                    break;
+                }
                 case Film.G_WALK_PLACE:
                     p.walk = t * 9; p.walkAmt = 0.8f;
                     mo.dy -= bump(t * 9) * 5;
