@@ -5386,7 +5386,8 @@ public final class Director {
         if (subj != null && target != null && target != subj && headRestOnShoulder(s)
                 && subj.stateAt(t).visible && target.stateAt(t).visible) {
             Film.Key posture = subj.stateAt(t);
-            if (posture.body != Pose.SIT && posture.body != Pose.LIE && posture.body != Pose.KNEEL)
+            boolean sittingHere = Txt.has(s, "बैठ", "बैठे", "बैठी", "sits", "sitting", "sat");
+            if (!sittingHere && posture.body != Pose.SIT && posture.body != Pose.LIE && posture.body != Pose.KNEEL)
                 moveNear(subj, target, t, 0.45f);
             Film.Act rest = new Film.Act(t, t + Math.max(2.4f, d), Film.G_HEAD_REST);
             rest.target = target;
