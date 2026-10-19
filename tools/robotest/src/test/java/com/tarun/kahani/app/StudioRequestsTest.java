@@ -138,7 +138,7 @@ public class StudioRequestsTest {
 
         // A prop mentioned only in dialogue is not an asset request: only scripted physical-action directions add props.
         Project spokenOnly = project(HINDI.replace("[राहुल छड़ी उठाता है।]", "[राहुल घर में खड़ा है।]")
-                .replace("राहुल: \\"माँ, चरखी लो।\\"", "राहुल: \\"माँ, छड़ी लो।\\""));
+                .replace("चरखी लो।", "छड़ी लो।"));
         for (StudioPlan.Request r : StudioPlan.requests(FilmJob.storyOf(spokenOnly)))
             assertFalse("dialogue alone must not request a stick: " + r, r.kind.equals(StudioPlan.OBJECT) && r.shown.equals("छड़ी"));
 
