@@ -441,6 +441,8 @@ public final class Film {
         public String what;
         /** v47.4 (FX_HELD, a book-like thing): open in the hands from openFrom until openUntil (the user's reference: book_hold_open_close_put_down.gif). */
         public float openFrom = 1e6f, openUntil = 1e6f;
+        /** v47.13 (FX_HELD): how the thing is in this scene (Rigidity.kindIn: a letter fluttering here, stiff there); 0: by its name. */
+        public int rigidity;
         public Fx(int type, float t0, float t1) { this.type = type; this.t0 = t0; this.t1 = t1; }
     }
 

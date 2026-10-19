@@ -5618,7 +5618,7 @@ public final class Renderer {
         if (a.bagFrom >= 0 && t >= a.bagFrom) p.bagKind = a.bagKind;
         for (Film.Fx f : s.fx) {
             if (f.type != Film.FX_HELD || f.a != a || f.kind == Film.THING_PLACE || t < f.t0 || t >= f.t1 || f.pic == null || f.pic.img == null) continue;
-            p.heldPic = f.pic.img; p.heldAspect = f.pic.w / (float) Math.max(1, f.pic.h); p.heldSize = f.size > 0 ? f.size : 0.18f; p.heldKind = f.kind; p.heldSoft = Rigidity.isSoft(f.what);
+            p.heldPic = f.pic.img; p.heldAspect = f.pic.w / (float) Math.max(1, f.pic.h); p.heldSize = f.size > 0 ? f.size : 0.18f; p.heldKind = f.kind; p.heldSoft = f.rigidity != Rigidity.UNKNOWN ? f.rigidity == Rigidity.SOFT : Rigidity.isSoft(f.what);
             p.heldH = actorHeight(a.look, a.c, art, s);
             p.heldU = f.t2 > f.t0 ? Math.min(1, (t - f.t0) / (f.t2 - f.t0)) : 1;
             // v47.4: open in the hands between the words that open and close it (never past the hold's end), and going
@@ -5787,7 +5787,7 @@ public final class Renderer {
         float y = s.ground + f.y;
         if (HELD_DEBUG) System.err.printf(java.util.Locale.US, "PLACED t=%.2f %s x=%.0f y=%.0f %.0fx%.0f pic=%dx%d%n", t, f.what, f.x, y, tw, th, f.pic.w, f.pic.h);
         g.save(); g.setAlpha(0.22f); g.color(0xFF000000); g.oval(f.x, y + 2, tw * 0.5f, th * 0.08f + 3); g.restore();
-        if (Rigidity.isSoft(f.what) && film != null && Sets.outdoorSet(s.set)) {
+        if ((f.rigidity != Rigidity.UNKNOWN ? f.rigidity == Rigidity.SOFT : Rigidity.isSoft(f.what)) && film != null && Sets.outdoorSet(s.set)) {
             // a cloth or a bag left on the ground outdoors: its loose edge lifts and stirs in the gusts (the ground holds the rest)
             float wnd = film.wind(t), dir = wnd >= 0 ? 1 : -1;
             float wind = wnd * (0.5f + 0.5f * Nature.gustField(f.x / 1280f, t, dir)) * 0.35f;

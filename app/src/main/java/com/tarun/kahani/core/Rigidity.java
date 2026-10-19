@@ -173,6 +173,25 @@ public final class Rigidity {
     public static boolean isRigid(String text) { return kind(text) == RIGID; }
     public static boolean isSoft(String text) { return kind(text) == SOFT; }
 
+    /**
+     * v47.13 (the user: "some objects may be rigid in one scene and non rigid in another, like chitthi, book"): what
+     * the scene says of the thing decides — a letter that flutters, is crumpled or folded bends, a book whose pages
+     * flutter bends; one held stiff, flat or in a frame keeps its shape; otherwise its name decides (kind).
+     */
+    public static final String[] BENDS_IN_SCENE = {"फड़फड़", "फडफड", "लहरा", "मसल", "मुड़ी हुई", "मुड़ा हुआ", "मोड़कर", "मोड़ दी", "तह कर", "सिकुड़", "उड़ती", "उड़ता", "उड़ने", "हवा में", "पन्ने पलट",
+            "flutter", "crumple", "crumpled", "folded", "flapping", "waving", "in the wind", "blows", "pages turn"};
+    public static final String[] STIFF_IN_SCENE = {"कड़क", "फ्रेम", "मढ़ी", "मढ़ा", "तनी हुई", "stiff", "flat", "framed", "in a frame", "laminated", "rigid"};
+    public static int kindIn(String name, String scene) {
+        int k = kind(name);
+        if (scene == null || scene.length() == 0) return k;
+        boolean flexible = k == SOFT || bookLike(name) || material(name) == FLEXIBLE;
+        if (!flexible) return k;                    // a cup is never soft, whatever the scene says
+        String t = scene.toLowerCase(java.util.Locale.ROOT);
+        for (String w : STIFF_IN_SCENE) if (t.contains(w)) return RIGID;
+        for (String w : BENDS_IN_SCENE) if (t.contains(w)) return SOFT;
+        return k;
+    }
+
     /** The words of the list found in a text, in order of appearance, each once. */
     public static List<String> found(String text, String[] words) {
         List<String> out = new ArrayList<String>();

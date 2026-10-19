@@ -40,4 +40,16 @@ public class RigidSoftTest {
         assertEquals(Rigidity.FLEXIBLE, Rigidity.material("स्कूल का बैग"));
         assertEquals(Rigidity.RIGID, Rigidity.material("पानी की बाल्टी"));
     }
+
+    /** v47.13 (the user: "some objects may be rigid in one scene and non rigid in another, like chitthi, book"). */
+    @Test public void theSceneDecidesForALetterOrABook() {
+        assertEquals("a letter fluttering in the wind bends", Rigidity.SOFT, Rigidity.kindIn("चिट्ठी", "हवा में चिट्ठी फड़फड़ाती है"));
+        assertEquals("a crumpled letter bends", Rigidity.SOFT, Rigidity.kindIn("letter", "she holds the crumpled letter"));
+        assertEquals("a framed letter keeps its shape", Rigidity.RIGID, Rigidity.kindIn("चिट्ठी", "दीवार पर फ्रेम में चिट्ठी"));
+        assertEquals("a book whose pages flutter bends", Rigidity.SOFT, Rigidity.kindIn("किताब", "किताब के पन्ने हवा में फड़फड़ाते हैं"));
+        assertEquals("a book in the lap: by its name", Rigidity.kind("किताब"), Rigidity.kindIn("किताब", "गोद में किताब रखी है"));
+        assertEquals("he turned (मुड़ा) is not a folded letter", Rigidity.kind("चिट्ठी"), Rigidity.kindIn("चिट्ठी", "वह मुड़ा और चिट्ठी पकड़ी"));
+        assertEquals("a cup never bends", Rigidity.RIGID, Rigidity.kindIn("कप", "हवा में कप फड़फड़ाता है"));
+        assertEquals("no scene: by its name", Rigidity.kind("चिट्ठी"), Rigidity.kindIn("चिट्ठी", null));
+    }
 }

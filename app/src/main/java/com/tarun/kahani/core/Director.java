@@ -4004,6 +4004,7 @@ public final class Director {
             }
             Film.Fx f = fx(Film.FX_HELD, heldFrom, 1e6f, 0, 0, who, null);
             f.pic = sh.pic; f.kind = kind; f.size = thingSize(key); f.what = key; f.t2 = kind == Film.THING_TAKE ? t + 1.4f : heldFrom;
+            f.rigidity = Rigidity.kindIn(key, win);
             if (Rigidity.bookLike(key) && Txt.has(win, "खुली", "खुला", "खुले", "open book", "lies open")) f.openFrom = heldFrom;     // v47.9: open from the first ("गोद में खुली किताब")
             if (kind == Film.THING_TAKE) {
                 Film.Key k = who.stateAt(t);
