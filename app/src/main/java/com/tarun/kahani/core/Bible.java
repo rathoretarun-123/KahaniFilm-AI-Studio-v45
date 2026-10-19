@@ -165,6 +165,8 @@ public final class Bible {
                 for (int w = 0; w < made.size(); w++) b.append(w > 0 ? ", " : "").append(made.get(w));
                 b.append("\n");
             }
+            // a voice only (the narrator, a radio) is never asked for a picture, nor given a picture prompt
+            if (c.voiceOnly) { b.append("\n"); continue; }
             b.append("   ").append(hi ? "चित्र: " : "Picture: ").append(havePicture != null && contains(havePicture, c)
                     ? (hi ? "✔ मिल गया" : "✔ given") : (hi ? "✘ चाहिए (या स्टूडियो बनाएगा)" : "✘ needed (or studio makes it)")).append("\n");
             b.append("   Prompt: ").append(characterPrompt(c)).append("\n\n");

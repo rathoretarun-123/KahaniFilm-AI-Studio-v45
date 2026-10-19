@@ -260,9 +260,12 @@ public final class FilmJob implements Runnable {
      * phone, an announcer) is pictured after all when the user chose "Picture it anyway" (pictured.<name> = 1).
      */
     static Story overrides(Project p, Story st) {
-        if (p == null || st == null) return st;
+        if (st == null) return st;
+        if (p == null) return StudioPlan.voicesOnly(st);
         for (Story.CharacterDef c : st.characters) if (c.voiceOnly && "1".equals(p.setting("pictured." + c.displayName, ""))) c.voiceOnly = false;
-        return st;
+        // the narrator (कथावाचक, सूत्रधार, नैरेटर, Narrator, voice-over) — even one listed among the characters — and a group
+        // word ("सब") are voices only: never pictured, never asked for a picture, whatever was chosen before
+        return StudioPlan.voicesOnly(st);
     }
 
     /**
@@ -422,7 +425,8 @@ public final class FilmJob implements Runnable {
                 check();
                 step("Fetching free pictures of the story's objects…", 0.022f);
                 java.util.List<String> got = new java.util.ArrayList<String>();
-                int n = FreeArt.fetchFor(project, story, Prefs.cloud(ctx), Library.get(ctx), 6, got);
+                int n = 0;
+                try { n = FreeArt.fetchFor(project, story, Prefs.cloud(ctx), Library.get(ctx), 6, got); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("free pictures of the objects", e); }
                 if (n > 0) objectNotes = got;
             }
             // v34: whatever still has no picture after the library is asked of the user first: the film waits on this
@@ -438,28 +442,32 @@ public final class FilmJob implements Runnable {
                     stage = "Waiting for you: please add pictures of " + picturesNeeded;
                     pictureChoice = 0;
                     picturesWaiting = true;
-                    boolean byItself = false;
-                    int left = needed.size();
-                    autoContinueAt = System.currentTimeMillis() + AUTO_CONTINUE_SECONDS * 1000L;
-                    while (picturesWaiting && !cancelled) {
-                        try { Thread.sleep(400); } catch (InterruptedException e) { break; }
-                        int now = neededPictures(story).size();
-                        if (now == 0) break;
-                        // a picture was added, or the user paused: the wait holds; otherwise it goes on by itself
-                        if (now != left || paused) { left = now; holdOn(AUTO_CONTINUE_SECONDS); }
-                        if (System.currentTimeMillis() >= autoContinueAt) { pictureChoice = 3; byItself = true; break; }
-                    }
-                    autoContinueAt = 0;
+                    final Story asked = story;
+                    final int[] left = {needed.size()};
+                    // (the user: "if anything to ask, pause for 30 second to allow user to upload, otherwise continue"):
+                    // at most 30 seconds — each picture added, "need more time" or a pause gives more — then it goes on
+                    boolean byItself = waitForUser(new Answer() {
+                        public boolean given() {
+                            if (!picturesWaiting) return true;
+                            int now = neededPictures(asked).size();
+                            if (now == 0) return true;
+                            if (now != left[0]) { left[0] = now; holdOn(waitSeconds()); }
+                            return false;
+                        }
+                    });
+                    if (byItself) pictureChoice = 3;
                     picturesWaiting = false;
                     check();
-                    if (byItself) info = "No answer for " + AUTO_CONTINUE_SECONDS + " seconds — the film went on by itself; the studio draws what has no picture";
+                    if (byItself) info = "No answer for " + waitSeconds() + " seconds — the film went on by itself; the studio draws what has no picture";
                     else if (pictureChoice == 0) info = "Thank you — every picture is there now";
                     else if (pictureChoice == 3) info = "Going on — the studio draws what has no picture";
                 }
             }
             // v39: pictures made with AI only after the user was asked and chose to have the rest made — never before
             // ("it is still creating pictures on its own"): the user's own pictures and the library come first
-            if (!remake && Prefs.online(ctx) && Prefs.autoArt(ctx) && (!askForPictures || pictureChoice == 1 || pictureChoice == 2) && !neededPictures(story).isEmpty()) makeMissingPictures(story, ed);
+            if (!remake && Prefs.online(ctx) && Prefs.autoArt(ctx) && (!askForPictures || pictureChoice == 1 || pictureChoice == 2) && !neededPictures(story).isEmpty()) {
+                try { makeMissingPictures(story, ed); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("AI pictures", e); }
+            }
             // (v47.6: the 3D maker is gone — no picture is built in 3D; the user's pictures, AI illustrations on request, or the studio's drawing)
             step("Preparing pictures (removing backgrounds)…", 0.03f);
             // v26: pictures are read at a size that fits the output (sharper at 1080p, lighter at 480p), within the memory left
@@ -486,7 +494,9 @@ public final class FilmJob implements Runnable {
             }
             Art art = Art.fromManifest(castText, story, project.loader());
             // v47.8: the user's story board (the title, the 3×2 sheets of the story's moments, the end)
-            art.readBoard(project.loader(), project.boardNames(), story);
+            // (the user: "additional reference pictures upto 100 … no beyond 3x2 splitting"; the starting and ending pages
+            // have their own places now): every picture of the board is one sheet of at most 3×2 moments
+            try { readBoardSheets(art, project.loader(), project.boardNames(), story); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the additional reference pictures", e); }
             check();
 
             Director.Options opt = new Director.Options();
@@ -696,7 +706,7 @@ public final class FilmJob implements Runnable {
             // ---------------- direction & sound
             step("Director is staging the scenes…", 0.29f);
             film = dir.direct(art);
-            referenceLook(film);
+            try { referenceLook(film); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the reference images and videos", e); }
             // background sounds the user picked for parts of the story
             for (Film.Amb a : film.ambience) {
                 Film.Seg sg = film.segAt(a.t0 + 0.05f);
@@ -708,7 +718,7 @@ public final class FilmJob implements Runnable {
             if (Prefs.online(ctx)) {
                 step("Finding real recordings for the backgrounds…", 0.295f);
                 java.util.List<String> got = new java.util.ArrayList<String>();
-                FreeSounds.fetchFor(ctx, film, lib, Prefs.cloud(ctx), 3, got);
+                try { FreeSounds.fetchFor(ctx, film, lib, Prefs.cloud(ctx), 3, got); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("free background recordings", e); }
                 if (!got.isEmpty()) {
                     StringBuilder b = new StringBuilder();
                     for (String g : got) b.append(b.length() > 0 ? ", " : "").append(g);
@@ -724,11 +734,12 @@ public final class FilmJob implements Runnable {
             check();
             // pipeline steps 1-2: the Character Lock Sheet of every character and the Location Lock Plate of every
             // place, saved with the film (and shown first in Human QC)
-            lockSheets(film, art, dir, ed);
+            try { lockSheets(film, art, dir, ed); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the lock sheets", e); }
             // the director's manual (1.1, 2.3): the project asset inventory and the facial identity specification of
             // every character, written with the film
             step("Writing the asset inventory and the facial identity specifications…", 0.294f);
-            film.shotList += "\n" + com.tarun.kahani.core.DirectorsManual.inventory(Studio3DArt.inventory(project, story, lib)) + "\n" + Studio3DArt.facialSpecs(project, story, Prefs.humanQc(ctx));
+            try { film.shotList += "\n" + com.tarun.kahani.core.DirectorsManual.inventory(Studio3DArt.inventory(project, story, lib)) + "\n" + Studio3DArt.facialSpecs(project, story, Prefs.humanQc(ctx)); }
+            catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the asset inventory", e); }
             // v46: the four roles' structured review (stable issue ids, severities, owners, bounded rounds) and the
             // reference coverage of every character, kept beside the film as review_ledger.json and in qc.txt
             try {
@@ -777,16 +788,18 @@ public final class FilmJob implements Runnable {
             }
             check();
             // the director's manual (V): the mix checked for missing dialogue, gaps and clipping
-            audioCheck(film, mix, lineFiles);
+            try { audioCheck(film, mix, lineFiles); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the sound check", e); }
             // Human QC (protocol pipeline step 4): the animatic and the first frame of every shot, checked by the user
             // before the film is made; their fixes are applied, then the film is made
-            if (Prefs.humanQc(ctx) && !remake) humanQc(film, art, dir, ed, tmp, mix);
+            if (Prefs.humanQc(ctx) && !remake) {
+                try { humanQc(film, art, dir, ed, tmp, mix); } catch (CancelledException e) { throw e; } catch (Throwable e) { qcWaiting = false; skipped("the shot check", e); }
+            }
             else if (remake) film.shotList += "\nHUMAN QC: a remake with your change — the first frames approved with the last film stand.\n";
             // pipeline step 6: every shot played frame by frame at check size (the frames seen one by one at 0.25x
             // speed); a shot that boils or shakes has its motion cut by 80% and is played again from the same first frame
-            finalCheck(film, art, ed);
+            try { finalCheck(film, art, ed); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the frame-by-frame check", e); }
             // the scene maker guide (9.3): a keyframe for every shot — one picture per shot, saved with the story
-            shotPictures(film, art, ed);
+            try { shotPictures(film, art, ed); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the keyframe of every shot", e); }
 
             // ---------------- video
             int[] want = ed.size();
@@ -809,6 +822,12 @@ public final class FilmJob implements Runnable {
                     if (cancelled) throw new CancelledException();
                     last = e;
                     warning = "Video " + size[0] + "x" + size[1] + " could not be made, trying a smaller size…";
+                } catch (OutOfMemoryError e) {
+                    // (the user: "make sure film making doesn't stop any where"): out of memory at this size — a smaller one
+                    if (cancelled) throw new CancelledException();
+                    last = new IOException("the phone ran out of memory at " + size[0] + "x" + size[1]);
+                    warning = "The phone ran out of memory at " + size[0] + "x" + size[1] + " — trying a smaller size…";
+                    System.gc();
                 }
             }
             if (!ok) throw last != null ? last : new IllegalStateException("The video could not be made");
@@ -826,8 +845,8 @@ public final class FilmJob implements Runnable {
             project.setSetting("made.sig", hash(script) + "|" + hash(project.read("cast.txt")));     // v33: a remake with the same story and pictures keeps everything
             // the director's manual (IV stage 9, 3.10, V): the exported file verified, then the three-level review, the
             // five gates and the QA checklist from everything that was checked — never a finished claim before this
-            film.shotList += "\n" + exportCheck(fin, film);
-            film.shotList += "\n" + review(film);
+            try { film.shotList += "\n" + exportCheck(fin, film); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the export check", e); }
+            try { film.shotList += "\n" + review(film); } catch (CancelledException e) { throw e; } catch (Throwable e) { skipped("the review", e); }
             // v47.6: the render recorded against the revision it made — verified only with its file there and not empty
             if (pdoc != null) {
                 pdoc.frameAudit(frameAudit);          // v47.7: every character in every frame as drawn
@@ -900,9 +919,45 @@ public final class FilmJob implements Runnable {
      * v47.8 (the user: "place a continue button, which should automatically be pressed if I do not answer for 30
      * seconds, as I may be asleep"): every wait for the user goes on by itself after this long without an answer.
      */
-    public static final int AUTO_CONTINUE_SECONDS = 30;
+    public static final int WAIT_SECONDS = 30;
+    /** (the same 30 seconds, under its earlier name) */
+    public static final int AUTO_CONTINUE_SECONDS = WAIT_SECONDS;
+    /** How long a wait for the user lasts without an answer: WAIT_SECONDS; tests shorten it. */
+    static volatile int waitSeconds = WAIT_SECONDS;
+    /** The seconds every wait for the user lasts now (WAIT_SECONDS unless a test shortened it). */
+    public static int waitSeconds() { return Math.max(1, waitSeconds); }
     /** When the wait goes on by itself (System.currentTimeMillis()); 0 when nothing waits. */
     public volatile long autoContinueAt;
+
+    /** "I need more time": the wait goes on by itself one more wait later (counted from now or from its end, the later). */
+    public void moreTime() {
+        long at = autoContinueAt;
+        if (at <= 0) return;
+        autoContinueAt = Math.max(at, System.currentTimeMillis()) + waitSeconds() * 1000L;
+    }
+
+    /**
+     * Waits for the user at most waitSeconds() (the user's uploads, "need more time" and a pause hold it longer);
+     * returns true when it ran out with no answer — the film then goes on with the best it has.
+     */
+    boolean waitForUser(Answer answer) {
+        autoContinueAt = System.currentTimeMillis() + waitSeconds() * 1000L;
+        boolean byItself = false;
+        try {
+            while (!cancelled) {
+                if (answer.given()) break;
+                if (paused) holdOn(waitSeconds());
+                if (System.currentTimeMillis() >= autoContinueAt) { byItself = true; break; }
+                try { Thread.sleep(200); } catch (InterruptedException e) { break; }
+            }
+        } finally {
+            autoContinueAt = 0;
+        }
+        return byItself;
+    }
+
+    /** What a wait for the user waits on (checked a few times a second; true when answered or no longer needed). */
+    interface Answer { boolean given(); }
 
     /** The user is answering (choosing a picture, looking at the shots): the wait holds at least this long from now. */
     public void holdOn(int seconds) {
@@ -931,6 +986,45 @@ public final class FilmJob implements Runnable {
         return out;
     }
     public void proposalsDone() { proposalsWaiting = false; }
+
+    /** What was left out because it could not be done — said on the screen and in the film's notes; the film goes on. */
+    final java.util.List<String> skippedSteps = new java.util.ArrayList<String>();
+
+    private void skipped(String what, Throwable e) {
+        String why = e == null ? "" : e.getMessage() != null && e.getMessage().length() > 0 ? e.getMessage() : e.getClass().getSimpleName();
+        skippedSteps.add(what + (why.length() > 0 ? " (" + why + ")" : ""));
+        info = (info.length() > 0 ? info + "\n" : "") + "↷ " + what + " could not be done" + (why.length() > 0 ? " (" + why + ")" : "") + " — the film goes on without it";
+        android.util.Log.w("Kahani", what + ": " + e);
+    }
+
+    /**
+     * The additional reference pictures (the studio's story board, up to 100): every one is a sheet of at most 3×2
+     * moments, read in the story's order — none of them is taken for the starting or the ending page, which have
+     * their own places in the studio. Each picture is read on its own (StoryBoard.read of one picture is one sheet)
+     * and the moments are numbered on across the pictures.
+     */
+    static com.tarun.kahani.core.StoryBoard readBoardSheets(Art art, Art.Loader loader, java.util.List<String> files, Story story) {
+        if (files == null || files.isEmpty()) return null;
+        com.tarun.kahani.core.StoryBoard all = new com.tarun.kahani.core.StoryBoard();
+        int n = Math.min(files.size(), StudioPlan.MAX_ADDITIONAL_REFERENCES), order = 0, drawn = 0, known = 0;
+        if (files.size() > n) all.notes.add("additional references: the first " + n + " of " + files.size() + " pictures are read");
+        for (int i = 0; i < n; i++) {
+            com.tarun.kahani.core.StoryBoard one = com.tarun.kahani.core.StoryBoard.read(loader, java.util.Collections.singletonList(files.get(i)), art, story);
+            if (one.moments.isEmpty()) all.notes.add("additional reference " + (i + 1) + " (" + files.get(i) + ") could not be read");
+            int panels = 0;
+            for (com.tarun.kahani.core.StoryBoard.Moment m : one.moments) {
+                if (++panels > StudioPlan.MAX_SHEET_PANELS) break;          // never more than 3×2 moments from one picture
+                m.sheet = i + 1;
+                m.order = order + m.panel - 1;
+                all.moments.add(m);
+                if (!m.empty) { drawn++; if (!m.who.isEmpty()) known++; }
+            }
+            order += StudioPlan.MAX_SHEET_PANELS;
+        }
+        all.notes.add(String.format(java.util.Locale.US, "additional references: %d picture(s), each at most 3×2 moments — %d moments drawn, %d with a character known by its colours", n, drawn, known));
+        if (art != null) { art.board = all; art.notes.addAll(all.notes); }
+        return all;
+    }
     private String styleNote = "";
     /** The user's fix per shot (index into film.shots → Director.FIX_*), set by the screen before approving. */
     public final java.util.Map<Integer, Integer> qcFixes = new java.util.concurrent.ConcurrentHashMap<Integer, Integer>();
@@ -1151,16 +1245,17 @@ public final class FilmJob implements Runnable {
         // 4. wait for the user (the notification says so); then their fixes
         stage = "Waiting for you: check the animatic and the first frame of every shot";
         qcWaiting = true;
-        int seenFixes = qcFixes.size();
-        autoContinueAt = System.currentTimeMillis() + AUTO_CONTINUE_SECONDS * 1000L;
-        boolean approvedByItself = false;
-        while (qcWaiting && !cancelled) {
-            try { Thread.sleep(300); } catch (InterruptedException e) { break; }
-            if (qcFixes.size() != seenFixes || paused) { seenFixes = qcFixes.size(); holdOn(AUTO_CONTINUE_SECONDS); }
-            if (System.currentTimeMillis() >= autoContinueAt) { qcWaiting = false; approvedByItself = true; }
-        }
-        autoContinueAt = 0;
-        if (approvedByItself) info = "No answer for " + AUTO_CONTINUE_SECONDS + " seconds — the shots were approved as planned and the film went on by itself";
+        final int[] seenFixes = {qcFixes.size()};
+        // at most 30 seconds without an answer (a fix chosen, "need more time" or a pause gives more), then approved as planned
+        boolean approvedByItself = waitForUser(new Answer() {
+            public boolean given() {
+                if (!qcWaiting) return true;
+                if (qcFixes.size() != seenFixes[0]) { seenFixes[0] = qcFixes.size(); holdOn(waitSeconds()); }
+                return false;
+            }
+        });
+        qcWaiting = false;
+        if (approvedByItself) info = "No answer for " + waitSeconds() + " seconds — the shots were approved as planned and the film went on by itself";
         check();
         int fixed = 0;
         StringBuilder note = new StringBuilder();

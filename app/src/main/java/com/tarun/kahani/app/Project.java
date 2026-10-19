@@ -162,7 +162,11 @@ public final class Project {
 
     // ---- v47.3: reference frames and clips for the film (the look the user wants), apart from the story's pictures
     public static final int MAX_REF_FRAMES = 18, MAX_REF_VIDEOS = 18;   // v47.6: up to 18 of each (the user)    // v47.4: 18 frames like every other upload (the user), two clips
-    /** Up to five full frames (characters, props and background together) and two clips, kept under refs/. */
+    /** The user: "reference images and videos upto 18" — images and videos together, at most this many. */
+    public static final int MAX_REFERENCES = 18;
+    /** How many reference images and videos the film has (images and videos together, at most MAX_REFERENCES). */
+    public int references() { return refFrames().size() + refVideos().size(); }
+    /** Full frames (characters, props and background together) and clips, kept under refs/. */
     public File refsDir() { File d = new File(dir, "refs"); if (!d.exists()) d.mkdirs(); return d; }
     private List<File> refs(String prefix) {
         List<File> out = new ArrayList<File>();
@@ -180,6 +184,7 @@ public final class Project {
     /** Saves a reference frame (downscaled to 1600 px); null when the five are already there. */
     public File saveRefFrame(Context c, android.net.Uri uri) throws IOException {
         if (refFrames().size() >= MAX_REF_FRAMES) return null;
+        if (references() >= MAX_REFERENCES) return null;
         byte[] data = readPicture(c.getContentResolver(), uri);
         if (data == null) throw new IOException("This picture could not be read");
         BitmapFactory.Options o = new BitmapFactory.Options();
@@ -202,6 +207,7 @@ public final class Project {
     /** Copies a reference clip in as it is (up to MAX_UPLOAD); null when the two are already there. */
     public File saveRefVideo(Context c, android.net.Uri uri) throws IOException {
         if (refVideos().size() >= MAX_REF_VIDEOS) return null;
+        if (references() >= MAX_REFERENCES) return null;
         if (sizeOf(c.getContentResolver(), uri) > MAX_UPLOAD) throw new IOException("it is larger than 300 MB");
         InputStream in = c.getContentResolver().openInputStream(uri);
         if (in == null) throw new IOException("Could not open the clip");

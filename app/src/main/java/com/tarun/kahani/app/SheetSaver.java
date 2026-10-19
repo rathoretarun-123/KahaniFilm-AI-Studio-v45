@@ -28,7 +28,8 @@ final class SheetSaver {
             List<com.tarun.kahani.core.Angles.Piece> parts = panels
                     ? com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px, w, h, false), w, h)
                     : com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px, w, h), w, h);
-            return parts.size() >= 2;
+            // (the user: "no splitting beyond 3x2"): a sheet is two to six pieces; more is a picture kept whole
+            return StudioPlan.splits(parts.size());
         } catch (Throwable e) {
             return false;
         }
@@ -99,8 +100,9 @@ final class SheetSaver {
                 parts = com.tarun.kahani.core.Angles.figures(com.tarun.kahani.core.Angles.split(px.clone(), w, h), w, h, "object".equals(kind));
             }
         } catch (Throwable e) { return out; }
+        // (the user: "no splitting beyond 3x2, so characters with objects remain intact"): at most 3×2 pieces, else kept whole
+        parts = StudioPlan.withinSheet(parts);
         if (parts.size() < 2) return out;
-        if (parts.size() > 100) parts = parts.subList(0, 100);
         String base = name == null || name.trim().length() == 0 ? "picture" : name.trim();
         if (panels) {
             for (int i = 0; i < parts.size(); i++) {
@@ -409,8 +411,8 @@ final class SheetSaver {
         List<Object[]> pics = new ArrayList<Object[]>();     // {px, w, h, cutOut, cameraPhoto}
         int split = 0, keptWhole = 0;
         int unreadable = 0, files = 0, overLimit = 0;
-        // v46: a character takes up to 18 reference pictures, a prop or a place up to 10 (ReferenceCoverage)
-        final int limit = com.tarun.kahani.core.ReferenceCoverage.limitFor(kind);
+        // (the user): up to 18 pictures each for a character, an object and a place (StudioPlan)
+        final int limit = StudioPlan.limitFor(kind);
         for (byte[] d : datas) {
             if (++files > limit) { overLimit = datas.size() - limit; break; }
             if (d == null || d.length < 16) { unreadable++; continue; }
@@ -449,6 +451,9 @@ final class SheetSaver {
                     }
                 } catch (Throwable e) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); }
             } catch (Throwable e) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); }
+            // (the user: "no splitting beyond 3x2"): a picture that comes apart into more than 3×2 pieces is no sheet of
+            // views — a crowd, a character with its things — and is kept whole, as the user made it
+            if (parts.size() > StudioPlan.MAX_SHEET_PANELS) { parts = new ArrayList<com.tarun.kahani.core.Angles.Piece>(); keptWhole++; }
             // v47.9 (the user: "do not split images of combined characters, or characters with object"): a picture of a
             // character is split only when it is a sheet of that one character's views; two people together, a girl on
             // a sofa, a moment of a story board — kept whole, as the user made it

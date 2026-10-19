@@ -1420,8 +1420,8 @@ public class AppTest {
         call(a, "showStudio", new Class<?>[0]);
         idle();
         View root = a.findViewById(android.R.id.content);
-        // (v47.9: a character takes six named pictures — the "All six at once" button opens the picker for them)
-        View b = byText(root, "📷 All six", new int[]{0});
+        // (v47.9: a character takes six named pictures; the user: up to 18 at once — that button opens the picker for them)
+        View b = byText(root, "📷 Up to 18", new int[]{0});
         assertNotNull("the character's upload button", b);
         b.performClick(); idle();
         firstDialogItem();
@@ -1431,19 +1431,9 @@ public class AppTest {
         pb.performClick(); idle();
         firstDialogItem();
         rep.append("studio place: ").append(pickerStarted(a)).append('\n');
-        // a thing, named on the spot
-        View tb = byText(root, "➕ Another thing of the story", new int[]{0});
-        if (tb == null) tb = byText(root, "➕ A thing of the story", new int[]{0});
-        assertNotNull("the thing button", tb);
-        tb.performClick(); idle();
-        android.app.AlertDialog nd = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
-        assertNotNull(nd);
-        EditText q = (EditText) byTextClass(nd.getWindow().getDecorView(), EditText.class);
-        assertNotNull("the name box", q);
-        q.setText("पगड़ी");
-        nd.getButton(android.content.DialogInterface.BUTTON_POSITIVE).performClick(); idle();
-        firstDialogItem();
-        rep.append("studio thing: ").append(pickerStarted(a)).append('\n');
+        // (the user: "asking for only what is mention in script"): no button for a thing the script does not name
+        assertNull("no request for a thing outside the script", byText(root, "➕ Another thing of the story", new int[]{0}));
+        assertNull("no request for a thing outside the script", byText(root, "➕ A thing of the story", new int[]{0}));
         // 2. (v47.10: the story screen no longer lists the missing pictures — the studio does, each a tile of its own)
         // one picture place of a character, tapped: its own picker
         call(a, "showStudio", new Class<?>[0]);
@@ -2754,9 +2744,9 @@ public class AppTest {
         Method things = MainActivity.class.getDeclaredMethod("things", Story.class);
         things.setAccessible(true);
         @SuppressWarnings("unchecked") List<String[]> ts = new ArrayList<String[]>((List<String[]>) things.invoke(a, st));
-        ts.add(new String[]{"पगड़ी", "पगड़ी"});
-        assertTrue("things in the story", ts.size() >= 2);
-        for (String[] o : ts) {
+        List<String[]> saved = new ArrayList<String[]>(ts);
+        saved.add(new String[]{"पगड़ी", "पगड़ी"});          // (a thing outside the script still takes pictures when given — it is just never asked for)
+        for (String[] o : saved) {
             for (int k = 0; k < 2; k++) {
                 List<byte[]> one = new ArrayList<byte[]>(); one.add(k == 0 ? thing : picB);
                 call("com.tarun.kahani.app.SheetSaver", "save", p, lib, st, "angles:obj:" + o[0] + ":" + o[1], one, null);
@@ -2776,10 +2766,13 @@ public class AppTest {
         View root = a.findViewById(android.R.id.content);
         List<String> tx = texts(root, new ArrayList<String>());
         int up = 0, objUp = 0;
-        // (v47.9: a character's batch button is "All six at once" beside its six named pictures; a place's keeps its own)
-        for (String t : tx) { if (t.equals("📷 Pictures") || t.equals("📷 All six")) up++; if (t.equals("📷 Angles") || t.equals("📷 More angles")) objUp++; }
-        assertTrue("one upload button per character and place: " + up + " for " + st.cast().size() + " + " + st.scenes.size(), up == st.cast().size() + st.scenes.size());
-        assertTrue("one upload button per thing: " + objUp + " for " + ts.size(), objUp >= Math.min(20, ts.size()));
+        // (v47.9: a character's batch button is beside its six named pictures; a place's keeps its own) — the user: one
+        // per character, object and place the script names (StudioPlan), nothing else
+        int wantChars = 0, wantPlaces = 0;
+        for (Object r : (List<?>) call("com.tarun.kahani.app.StudioPlan", "requests", st)) { String k = r.toString(); if (k.startsWith("char:")) wantChars++; else if (k.startsWith("scene:")) wantPlaces++; }
+        for (String t : tx) { if (t.equals("📷 Pictures") || t.startsWith("📷 Pictures of ") || t.equals("📷 Up to 18")) up++; if (t.equals("📷 Angles") || t.equals("📷 More angles")) objUp++; }
+        assertTrue("one upload button per character and place: " + up + " for " + wantChars + " + " + wantPlaces, up == wantChars + wantPlaces);
+        assertTrue("one upload button per thing the script lists: " + objUp + " for " + ts.size(), objUp == ts.size());
         // 6. the progress screen's card: a row for every character, place, added scene and thing
         LinearLayout card = new LinearLayout(a);
         call(a, "picturesCard", new Class<?>[]{LinearLayout.class, Story.class}, card, st);
@@ -2787,7 +2780,7 @@ public class AppTest {
         List<String> rows = texts(card, new ArrayList<String>());
         int more = 0;
         for (String t : rows) if (t.equals("📷 More") || t.equals("📷 Add")) more++;
-        int want = st.cast().size() + st.scenes.size() + ts.size();      // v47.4 (the user): no rows for extra shots
+        int want = wantChars + wantPlaces + ts.size();      // v47.4 (the user): no rows for extra shots
         assertTrue("a row with its button for everything: " + more + " of " + want, more == want);
         // 7. the make-film popup lists every character, place, added scene and thing
         call(a, "makeFilm", new Class<?>[0]);
@@ -2800,9 +2793,9 @@ public class AppTest {
         List<String> items = new ArrayList<String>();
         for (int i = 0; i < list.getListView().getCount(); i++) items.add(String.valueOf(list.getListView().getItemAtPosition(i)));
         for (Story.CharacterDef c : st.cast()) { boolean has = false; for (String it : items) if (it.startsWith(c.shown())) has = true; assertTrue("popup lists " + c.shown() + ": " + items, has); }
-        for (Story.Scene sc : st.scenes) { boolean has = false; for (String it : items) if (it.startsWith("Part " + sc.number + ":")) has = true; assertTrue("popup lists part " + sc.number + ": " + items, has); }
-        for (String[] o : ts) { boolean has = false; for (String it : items) if (it.startsWith("🔑 " + o[1]) || it.startsWith(o[1] + " (scene")) has = true; assertTrue("popup lists the thing " + o[1] + ": " + items, has); }
-        assertTrue("popup lets a thing be named", items.get(items.size() - 1).startsWith("➕"));
+        assertEquals("popup lists exactly the script's characters, places and things: " + items, wantChars + wantPlaces + ts.size(), items.size());
+        for (String[] o : ts) { boolean has = false; for (String it : items) if (it.startsWith("🔑 " + o[1])) has = true; assertTrue("popup lists the thing " + o[1] + ": " + items, has); }
+        for (String it : items) assertFalse("nothing outside the script: " + it, it.startsWith("➕") || it.startsWith("🎬 "));
         list.dismiss(); mk.dismiss();
         // 8. a character whose name reads like a voice is pictured after all when the user says so
         Project q = Project.create(ctx);

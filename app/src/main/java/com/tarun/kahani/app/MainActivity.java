@@ -624,13 +624,13 @@ public class MainActivity extends Activity {
     }
 
     /**
-     * v47.9: how many pictures one upload takes — one for a named place of a character, six for a character at once
-     * (front, back, two sides, two three-quarters), eighteen for a place or a thing (a place keeps up to 100 in all).
+     * How many pictures one upload takes (the user: "characters upto 18 pics each … objects, upto 18 pics each …
+     * places and background upto 18 images each"): one for a named place of a character, else eighteen.
      */
     static int maxPictures(String tgt, String slot) {
         if (slot != null && slot.length() > 0) return 1;
         String[] q = tgt == null ? new String[0] : tgt.split(":", 4);
-        return com.tarun.kahani.core.ReferenceCoverage.limitFor(q.length > 1 ? q[1] : "char");
+        return StudioPlan.limitFor(q.length > 1 ? q[1] : "char");
     }
 
     /** v47.9: what the upload asks for, in words for this kind of picture. */
@@ -638,11 +638,12 @@ public class MainActivity extends Activity {
         String[] q = tgt == null ? new String[0] : tgt.split(":", 4);
         String kind = q.length > 1 ? q[1] : "char";
         if (slot != null && slot.length() > 0) return "Choose one picture for this place. It is used exactly as that view — it is never split or guessed.";
-        if (kind.equals("char")) return "Up to 6 pictures: front, back, two sides and two three-quarter views (or one sheet of those six views, which is split). "
+        if (kind.equals("char")) return "Up to " + StudioPlan.MAX_CHARACTER_PICTURES + " pictures: front, back, two sides, two three-quarter views and more poses or expressions. "
+                + "A sheet of up to 3×2 views of this one character is split into its views — never into more than six. "
                 + "A picture with two characters together, or a character with a thing (on a sofa, on a bench), is kept whole as it is.";
-        if (kind.equals("scene")) return "Up to 18 pictures of this place at a time, up to 100 in all: the wide view, the reverse view and close views behind the shots. "
-                + "A sheet of up to 3×2 views is split into its panels. No characters in them — the director puts the characters in.";
-        return "Up to 18 pictures of this thing; a sheet of up to 3×2 views of it is split into the views.";
+        if (kind.equals("scene")) return "Up to " + StudioPlan.MAX_PLACE_PICTURES + " pictures of this place: the wide view, the reverse view and close views behind the shots. "
+                + "A sheet of up to 3×2 views is split into its panels — never into more than six. No characters in them — the director puts the characters in.";
+        return "Up to " + StudioPlan.MAX_OBJECT_PICTURES + " pictures of this thing; a sheet of up to 3×2 views of it is split into the views — never into more than six.";
     }
 
     /** v38: what each choice of the angles dialog does (0 gallery, 1 files, 2 the camera, 3 the library, 4 the internet / AI). */
@@ -724,7 +725,7 @@ public class MainActivity extends Activity {
      * labels, arrows and crumbs dropped), the ten largest, left to right. Fewer than two figures: not a sheet.
      */
     static List<com.tarun.kahani.core.Angles.Piece> sheetFigures(List<com.tarun.kahani.core.Angles.Piece> parts, int w, int h) {
-        if (true) return com.tarun.kahani.core.Angles.figures(parts, w, h);
+        if (true) return StudioPlan.withinSheet(com.tarun.kahani.core.Angles.figures(parts, w, h));     // never more than 3×2
         List<com.tarun.kahani.core.Angles.Piece> out = new ArrayList<com.tarun.kahani.core.Angles.Piece>();
         int tallest = 0;
         for (com.tarun.kahani.core.Angles.Piece pc : parts) tallest = Math.max(tallest, pc.h);
@@ -971,9 +972,9 @@ public class MainActivity extends Activity {
         if (st == null || st.scenes.isEmpty()) return;
         List<String[]> miss = AutoLibrary.missingForUser(project, st);
         LinearLayout m = Ui.card(this);
-        m.addView(Ui.text(this, "📷 The director's plan: every character, place and thing below gets its own reference. Upload up to 18 images per character or place (front, back, two sides, two three-quarter views and up to ten extras). "
-                + "Contact sheets are split into separate images when the panels can be identified; references are stored in the private library for future films. Each new place also gets an establishing moment of its own. "
-                + "If a required element cannot be identified confidently, the director should pause and ask you for a clearer reference instead of guessing. Pictures added while a film is being made are used from the next make.", 13, Ui.SUB, false));
+        m.addView(Ui.text(this, "📷 The director's plan: every character, object and place the script names below gets its own reference — up to 18 pictures each (front, back, two sides, two three-quarter views and more). "
+                + "A sheet is split into at most 3×2 pictures; a character with a thing stays whole. References are stored in the private library for future films. "
+                + "Pictures added while a film is being made are used from the next make.", 13, Ui.SUB, false));
         m.addView(Ui.small(this, "📚 Search my library for this story", Ui.GREEN, new View.OnClickListener() {
             public void onClick(View v) { libraryMatches(false); }
         }));
@@ -1006,18 +1007,9 @@ public class MainActivity extends Activity {
                 public void onClick(View v) { anglesFor(ft, t[1]); }
             }));
         }
-        if (n == 0) m.addView(Ui.text(this, "Every required character, place and story prop has a picture. More references can be added from the Studio cards.", 13, Ui.GREEN, false));
-        // v26: the scenes the director adds (the journey into every new place) ask for their own pictures here
-        for (final com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
-            final boolean has = project.manifestLine("scene", x.key) != null;
-            final String tgt = "angles:scene:" + x.key + ":" + x.label;
-            m.addView(Ui.small(this, (has ? "✅ " : "🎬 ") + x.label + (has ? " — more angles" : " — add its pictures (up to 18 references)"), has ? Ui.GREEN : Ui.PRIMARY_DARK, new View.OnClickListener() {
-                public void onClick(View v) { anglesFor(tgt, x.label); }
-            }));
-        }
-        m.addView(Ui.small(this, "➕ A thing of the story (name it) — its pictures", Ui.BLUE, new View.OnClickListener() {
-            public void onClick(View v) { askThingName(null); }
-        }));
+        if (n == 0) m.addView(Ui.text(this, "Every character, object and place the script names has a picture. More references can be added from the Studio cards.", 13, Ui.GREEN, false));
+        // (the user: "asking for only what is mention in script"): no request for the director's own added scenes or a
+        // thing the script does not name — the studio makes those from the script's own pictures
         body.addView(m);
     }
 
@@ -1036,11 +1028,11 @@ public class MainActivity extends Activity {
     private void picturesCard(LinearLayout body, final Story st) {
         if (project == null || st == null) return;
         LinearLayout card = Ui.card(this);
-        card.addView(Ui.text(this, "🖼 Pictures in this film — add or replace any of them here (up to 100 pictures at once — angles, poses, expressions; a sheet is split by the director). The same rule for every kind: up to 18 pictures each.", 15, Ui.TEXT, true));
+        card.addView(Ui.text(this, "🖼 Pictures in this film — add or replace any of them here. The same rule for every kind: up to 18 pictures each (angles, poses, expressions); a sheet is split into at most 3×2.", 15, Ui.TEXT, true));
         String cast = project.read("cast.txt");
         // v47.4 (the user): the uploads in their own sections — characters, objects, backgrounds and places; the reference frames and clips are the card below
         card.addView(Ui.text(this, "👤 Characters", 15, Ui.PRIMARY_DARK, true));
-        for (final Story.CharacterDef c : st.cast()) {
+        for (final Story.CharacterDef c : StudioPlan.characters(st)) {
             String file = charFile(c);
             boolean real = Studio3DArt.realAngles(project, keyFor(c));
             String status = file == null ? "▫ no picture" : real ? "✅ your pictures (" + countAngles(c.shown()) + ")" : file.startsWith("3d_") ? "🧊 made in 3D" : "✅ picture";
@@ -1056,22 +1048,13 @@ public class MainActivity extends Activity {
             int nt = SheetSaver.thingPictures(project, o[0]);
             pictureRow(card, "🔑 " + o[1], file != null ? "✅ your pictures (" + nt + ")" : "▫ none", file, "angles:obj:" + o[0] + ":" + o[1]);
         }
-        card.addView(Ui.small(this, "➕ A thing of the story (name it) — its pictures", Ui.BLUE, new View.OnClickListener() {
-            public void onClick(View v) { askThingName(null); }
-        }));
         card.addView(Ui.text(this, "🏞 Backgrounds and places", 15, Ui.PRIMARY_DARK, true));
-        Set<String> shownPlaces = new HashSet<String>();
-        for (final Story.Scene sc : st.scenes) {
-            String placeName = null;
-            for (String[] place : Bible.listedPlaces(st)) if (AutoLibrary.placeOf(sc, place[0])) { placeName = place[0]; break; }
-            if (placeName == null) placeName = Bible.firstClauseOf(sc.setting);
-            String placeKey = Bible.placeIdentity(placeName);
-            if (placeKey.length() > 0 && !shownPlaces.add(placeKey)) continue;
+        for (StudioPlan.Place pl : StudioPlan.places(st)) {
+            final Story.Scene sc = pl.host;
             String file = sceneFile(sc);
-            String nm = placeName.length() > 0 ? placeName : (sc.title.length() > 0 ? sc.title : "Part " + sc.number);
             int np = SheetSaver.placePictures(project, String.valueOf(sc.number));
             String status = file == null ? "▫ no background" : file.startsWith("3d_") ? "🧊 made in 3D" : np > 1 ? "✅ your pictures (" + np + ")" : "✅ background";
-            pictureRow(card, "Part " + sc.number + ": " + nm, status, file, "angles:scene:" + sc.number + ":" + nm);
+            pictureRow(card, (pl.partOf() ? "" : "Part " + sc.number + ": ") + pl.shown, status, file, "angles:scene:" + sc.number + ":" + pl.shown);
         }
         body.addView(card);
     }
@@ -1083,18 +1066,18 @@ public class MainActivity extends Activity {
      * quality check compares every frame with them.
      */
     /**
-     * v47.8 (the user): the story board — up to 100 pictures in the story's order. The first is the title picture and the
-     * last the end picture (one picture each); every one between is a sheet of six moments, three across and two down,
-     * each with one or more characters and their things on a clear background. The director places each moment at its
-     * shot and checks the film's staging against it.
+     * The additional reference pictures (v47.8's story board) — up to 100 pictures in the story's order, each a sheet of
+     * at most six moments, three across and two down, with two or more characters and their things (the user: "no beyond
+     * 3x2 splitting"). The starting and ending pages have their own cards now, so none of these is taken for them
+     * (FilmJob.readBoardSheets). The director places each moment at its shot and checks the film's staging against it.
      */
     private LinearLayout boardCard() {
         final LinearLayout card = Ui.card(this);
-        card.addView(Ui.title(this, "🗂 Story board"));
-        card.addView(Ui.text(this, "Add the pictures in the story's order. The first is the title picture and the last the end picture — one picture each. "
-                + "Every picture between them is a sheet of 6 moments of the story, 3 across and 2 down: several characters at once with their things, "
-                + "without a background. The director reads who is in each moment, places it at its shot in the film and checks the staging against it "
-                + "(who stands left of whom); the shot list and the director's notes say where each moment went.", 13, Ui.SUB, false));
+        card.addView(Ui.title(this, "🗂 Additional reference pictures"));
+        card.addView(Ui.text(this, "Up to " + StudioPlan.MAX_ADDITIONAL_REFERENCES + " pictures, in the story's order. Each can show two or more characters together with their things, "
+                + "and is read as at most 3×2 moments (3 across, 2 down) — never split further, so a character with a thing stays whole. "
+                + "The director reads who is in each moment, places it at its shot in the film and checks the staging against it "
+                + "(who stands left of whom). The starting and ending pages have their own places below.", 13, Ui.SUB, false));
         final List<File> pics = project.boardPictures();
         if (!pics.isEmpty()) {
             LinearLayout row = Ui.row(this);
@@ -1108,12 +1091,12 @@ public class MainActivity extends Activity {
                 row.addView(iv, new LinearLayout.LayoutParams(0, Ui.dp(this, 40), 1f));
             }
             card.addView(row);
-            card.addView(Ui.text(this, pics.size() + " picture" + (pics.size() == 1 ? "" : "s") + (pics.size() >= 2 ? ": the title, " + Math.max(0, pics.size() - 2) + " sheet" + (pics.size() - 2 == 1 ? "" : "s") + " of moments (up to " + 6 * Math.max(0, pics.size() - 2) + " moments), the end" : ": one sheet of moments"), 13, Ui.TEXT, false));
+            card.addView(Ui.text(this, pics.size() + " picture" + (pics.size() == 1 ? "" : "s") + " — up to " + StudioPlan.MAX_SHEET_PANELS * pics.size() + " moments", 13, Ui.TEXT, false));
         }
         LinearLayout btns = Ui.row(this);
         btns.addView(Ui.small(this, "🖼 Add pictures (" + pics.size() + "/" + Project.MAX_BOARD + ")", pics.size() < Project.MAX_BOARD ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) {
-                if (project.boardPictures().size() >= Project.MAX_BOARD) { toast(Project.MAX_BOARD + " pictures are already on the board — remove some first"); return; }
+                if (project.boardPictures().size() >= Project.MAX_BOARD) { toast(Project.MAX_BOARD + " additional reference pictures are already here — remove some first"); return; }
                 pick("image/*", REQ_BOARD, true);
             }
         }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
@@ -1121,7 +1104,7 @@ public class MainActivity extends Activity {
             public void onClick(View v) {
                 List<File> now = project.boardPictures();
                 if (!now.isEmpty()) now.get(now.size() - 1).delete();
-                toast("The last picture of the board was removed");
+                toast("The last additional reference picture was removed");
                 showStudio();
             }
         }));
@@ -1140,7 +1123,7 @@ public class MainActivity extends Activity {
             public void done(Object r, Exception e) {
                 if (e != null) { toast("Could not add it: " + e.getMessage()); showStudio(); return; }
                 int[] c = (int[]) r;
-                toast("Story board: " + c[0] + " picture" + (c[0] == 1 ? "" : "s") + " added" + (c[1] > 0 ? " (" + c[1] + " left out — the board holds " + Project.MAX_BOARD + ")" : ""));
+                toast("Additional references: " + c[0] + " picture" + (c[0] == 1 ? "" : "s") + " added" + (c[1] > 0 ? " (" + c[1] + " left out — up to " + Project.MAX_BOARD + ")" : ""));
                 showStudio();
             }
         });
@@ -1148,10 +1131,11 @@ public class MainActivity extends Activity {
 
     private LinearLayout referenceCard() {
         final LinearLayout card = Ui.card(this);
-        card.addView(Ui.title(this, "🎞 Reference frames and clips (for the AI team's quality check)"));
-        card.addView(Ui.text(this, "Up to " + Project.MAX_REF_FRAMES + " full sample frames (characters, props and background together, as you want them) and up to "
-                + Project.MAX_REF_VIDEOS + " short clips. They are not placed in the film: the director, the technical director and the editor use them as the look to reach, and every frame is checked against them.", 13, Ui.SUB, false));
+        card.addView(Ui.title(this, "🎞 Reference images and videos (for the AI team's quality check)"));
+        card.addView(Ui.text(this, "Up to " + Project.MAX_REFERENCES + " in all — full sample images (characters, props and background together, as you want them) and short videos. "
+                + "They are not placed in the film: the director, the technical director and the editor use them as the look to reach, and every frame is checked against them.", 13, Ui.SUB, false));
         final List<File> frames = project.refFrames(), clips = project.refVideos();
+        final int inAll = frames.size() + clips.size();
         if (!frames.isEmpty()) {
             LinearLayout row = Ui.row(this);
             row.setGravity(Gravity.CENTER_VERTICAL);
@@ -1180,15 +1164,15 @@ public class MainActivity extends Activity {
             card.addView(r);
         }
         LinearLayout btns = Ui.row(this);
-        btns.addView(Ui.small(this, "🖼 Add reference frame (" + frames.size() + "/" + Project.MAX_REF_FRAMES + ")", frames.size() < Project.MAX_REF_FRAMES ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
+        btns.addView(Ui.small(this, "🖼 Add image (" + inAll + "/" + Project.MAX_REFERENCES + ")", inAll < Project.MAX_REFERENCES ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) {
-                if (project.refFrames().size() >= Project.MAX_REF_FRAMES) { toast(Project.MAX_REF_FRAMES + " reference frames are already here — remove one first"); return; }
+                if (project.references() >= Project.MAX_REFERENCES) { toast(Project.MAX_REFERENCES + " reference images and videos are already here — remove one first"); return; }
                 pick("image/*", REQ_REF_FRAME, true);
             }
         }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-        btns.addView(Ui.small(this, "🎥 Add reference clip (" + clips.size() + "/" + Project.MAX_REF_VIDEOS + ")", clips.size() < Project.MAX_REF_VIDEOS ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
+        btns.addView(Ui.small(this, "🎥 Add video (" + inAll + "/" + Project.MAX_REFERENCES + ")", inAll < Project.MAX_REFERENCES ? Ui.PRIMARY : Ui.SUB, new View.OnClickListener() {
             public void onClick(View v) {
-                if (project.refVideos().size() >= Project.MAX_REF_VIDEOS) { toast(Project.MAX_REF_VIDEOS + " reference clips are already here — remove one first"); return; }
+                if (project.references() >= Project.MAX_REFERENCES) { toast(Project.MAX_REFERENCES + " reference images and videos are already here — remove one first"); return; }
                 pick("video/*", REQ_REF_VIDEO, false);
             }
         }), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
@@ -1211,7 +1195,7 @@ public class MainActivity extends Activity {
             public void done(Object r, Exception e) {
                 if (e != null) { toast("Could not add it: " + e.getMessage()); showStudio(); return; }
                 int[] c = (int[]) r;
-                toast((video ? "Reference clip" : "Reference frame") + (c[0] == 1 ? "" : "s") + " added: " + c[0] + (c[1] > 0 ? " (" + c[1] + " left out — the limit is " + (video ? Project.MAX_REF_VIDEOS + " clips" : Project.MAX_REF_FRAMES + " frames") + ")" : ""));
+                toast((video ? "Reference video" : "Reference image") + (c[0] == 1 ? "" : "s") + " added: " + c[0] + (c[1] > 0 ? " (" + c[1] + " left out — up to " + Project.MAX_REFERENCES + " images and videos in all)" : ""));
                 showStudio();
             }
         });
@@ -1235,37 +1219,24 @@ public class MainActivity extends Activity {
         card.addView(r);
     }
 
-    /** Every thing of the story, {key, shown}: the insert words, the free-picture words, and the things the user named (v25). */
+    /**
+     * Every thing of the story, {key, shown}: (the user: "asking for only what is mention in script") the objects the
+     * script lists, once each — never a word matched in the action, never a thing named outside the script.
+     */
     private List<String[]> things(Story st) {
-        // The Studio asks for pictures only for the screenplay's explicit object inventory or an object
-        // the user already added. FreeArt's broad vocabulary is for optional automatic illustrations;
-        // matching words in directions (e.g. “छड़ी”, “पत्र”, “किताब”) created unrelated photo requests.
         List<String[]> things = new ArrayList<String[]>();
-        Set<String> seenKeys = new HashSet<String>();
-        for (String[] o : things) seenKeys.add(o[0]);
-        for (String[] t : AutoLibrary.missingTargets(project, st)) {
-            if (!t[0].startsWith("shot:")) continue;
-            String[] sk = t[0].split(":", 3);
-            if (sk.length == 3 && seenKeys.add(sk[2])) things.add(new String[]{sk[2], sk[2]});
-        }
-        for (String l : project.read("cast.txt").split("\n")) {
-            String[] f = l.split("\\|");
-            if (f.length >= 5 && f[0].equals("shot") && f[4].trim().equals("object") && seenKeys.add(f[2])) things.add(new String[]{f[2], f[2].replace(',', ' ')});
-        }
+        for (String[] o : StudioPlan.objects(st)) things.add(new String[]{o[0], o[1]});
         return things;
     }
 
-    /** The things the story names (keys, props, fruit, a kite…): their pictures from the library or from you, up to ten angles each (item 3). */
+    /** The objects the script lists: each one's pictures from the phone, the camera or the library, up to 18 each. */
     private LinearLayout objectsCard(final Story st) {
         LinearLayout card = Ui.card(this);
-        card.addView(Ui.text(this, "Things of the story — a real picture of each makes its insert and the hand props look real. Up to 10 angles (front, side, rear) from the phone, the camera or the library; the director keeps them all.", 13, Ui.SUB, false));
+        card.addView(Ui.text(this, "The objects the script lists — a real picture of each makes its insert and the hand props look real. Up to " + StudioPlan.MAX_OBJECT_PICTURES
+                + " pictures each (front, side, rear…); a sheet of up to 3×2 views is split into them. Without one the studio draws it.", 13, Ui.SUB, false));
         String cast = project.read("cast.txt");
         int n = 0;
-        List<String[]> things = things(st);
-        card.addView(Ui.small(this, "➕ Another thing of the story (name it)", Ui.BLUE, new View.OnClickListener() {
-            public void onClick(View v) { askThingName(null); }
-        }));
-        for (final String[] o : things) {
+        for (final String[] o : things(st)) {
             final boolean have = cast.contains("|" + o[0] + "|");
             final String name = o[1];
             int nt = have ? SheetSaver.thingPictures(project, o[0]) : 0;
@@ -1275,9 +1246,9 @@ public class MainActivity extends Activity {
                 public void onClick(View v) { anglesFor("angles:obj:" + o[0] + ":" + name, name); }
             }));
             card.addView(r);
-            if (++n >= 20) break;
+            n++;
         }
-        if (n == 0) card.addView(Ui.text(this, "No portable thing is named in this story yet (a key, a crown, a kite, a book…) — name one above.", 13, Ui.SUB, false));
+        if (n == 0) card.addView(Ui.text(this, "The script lists no object (a list such as \"वस्तुएँ\" or \"Objects\" before the story) — nothing to add here.", 13, Ui.SUB, false));
         return card;
     }
 
@@ -1509,11 +1480,12 @@ public class MainActivity extends Activity {
         } catch (Throwable ignored) { }
         // ---- summary and what is missing
         int noPic = 0, noVoice = 0, noBg = 0;
-        for (Story.CharacterDef c : st.cast()) {
+        for (Story.CharacterDef c : StudioPlan.characters(st)) {
             if (charFile(c) == null) noPic++;
             if (library.byId(project.setting("vsample." + c.displayName, "")) == null) noVoice++;
         }
-        for (Story.Scene sc : st.scenes) if (sceneFile(sc) == null) noBg++;
+        List<StudioPlan.Place> placesAsked = StudioPlan.places(st);
+        for (StudioPlan.Place pl : placesAsked) if (sceneFile(pl.host) == null) noBg++;
         // Asset intake order: show upload controls on this filmmaking page first. Private-library matching
         // remains available through the explicit buttons below, only after the filmmaker chooses it.
         // This avoids silently reusing an old character/place/voice before the user has supplied current references.
@@ -1521,12 +1493,12 @@ public class MainActivity extends Activity {
         LinearLayout sum = Ui.card(this);
         sum.addView(Ui.title(this, "📜 " + st.title));
         sum.addView(Ui.text(this, "Language: " + (st.hinglish ? "Hinglish (spoken in Hindi, ends with \"समाप्त\")" : st.hindi ? "Hindi (ends with \"समाप्त\")" : "English (ends with \"The End\")")
-                + "\nCharacters: " + st.characters.size() + "   •   Parts: " + st.scenes.size() + "   •   Lines: " + st.dialogueCount()
+                + "\nCharacters: " + StudioPlan.characters(st).size() + "   •   Parts: " + st.scenes.size() + "   •   Lines: " + st.dialogueCount()
                 + (st.hasNarrator ? "\nNarrator voice: yes (the story has a narrator)" : ""), 15, Ui.TEXT, false));
         // v47.10 (the user: "studio page has bugs and very cluttered"): what is ready, said once and kindly — everything is
         // optional (the studio draws what has no picture, the phone's voice speaks what has no voice) — and the film is
         // made from the top of the page, not from under fifteen screens of cards
-        int nChar = st.cast().size(), nPlace = st.scenes.size();
+        int nChar = StudioPlan.characters(st).size(), nPlace = placesAsked.size();
         String ready = "Pictures: " + (nChar - noPic) + " of " + nChar + " characters, " + (nPlace - noBg) + " of " + nPlace + " places"
                 + "\nAll optional — the studio draws what has no picture, and the phone's voice speaks every line that has no voice of its own.";
         sum.addView(Ui.text(this, ready, 14, noPic + noBg == 0 ? Ui.GREEN : Ui.SUB, false));
@@ -1542,41 +1514,61 @@ public class MainActivity extends Activity {
         }));
         body.addView(sum);
 
-        // ---- v47.4 (the user): first the characters, then the objects, then the places and backgrounds — nothing else asked for
-        // ---- characters
-        heading(body, "1. Characters");
-        for (Story.CharacterDef c : st.cast()) body.addView(characterCard(st, c));
+        // ---- the user ("debug the studio page properly that is asking for only what is mention in script"): 1. each
+        // character the script names, 2. each object it lists, 3. each place and background — then, all optional,
+        // 4. additional reference pictures, 5. the starting page, 6. the ending page, 7. reference images and videos
+        // (StudioPlan). Never the narrator, a voice only or a group word ("सब").
+        heading(body, "1. Characters (up to " + StudioPlan.MAX_CHARACTER_PICTURES + " pictures each)");
+        List<Story.CharacterDef> asked = StudioPlan.characters(st);
+        for (Story.CharacterDef c : asked) body.addView(characterCard(st, c));
+        if (asked.isEmpty()) body.addView(Ui.text(this, "The script names no character to picture.", 13, Ui.SUB, false));
         for (final Story.CharacterDef c : st.characters) {
-            if (!c.voiceOnly) continue;
-            // v34: a name that reads like a voice (a radio, a phone, an announcer) is still pictured when the user says so
+            if (!c.voiceOnly || StudioPlan.groupWord(c.displayName)) continue;
+            final boolean narrator = StudioPlan.narratorLike(c);
             LinearLayout vr = Ui.row(this);
             vr.setGravity(Gravity.CENTER_VERTICAL);
-            vr.addView(Ui.text(this, "🔊 " + c.shown() + " — a voice only (heard, never pictured)", 13, Ui.SUB, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
-            vr.addView(Ui.small(this, "📷 Picture it anyway", Ui.PRIMARY, new View.OnClickListener() {
-                public void onClick(View v) {
-                    project.setSetting("pictured." + c.displayName, "1");
-                    Story st2 = loadStory();
-                    Story.CharacterDef c2 = ScriptParser.resolve(st2, c.displayName);
-                    String k = c2 != null ? keyFor(c2) : c.displayName;
-                    anglesFor("angles:char:" + k + ":" + c.shown(), c.shown());
-                }
-            }));
+            vr.addView(Ui.text(this, "🔊 " + c.shown() + (narrator ? " — the narrator: a voice only, never pictured" : " — a voice only (heard, never pictured)"), 13, Ui.SUB, false), new LinearLayout.LayoutParams(0, ViewGroup.LayoutParams.WRAP_CONTENT, 1f));
+            if (narrator) {
+                // (the user: "make sure app doesn't ask for narrator photos at studio or any other place"): its voice only
+                vr.addView(Ui.small(this, "🎙 Voice", Ui.GREEN, new View.OnClickListener() {
+                    public void onClick(View v) { chooseVoice(c.displayName, st, c); }
+                }));
+            } else {
+                // v34: a name that reads like a voice (a radio, a phone, an announcer) is still pictured when the user says so
+                vr.addView(Ui.small(this, "📷 Picture it anyway", Ui.PRIMARY, new View.OnClickListener() {
+                    public void onClick(View v) {
+                        project.setSetting("pictured." + c.displayName, "1");
+                        Story st2 = loadStory();
+                        Story.CharacterDef c2 = ScriptParser.resolve(st2, c.displayName);
+                        String k = c2 != null ? keyFor(c2) : c.displayName;
+                        anglesFor("angles:char:" + k + ":" + c.shown(), c.shown());
+                    }
+                }));
+            }
             body.addView(vr);
         }
         if (st.hasNarrator) body.addView(narratorCard());
 
-        // ---- the things, then the places
-        heading(body, "2. Things in the story (optional)");
+        // ---- the objects, then the places and backgrounds
+        heading(body, "2. Objects (up to " + StudioPlan.MAX_OBJECT_PICTURES + " pictures each)");
         body.addView(objectsCard(st));
-        heading(body, "3. Places");
+        heading(body, "3. Places and backgrounds (up to " + StudioPlan.MAX_PLACE_PICTURES + " pictures each)");
         final SoundLib sl = library.soundLib();
         placeCards(body, st, sl);
-        heading(body, "4. Title and end pages (optional — the studio makes them)");
-        body.addView(pageCard("Title page", "title"));
-        body.addView(pageCard(st.hindi ? "End page (समाप्त)" : "End page (The End)", "end"));
 
-        // ---- v47.10: everything else folded shut (built only when opened): the helpers, the references, the story
-        // board, the extra views of each place, the director's plan and the script's format
+        // ---- 4. to 7.: optional — the studio makes the pages itself and needs no reference to make the film
+        heading(body, "4.–7. Optional: references and pages");
+        folded(body, "4. 🗂 Additional reference pictures (up to " + StudioPlan.MAX_ADDITIONAL_REFERENCES + ")", new Fill() {
+            public void into(LinearLayout box) { box.addView(boardCard()); }
+        });
+        body.addView(pageCard("5. Starting page", "title"));
+        body.addView(pageCard(st.hindi ? "6. Ending page (समाप्त)" : "6. Ending page (The End)", "end"));
+        folded(body, "7. 🎞 Reference images and videos (up to " + StudioPlan.MAX_REFERENCE_MEDIA + ")", new Fill() {
+            public void into(LinearLayout box) { box.addView(referenceCard()); }
+        });
+
+        // ---- v47.10: everything else folded shut (built only when opened): the helpers, the extra views of each place,
+        // the director's plan and the script's format
         heading(body, "More (optional)");
         folded(body, "🧰 Helpers — find in my library, add many pictures, voices, descriptions", new Fill() {
             public void into(LinearLayout box) {
@@ -1599,12 +1591,6 @@ public class MainActivity extends Activity {
         });
         folded(body, "🖼 More views of each place (wide, reverse, close)", new Fill() {
             public void into(LinearLayout box) { backgroundCards(box, st); }
-        });
-        folded(body, "🎞 Reference images and videos for the director's checks (up to " + Project.MAX_REF_FRAMES + " each)", new Fill() {
-            public void into(LinearLayout box) { box.addView(referenceCard()); }
-        });
-        folded(body, "🗂 Story board (up to " + Project.MAX_BOARD + " pictures, in the story's order)", new Fill() {
-            public void into(LinearLayout box) { box.addView(boardCard()); }
         });
         folded(body, "🎬 The director's plan and the production check", new Fill() {
             public void into(LinearLayout box) { box.addView(planCard(st, sl)); }
@@ -1821,7 +1807,7 @@ public class MainActivity extends Activity {
         // v47.9 (the user: "on the character page you just take 6 pictures — side, front, back and three-quarter"):
         // six named places, each one picture, shown with what is there
         final String ck = keyFor(c);
-        card.addView(Ui.text(this, "📷 Six pictures of " + c.shown() + " — tap a place to add one", 13, Ui.SUB, false));
+        card.addView(Ui.text(this, "📷 The six views of " + c.shown() + " — tap one to add it; up to " + StudioPlan.MAX_CHARACTER_PICTURES + " pictures in all", 13, Ui.SUB, false));
         LinearLayout g1 = Ui.row(this), g2 = Ui.row(this);
         for (int si = 0; si < SheetSaver.CHAR_SLOTS.length; si++) {
             final String[] sl = SheetSaver.CHAR_SLOTS[si];
@@ -1851,7 +1837,7 @@ public class MainActivity extends Activity {
         card.addView(g1);
         card.addView(g2);
         LinearLayout r = Ui.row(this);
-        r.addView(Ui.small(this, "📷 All six", Ui.PRIMARY, new View.OnClickListener() {
+        r.addView(Ui.small(this, "📷 Up to " + StudioPlan.MAX_CHARACTER_PICTURES, Ui.PRIMARY, new View.OnClickListener() {
             public void onClick(View v) { anglesFor("angles:char:" + keyFor(c) + ":" + c.shown(), c.shown()); }          // v33: one button, several pictures at once
         }));
         if (Studio3DArt.realAngles(project, keyFor(c))) info.addView(Ui.text(this, "📷 " + countAngles(c.shown()) + " real pictures of " + c.shown() + " in the library (angles, poses) — the film is played by the rigged, animated picture made from them; angles you did not give are made from your front picture for you to approve", 13, Ui.GREEN, false));
@@ -1991,42 +1977,37 @@ public class MainActivity extends Activity {
      * keep their own cards after the list.
      */
     private void placeCards(LinearLayout body, Story st, SoundLib sl) {
-        java.util.Set<Integer> done = new java.util.HashSet<Integer>();
+        // (the user: "places and background upto 18 images each", only what the script names): one card per place
+        // of the script (StudioPlan.places — the list's variants of one place are one), numbered as listed
         int pn = 0;
-        for (Story.PlaceDef pl : st.places) {
+        for (StudioPlan.Place pl : StudioPlan.places(st)) {
             pn++;
-            List<Story.Scene> here = new ArrayList<Story.Scene>();
-            for (Story.Scene sc : st.scenes) if (!done.contains(sc.number) && com.tarun.kahani.core.ProductionDocument.placeOfScene(st, sc) == pl) here.add(sc);
             StringBuilder nums = new StringBuilder();
-            for (Story.Scene sc : here) { nums.append(nums.length() > 0 ? ", " : "").append(sc.number); done.add(sc.number); }
+            for (Story.Scene sc : pl.scenes) nums.append(nums.length() > 0 ? ", " : "").append(sc.number);
             LinearLayout head = Ui.card(this);
-            head.addView(Ui.text(this, pn + ". " + pl.name, 16, Ui.TEXT, true));
-            if (pl.description.length() > 0) head.addView(Ui.text(this, pl.description.length() > 160 ? pl.description.substring(0, 160) + "…" : pl.description, 12, Ui.SUB, false));
-            head.addView(Ui.text(this, here.isEmpty() ? "No scene is set here by name — it is part of where the story happens. Its pictures are used behind the close shots there."
-                    : "Scenes here: " + nums + (here.size() > 1 ? " — one picture for all of them" : ""), 13, here.isEmpty() ? Ui.SUB : Ui.PRIMARY_DARK, false));
+            head.addView(Ui.text(this, pn + ". " + pl.shown, 16, Ui.TEXT, true));
+            if (pl.description.length() > 0 && !pl.description.equals(pl.name)) head.addView(Ui.text(this, pl.description.length() > 160 ? pl.description.substring(0, 160) + "…" : pl.description, 12, Ui.SUB, false));
+            head.addView(Ui.text(this, pl.partOf() ? "No scene is set here by name — it is part of where the story happens. Its pictures are used behind the close shots there."
+                    : "Scenes here: " + nums + (pl.scenes.size() > 1 ? " — one picture for all of them" : ""), 13, pl.partOf() ? Ui.SUB : Ui.PRIMARY_DARK, false));
             body.addView(head);
-            if (here.isEmpty()) {
-                // v47.9 (the user: "it doesn't even ask for picture of all the … backgrounds"): every place the script
-                // lists has its button — a place no scene names (the sofa corner of the room) is part of the place the
-                // scenes are in, and its pictures are that place's close views
-                if (!st.scenes.isEmpty()) {
-                    final Story.Scene hostScene = st.scenes.get(0);
-                    final String hostKey = String.valueOf(hostScene.number), name = st.shown(pl.name);
-                    int np = SheetSaver.placePictures(project, hostKey);
-                    head.addView(Ui.small(this, "📷 Pictures of " + name + " (up to 100)", Ui.PRIMARY, new View.OnClickListener() {
-                        public void onClick(View v) { anglesFor("angles:scene:" + hostKey + ":" + name, name + " — part of the place of part " + hostKey); }
-                    }));
-                    if (np > 0) head.addView(Ui.text(this, "📷 " + np + " background picture" + (np > 1 ? "s" : "") + " so far where the story happens", 13, Ui.GREEN, false));
-                }
+            if (pl.partOf()) {
+                // v47.9 (the user: "it doesn't even ask for picture of all the … backgrounds"): a place no scene names (the
+                // sofa corner of the room) is part of the place the scenes are in, and its pictures are that place's views
+                final String hostKey = String.valueOf(pl.host.number), name = pl.shown;
+                int np = SheetSaver.placePictures(project, hostKey);
+                head.addView(Ui.small(this, "📷 Pictures of " + name + " (up to " + StudioPlan.MAX_PLACE_PICTURES + ")", Ui.PRIMARY, new View.OnClickListener() {
+                    public void onClick(View v) { anglesFor("angles:scene:" + hostKey + ":" + name, name + " — part of the place of part " + hostKey); }
+                }));
+                if (np > 0) head.addView(Ui.text(this, "📷 " + np + " background picture" + (np > 1 ? "s" : "") + " so far where the story happens", 13, Ui.GREEN, false));
                 continue;
             }
             // the scenes set here share the first one's picture
-            String first = sceneFile(here.get(0));
-            if (first != null) for (int i = 1; i < here.size(); i++) if (sceneFile(here.get(i)) == null)
-                project.setManifest("scene", String.valueOf(here.get(i).number), "scene|" + here.get(i).number + "|" + first);
-            body.addView(sceneCard(here.get(0), sl));
+            String first = sceneFile(pl.scenes.get(0));
+            if (first != null) for (int i = 1; i < pl.scenes.size(); i++) if (sceneFile(pl.scenes.get(i)) == null)
+                project.setManifest("scene", String.valueOf(pl.scenes.get(i).number), "scene|" + pl.scenes.get(i).number + "|" + first);
+            body.addView(sceneCard(pl.scenes.get(0), pl.shown, sl));
         }
-        for (Story.Scene sc : st.scenes) if (!done.contains(sc.number)) body.addView(sceneCard(sc, sl));
+        if (pn == 0) body.addView(Ui.text(this, "The script names no place yet — the studio draws the backgrounds from the story's words.", 13, Ui.SUB, false));
     }
 
     /**
@@ -2070,7 +2051,8 @@ public class MainActivity extends Activity {
         if (pn == 0) body.addView(Ui.text(this, "The script names no place yet — the backgrounds are asked for once it does.", 13, Ui.SUB, false));
     }
 
-    private LinearLayout sceneCard(final Story.Scene sc, SoundLib sl) {
+    private LinearLayout sceneCard(final Story.Scene sc, final String placeName, SoundLib sl) {
+        final String upName = placeName != null && placeName.length() > 0 ? placeName : sc.title.length() > 0 ? sc.title : "part " + sc.number;
         LinearLayout card = Ui.card(this);
         final String key = String.valueOf(sc.number);
         final String file = sceneFile(sc);
@@ -2090,7 +2072,7 @@ public class MainActivity extends Activity {
                 : auto != null ? auto.title + (auto.user ? " (yours — it fits the description)" : " (automatic)") : "Automatic"), 13, amb != null || (auto != null && auto.user) ? Ui.GREEN : Ui.SUB, false));
         LinearLayout r = Ui.row(this);
         r.addView(Ui.small(this, "📷 Pictures", Ui.PRIMARY, new View.OnClickListener() {
-            public void onClick(View v) { anglesFor("angles:scene:" + key + ":" + (sc.title.length() > 0 ? sc.title : "part " + key), sc.title.length() > 0 ? sc.title : "part " + key); }   // v33
+            public void onClick(View v) { anglesFor("angles:scene:" + key + ":" + upName, upName); }   // v33: up to 18 pictures of the place
         }));
         r.addView(Ui.small(this, "🔊 Sound", Ui.GREEN, new View.OnClickListener() {
             public void onClick(View v) { chooseSound("amb:" + key, sc.setting + " " + sc.title); }
@@ -3739,7 +3721,9 @@ public class MainActivity extends Activity {
     /** Everything a picture can be in this story: {target, label, description}. */
     private List<String[]> pictureTargets(Story st) {
         List<String[]> t = new ArrayList<String[]>();
-        for (Story.CharacterDef c : st.characters) t.add(new String[]{"char:" + keyFor(c), c.shown(), c.description});
+        // (the user: "make sure app doesn't ask for narrator photos … any other place"): the library's suggestions are for the
+        // characters the film pictures only — never the narrator, a voice only or a group word
+        for (Story.CharacterDef c : StudioPlan.characters(st)) t.add(new String[]{"char:" + keyFor(c), c.shown(), c.description});
         for (String[] p : Bible.listedPlaces(st)) t.add(new String[]{"place:" + p[0], st.shown(p[0]), p[1]});
         // v47.4: the things the script lists are targets too (a library prop picture was never placed on one)
         for (Story.PlaceDef th : st.things) if (th.name != null && th.name.trim().length() > 0 && !Bible.intangible(th.name)) t.add(new String[]{"thing:" + th.name.trim(), th.name.trim(), th.description == null ? "" : th.description});
@@ -4278,21 +4262,9 @@ public class MainActivity extends Activity {
     private void makeFilm() {
         saveScript();
         if (FilmJob.scriptOf(project).trim().length() < 10) { toast("Write or paste a story first"); return; }
-        // v47.4 (the user): the director first lists what it still has no picture for — upload now (the film waits), or make
-        // without them (made in 3D / drawn); the same list is on the progress screen with its upload buttons
-        final List<String[]> miss = new ArrayList<String[]>();
-        try { for (String[] t : AutoLibrary.missingForUser(project, loadStory())) if (!t[0].equals("title") && !t[0].equals("end") && !AutoLibrary.optional(t)) miss.add(t); } catch (Throwable ignored) { }
-        if (!miss.isEmpty()) {
-            StringBuilder sb = new StringBuilder();
-            int k = 0;
-            for (String[] t : miss) { if (++k > 12) { sb.append("… and ").append(miss.size() - 12).append(" more\n"); break; } sb.append(t[0].startsWith("shot:") ? "📦 " : t[0].startsWith("place:") ? "🏞 " : "👤 ").append(t[1]).append('\n'); }
-            new AlertDialog.Builder(this).setTitle("The director still has no picture for")
-                    .setMessage(sb.toString().trim() + "\n\nUpload them now (the film waits), or make the film without them — those are then drawn by the studio from the story's words.")
-                    .setPositiveButton("📷 Upload now", new DialogInterface.OnClickListener() { public void onClick(DialogInterface d, int w) { showStudio(); } })
-                    .setNegativeButton("Make without them", new DialogInterface.OnClickListener() { public void onClick(DialogInterface d, int w) { askBeforeMaking(new Runnable() { public void run() { startFilm(); } }); } })
-                    .show();
-            return;
-        }
+        // (the user: "make sure film making doesn't stop any where"): no separate stop for the missing pictures — the
+        // dialog below lists them with "Pictures first", and while the film is made the director asks once more and waits
+        // 30 seconds for them before it goes on
         // the director asks before generating anything (FINAL_AR, which pictures AI may make, the shot check)
         askBeforeMaking(new Runnable() { public void run() { startFilm(); } });
     }
@@ -4361,15 +4333,11 @@ public class MainActivity extends Activity {
             }
             if (opt.length() > 0) body.addView(Ui.text(this, "\n🪑 Better with (optional): " + opt + ". Without them the director lowers the standing picture onto the seat or turns it to lie down.", 14, Ui.SUB, false));
             if (objN > 0) body.addView(Ui.text(this, "\n🧸 Things in the story with no picture yet: " + objs + (objN > 12 ? " and " + (objN - 12) + " more" : "")
-                    + ". Tap \"Pictures first\" to add your own (up to 100 each) — without them the director draws the everyday ones itself.", 14, Ui.SUB, false));
+                    + ". Tap \"Pictures first\" to add your own (up to 18 each) — without them the director draws the everyday ones itself.", 14, Ui.SUB, false));
             if (shown > 10) m.append(" and ").append(shown - 10).append(" more");
-            List<com.tarun.kahani.core.ScenePlan.Extra> extras = com.tarun.kahani.core.ScenePlan.extras(st);
-            StringBuilder xs = new StringBuilder();
-            for (com.tarun.kahani.core.ScenePlan.Extra x : extras) if (project.manifestLine("scene", x.key) == null) xs.append(xs.length() > 0 ? "; " : "").append(x.label);
-            if (xs.length() > 0) body.addView(Ui.text(this, "\n🎬 The director adds " + extras.size() + " scene(s) of its own and asks for their pictures (up to 100 each): " + xs + ". Without one it shows the place itself.", 14, Ui.PRIMARY_DARK, false));
             if (shown > 0) {
-                body.addView(Ui.text(this, "\nNo picture yet: " + m + ". Please add them — tap \"Pictures first\" below (up to 100 pictures of each). The director looks in your library first, "
-                        + "and before anything is drawn for you the film stops and asks you for the rest.", 14, Ui.PRIMARY_DARK, false));
+                body.addView(Ui.text(this, "\nNo picture yet: " + m + ". Add them now — tap \"Pictures first\" below (up to 18 pictures of each) — or later: while the film is made the director asks once more "
+                        + "and waits " + FilmJob.waitSeconds() + " seconds for them, then goes on and draws the rest.", 14, Ui.PRIMARY_DARK, false));
                 ai.setText("Make the rest with free AI (animated-film style, made in the film's shape)");
                 ai.setChecked(Prefs.autoArt(this) && Prefs.online(this));
                 ai.setEnabled(Prefs.online(this));
@@ -4380,61 +4348,39 @@ public class MainActivity extends Activity {
         qc.setText("Show me the first frame of every shot before the film is made, so I can fix any (Human QC)");
         qc.setChecked(Prefs.humanQc(this));
         body.addView(qc);
+        // (the user: "if anything to ask, pause for 30 second … otherwise continue if user doesn't upload anything or doesn't
+        // ask for more time"): with no answer the film is started by itself, as chosen here; "need more time" waits longer
+        final TextView waitNote = Ui.text(this, "", 14, Ui.BLUE, true);
+        final long[] startAt = {android.os.SystemClock.uptimeMillis() + FilmJob.waitSeconds() * 1000L};
+        body.addView(waitNote);
+        body.addView(Ui.small(this, "⏳ I need more time (+" + FilmJob.waitSeconds() + " s)", Ui.SUB, new View.OnClickListener() {
+            public void onClick(View v) { startAt[0] = Math.max(startAt[0], android.os.SystemClock.uptimeMillis()) + FilmJob.waitSeconds() * 1000L; }
+        }));
         ScrollView sv = new ScrollView(this);
         sv.addView(body);
         AlertDialog.Builder dlg = new AlertDialog.Builder(this).setTitle("🎬 Before the director makes your film").setView(sv);
         // v25: always there — a picture of anything (also of what already has one, or a thing named now); back to this dialog after
         dlg.setNeutralButton("📷 Pictures first", new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface d, int w) {
-                final List<String[]> all = new ArrayList<String[]>(uploadable);
+                // (the user: "asking for only what is mention in script"): every character, object and place the script
+                // names, with a picture (more angles) or without — nothing else
+                final List<String[]> all = new ArrayList<String[]>();
                 try {
                     Story st = FilmJob.storyOf(project);
-                    Set<String> seen = new HashSet<String>();
-                    for (String[] u : all) seen.add(u[0]);
                     castStory = st;
-                    for (Story.CharacterDef c : st.cast()) {
-                        String t = "angles:char:" + keyFor(c) + ":" + c.shown();          // v34: the Studio's key, never a second one
-                        boolean dup = false;
-                        for (String[] u : all) if (u[0].startsWith("angles:char:" + c.displayName + ":") || u[0].startsWith("angles:char:" + keyFor(c) + ":")) dup = true;
-                        if (!dup && seen.add(t)) all.add(new String[]{t, c.shown() + " (more angles)"});
-                    }
-                    // v47.6: one row per place, as the Studio's places card shows them: the three parts of आखिरी चिट्ठी under
-                    // the same neem are one background to give (SheetSaver gives every part there the same picture)
-                    Set<String> placeKeys = new HashSet<String>();
-                    for (Story.Scene sc : st.scenes) {
-                        String placeName = null;
-                        for (String[] place : Bible.listedPlaces(st)) if (AutoLibrary.placeOf(sc, place[0])) { placeName = place[0]; break; }
-                        if (placeName == null) placeName = Bible.firstClauseOf(sc.setting);
-                        String placeKey = Bible.placeIdentity(placeName);
-                        boolean dup = placeKey.length() > 0 && !placeKeys.add(placeKey);
-                        String nm = placeName.length() > 0 ? placeName : sc.title.length() > 0 ? sc.title : "part " + sc.number;
-                        String t = "angles:scene:" + sc.number + ":" + nm;
-                        for (String[] u : all) if (u[0].startsWith("angles:scene:" + sc.number + ":")) dup = true;
-                        // (a place already in the list from the missing pictures above counts as listed too)
-                        for (String[] u : all) if (u[0].startsWith("angles:scene:") && placeKey.length() > 0 && Bible.placeIdentity(u[0].replaceFirst("^angles:scene:[^:]*:", "")).equals(placeKey)) dup = true;
-                        if (!dup && seen.add(t)) all.add(new String[]{t, nm + " (background)"});
-                    }
-                    for (com.tarun.kahani.core.ScenePlan.Extra x : com.tarun.kahani.core.ScenePlan.extras(st)) {
-                        String t = "angles:scene:" + x.key + ":" + x.label;
-                        if (seen.add(t)) all.add(new String[]{t, "🎬 " + x.label + (project.manifestLine("scene", x.key) != null ? " ✅" : "")});
-                    }
-                    // v34: every thing of the story, with a picture (more angles) or without
                     String cast = project.read("cast.txt");
-                    for (String[] o : things(st)) {
-                        String t = "angles:obj:" + o[0] + ":" + o[1];
-                        boolean dup = false;
-                        for (String[] u : all) if (u[0].startsWith("angles:obj:" + o[0] + ":")) dup = true;
-                        if (!dup && seen.add(t)) all.add(new String[]{t, "🔑 " + o[1] + (cast.contains("|" + o[0] + "|") ? " (more angles)" : "")});
-                    }
+                    for (Story.CharacterDef c : StudioPlan.characters(st))
+                        all.add(new String[]{"angles:char:" + keyFor(c) + ":" + c.shown(), c.shown() + (charFile(c) != null ? " (more angles)" : "")});
+                    for (StudioPlan.Place pl : StudioPlan.places(st))
+                        all.add(new String[]{"angles:scene:" + pl.host.number + ":" + pl.shown, (pl.partOf() ? "" : "Part " + pl.host.number + ": ") + pl.shown + " (background)" + (sceneFile(pl.host) != null ? " ✅" : "")});
+                    for (String[] o : things(st))
+                        all.add(new String[]{"angles:obj:" + o[0] + ":" + o[1], "🔑 " + o[1] + (cast.contains("|" + o[0] + "|") ? " (more angles)" : "")});
                 } catch (Exception ignored) {}
-                String[] names = new String[all.size() + 1];
+                if (all.isEmpty()) { toast("The script names no character, object or place to picture"); return; }
+                String[] names = new String[all.size()];
                 for (int i = 0; i < all.size(); i++) names[i] = all.get(i)[1];
-                names[all.size()] = "➕ A thing of the story — name it";
                 new AlertDialog.Builder(MainActivity.this).setTitle("📷 Add pictures of…").setItems(names, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dd, int k) {
-                        if (k == all.size()) askThingName("make");
-                        else anglesFor(all.get(k)[0], all.get(k)[1], "make");
-                    }
+                    public void onClick(DialogInterface dd, int k) { anglesFor(all.get(k)[0], all.get(k)[1], "make"); }
                 }).setNegativeButton("Cancel", null).show();
             }
         });
@@ -4450,7 +4396,21 @@ public class MainActivity extends Activity {
                         Prefs.put(MainActivity.this, "humanQc", qc.isChecked() ? "1" : "0");
                         go.run();
                     }
-                }).setNegativeButton("Cancel", null).show();
+                }).setNegativeButton("Cancel", null);
+        final AlertDialog asking = dlg.show();
+        ui.post(new Runnable() {
+            public void run() {
+                if (!asking.isShowing()) return;            // answered: made, cancelled, or gone for pictures first
+                long left = (startAt[0] - android.os.SystemClock.uptimeMillis() + 999) / 1000;
+                if (left <= 0) {
+                    Button make = asking.getButton(DialogInterface.BUTTON_POSITIVE);
+                    if (make != null) make.performClick(); else { asking.dismiss(); go.run(); }
+                    return;
+                }
+                waitNote.setText("⏱ The film is started by itself in " + left + " s if you don't answer");
+                ui.postDelayed(this, 500);
+            }
+        });
     }
 
     private void startFilm() {
@@ -4845,12 +4805,17 @@ public class MainActivity extends Activity {
         if (shownWaiting) {
             LinearLayout ask = Ui.card(this);
             ask.addView(Ui.text(this, "📷 The director needs your pictures of: " + cur.picturesNeeded, 16, Ui.PRIMARY_DARK, true));
-            ask.addView(Ui.text(this, "Add them with the buttons below (up to 100 each; a sheet of several angles is split). The film goes on when every picture is there — or tap Continue. "
-                    + "If you don't answer, it goes on by itself after " + FilmJob.AUTO_CONTINUE_SECONDS + " seconds and the studio draws what has no picture.", 14, Ui.SUB, false));
+            ask.addView(Ui.text(this, "Add them with the buttons below (up to 18 each; a sheet of up to 3×2 views is split). The film goes on when every picture is there — or tap Continue. "
+                    + "If you don't answer, it goes on by itself after " + FilmJob.waitSeconds() + " seconds and the studio draws what has no picture.", 14, Ui.SUB, false));
             ask.addView(Ui.button(this, "▶  Continue now — the studio draws what has no picture", Ui.GREEN, new View.OnClickListener() {
                 public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.choosePictures(3); }
             }));
             ask.addView(countdown);
+            // (the user: "pause for 30 second to allow user to upload, otherwise continue if user doesn't upload anything
+            // or doesn't ask for more time"): more time, as often as wanted
+            ask.addView(Ui.small(this, "⏳ I need more time (+" + FilmJob.waitSeconds() + " s)", Ui.SUB, new View.OnClickListener() {
+                public void onClick(View v) { FilmJob j = FilmJob.current; if (j != null) j.moreTime(); }
+            }));
             // v47.8 (the user: "the film making window is asking for more pictures but no place to upload them"): a button
             // for every picture the film waits on, here on its card — the list below leaves out things it counts optional
             try {
@@ -4921,7 +4886,7 @@ public class MainActivity extends Activity {
                         final Project jp = j.project;
                         final Button again = Ui.button(MainActivity.this, "▶  Continue — make it again", Ui.GREEN, null);
                         final boolean auto = System.currentTimeMillis() - lastAutoRetry > 10 * 60 * 1000L;
-                        final long at = System.currentTimeMillis() + FilmJob.AUTO_CONTINUE_SECONDS * 1000L;
+                        final long at = System.currentTimeMillis() + FilmJob.waitSeconds() * 1000L;
                         final Runnable go = new Runnable() {
                             public void run() {
                                 if (FilmJob.busy()) return;
@@ -4972,7 +4937,7 @@ public class MainActivity extends Activity {
         }));
         body.addView(c);
         if (System.currentTimeMillis() - lastAutoRetry > 10 * 60 * 1000L) {
-            final long at = System.currentTimeMillis() + FilmJob.AUTO_CONTINUE_SECONDS * 1000L;
+            final long at = System.currentTimeMillis() + FilmJob.waitSeconds() * 1000L;
             ui.post(new Runnable() {
                 public void run() {
                     if (screen != S_PROGRESS || FilmJob.current != null || project != jp) return;
