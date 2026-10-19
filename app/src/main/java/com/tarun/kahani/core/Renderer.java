@@ -227,8 +227,9 @@ public final class Renderer {
         } else {
             g.save();
             stageView(g, 1 + 0.05f * u);
-            g.layer("set:title", W, H, new Gfx.Painter() { public void paint(Gfx gg) { Sets.paintStatic(gg, Sets.GARDEN, Sets.MORNING); } });
-            Sets.paintLive(g, Sets.GARDEN, Sets.MORNING, t);
+            final boolean royal = royalStory();
+            g.layer("set:title:" + royal, W, H, new Gfx.Painter() { public void paint(Gfx gg) { Sets.paintStatic(gg, Sets.GARDEN, Sets.MORNING, royal, Sets.D_NONE); } });
+            Sets.paintLive(g, Sets.GARDEN, Sets.MORNING, t, 0, royal);
             heroesLineup(g, t, vw < 900 ? 1 : 2, 640, Sets.GROUND + 20, 1.0f);
             g.restore();
         }
@@ -253,7 +254,7 @@ public final class Renderer {
             g.save();
             stageView(g, 1.08f + 0.04f * u);
             g.layer("set:" + set + ":" + tod + ":" + decor, W, H, new Gfx.Painter() { public void paint(Gfx gg) { Sets.paintStatic(gg, set, tod, decor); } });
-            Sets.paintLive(g, set, tod, t, film == null ? 0 : film.wind(t));     // v35: its trees, swaying
+            Sets.paintLive(g, set, tod, t, film == null ? 0 : film.wind(t), decor != Sets.D_PARK);     // v35: its trees, swaying
             g.restore();
         }
         if (s.text1.length() == 0 && s.text2.length() == 0) return;     // an establishing bridge: the place alone
@@ -283,8 +284,9 @@ public final class Renderer {
         else {
             g.save();
             stageView(g, 1 + 0.04f * u);
-            g.layer("set:end", W, H, new Gfx.Painter() { public void paint(Gfx gg) { Sets.paintStatic(gg, Sets.CELEBRATION, Sets.EVENING); } });
-            Sets.paintLive(g, Sets.CELEBRATION, Sets.EVENING, t);
+            final boolean royal = royalStory();
+            g.layer("set:end:" + royal, W, H, new Gfx.Painter() { public void paint(Gfx gg) { Sets.paintStatic(gg, Sets.CELEBRATION, Sets.EVENING, royal, Sets.D_NONE); } });
+            Sets.paintLive(g, Sets.CELEBRATION, Sets.EVENING, t, 0, royal);
             heroesLineup(g, t, vw < 900 ? 3 : 6, 640, Sets.GROUND + 30, vw < 900 ? 0.75f : 0.85f);
             g.restore();
         }
@@ -1098,7 +1100,7 @@ public final class Renderer {
             float farZoom = (1 + (camZ - 1) * 0.78f) * 1.1f;
             if (farZoom > 1.2f) Sets.paintStatic(g, set, tod, decor);
             else g.layer("set:" + set + ":" + tod + ":" + decor, W, H, new Gfx.Painter() { public void paint(Gfx gg) { Sets.paintStatic(gg, set, tod, decor); } });
-            Sets.paintLive(g, set, tod, t, wind);
+            Sets.paintLive(g, set, tod, t, wind, decor != Sets.D_PARK);
             skyNature(g, s, t, 0.38f);
             waterNature(g, s, t, null, null);
             snowLand(g, s, t, 0.38f);
@@ -1784,7 +1786,8 @@ public final class Renderer {
             }
             p.facing = mv != null ? mv.facing : trk.facing(tp);
             // a calm, weighted step: a small rise and fall (no hopping) and a slight sway of the body
-            mo.dy = -bump(p.walk) * (run ? 6 : 3.5f) * amt;
+            // (v47.12: in proportion to the body — the same rise on a puppy jolted it up and down every step)
+            mo.dy = -bump(p.walk) * (run ? 6 : 3.5f) * amt * Math.min(1, h / 300f);
             mo.rot = (float) Math.sin(p.walk) * (run ? 1.8f : 1.1f) * amt;
             p.armL = 8 + (17 + (float) Math.sin(p.walk) * 25) * amt;
             p.armR = 8 + (17 - (float) Math.sin(p.walk) * 25) * amt;
@@ -3017,11 +3020,15 @@ public final class Renderer {
                 case Film.G_JUMP: {
                     // a real jump: crouch, take off, fly on a parabola under gravity, land and squash
                     float d = act.t1 - act.t0, crouch = Math.min(0.15f, d * 0.2f), air = d - crouch - 0.12f;
+                    // (v47.12: a jump taken on the run leaves the steps' rise and fall behind it — the two together jolted)
+                    mo.dy *= 1 - Rig.smooth(0, crouch, u) * (1 - Rig.smooth(d - 0.12f, d, u));
                     // squash and stretch (Disney): the crouch squashes to 80 %, the take-off stretches to 120 %, the landing squashes again
                     if (u < crouch) { float k2 = u / crouch; mo.sy *= 1 - 0.2f * k2; mo.sx *= 1 + 0.12f * k2; }
                     else if (u < crouch + air) {
-                        float a2 = u - crouch, peak = 80, g2 = 8 * peak / (air * air), v0 = g2 * air / 2;
-                        mo.dy -= v0 * a2 - 0.5f * g2 * a2 * a2;
+                        // (v47.12: as high as the jumper is tall allows — a puppy leapt over half its height — and eased off
+                        // the ground and onto it: thrown off at full speed, it left the floor in one frame, a jump the audit counted)
+                        float a2 = u - crouch, peak = 80 * (a.look == null ? 1 : Math.max(0.3f, Math.min(1, a.look.height))), sn = (float) Math.sin(Math.PI * Math.min(1, a2 / air));
+                        mo.dy -= peak * sn * sn;
                         float rise = Math.max(0, 1 - a2 / (air * 0.35f));
                         mo.sy *= 1.04f + 0.16f * rise; mo.sx *= 1 - 0.08f * rise;
                         p.armL = 150; p.armR = 150;
@@ -4854,6 +4861,21 @@ public final class Renderer {
             new java.util.concurrent.atomic.AtomicLong(), new java.util.concurrent.atomic.AtomicLong()};
 
     static final boolean DEBUG_DRAW = System.getProperty("kahani.debugDraw") != null;
+
+    /**
+     * v47.12: a story of palaces (a palace hall, its courtyard or gate, a celebration, a garden that is not a park):
+     * only then do the drawn title and end pages show the palace on the far hill — a story in a park of today had
+     * a palace behind its title, its scenes and its end.
+     */
+    boolean royalStory() {
+        if (film == null) return true;
+        for (Film.Seg sg : film.segs) {
+            if (sg.type != Film.S_SCENE) continue;
+            if (sg.set == Sets.HALL || sg.set == Sets.COURTYARD || sg.set == Sets.GATE || sg.set == Sets.CELEBRATION
+                    || (sg.set == Sets.GARDEN && sg.decor != Sets.D_PARK)) return true;
+        }
+        return false;
+    }
 
     public static String stats() {
         long n = STAT[0].get(), alive = STAT[1].get(), sp = STAT[2].get(), spa = STAT[3].get();

@@ -1155,3 +1155,56 @@ them. Another sad line keeps them.
   rise to gesture; adding one would need new mesh regions and risks tearing the picture. That is not done.
 - **बाबू के लिए.** The girl kneels (lowered onto her knees), and only his photo's own bench shows in the two-shots.
   The earlier notes on both were out of date.
+
+## 16. Twelfth round (19 October): new stories made end to end, the phone's own drawing checked
+
+The user: "debug again … check everything is working fine and producing … film from script". Three stories the engine
+had never seen were written and made end to end, and their frames were looked at. One was in a park with the user's
+pictures (नीम के नीचे), one in English with no pictures at all (The Rainy Day Dog), one in a Hindi village (गौरी की
+घंटी). Every fault below was found on their frames and fixed in the universal code.
+
+### The phone's own drawing (`PhoneFilmTest`)
+
+No test had made a film the way the phone makes it. Now one does: a new story with two of the user's pictures from
+the test data, read by the phone's own loader. Every frame is drawn by the phone's AndroidGfx with the film look, and
+the frame audit reads it. Result on 858 frames: frame audit clean, faces living in every frame, lips moving through
+every spoken line. One frame a second is kept.
+
+### Faults found and fixed
+
+- **A palace in a park.** Every park was the palace garden, and every drawn title and end page had the palace too, so
+  a story in a park of today had a palace behind its title, its scenes and its end. A park or playground is now a
+  garden without the palace (`Sets.D_PARK`). The title and end pages show the palace only in a story of palaces.
+- **White dashes in the sky.** The palace garden's waterfall shimmer was drawn even where no waterfall was. It now
+  goes with the waterfall.
+- **"(उदास होकर)" played calm.** Sadness was read only from crying. Plain words of sadness now play sad and bring tears
+  (उदास, दुखी, निराश, मायूस, "sadly"), and so do worry (चिंतित, परेशान, "worried"), annoyance (नाराज़, "annoyed"),
+  surprise ("surprised", "shocked") and gladness (उत्साह, "happily").
+- **The puppy drawn as a man.** "Bruno (dog)" with "(a small brown puppy)" under it was read as a name with a role and
+  an empty description. A character named as an animal is now that animal, and keeps its own name. A robot dog keeps
+  its role.
+- **Arrivals.** A character first named just after a door is opened (or knocked, scratched or rung at) comes in
+  through it. One whose first line is said "(दौड़ते हुए आता है)" runs in with it. Both used to be there from the start.
+- **Lifted up after a fall.** मोहन slipped and fell, and got up by himself at once, so when दादी went to him and
+  "उसे उठाती हैं" she lifted no one, and her own "उठकर" (getting up) stood him up too. Now one who falls stays down
+  when what follows has someone lift them up, and stands once that one has come to them. With no one coming they get
+  up by themselves, as before (`FallHelpTest`).
+- **A puppy that leapt.** Coming in, every walk-on took a fixed time whatever its length and the walker's size: the
+  puppy dashed in at four of its heights a second. A jump rose 80 units whatever the jumper's size, thrown off the
+  ground at full speed. The steps' rise was the same 6 units on a puppy as on a man. Each now goes with the size of
+  the body. A jump eases off the ground and onto it, and leaves the steps' rise behind it.
+
+### Results
+
+| Story | Frame audit | Voices |
+|---|---|---|
+| नीम के नीचे (the user's pictures, a park) | 0 findings | 4 of 4 |
+| The Rainy Day Dog (drawn, English) | 0 findings (it had a jump and two jolts) | 5 of 5 |
+| गौरी की घंटी (drawn, a village, a cow, rain, a fall) | 0 findings | 4 of 4 |
+
+### Not fixed
+
+- The puppy "jumps into Maya's arms" and lands beside her on the sofa: held animals are not drawn.
+- An old man's picture whose own face is sad smiles only a little: the picture's face is where the acting starts, and
+  his moustache hides his mouth.
+- The drawn people and places are simple shaded shapes.

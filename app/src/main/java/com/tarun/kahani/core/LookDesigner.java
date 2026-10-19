@@ -322,7 +322,7 @@ public final class LookDesigner {
         Object[][] sp = {
                 {Look.SP_FOX, "लोमड़ी", "fox"}, {Look.SP_LION, "शेर", "सिंह", "lion"}, {Look.SP_TIGER, "बाघ", "tiger"},
                 {Look.SP_BEAR, "भालू", "रीछ", "bear"}, {Look.SP_ELEPHANT, "हाथी", "elephant"}, {Look.SP_RABBIT, "खरगोश", "rabbit", "hare"},
-                {Look.SP_CAT, "बिल्ली", "cat"}, {Look.SP_DOG, "कुत्ता", "कुत्ते", "dog"}, {Look.SP_DEER, "हिरण", "deer"},
+                {Look.SP_CAT, "बिल्ली", "cat", "kitten"}, {Look.SP_DOG, "कुत्ता", "कुत्ते", "dog", "puppy", "पिल्ला", "पिल्ले"}, {Look.SP_DEER, "हिरण", "deer"},
                 {Look.SP_GOAT, "बकरी", "बकरा", "goat"}, {Look.SP_COW, "गाय", "बैल", "cow", "ox", "bull"}, {Look.SP_WOLF, "भेड़िया", "wolf"},
                 {Look.SP_MOUSE, "चूहा", "चुहिया", "mouse", "rat"}, {Look.SP_TORTOISE, "कछुआ", "tortoise", "turtle"}, {Look.SP_HORSE, "घोड़ा", "घोड़ी", "horse"},
                 {Look.SP_CROW, "कौआ", "कौवा", "crow"}, {Look.SP_SPARROW, "गौरैया", "चिड़िया", "sparrow"}, {Look.SP_PARROT, "तोता", "मैना", "parrot"},

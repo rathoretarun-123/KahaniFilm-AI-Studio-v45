@@ -188,6 +188,12 @@ jobs:
             --tests com.tarun.kahani.LipFinderTest \
             --tests com.tarun.kahani.WalkSideTest \
             --tests com.tarun.kahani.TearsDryTest \
+            --tests com.tarun.kahani.PhoneFilmTest \
+            --tests com.tarun.kahani.ParkSetTest \
+            --tests com.tarun.kahani.MannerFeelingsTest \
+            --tests com.tarun.kahani.DogCharacterTest \
+            --tests com.tarun.kahani.EntranceTest \
+            --tests com.tarun.kahani.FallHelpTest \
             --tests com.tarun.kahani.UiShotsTest \
             --tests com.tarun.kahani.FrameAuditTest \
             --tests com.tarun.kahani.ObjectCharactersTest \

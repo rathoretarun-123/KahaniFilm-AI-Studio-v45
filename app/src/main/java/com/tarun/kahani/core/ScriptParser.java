@@ -1401,9 +1401,16 @@ public final class ScriptParser {
         // look (a "Corporate Rakshas" is a man in a suit, not a monster)
         String role = "";
         Matcher rm = Pattern.compile("^(.{2,40}?)\\s+[-–—]\\s+(.{2,60})$").matcher(name.trim());
-        if (rm.matches() && rm.group(2).trim().split("\\s+").length <= 6 && !rm.group(2).contains(":")) { name = rm.group(1).trim(); role = rm.group(2).trim(); }
+        // (v47.12: unless it names what they are — "Bruno — dog, a small brown puppy" is a dog called Bruno: the name
+        // is split off and the rest stays in the description the look is read from)
+        if (rm.matches() && rm.group(2).trim().split("\\s+").length <= 6 && !rm.group(2).contains(":")) {
+            name = rm.group(1).trim();
+            if (LookDesigner.speciesOf(rm.group(2) + "।") < 0 || Txt.has(rm.group(2), "robo", "रोबो")) role = rm.group(2).trim();
+        }
+        // (v47.12: "Bruno (dog)" is a dog, not a role — the robot dog is "robo": the dog and its description went into
+        // the role, and the puppy was drawn as a man)
         else if (paren.length() > 0 && paren.split("\\s+").length <= 4 && findAge(paren) < 0 && !paren.matches(".*[0-9].*")
-                && Txt.has(paren, "robo", "robot", "dog", "witch", "kid", "boss", "chief", "captain", "रोबो", "बॉस", "कप्तान")) role = paren;
+                && Txt.has(paren, "robo", "robot", "witch", "kid", "boss", "chief", "captain", "रोबो", "बॉस", "कप्तान")) role = paren;
         // the description keeps the name, age and details; the role stays apart (c.role)
         String hdr = role.length() > 0 ? name + (paren.length() > 0 && !paren.equals(role) ? " (" + paren + ")" : "") : header;
         // v39: "वृंदा - 11 साल, बड़ी बेटी": an age and a relation after the name are who they are (a daughter is a girl),

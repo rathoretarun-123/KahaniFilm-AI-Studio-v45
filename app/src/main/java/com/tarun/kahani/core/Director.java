@@ -215,8 +215,16 @@ public final class Director {
         if (Txt.has(m, "चीख", "चिल्ला", "दर्द", "scream")) return Pose.PAIN;
         if (Txt.has(m, "गुस्स", "दहाड़", "क्रोध", "angry", "roar")) return Pose.ANGRY;
         if (Txt.has(m, "रोते", "रोकर", "रो रहे", "रोती", "फूट-फूट", "cry", "sob")) return Pose.SAD;
+        // v47.12: sadness named plainly ("उदास होकर", "निराश स्वर में", "sadly") — it was read as no feeling at all, and a
+        // sad line was played calm, without a tear
+        if (Txt.has(m, "उदास", "दुखी", "दुःखी", "दुख से", "दुःख से", "निराश", "मायूस", "ग़मगीन", "गमगीन", "सिर झुका",
+                "sad", "upset", "disappointed", "gloomy", "unhappy", "sorrow", "downcast")) return Pose.SAD;
+        // (annoyance is anger, smaller)
+        if (Txt.has(m, "नाराज़", "नाराज", "झुँझला", "झुंझला", "चिढ़", "annoyed", "irritated", "furious")) return Pose.ANGRY;
         if (Txt.has(m, "हँस", "हंस", "खिलखिला", "laugh") || Txt.has(text, "हा हा", "ही ही", "ही-ही")) return villain ? Pose.EVIL : Pose.LAUGH;
         if (Txt.has(m, "डर", "घबरा", "सहम", "काँप", "कांप", "झिझक", "scared", "afraid")) return Pose.SCARED;
+        // v47.12: worry wears the face of fear, smaller ("चिंतित होकर", "परेशान", "worried")
+        if (Txt.has(m, "चिंतित", "चिंता से", "चिन्तित", "परेशान", "बेचैन", "worried", "anxious", "nervous", "uneasy")) return Pose.SCARED;
         // the director's manual (2.6): suspicion and relief are directing cues of their own
         if (Txt.has(m, "शक", "संदेह", "शंका", "suspicious", "suspicion", "doubtful", "warily", "wary")) return Pose.SUSPICIOUS;
         if (Txt.has(m, "राहत", "चैन की साँस", "चैन की सांस", "सुकून", "relieved", "relief", "sigh of relief")) return Pose.RELIEVED;
@@ -224,14 +232,16 @@ public final class Director {
         if (Txt.has(m, "फुसफुसा", "धीरे से", "whisper")) return Pose.WHISPER;
         // v47: more emotional tones that reach into every day Hindi
         if (Txt.has(m, "सुबक", "आंसू", "आँसू", "आँखें नम", "आंखें नम", "टूटती", "भावुक", "गले लग", "tearful", "weeping", "choked", "trembling voice", "heartbroken", "broken voice", "moist eyes")) return Pose.SAD;
-        if (Txt.has(m, "अविश्वास", "आश्चर्य", "हैरान", "चौंक", "मुंह खुल", "मुँह खुल", "disbelief", "astonish", "startle", "amazed", "speechless", "jaw drop")) return Pose.SURPRISED;
+        if (Txt.has(m, "अविश्वास", "आश्चर्य", "हैरान", "चौंक", "मुंह खुल", "मुँह खुल", "disbelief", "astonish", "startle", "amazed", "speechless", "jaw drop",
+                "अचंभ", "अचम्भ", "surprised", "shocked", "in surprise")) return Pose.SURPRISED;
         if (Txt.has(m, "हिचकिचा", "हिचकिचाहट", "सकपका", "ठिठक", "hesitant", "flinch", "stammer")) return Pose.SUSPICIOUS;
         if (Txt.has(m, "खुशी से", "चेहरा खिल", "खिलखिलाता", "beaming", "joyful", "glowing", "overjoyed")) return villain ? Pose.EVIL : Pose.LAUGH;
         if (Txt.has(m, "प्यार से", "स्नेह से", "आत्मीयता", "affection", "tenderly", "fondly", "lovingly", "warmly")) return villain ? Pose.EVIL : Pose.HAPPY;
         if (Txt.has(m, "गर्व", "सीना", "proud")) return Pose.PROUD;
         if (Txt.has(m, "दृढ़", "गंभीर", "आत्मविश्वास", "विश्वास", "तेज़ आवाज़", "determined", "firm")) return Pose.DETERMINED;
         if (Txt.has(m, "मासूम", "उत्सुक", "आँखें बड़ी", "curious", "innocent")) return Pose.CURIOUS;
-        if (Txt.has(m, "मुस्कुरा", "मुस्कान", "प्यार", "मीठी", "खुशी", "smil", "happy")) return villain ? Pose.EVIL : Pose.HAPPY;
+        if (Txt.has(m, "मुस्कुरा", "मुस्कान", "प्यार", "मीठी", "खुशी", "smil", "happy",
+                "प्रसन्न", "उत्साह", "ख़ुशी", "excited", "cheerful", "glad", "delighted", "happily", "joyfully")) return villain ? Pose.EVIL : Pose.HAPPY;
         if (Txt.has(m, "भारी आवाज़", "गूँजती") && villain) return Pose.ANGRY;
         return Pose.NEUTRAL;
     }
@@ -1226,8 +1236,12 @@ public final class Director {
         String voiceFromOutside = Txt.has(where, "बाहर से", "आवाज़ आती", "from outside") ? "y" : "";
         // v34: only addressed or named in a manner so far (not seen speaking or acting): a later "… walks in" is their entrance
         java.util.Set<Story.CharacterDef> soft = new java.util.HashSet<Story.CharacterDef>();
+        // v47.12: the door opened (a knock, a scratch, the bell at it): one first seen or named just after it comes in
+        // through it — the wet puppy was in the room from the start, and the door was opened to no one
+        int doorBeat = -1;
         for (int bi = b0; bi < b1; bi++) {
             Story.Beat b = sc.beats.get(bi);
+            boolean byDoor = doorBeat >= b0 && bi > doorBeat && bi - doorBeat <= 2;
             if (b.type == Story.Beat.DIALOGUE) {
                 Story.CharacterDef c = b.speaker;
                 // a voice from the air, a device or off-screen is heard, never stood on the stage
@@ -1235,17 +1249,20 @@ public final class Director {
                 if (c != null && !order.contains(c)) {
                     order.add(c);
                     boolean far = Txt.has(b.manner, "दूर से");
-                    if ((voiceFromOutside.length() > 0 && bi > b0 && !mentionsAny(sc, b0, bi, c)) || far) entryBeat.put(c, bi);
+                    // (v47.12: or the manner of their first line has them come in — "(दौड़ते हुए आता है)": he stood there from
+                    // the start, and his run in was never seen)
+                    if ((voiceFromOutside.length() > 0 && bi > b0 && !mentionsAny(sc, b0, bi, c)) || far || byDoor || isEntry(b.manner)) entryBeat.put(c, bi);
                 }
                 // v38: the others saying the line together ("तीनों:", "मीना और राजू:") are on the stage too
                 if (c != null) for (Story.CharacterDef m : b.chorus) if (!m.voiceOnly && !order.contains(m)) order.add(m);
                 // characters named in the manner (e.g. "वृंदा की तलवार को रोकते हुए") are on stage too
                 for (Story.CharacterDef m : ScriptParser.mentions(story, b.manner)) if (!order.contains(m)) { order.add(m); soft.add(m); }
                 // ...and so is anyone addressed by name ("और कृपा, तुम्हारी चतुराई...")
-                for (Story.CharacterDef m : vocatives(b.text)) if (!order.contains(m)) { order.add(m); soft.add(m); }
+                for (Story.CharacterDef m : vocatives(b.text)) if (!order.contains(m)) { order.add(m); soft.add(m); if (byDoor) entryBeat.put(m, bi); }
                 if (c != null) soft.remove(c);
             } else {
                 String txt = b.text;
+                if (atTheDoor(txt)) doorBeat = bi;
                 for (String sent : sentences(txt)) {
                     List<Story.CharacterDef> ms = presentWithGroups(sent);
                     // v39: "चारों पार्क में चलते हुए आते हैं" with no name: the scene's own people (those who speak or are named in it)
@@ -1266,6 +1283,7 @@ public final class Director {
                         // (one who follows the one coming in comes in too: "कान्हा … दौड़ता हुआ आता है, शेरू उसके पीछे भौंकता हुआ दौड़ रहा है")
                         boolean follows = mine != sent && isEntry(sent) && Txt.has(mine, "पीछे", "साथ-साथ", "साथ साथ", "के साथ", "दौड़", "भाग", "behind", "follows", "runs", "with him", "with her");
                         if ((bi > b0 || walkingIn(mine) || follows && walkingIn(sent)) && (isEntry(mine) || follows)) entryBeat.put(m, bi);
+                        else if (byDoor && doorBeat != bi) entryBeat.put(m, bi);
                     }
                 }
             }
@@ -1440,12 +1458,16 @@ public final class Director {
                 Integer ent = entryBeat.get(a.c);
                 if (ent != null && ent == bi) {
                     boolean far = b.type == Story.Beat.DIALOGUE && Txt.has(b.manner, "दूर से");
-                    String sent = b.type == Story.Beat.DIRECTION ? b.text : "";
+                    String sent = b.type == Story.Beat.DIRECTION ? b.text : b.manner == null ? "" : b.manner;     // (v47.12: a line's manner says how they come in)
                     tc = enter(a, tc, sent, far);
                 }
             }
             if (b.type == Story.Beat.DIALOGUE) { leading = false; tc = dialogue(si, bi, b, tc); }
-            else tc = direction(si, bi, b, tc, bi == b0 && pi == 0, where);
+            else {
+                float tb = tc;
+                tc = direction(si, bi, b, tc, bi == b0 && pi == 0, where);
+                if (!awaitingHelp.isEmpty() && helpUp(b.text)) tc = liftTheFallen(tb, tc);
+            }
             for (Film.Actor a : seg.actors) orderKeys(a);
             unstack(tc);
             for (Object[] ch : changed) {
@@ -1465,6 +1487,9 @@ public final class Director {
             comicBeat(b0 < b1 ? tc : t, mood);
             if ((mood == Film.M_HAPPY || mood == Film.M_PLAYFUL || mood == Film.M_CELEBRATE) && storyHasVillain() && tc - t > 6) shadowPass(t + (tc - t) * 0.55f);
         }
+        // (v47.12: nobody came for the fallen in this part — they get up by themselves, as before)
+        for (java.util.Map.Entry<Film.Actor, Float> e : awaitingHelp.entrySet()) standUp(e.getKey(), e.getValue() + 1.6f);
+        awaitingHelp.clear();
         paceTracks(tc + 0.8f);
         playUntil(tc + 0.8f);
         seg.t1 = tc + 0.8f;
@@ -1624,6 +1649,12 @@ public final class Director {
         return n < out.size() ? new ArrayList<Story.CharacterDef>(out.subList(0, n)) : out;
     }
 
+    /** v47.12: a direction at the door: it opens, or someone knocks, scratches or rings at it. */
+    static boolean atTheDoor(String s) {
+        if (s == null || !Txt.has(s, "door", "दरवाज़", "दरवाज", "द्वार")) return false;
+        return Txt.has(s, "open", "knock", "scratch", "doorbell", "rings", "bell", "खोल", "खुल", "दस्तक", "खटखट", "खटखटा", "घंटी", "खरोंच");
+    }
+
     static boolean isEntry(String s) {
         return Txt.has(s, "बाहर निकल", "आता है", "आती है", "आते हैं", "आ जाता", "आ जाती", "आ बैठ", "प्रवेश", "घुसते", "घुसता",
                 "छलाँग", "उल्टा लटक", "दौड़ते हुए आते", "आगे आती", "आगे आता", "enters", "arrives", "comes in", "पहुँचते", "पहुँचती", "पहुँचता",
@@ -1778,6 +1809,9 @@ public final class Director {
         Film.Key k = a.at(tc + 0.01f);
         k.x = dest;
         k.moveDur = run ? 0.9f : blindIn ? 2.0f : 1.3f;
+        // (v47.12: never quicker than a body of this size can cover the ground — a puppy dashed in from off the stage
+        // at four of its heights a second, a jump the frame audit counted)
+        k.moveDur = Math.max(k.moveDur, leastMoveTime(Math.abs(dest - startX), heightOf(a), run));
         k.run = run;
         k.facing = dest > startX ? 1 : -1;
         // (v35: a hand out in front without a cane; with one, the cane finds the way and taps)
@@ -4869,6 +4903,15 @@ public final class Director {
                         gesture = -1; d = 1.9f;
                         break;
                     }
+                    // v47.12: someone lifts them up in what follows ("दादी … उसे उठाती हैं", "helps him up"): they stay down
+                    // until then (the boy stood up by himself, and the grandmother lifted no one)
+                    if (helpUp(ahead)) {
+                        Film.Key still = keyAt(a, t0 + 1.6f); still.body = Pose.LIE; still.seat = -1; still.emotion = Pose.PAIN;
+                        awaitingHelp.put(a, t0);
+                        falls++;
+                        gesture = -1; d = 1.9f;
+                        break;
+                    }
                     Film.Key up = keyAt(a, t0 + 1.6f); up.body = Pose.STAND; up.seat = -1; up.emotion = Pose.PAIN;
                     Film.Key ok = keyAt(a, t0 + 2.6f); ok.emotion = Pose.NEUTRAL;
                     falls++;
@@ -4923,7 +4966,11 @@ public final class Director {
                         Film.Key k = keyAt(a, t0 + 0.6f); k.body = Pose.SIT; k.seat = Film.SEAT_FLOOR;
                     }
                     break;
-                case EV_STAND: if (now.body == Pose.SIT || now.body == Pose.LIE || now.body == Pose.KNEEL) { Film.Key k = keyAt(a, t0); k.body = Pose.STAND; k.seat = -1; k.eyesShut = false; } break;
+                case EV_STAND:
+                    // (v47.12: not one lying fallen who waits to be lifted — "दादी … उठकर मोहन के पास जाती हैं": she gets up, he does not)
+                    if (awaitingHelp.containsKey(a)) break;
+                    if (now.body == Pose.SIT || now.body == Pose.LIE || now.body == Pose.KNEEL) { Film.Key k = keyAt(a, t0); k.body = Pose.STAND; k.seat = -1; k.eyesShut = false; }
+                    break;
                 case EV_EYES: {
                     // (v47.8: meditation keeps them shut a while — "आँखें बंद करके ध्यान करते हैं")
                     float open = Txt.has(w, "ध्यान", "meditat") ? Math.max(dur, 4.5f) : dur;
@@ -5079,6 +5126,45 @@ public final class Director {
      * v47.3: after this fall the script brings blood or a death before anyone gets up ("गिर जाता है। सिर से खून बहता
      * है।", "falls … and dies"): the one who fell stays on the ground for it.
      */
+    /** v47.12: the fallen waiting for the one who lifts them up — and when they fell. */
+    private final java.util.Map<Film.Actor, Float> awaitingHelp = new java.util.LinkedHashMap<Film.Actor, Float>();
+    public int helpedUp;
+
+    /** v47.12: someone is lifted up (to their feet) in this text. */
+    static boolean helpUp(String s) {
+        return s != null && Txt.has(s, "उसे उठा", "उन्हें उठा", "उसको उठा", "हाथ पकड़कर उठा", "सहारा देकर उठा", "हाथ देकर उठा", "उठाकर खड़ा",
+                "helps him up", "helps her up", "helped him up", "helped her up", "help him up", "help her up", "lifts him up", "lifts her up",
+                "pulls him up", "pulls her up", "picks him up", "picks her up", "to his feet", "to her feet");
+    }
+
+    /**
+     * v47.12: the fallen who were waiting are lifted up by the direction staged from tb to tc — once the one who comes
+     * to them has got there (every move begun in it has ended); the time it ends.
+     */
+    private float liftTheFallen(float tb, float tc) {
+        float end = tc, arrive = tc - 0.2f;
+        for (Film.Actor o : seg.actors) {
+            if (awaitingHelp.containsKey(o)) continue;
+            // (a walk the direction set going may begin a moment after its own end: the old one gets up first)
+            for (Film.Key k : o.keys) if (k.moveDur > 0 && k.t >= tb - 0.01f && k.t <= tc + 1.5f) arrive = Math.max(arrive, k.t + k.moveDur);
+        }
+        for (java.util.Map.Entry<Film.Actor, Float> e : awaitingHelp.entrySet()) {
+            float at = Math.max(e.getValue() + 1.6f, arrive + 0.2f);
+            standUp(e.getKey(), at);
+            end = Math.max(end, at + 0.8f);
+            helpedUp++;
+        }
+        awaitingHelp.clear();
+        return end;
+    }
+
+    /** v47.12: up from the ground at t, the pain easing a second later. */
+    private static void standUp(Film.Actor a, float t) {
+        Film.Key up = keyAt(a, t); up.body = Pose.STAND; up.seat = -1; up.emotion = Pose.PAIN;
+        spread(a, up);
+        Film.Key ok = keyAt(a, t + 1.0f); ok.emotion = Pose.NEUTRAL;
+    }
+
     private boolean downAfter(String w) {
         int i = firstAt(w, "गिर", "फिसल", "falls", "fell", "slips", "slipped", "tumbles");
         String rest = (i >= 0 ? w.substring(i) : w) + " " + ahead;
@@ -8042,6 +8128,7 @@ public final class Director {
             // v41: on the swing or the slide: the seat, the getting up and the lying down are the play's (playFrom)
         } else if (risesUp(s) && !Txt.has(s, "उठकर बैठ", "उठ कर बैठ", "उठ बैठ", "sits up", "sat up")) {
             for (Film.Actor a : who) {
+                if (awaitingHelp.containsKey(a)) continue;      // (v47.12: the fallen one waits to be lifted)
                 // v35: one lying sits up first (0.9 s), then stands; from the floor, a sofa or a bed the rise takes a second.
                 // When the same sentence woke them, they stand after sitting up and stretching on the bed
                 float tt = t + 0.1f;

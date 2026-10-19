@@ -168,7 +168,9 @@ public final class Sets {
 
     /** v45: the details of a place drawn over its set (a metro platform over the street, desks over the room …). */
     public static final int D_NONE = 0, D_METRO = 1, D_OFFICE = 2, D_HOSPITAL = 3, D_CLASS = 4, D_MALL = 5, D_AIRPORT = 6, D_GYM = 7, D_CAFE = 8,
-            D_WELL = 9, D_FIELDS = 10, D_POTTER = 11, D_TEMPLE = 12, D_GHAT = 13, D_CAMP = 14, D_BAZAAR = 15;
+            D_WELL = 9, D_FIELDS = 10, D_POTTER = 11, D_TEMPLE = 12, D_GHAT = 13, D_CAMP = 14, D_BAZAAR = 15,
+            /** v47.12: a park or a playground of today — the garden without the palace on the far hill. */
+            D_PARK = 16;
 
     /** v45: the place's own details, from its name or its first sentence. */
     public static int decorFor(String text) {
@@ -188,6 +190,8 @@ public final class Sets {
         if (Txt.has(text, "युद्ध", "रणभूमि", "छावनी", "शिविर") || Txt.hasWord(text, "battlefield", "battle", "camp", "war camp")) return D_CAMP;
         if (Txt.has(text, "बाज़ार", "बाजार", "हाट", "मंडी") || Txt.hasWord(text, "bazaar", "market", "marketplace")) return D_BAZAAR;
         if (Txt.has(text, "खेत", "खलिहान") || Txt.hasWord(text, "fields", "field", "farm", "farmland")) return D_FIELDS;
+        if ((Txt.has(text, "पार्क", "उद्यान", "मैदान") || Txt.hasWord(text, "park", "parks", "playground"))
+                && !Txt.has(text, "महल", "राजमहल", "palace", "castle", "किला", "किले")) return D_PARK;
         return D_NONE;
     }
 
@@ -205,8 +209,7 @@ public final class Sets {
 
     /** v45: the set and its details as one cached picture. */
     public static void paintStatic(Gfx g, int set, int tod, int decor) {
-        paintStatic(g, set, tod);
-        if (decor != D_NONE) paintDecor(g, decor, tod);
+        paintStatic(g, set, tod, decor != D_PARK, decor);
     }
 
     static void paintDecor(Gfx g, int decor, int tod) {
@@ -423,18 +426,22 @@ public final class Sets {
         g.line(x, y, x, y - 18, 3); g.line(x, y, x + 12, y + 4, 3);
     }
 
-    public static void paintStatic(Gfx g, int set, int tod) {
+    public static void paintStatic(Gfx g, int set, int tod) { paintStatic(g, set, tod, true, D_NONE); }
+
+    /** v47.12: palace = false leaves the palace off the far hill of a garden or a celebration (a park, a story of today). */
+    public static void paintStatic(Gfx g, int set, int tod, boolean palace, int decor) {
         boolean[] still = STILL_LAYER.get();
         boolean was = still[0];
         still[0] = trees(set) != null && set >= GARDEN && set <= STREET;
         try {
-            paintStill(g, set, tod);
+            paintStill(g, set, tod, palace);
         } finally {
             still[0] = was;
         }
+        if (decor != D_NONE && decor != D_PARK) paintDecor(g, decor, tod);
     }
 
-    private static void paintStill(Gfx g, int set, int tod) {
+    private static void paintStill(Gfx g, int set, int tod, boolean palace) {
         switch (set) {
             case CAVE_IN: caveInside(g); return;
             case CAVE_MOUTH: caveMouth(g, tod); return;
@@ -447,12 +454,12 @@ public final class Sets {
             default:
         }
         sky(g, tod);
-        hills(g, tod, set == GARDEN);        // only the palace garden has the waterfall on the far hill
+        hills(g, tod, set == GARDEN && palace);        // only the palace garden has the waterfall on the far hill
         switch (set) {
-            case GARDEN: palaceFar(g, tod, 0.82f); garden(g, tod); break;
+            case GARDEN: if (palace) palaceFar(g, tod, 0.82f); garden(g, tod); break;
             case COURTYARD: courtyard(g, tod); break;
             case GATE: gate(g, tod); break;
-            case CELEBRATION: palaceFar(g, tod, 1.0f); garden(g, tod); break;
+            case CELEBRATION: if (palace) palaceFar(g, tod, 1.0f); garden(g, tod); break;
             case VILLAGE: village(g, tod); break;
             default: meadow(g, tod);
         }
@@ -975,8 +982,13 @@ public final class Sets {
 
     public static void paintLive(Gfx g, int set, int tod, float t) { paintLive(g, set, tod, t, 0); }
 
-    /** wind (v35): the film's wind now (+ towards the right): the place's trees sway in it. */
-    public static void paintLive(Gfx g, int set, int tod, float t, float wind) {
+    public static void paintLive(Gfx g, int set, int tod, float t, float wind) { paintLive(g, set, tod, t, wind, true); }
+
+    /**
+     * wind (v35): the film's wind now (+ towards the right): the place's trees sway in it. palace (v47.12): false for a
+     * park — no shimmer of the palace garden's waterfall (it hung in the air as white dashes beside the faces).
+     */
+    public static void paintLive(Gfx g, int set, int tod, float t, float wind, boolean palace) {
         float[][] tr = trees(set);
         if (tr != null) for (float[] q : tr) tree(g, q[0], q[1], q[2], tod, t, wind, true);
         if (set == CAVE_MOUTH && tr != null) {
@@ -1029,7 +1041,7 @@ public final class Sets {
             case GARDEN: case CELEBRATION: case GENERIC_OUT: case GATE: {
                 if (tod != NIGHT) {
                     // waterfall shimmer (the palace garden's waterfall)
-                    if (set == GARDEN) {
+                    if (set == GARDEN && palace) {
                         g.color(0x88FFFFFF);
                         for (int i = 0; i < 4; i++) {
                             float y = 300 + ((t * 120 + i * 30) % 120);
