@@ -1101,6 +1101,7 @@ public final class Renderer {
             if (farZoom > 1.2f) Sets.paintStatic(g, set, tod, decor);
             else g.layer("set:" + set + ":" + tod + ":" + decor, W, H, new Gfx.Painter() { public void paint(Gfx gg) { Sets.paintStatic(gg, set, tod, decor); } });
             Sets.paintLive(g, set, tod, t, wind, decor != Sets.D_PARK);
+            if (set == Sets.ROOM && film != null) Sets.windowRain(g, t, Math.max(film.weather(Film.W_RAIN, t), film.weather(Film.W_STORM, t)));
             skyNature(g, s, t, 0.38f);
             waterNature(g, s, t, null, null);
             snowLand(g, s, t, 0.38f);
@@ -1218,10 +1219,10 @@ public final class Renderer {
             if (cand > 0) for (Film.Weather w : film.weather) if (w.type == Film.W_CANDLES && t >= w.t0 && t <= w.t1 + 1.5f && inPart(w, s)) candles(g, s, t, w.kind, cand);
             float ff = film.weather(Film.W_FIREFLIES, t);
             if (ff > 0) Nature.fireflies(g, s.ground, t, ff);
-            float wet = film.wetness(t);
-            if (wet > 0.05f) for (Film.Actor a : s.actors) {
+            if (film.wetness(t) > 0.05f) for (Film.Actor a : s.actors) {
                 Film.Key k = a.stateAt(t);
-                if (!k.visible) continue;
+                float wet = film.wetness(a, s, t);
+                if (!k.visible || wet <= 0.05f) continue;
                 float h = actorHeight(a.look, a.c, art, s);
                 Nature.drips(g, Director.xAt(a, t), s.ground - h, s.ground, h * 0.4f, t, wet, a.order);
             }
@@ -1698,7 +1699,7 @@ public final class Renderer {
             float wnd = film.wind(t), dir = wnd >= 0 ? 1 : -1, gx = Director.xAt(a, t) / 1280f;
             float gust = Nature.gustField(gx, t, dir);
             p.wind = wnd * (0.75f + 0.45f * gust) + 0.12f * (0.6f + 0.4f * gust) * (float) Math.sin(t * 0.9f + a.order * 1.3f);
-            p.wet = film.wetness(t);
+            p.wet = film.wetness(a, s, t);
             // v34: an umbrella opens over the head while it rains (and keeps its carrier dry)
             float rainNow = Math.max(film.weather(Film.W_RAIN, t), film.weather(Film.W_STORM, t));
             // v47.7: or opened by the words ("छाता खोलती है"), rain or shine — it spreads over 1.2 s from then

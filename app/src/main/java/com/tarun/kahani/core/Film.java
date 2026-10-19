@@ -600,6 +600,20 @@ public final class Film {
         return w * (0.75f + 0.25f * (float) Math.sin(t * 1.3) + 0.12f * (float) Math.sin(t * 3.7));
     }
 
+    /**
+     * v47.12: how wet this one is at t in the part seg — under a roof, only one who came in from the rain while it fell
+     * (the puppy at the door "all wet"); the people inside all along stay dry (a rain outside the window soaked them).
+     */
+    public float wetness(Actor a, Seg seg, float t) {
+        float w = wetness(t);
+        if (w <= 0 || a == null || seg == null || Sets.outdoorSet(seg.set) || seg.set == Sets.CAVE_MOUTH) return w;
+        float rainFrom = Float.MAX_VALUE;
+        for (Weather r : weather) if ((r.type == W_RAIN || r.type == W_STORM) && r.t0 <= t) rainFrom = Math.min(rainFrom, r.t0);
+        float seen = -1;
+        for (Key k : a.keys) if (k.visible && k.t >= seg.t0 - 0.01f) { seen = k.t; break; }
+        return seen > seg.t0 + 0.2f && seen >= rainFrom ? w : 0;
+    }
+
     /** How wet the characters are: soaking up during rain, drying slowly afterwards. */
     public float wetness(float t) {
         float wet = 0;

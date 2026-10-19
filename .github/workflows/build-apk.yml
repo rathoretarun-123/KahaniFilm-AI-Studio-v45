@@ -194,6 +194,7 @@ jobs:
             --tests com.tarun.kahani.DogCharacterTest \
             --tests com.tarun.kahani.EntranceTest \
             --tests com.tarun.kahani.FallHelpTest \
+            --tests com.tarun.kahani.WetIndoorsTest \
             --tests com.tarun.kahani.UiShotsTest \
             --tests com.tarun.kahani.FrameAuditTest \
             --tests com.tarun.kahani.ObjectCharactersTest \

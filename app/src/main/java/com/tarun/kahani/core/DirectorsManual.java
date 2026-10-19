@@ -331,7 +331,10 @@ public final class DirectorsManual {
         }
         if (b.length() == 0) b.append("no character in frame");
         float wet = film.wetness(t);
-        if (wet > 0.05f) b.append(" | everyone wet (rain)");
+        Film.Seg here = null;
+        for (Film.Seg x : film.segs) if (t >= x.t0 && t < x.t1) here = x;
+        // (v47.12: under a roof the rain outside wets no one who was inside)
+        if (wet > 0.05f && (here == null || Sets.outdoorSet(here.set))) b.append(" | everyone wet (rain)");
         return b.toString();
     }
 

@@ -465,6 +465,24 @@ public final class Sets {
         }
     }
 
+    /**
+     * v47.12: rain outside the drawn room's window ("Rain is falling outside") — a greyer sky in its pane and streaks
+     * falling past it; inside, nothing else (the window showed a blue sky with a cloud while it poured).
+     */
+    public static void windowRain(Gfx g, float t, float rain) {
+        if (rain <= 0.02f) return;
+        float a = Math.min(1, rain);
+        g.color(Puppet.alpha(0xFF5A6A80, 0.55f * a));
+        g.rect(820, 120, 300, 260);
+        g.color(Puppet.alpha(0xFFE3ECF7, 0.75f * a));
+        int n = Math.round(14 + 26 * a);
+        for (int i = 0; i < n; i++) {
+            float x = 822 + ((i * 97) % 296), y = 120 + (((i * 53) + t * 520) % 280) - 20, len = 18 + (i % 3) * 6;
+            float y0 = Math.max(121, y), y1 = Math.min(379, y + len);
+            if (y1 > y0 + 2) g.line(x, y0, x - (y1 - y0) * 0.12f, y1, 1.6f);
+        }
+    }
+
     static void sky(Gfx g, int tod) {
         int top, bot;
         switch (tod) {

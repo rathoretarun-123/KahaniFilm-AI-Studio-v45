@@ -12,7 +12,7 @@ import org.junit.Test;
 
 /**
  * v47.11 (the user: "facial expressions"): tears come with a sad line and dry with a line of another feeling — they ran
- * on down her cheeks through her surprise.
+ * on down her cheeks through her surprise. v47.12: they come when the script has them cry; plain sadness is a sad face.
  */
 public class TearsDryTest {
     static Film.Actor vrinda(String secondManner) throws Exception {
@@ -36,6 +36,15 @@ public class TearsDryTest {
         dryAtEnd = !a.stateAt(last + 0.5f).tears;
         assertTrue("the sad line brings tears", cried);
         assertTrue("the surprised line has dried them", dryAtEnd);
+    }
+
+    @Test public void aSadLineWithoutCryingBringsNoTears() throws Exception {
+        Story story = ScriptParser.parse("शीर्षक: ऊब\n\nपात्र\n\n1. वृंदा (11 साल)\n(पतली लड़की)\n\nस्थान\n\n1. घर का कमरा\n(क्रीम दीवारें)\n\n"
+                + "कहानी\n\nदृश्य 1\n(वृंदा कमरे में खड़ी है)\n\nवृंदा: \"मैं बहुत ऊब गई हूँ।\" (उदास होकर)\n\nसमाप्त\n");
+        Director d = new Director(story, new Director.Options());
+        d.prepare();
+        Film film = d.direct(new Art());
+        for (Film.Seg seg : film.segs) for (Film.Actor a : seg.actors) for (Film.Key k : a.keys) assertFalse("a sad face, no tears", k.tears);
     }
 
     @Test public void tearsStayThroughAnotherSadLine() throws Exception {

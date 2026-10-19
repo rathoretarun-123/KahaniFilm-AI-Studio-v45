@@ -1177,9 +1177,12 @@ every spoken line. One frame a second is kept.
   garden without the palace (`Sets.D_PARK`). The title and end pages show the palace only in a story of palaces.
 - **White dashes in the sky.** The palace garden's waterfall shimmer was drawn even where no waterfall was. It now
   goes with the waterfall.
-- **"(उदास होकर)" played calm.** Sadness was read only from crying. Plain words of sadness now play sad and bring tears
+- **"(उदास होकर)" played calm.** Sadness was read only from crying. Plain words of sadness now play a sad face
   (उदास, दुखी, निराश, मायूस, "sadly"), and so do worry (चिंतित, परेशान, "worried"), annoyance (नाराज़, "annoyed"),
   surprise ("surprised", "shocked") and gladness (उत्साह, "happily").
+- **Tears for every sadness.** Any sad line brought tears. Tears now come only when the script has the character cry
+  (रोते, रोकर, सुबक, आँसू, आँखें नम, "cries", "sobs", "weeps"); a sad line without them is a sad face, dry
+  (`TearsDryTest`).
 - **The puppy drawn as a man.** "Bruno (dog)" with "(a small brown puppy)" under it was read as a name with a role and
   an empty description. A character named as an animal is now that animal, and keeps its own name. A robot dog keeps
   its role.
@@ -1193,6 +1196,9 @@ every spoken line. One frame a second is kept.
   puppy dashed in at four of its heights a second. A jump rose 80 units whatever the jumper's size, thrown off the
   ground at full speed. The steps' rise was the same 6 units on a puppy as on a man. Each now goes with the size of
   the body. A jump eases off the ground and onto it, and leaves the steps' rise behind it.
+- **Everyone wet indoors.** Once rain began anywhere in the film, everyone on screen was drawn dripping, including
+  the family who had sat dry inside the house all along. Indoors, only one who came in from the rain while it fell is
+  wet now (the puppy at the door). The room's window shows the rain outside.
 
 ### Results
 

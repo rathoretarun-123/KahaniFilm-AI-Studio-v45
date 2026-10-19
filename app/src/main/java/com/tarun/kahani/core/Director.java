@@ -1980,10 +1980,12 @@ public final class Director {
         if (call != null) { call.t1 = Math.max(call.t1, end + 0.4f); sp.acts.remove(call); sp.acts.add(call); }
         cuesFrom(b.manner, start, sp, to, null);
         if (!mountLine) headwearFromWords(sp, to, b.text, start);
-        if (line.emotion == Pose.SAD && !mountLine) { Film.Key k = sp.at(start); k.tears = true; }
+        // (v47.12: tears when the script has them cry — a sad "I am so bored" is a sad face, not tears)
+        if (line.emotion == Pose.SAD && !mountLine && Txt.has(b.manner + " " + b.text, "रोते", "रोकर", "रो रह", "रोती", "रोता", "फूट-फूट", "सुबक", "आँसू", "आंसू",
+                "आँखें नम", "आंखें नम", "भर आ", "cry", "cries", "sob", "tear", "weep")) { Film.Key k = sp.at(start); k.tears = true; }
         // v47.11: a line of another feeling (glad, surprised, angry, scared) after the tears: they have dried — they ran on
         // down her cheeks through her surprise
-        else if (line.emotion != Pose.NEUTRAL && !mountLine && sp.stateAt(start).tears) {
+        else if (line.emotion != Pose.NEUTRAL && line.emotion != Pose.SAD && !mountLine && sp.stateAt(start).tears) {
             Film.Key k = sp.at(start);
             k.tears = false;
             for (int j = sp.keys.indexOf(k) + 1; j < sp.keys.size() && sp.keys.get(j).tears; j++) sp.keys.get(j).tears = false;
