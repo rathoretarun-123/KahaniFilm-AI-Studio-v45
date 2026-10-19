@@ -40,6 +40,12 @@ public class NarratorVoicesTest {
             assertTrue(v.id + ": phone pitch " + v.phonePitch, v.phonePitch >= 0.6f && v.phonePitch <= 1.4f);
             assertTrue(v.id + ": phone pace " + v.phoneRate, v.phoneRate >= 0.6f && v.phoneRate <= 1.3f);
             assertTrue(v.id + ": a sample line in its language", v.hindi() == com.tarun.kahani.core.Txt.mostlyHindi(v.sample));
+            // v47.13: its recorded sample is in the app (a real Ogg file) and says what made it
+            File rec = new File(System.getProperty("kahani.assets", "../../app/src/main/assets"), v.recording);
+            assertTrue(v.id + ": its recorded sample " + rec, v.recording.startsWith("voices/samples/") && rec.length() > 5000);
+            byte[] head = Arrays.copyOf(Files.readAllBytes(rec.toPath()), 4);
+            assertEquals(v.id + ": an Ogg file", "OggS", new String(head, "US-ASCII"));
+            assertTrue(v.id + ": what made it", v.recordingMadeWith.contains("Kokoro"));
         }
     }
 

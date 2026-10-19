@@ -1,979 +1,1569 @@
 [
-{
-"file": "rain.ogg",
-"type": "amb",
-"words": "rain, raining, drizzle, monsoon, बारिश, वर्षा, बरसात",
-"title": "Rain",
-"seconds": 32.0
-},
-{
-"file": "rain_heavy.ogg",
-"type": "amb",
-"words": "heavy rain, storm, downpour, तूफान, मूसलाधार",
-"title": "Heavy rain",
-"seconds": 32.0
-},
-{
-"file": "wind.ogg",
-"type": "amb",
-"words": "wind, breeze, hill, mountain, desert, हवा, पहाड़",
-"title": "Gentle wind",
-"seconds": 32.0
-},
-{
-"file": "wind_storm.ogg",
-"type": "amb",
-"words": "storm, strong wind, gale, आँधी, तूफ़ान",
-"title": "Storm wind",
-"seconds": 32.0
-},
-{
-"file": "ocean.ogg",
-"type": "amb",
-"words": "sea, ocean, beach, waves, shore, coast, समुद्र, सागर, लहरें, किनारा",
-"title": "Ocean waves",
-"seconds": 34.0
-},
-{
-"file": "river.ogg",
-"type": "amb",
-"words": "river, stream, brook, waterfall, water, नदी, झरना, धारा, गंगा",
-"title": "River stream",
-"seconds": 32.0
-},
-{
-"file": "fire.ogg",
-"type": "amb",
-"words": "fire, campfire, bonfire, flames, burning, torch, आग, अग्नि, अलाव, हवन, मशाल",
-"title": "Crackling fire",
-"seconds": 32.0
-},
-{
-"file": "night_crickets.ogg",
-"type": "amb",
-"words": "night, crickets, evening, moon, रात, शाम, झींगुर, चाँदनी",
-"title": "Night crickets",
-"seconds": 32.0
-},
-{
-"file": "forest_birds.ogg",
-"type": "amb",
-"words": "forest, jungle, woods, garden, park, morning, birds, tree, जंगल, वन, बगीचा, सुबह, पेड़, उपवन",
-"title": "Forest birds",
-"seconds": 32.0
-},
-{
-"file": "village_day.ogg",
-"type": "amb",
-"words": "village, field, farm, countryside, hut, गाँव, गांव, खेत, झोपड़ी, आँगन",
-"title": "Village day",
-"seconds": 32.0
-},
-{
-"file": "jungle_night.ogg",
-"type": "amb",
-"words": "jungle night, swamp, pond, frogs, dark forest, तालाब, दलदल, मेंढक",
-"title": "Jungle at night",
-"seconds": 32.0
-},
-{
-"file": "cave.ogg",
-"type": "amb",
-"words": "cave, tunnel, dungeon, underground, mine, गुफा, सुरंग, तहखाना",
-"title": "Cave drips",
-"seconds": 32.0
-},
-{
-"file": "temple.ogg",
-"type": "amb",
-"words": "temple, shrine, puja, prayer, ashram, mandir, मंदिर, पूजा, आश्रम, देवालय, आरती",
-"title": "Temple (tanpura & bells)",
-"seconds": 34.0
-},
-{
-"file": "palace_hall.ogg",
-"type": "amb",
-"words": "palace, hall, court, throne, castle, fort, mahal, महल, दरबार, राजमहल, किला, सिंहासन",
-"title": "Palace hall",
-"seconds": 32.0
-},
-{
-"file": "magic_hum.ogg",
-"type": "amb",
-"words": "magic, magical, enchanted, fairy, heaven, divine, dream, जादू, परी, स्वर्ग, दिव्य, सपना",
-"title": "Magical shimmer",
-"seconds": 32.0
-},
-{
-"file": "desert.ogg",
-"type": "amb",
-"words": "desert, sand, dunes, dry, रेगिस्तान, मरुस्थल, रेत",
-"title": "Desert wind",
-"seconds": 32.0
-},
-{
-"file": "room_tone.ogg",
-"type": "amb",
-"words": "house, home, room, kitchen, school, classroom, inside, घर, कमरा, रसोई, स्कूल, कक्षा",
-"title": "Quiet room",
-"seconds": 32.0
-},
-{
-"file": "crowd_market.ogg",
-"type": "amb",
-"words": "market, bazaar, crowd, fair, mela, festival, city, street, बाज़ार, बाजार, मेला, भीड़, शहर",
-"title": "Busy market murmur",
-"seconds": 32.0
-},
-{
-"file": "thunder.ogg",
-"type": "sfx",
-"words": "thunder, lightning, गरज, बिजली, बादल गरजे, गड़गड़ाहट",
-"title": "Thunder",
-"seconds": 6.0
-},
-{
-"file": "temple_bell.ogg",
-"type": "sfx",
-"words": "bell, temple bell, ghanta, ghanti, घंटा, घंटी, टन",
-"title": "Temple bell",
-"seconds": 6.0
-},
-{
-"file": "small_bells.ogg",
-"type": "sfx",
-"words": "small bells, anklets, ghungroo, chime, घुंघरू, पायल",
-"title": "Little bells",
-"seconds": 3.5
-},
-{
-"file": "gong.ogg",
-"type": "sfx",
-"words": "gong, announcement, royal, court, घड़ियाल",
-"title": "Gong",
-"seconds": 8.0
-},
-{
-"file": "magic_chime.ogg",
-"type": "sfx",
-"words": "magic chime, sparkle, title, appear, magic, spell, wand, जादू, चमक, मंत्र",
-"title": "Magic chime",
-"seconds": 3.5
-},
-{
-"file": "whoosh.ogg",
-"type": "sfx",
-"words": "whoosh, swoosh, fly, flew, arrow, swing, rush, दौड़, उड़ा, तीर, झपटा",
-"title": "Whoosh",
-"seconds": 1.2
-},
-{
-"file": "impact_boom.ogg",
-"type": "sfx",
-"words": "boom, impact, crash, smash, fall, blow, hit, slam, धमाका, टक्कर, गिरा, प्रहार",
-"title": "Impact boom",
-"seconds": 4.0
-},
-{
-"file": "explosion.ogg",
-"type": "sfx",
-"words": "explosion, blast, explode, विस्फोट, धमाका",
-"title": "Explosion",
-"seconds": 6.0
-},
-{
-"file": "door_knock.ogg",
-"type": "sfx",
-"words": "knock, door, knocked, खटखट, दरवाज़ा, दस्तक",
-"title": "Door knock",
-"seconds": 1.6
-},
-{
-"file": "footsteps.ogg",
-"type": "sfx",
-"words": "footsteps, walk, walked, steps, came, कदम, चला, चलते, आया, आहट",
-"title": "Footsteps",
-"seconds": 5.8
-},
-{
-"file": "running_footsteps.ogg",
-"type": "sfx",
-"words": "running, ran, run, rushed, दौड़ा, दौड़ते, भागा, भागे",
-"title": "Running footsteps",
-"seconds": 5.2
-},
-{
-"file": "heartbeat.ogg",
-"type": "sfx",
-"words": "heartbeat, heart, nervous, fear, tension, dhadkan, धड़कन, दिल",
-"title": "Heartbeat",
-"seconds": 7.4
-},
-{
-"file": "clock_tick.ogg",
-"type": "sfx",
-"words": "clock, ticking, tick, time, deadline, घड़ी, टिक",
-"title": "Clock ticking",
-"seconds": 8.0
-},
-{
-"file": "water_splash.ogg",
-"type": "sfx",
-"words": "splash, jumped into water, fell into water, dive, छपाक, छलांग, पानी में",
-"title": "Water splash",
-"seconds": 2.0
-},
-{
-"file": "sword_clash.ogg",
-"type": "sfx",
-"words": "sword, swords clash, blade, fight, duel, तलवार, युद्ध, वार",
-"title": "Sword clash",
-"seconds": 2.5
-},
-{
-"file": "magic_poof.ogg",
-"type": "sfx",
-"words": "poof, vanished, disappeared, smoke, appeared, गायब, धुआँ, प्रकट",
-"title": "Magic poof",
-"seconds": 1.5
-},
-{
-"file": "riser.ogg",
-"type": "sfx",
-"words": "rising, suspense, reveal, approaching, tension, power, उठा, बढ़ता",
-"title": "Tension riser",
-"seconds": 4.0
-},
-{
-"file": "drum_roll.ogg",
-"type": "sfx",
-"words": "drum, drums, dhol, nagada, announcement, नगाड़ा, ढोल, डंका",
-"title": "Drum roll",
-"seconds": 4.0
-},
-{
-"file": "conch_shankh.ogg",
-"type": "sfx",
-"words": "conch, shankh, शंख, battle cry, call",
-"title": "Conch (shankh)",
-"seconds": 4.5
-},
-{
-"file": "monster_growl.ogg",
-"type": "sfx",
-"words": "growl, growled, roar, beast, monster, demon, गुर्राया, राक्षस, दहाड़",
-"title": "Low growl",
-"seconds": 2.2
-},
-{
-"file": "music_calm.ogg",
-"type": "music",
-"words": "calm, peaceful, gentle, soft, morning, शांत, मधुर",
-"title": "Calm (pad & plucks)",
-"seconds": 48.0
-},
-{
-"file": "music_sad.ogg",
-"type": "music",
-"words": "sad, sorrow, emotional, crying, grief, लाचार, दुखी, उदास, भावुक",
-"title": "Sad piano",
-"seconds": 48.0
-},
-{
-"file": "music_tense.ogg",
-"type": "music",
-"words": "tense, suspense, danger, chase, scary, fear, mystery, तनाव, खतरा, डर",
-"title": "Tense pulse",
-"seconds": 48.0
-},
-{
-"file": "music_epic.ogg",
-"type": "music",
-"words": "epic, battle, war, heroic, hero, orchestral, climax, victory, युद्ध, वीर, विजय",
-"title": "Epic drums & brass",
-"seconds": 48.0
-},
-{
-"file": "music_devotional.ogg",
-"type": "music",
-"words": "devotional, divine, indian, temple, flute, bhajan, prayer, भक्ति, दिव्य, बांसुरी, मंदिर",
-"title": "Indian devotional (tanpura & flute)",
-"seconds": 48.0
-},
-{
-"file": "music_happy.ogg",
-"type": "music",
-"words": "happy, cheerful, playful, funny, joyful, fun, खुश, मज़ेदार, खुशनुमा",
-"title": "Happy plucks",
-"seconds": 48.0
-},
-{
-"file": "music_adventure.ogg",
-"type": "music",
-"words": "adventure, exciting, journey, quest, explore, action, रोमांच, यात्रा, साहस",
-"title": "Adventure strings",
-"seconds": 48.0
-},
-{
-"file": "music_mystery.ogg",
-"type": "music",
-"words": "mystery, mysterious, secret, magic, night, strange, रहस्य, रहस्यमय, जादू",
-"title": "Mystery bells",
-"seconds": 48.0
-},
-{
-"file": "music_festive.ogg",
-"type": "music",
-"words": "festive, festival, celebration, wedding, dance, party, mela, diwali, holi, उत्सव, त्योहार, शादी, नाच, दिवाली, होली",
-"title": "Festive dhol",
-"seconds": 48.0
-},
-{
-"file": "moodist_animals_beehive.ogg",
-"type": "amb",
-"words": "bees, beehive, buzzing, honey, मधुमक्खी, छत्ता, भिनभिनाना",
-"title": "Beehive (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_birds.ogg",
-"type": "amb",
-"words": "birds, chirping, morning, garden, sparrow, चिड़िया, पक्षी, चहचहाना, सुबह, बगीचा",
-"title": "Birds (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_cat_purring.ogg",
-"type": "amb",
-"words": "cat, purring, purr, बिल्ली, घुरघुर",
-"title": "Cat Purring (Moodist)",
-"seconds": 38.7,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_chickens.ogg",
-"type": "amb",
-"words": "chickens, hens, rooster, farm, मुर्गी, मुर्गा, मुर्गियाँ",
-"title": "Chickens (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_cows.ogg",
-"type": "amb",
-"words": "cow, cows, moo, cattle, farm, गाय, गायें, रंभाना, बैल",
-"title": "Cows (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_crickets.ogg",
-"type": "amb",
-"words": "crickets, night, field, झींगुर, रात",
-"title": "Crickets (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_crows.ogg",
-"type": "amb",
-"words": "crow, crows, cawing, कौआ, कौवा, काँव",
-"title": "Crows (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_dog_barking.ogg",
-"type": "sfx",
-"words": "dog, barking, bark, कुत्ता, भौंकना, भौंक",
-"title": "Dog Barking (Moodist)",
-"seconds": 16.2,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_frog.ogg",
-"type": "amb",
-"words": "frog, frogs, pond, croak, मेंढक, तालाब",
-"title": "Frog (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_horse_gallop.ogg",
-"type": "sfx",
-"words": "horse, gallop, galloping, hooves, rider, घोड़ा, घोड़े, सरपट, टाप",
-"title": "Horse Gallop (Moodist)",
-"seconds": 9.1,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_owl.ogg",
-"type": "amb",
-"words": "owl, hoot, night forest, उल्लू",
-"title": "Owl (Moodist)",
-"seconds": 12.9,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_seagulls.ogg",
-"type": "amb",
-"words": "seagulls, gulls, beach, harbour, समुद्री पक्षी, बंदरगाह",
-"title": "Seagulls (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_sheep.ogg",
-"type": "amb",
-"words": "sheep, flock, bleat, goats, भेड़, बकरी, मेमना",
-"title": "Sheep (Moodist)",
-"seconds": 31.2,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_whale.ogg",
-"type": "amb",
-"words": "whale, deep sea, व्हेल, गहरा समुद्र",
-"title": "Whale (Moodist)",
-"seconds": 30.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_wolf.ogg",
-"type": "sfx",
-"words": "wolf, howl, wolves, भेड़िया, हुआँ",
-"title": "Wolf (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_animals_woodpecker.ogg",
-"type": "amb",
-"words": "woodpecker, pecking, कठफोड़वा",
-"title": "Woodpecker (Moodist)",
-"seconds": 15.3,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_campfire.ogg",
-"type": "amb",
-"words": "campfire, fire, crackling, bonfire, आग, अलाव, अंगीठी, चूल्हा",
-"title": "Campfire (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_droplets.ogg",
-"type": "amb",
-"words": "droplets, dripping, cave drips, बूँदें, टपकना, टप-टप",
-"title": "Droplets (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_howling_wind.ogg",
-"type": "amb",
-"words": "howling wind, gale, storm wind, desert wind, आँधी, सनसनाती हवा",
-"title": "Howling Wind (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_jungle.ogg",
-"type": "amb",
-"words": "jungle, forest, wild, जंगल, वन",
-"title": "Jungle (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_river.ogg",
-"type": "amb",
-"words": "river, stream, flowing water, नदी, धारा, बहता पानी",
-"title": "River (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_walk_in_snow.ogg",
-"type": "sfx",
-"words": "walking in snow, snow footsteps, बर्फ़ पर चलना, बर्फ",
-"title": "Walk in Snow (Moodist)",
-"seconds": 36.7,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_walk_on_gravel.ogg",
-"type": "sfx",
-"words": "walking on gravel, footsteps, path, कंकड़, बजरी, कदमों की आवाज़",
-"title": "Walk on Gravel (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_walk_on_leaves.ogg",
-"type": "sfx",
-"words": "walking on leaves, dry leaves, footsteps, सूखे पत्ते, पत्तों पर चलना",
-"title": "Walk on Leaves (Moodist)",
-"seconds": 20.6,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_waterfall.ogg",
-"type": "amb",
-"words": "waterfall, falls, cascade, झरना, प्रपात",
-"title": "Waterfall (Moodist)",
-"seconds": 23.5,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_waves.ogg",
-"type": "amb",
-"words": "waves, sea, ocean, beach, लहरें, समुद्र, सागर, तट",
-"title": "Waves (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_wind.ogg",
-"type": "amb",
-"words": "wind, breeze, हवा, पवन",
-"title": "Wind (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_nature_wind_in_trees.ogg",
-"type": "amb",
-"words": "wind in trees, rustling leaves, tree, पेड़, पत्ते सरसराना, सरसराहट",
-"title": "Wind in Trees (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_airport.ogg",
-"type": "amb",
-"words": "airport, terminal, announcements, हवाई अड्डा",
-"title": "Airport (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_cafe.ogg",
-"type": "amb",
-"words": "cafe, coffee shop, chatter, tea shop, कैफ़े, चाय की दुकान, बातचीत",
-"title": "Cafe (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_carousel.ogg",
-"type": "amb",
-"words": "carousel, fair, merry-go-round, mela, मेला, झूला",
-"title": "Carousel (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_church.ogg",
-"type": "amb",
-"words": "church, hall, choir echo, गिरजाघर, चर्च",
-"title": "Church (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_construction_site.ogg",
-"type": "amb",
-"words": "construction, building site, hammering, निर्माण, मज़दूर, हथौड़ा",
-"title": "Construction Site (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_crowded_bar.ogg",
-"type": "amb",
-"words": "crowded room, party, chatter, भीड़, दावत, शोर",
-"title": "Crowded Bar (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_laboratory.ogg",
-"type": "amb",
-"words": "laboratory, lab, machines, प्रयोगशाला",
-"title": "Laboratory (Moodist)",
-"seconds": 21.2,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_laundry_room.ogg",
-"type": "amb",
-"words": "laundry, washing, कपड़े धोना",
-"title": "Laundry Room (Moodist)",
-"seconds": 32.5,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_library.ogg",
-"type": "amb",
-"words": "library, quiet room, pages, पुस्तकालय, लाइब्रेरी, शांत",
-"title": "Library (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_night_village.ogg",
-"type": "amb",
-"words": "village at night, night village, गाँव, गांव, रात, देहात",
-"title": "Night Village (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_office.ogg",
-"type": "amb",
-"words": "office, typing, phones, दफ़्तर, ऑफिस",
-"title": "Office (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_restaurant.ogg",
-"type": "amb",
-"words": "restaurant, dining, plates, dhaba, रेस्टोरेंट, ढाबा, खाना",
-"title": "Restaurant (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_subway_station.ogg",
-"type": "amb",
-"words": "subway, metro station, platform, मेट्रो, स्टेशन",
-"title": "Subway Station (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_supermarket.ogg",
-"type": "amb",
-"words": "supermarket, shop, store, market, दुकान, बाज़ार, मॉल",
-"title": "Supermarket (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_temple.ogg",
-"type": "amb",
-"words": "temple, bells, prayer, मंदिर, घंटी, पूजा, आरती",
-"title": "Temple (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_places_underwater.ogg",
-"type": "amb",
-"words": "underwater, under water, diving, पानी के नीचे, गोता",
-"title": "Underwater (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_heavy_rain.ogg",
-"type": "amb",
-"words": "heavy rain, downpour, monsoon, मूसलाधार, तेज़ बारिश, बरसात",
-"title": "Heavy Rain (Moodist)",
-"seconds": 21.8,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_light_rain.ogg",
-"type": "amb",
-"words": "light rain, drizzle, rain, बूँदाबाँदी, हल्की बारिश, बारिश",
-"title": "Light Rain (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_rain_on_car_roof.ogg",
-"type": "amb",
-"words": "rain on car roof, car, कार पर बारिश",
-"title": "Rain on Car Roof (Moodist)",
-"seconds": 10.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_rain_on_leaves.ogg",
-"type": "amb",
-"words": "rain on leaves, forest rain, पत्तों पर बारिश",
-"title": "Rain on Leaves (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_rain_on_tent.ogg",
-"type": "amb",
-"words": "rain on tent, tent, shed, tin roof, तंबू, टीन की छत",
-"title": "Rain on Tent (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_rain_on_umbrella.ogg",
-"type": "amb",
-"words": "rain on umbrella, umbrella, छाता, छतरी",
-"title": "Rain on Umbrella (Moodist)",
-"seconds": 26.6,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_rain_on_window.ogg",
-"type": "amb",
-"words": "rain on window, window, glass, खिड़की पर बारिश",
-"title": "Rain on Window (Moodist)",
-"seconds": 33.1,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_rain_thunder.ogg",
-"type": "sfx",
-"words": "thunder, thunderstorm, storm, बिजली, गरज, कड़कना, तूफ़ान",
-"title": "Thunder (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_boiling_water.ogg",
-"type": "sfx",
-"words": "boiling water, kettle, tea, cooking, उबलता पानी, केतली, चाय, चूल्हा",
-"title": "Boiling Water (Moodist)",
-"seconds": 18.5,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_bubbles.ogg",
-"type": "sfx",
-"words": "bubbles, fish tank, water, बुलबुले",
-"title": "Bubbles (Moodist)",
-"seconds": 6.4,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_ceiling_fan.ogg",
-"type": "amb",
-"words": "ceiling fan, fan, whirring, पंखा, घर-घर, घरघर",
-"title": "Ceiling Fan (Moodist)",
-"seconds": 15.6,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_clock.ogg",
-"type": "amb",
-"words": "clock, ticking, tick tock, घड़ी, टिक-टिक",
-"title": "Clock (Moodist)",
-"seconds": 15.9,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_dryer.ogg",
-"type": "amb",
-"words": "dryer, machine hum, मशीन",
-"title": "Dryer (Moodist)",
-"seconds": 28.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_keyboard.ogg",
-"type": "sfx",
-"words": "keyboard, typing, computer, कंप्यूटर, टाइपिंग",
-"title": "Keyboard (Moodist)",
-"seconds": 12.1,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_morse_code.ogg",
-"type": "sfx",
-"words": "morse code, telegraph, signal, तार, संदेश",
-"title": "Morse Code (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_paper.ogg",
-"type": "sfx",
-"words": "paper, pages, turning pages, letter, book, काग़ज़, पन्ने, चिट्ठी, किताब",
-"title": "Paper (Moodist)",
-"seconds": 17.2,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_singing_bowl.ogg",
-"type": "sfx",
-"words": "singing bowl, meditation, prayer, ध्यान, कटोरा",
-"title": "Singing Bowl (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_slide_projector.ogg",
-"type": "sfx",
-"words": "projector, slides, clicking, प्रोजेक्टर",
-"title": "Slide Projector (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_tuning_radio.ogg",
-"type": "sfx",
-"words": "radio, tuning, static, रेडियो",
-"title": "Tuning Radio (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_typewriter.ogg",
-"type": "sfx",
-"words": "typewriter, typing letter, टाइपराइटर",
-"title": "Typewriter (Moodist)",
-"seconds": 21.8,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_vinyl_effect.ogg",
-"type": "amb",
-"words": "old record, gramophone, crackle, nostalgia, पुराना रिकॉर्ड, ग्रामोफ़ोन, यादें",
-"title": "Vinyl Effect (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_washing_machine.ogg",
-"type": "amb",
-"words": "washing machine, laundry, वॉशिंग मशीन",
-"title": "Washing Machine (Moodist)",
-"seconds": 22.5,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_wind_chimes.ogg",
-"type": "amb",
-"words": "wind chimes, chimes, magic, घंटियाँ, विंड चाइम",
-"title": "Wind Chimes (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_things_windshield_wipers.ogg",
-"type": "amb",
-"words": "windshield wipers, car in rain, वाइपर",
-"title": "Windshield Wipers (Moodist)",
-"seconds": 15.1,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_transport_airplane.ogg",
-"type": "amb",
-"words": "airplane, plane, flight, cabin, हवाई जहाज़, विमान",
-"title": "Airplane (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_transport_inside_a_train.ogg",
-"type": "amb",
-"words": "inside a train, train journey, compartment, रेल का डिब्बा, सफ़र",
-"title": "Inside a Train (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_transport_rowing_boat.ogg",
-"type": "amb",
-"words": "rowing boat, oars, boat, river, नाव, चप्पू, नाविक",
-"title": "Rowing Boat (Moodist)",
-"seconds": 25.5,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_transport_sailboat.ogg",
-"type": "amb",
-"words": "sailboat, boat, sea, sail, नाव, पाल, समुद्र",
-"title": "Sailboat (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_transport_submarine.ogg",
-"type": "amb",
-"words": "submarine, deep water, पनडुब्बी",
-"title": "Submarine (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_transport_train.ogg",
-"type": "amb",
-"words": "train, railway, passing train, रेल, रेलगाड़ी, ट्रेन",
-"title": "Train (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_urban_ambulance_siren.ogg",
-"type": "sfx",
-"words": "ambulance, siren, hospital, एम्बुलेंस, सायरन, अस्पताल",
-"title": "Ambulance Siren (Moodist)",
-"seconds": 22.6,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_urban_busy_street.ogg",
-"type": "amb",
-"words": "busy street, city, traffic, bazaar, शहर, भीड़भाड़, बाज़ार",
-"title": "Busy Street (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_urban_crowd.ogg",
-"type": "amb",
-"words": "crowd, people, gathering, market crowd, भीड़, लोग, मेला",
-"title": "Crowd (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_urban_fireworks.ogg",
-"type": "sfx",
-"words": "fireworks, diwali, crackers, celebration, पटाखे, आतिशबाज़ी, दिवाली",
-"title": "Fireworks (Moodist)",
-"seconds": 34.5,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_urban_highway.ogg",
-"type": "amb",
-"words": "highway, cars passing, हाईवे, राजमार्ग",
-"title": "Highway (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_urban_road.ogg",
-"type": "amb",
-"words": "road, street, cars, सड़क, गाड़ियाँ",
-"title": "Road (Moodist)",
-"seconds": 40.0,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-},
-{
-"file": "moodist_urban_traffic.ogg",
-"type": "amb",
-"words": "traffic, horns, city, ट्रैफ़िक, हॉर्न",
-"title": "Traffic (Moodist)",
-"seconds": 39.9,
-"licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
-}
+ {
+  "file": "rain.ogg",
+  "type": "amb",
+  "words": "rain, raining, drizzle, monsoon, बारिश, वर्षा, बरसात",
+  "title": "Rain",
+  "seconds": 32.0
+ },
+ {
+  "file": "rain_heavy.ogg",
+  "type": "amb",
+  "words": "heavy rain, storm, downpour, तूफान, मूसलाधार",
+  "title": "Heavy rain",
+  "seconds": 32.0
+ },
+ {
+  "file": "wind.ogg",
+  "type": "amb",
+  "words": "wind, breeze, hill, mountain, desert, हवा, पहाड़",
+  "title": "Gentle wind",
+  "seconds": 32.0
+ },
+ {
+  "file": "wind_storm.ogg",
+  "type": "amb",
+  "words": "storm, strong wind, gale, आँधी, तूफ़ान",
+  "title": "Storm wind",
+  "seconds": 32.0
+ },
+ {
+  "file": "ocean.ogg",
+  "type": "amb",
+  "words": "sea, ocean, beach, waves, shore, coast, समुद्र, सागर, लहरें, किनारा",
+  "title": "Ocean waves",
+  "seconds": 34.0
+ },
+ {
+  "file": "river.ogg",
+  "type": "amb",
+  "words": "river, stream, brook, waterfall, water, नदी, झरना, धारा, गंगा",
+  "title": "River stream",
+  "seconds": 32.0
+ },
+ {
+  "file": "fire.ogg",
+  "type": "amb",
+  "words": "fire, campfire, bonfire, flames, burning, torch, आग, अग्नि, अलाव, हवन, मशाल",
+  "title": "Crackling fire",
+  "seconds": 32.0
+ },
+ {
+  "file": "night_crickets.ogg",
+  "type": "amb",
+  "words": "night, crickets, evening, moon, रात, शाम, झींगुर, चाँदनी",
+  "title": "Night crickets",
+  "seconds": 32.0
+ },
+ {
+  "file": "forest_birds.ogg",
+  "type": "amb",
+  "words": "forest, jungle, woods, garden, park, morning, birds, tree, जंगल, वन, बगीचा, सुबह, पेड़, उपवन",
+  "title": "Forest birds",
+  "seconds": 32.0
+ },
+ {
+  "file": "village_day.ogg",
+  "type": "amb",
+  "words": "village, field, farm, countryside, hut, गाँव, गांव, खेत, झोपड़ी, आँगन",
+  "title": "Village day",
+  "seconds": 32.0
+ },
+ {
+  "file": "jungle_night.ogg",
+  "type": "amb",
+  "words": "jungle night, swamp, pond, frogs, dark forest, तालाब, दलदल, मेंढक",
+  "title": "Jungle at night",
+  "seconds": 32.0
+ },
+ {
+  "file": "cave.ogg",
+  "type": "amb",
+  "words": "cave, tunnel, dungeon, underground, mine, गुफा, सुरंग, तहखाना",
+  "title": "Cave drips",
+  "seconds": 32.0
+ },
+ {
+  "file": "temple.ogg",
+  "type": "amb",
+  "words": "temple, shrine, puja, prayer, ashram, mandir, मंदिर, पूजा, आश्रम, देवालय, आरती",
+  "title": "Temple (tanpura & bells)",
+  "seconds": 34.0
+ },
+ {
+  "file": "palace_hall.ogg",
+  "type": "amb",
+  "words": "palace, hall, court, throne, castle, fort, mahal, महल, दरबार, राजमहल, किला, सिंहासन",
+  "title": "Palace hall",
+  "seconds": 32.0
+ },
+ {
+  "file": "magic_hum.ogg",
+  "type": "amb",
+  "words": "magic, magical, enchanted, fairy, heaven, divine, dream, जादू, परी, स्वर्ग, दिव्य, सपना",
+  "title": "Magical shimmer",
+  "seconds": 32.0
+ },
+ {
+  "file": "desert.ogg",
+  "type": "amb",
+  "words": "desert, sand, dunes, dry, रेगिस्तान, मरुस्थल, रेत",
+  "title": "Desert wind",
+  "seconds": 32.0
+ },
+ {
+  "file": "room_tone.ogg",
+  "type": "amb",
+  "words": "house, home, room, kitchen, school, classroom, inside, घर, कमरा, रसोई, स्कूल, कक्षा",
+  "title": "Quiet room",
+  "seconds": 32.0
+ },
+ {
+  "file": "crowd_market.ogg",
+  "type": "amb",
+  "words": "market, bazaar, crowd, fair, mela, festival, city, street, बाज़ार, बाजार, मेला, भीड़, शहर",
+  "title": "Busy market murmur",
+  "seconds": 32.0
+ },
+ {
+  "file": "thunder.ogg",
+  "type": "sfx",
+  "words": "thunder, lightning, गरज, बिजली, बादल गरजे, गड़गड़ाहट",
+  "title": "Thunder",
+  "seconds": 6.0
+ },
+ {
+  "file": "temple_bell.ogg",
+  "type": "sfx",
+  "words": "bell, temple bell, ghanta, ghanti, घंटा, घंटी, टन",
+  "title": "Temple bell",
+  "seconds": 6.0
+ },
+ {
+  "file": "small_bells.ogg",
+  "type": "sfx",
+  "words": "small bells, anklets, ghungroo, chime, घुंघरू, पायल",
+  "title": "Little bells",
+  "seconds": 3.5
+ },
+ {
+  "file": "gong.ogg",
+  "type": "sfx",
+  "words": "gong, announcement, royal, court, घड़ियाल",
+  "title": "Gong",
+  "seconds": 8.0
+ },
+ {
+  "file": "magic_chime.ogg",
+  "type": "sfx",
+  "words": "magic chime, sparkle, title, appear, magic, spell, wand, जादू, चमक, मंत्र",
+  "title": "Magic chime",
+  "seconds": 3.5
+ },
+ {
+  "file": "whoosh.ogg",
+  "type": "sfx",
+  "words": "whoosh, swoosh, fly, flew, arrow, swing, rush, दौड़, उड़ा, तीर, झपटा",
+  "title": "Whoosh",
+  "seconds": 1.2
+ },
+ {
+  "file": "impact_boom.ogg",
+  "type": "sfx",
+  "words": "boom, impact, crash, smash, fall, blow, hit, slam, धमाका, टक्कर, गिरा, प्रहार",
+  "title": "Impact boom",
+  "seconds": 4.0
+ },
+ {
+  "file": "explosion.ogg",
+  "type": "sfx",
+  "words": "explosion, blast, explode, विस्फोट, धमाका",
+  "title": "Explosion",
+  "seconds": 6.0
+ },
+ {
+  "file": "door_knock.ogg",
+  "type": "sfx",
+  "words": "knock, door, knocked, खटखट, दरवाज़ा, दस्तक",
+  "title": "Door knock",
+  "seconds": 1.6
+ },
+ {
+  "file": "footsteps.ogg",
+  "type": "sfx",
+  "words": "footsteps, walk, walked, steps, came, कदम, चला, चलते, आया, आहट",
+  "title": "Footsteps",
+  "seconds": 5.8
+ },
+ {
+  "file": "running_footsteps.ogg",
+  "type": "sfx",
+  "words": "running, ran, run, rushed, दौड़ा, दौड़ते, भागा, भागे",
+  "title": "Running footsteps",
+  "seconds": 5.2
+ },
+ {
+  "file": "heartbeat.ogg",
+  "type": "sfx",
+  "words": "heartbeat, heart, nervous, fear, tension, dhadkan, धड़कन, दिल",
+  "title": "Heartbeat",
+  "seconds": 7.4
+ },
+ {
+  "file": "clock_tick.ogg",
+  "type": "sfx",
+  "words": "clock, ticking, tick, time, deadline, घड़ी, टिक",
+  "title": "Clock ticking",
+  "seconds": 8.0
+ },
+ {
+  "file": "water_splash.ogg",
+  "type": "sfx",
+  "words": "splash, jumped into water, fell into water, dive, छपाक, छलांग, पानी में",
+  "title": "Water splash",
+  "seconds": 2.0
+ },
+ {
+  "file": "sword_clash.ogg",
+  "type": "sfx",
+  "words": "sword, swords clash, blade, fight, duel, तलवार, युद्ध, वार",
+  "title": "Sword clash",
+  "seconds": 2.5
+ },
+ {
+  "file": "magic_poof.ogg",
+  "type": "sfx",
+  "words": "poof, vanished, disappeared, smoke, appeared, गायब, धुआँ, प्रकट",
+  "title": "Magic poof",
+  "seconds": 1.5
+ },
+ {
+  "file": "riser.ogg",
+  "type": "sfx",
+  "words": "rising, suspense, reveal, approaching, tension, power, उठा, बढ़ता",
+  "title": "Tension riser",
+  "seconds": 4.0
+ },
+ {
+  "file": "drum_roll.ogg",
+  "type": "sfx",
+  "words": "drum, drums, dhol, nagada, announcement, नगाड़ा, ढोल, डंका",
+  "title": "Drum roll",
+  "seconds": 4.0
+ },
+ {
+  "file": "conch_shankh.ogg",
+  "type": "sfx",
+  "words": "conch, shankh, शंख, battle cry, call",
+  "title": "Conch (shankh)",
+  "seconds": 4.5
+ },
+ {
+  "file": "monster_growl.ogg",
+  "type": "sfx",
+  "words": "growl, growled, roar, beast, monster, demon, गुर्राया, राक्षस, दहाड़",
+  "title": "Low growl",
+  "seconds": 2.2
+ },
+ {
+  "file": "music_calm.ogg",
+  "type": "music",
+  "words": "calm, peaceful, gentle, soft, morning, शांत, मधुर",
+  "title": "Calm (pad & plucks)",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_sad.ogg",
+  "type": "music",
+  "words": "sad, sorrow, emotional, crying, grief, लाचार, दुखी, उदास, भावुक",
+  "title": "Sad piano",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_tense.ogg",
+  "type": "music",
+  "words": "tense, suspense, danger, chase, scary, fear, mystery, तनाव, खतरा, डर",
+  "title": "Tense pulse",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_epic.ogg",
+  "type": "music",
+  "words": "epic, battle, war, heroic, hero, orchestral, climax, victory, युद्ध, वीर, विजय",
+  "title": "Epic drums & brass",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_devotional.ogg",
+  "type": "music",
+  "words": "devotional, divine, indian, temple, flute, bhajan, prayer, भक्ति, दिव्य, बांसुरी, मंदिर",
+  "title": "Indian devotional (tanpura & flute)",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_happy.ogg",
+  "type": "music",
+  "words": "happy, cheerful, playful, funny, joyful, fun, खुश, मज़ेदार, खुशनुमा",
+  "title": "Happy plucks",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_adventure.ogg",
+  "type": "music",
+  "words": "adventure, exciting, journey, quest, explore, action, रोमांच, यात्रा, साहस",
+  "title": "Adventure strings",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_mystery.ogg",
+  "type": "music",
+  "words": "mystery, mysterious, secret, magic, night, strange, रहस्य, रहस्यमय, जादू",
+  "title": "Mystery bells",
+  "seconds": 48.0
+ },
+ {
+  "file": "music_festive.ogg",
+  "type": "music",
+  "words": "festive, festival, celebration, wedding, dance, party, mela, diwali, holi, उत्सव, त्योहार, शादी, नाच, दिवाली, होली",
+  "title": "Festive dhol",
+  "seconds": 48.0
+ },
+ {
+  "file": "moodist_animals_beehive.ogg",
+  "type": "amb",
+  "words": "bees, beehive, buzzing, honey, मधुमक्खी, छत्ता, भिनभिनाना",
+  "title": "Beehive (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_birds.ogg",
+  "type": "amb",
+  "words": "birds, chirping, morning, garden, sparrow, चिड़िया, पक्षी, चहचहाना, सुबह, बगीचा",
+  "title": "Birds (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_cat_purring.ogg",
+  "type": "amb",
+  "words": "cat, purring, purr, बिल्ली, घुरघुर",
+  "title": "Cat Purring (Moodist)",
+  "seconds": 38.7,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_chickens.ogg",
+  "type": "amb",
+  "words": "chickens, hens, rooster, farm, मुर्गी, मुर्गा, मुर्गियाँ",
+  "title": "Chickens (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_cows.ogg",
+  "type": "amb",
+  "words": "cow, cows, moo, cattle, farm, गाय, गायें, रंभाना, बैल",
+  "title": "Cows (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_crickets.ogg",
+  "type": "amb",
+  "words": "crickets, night, field, झींगुर, रात",
+  "title": "Crickets (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_crows.ogg",
+  "type": "amb",
+  "words": "crow, crows, cawing, कौआ, कौवा, काँव",
+  "title": "Crows (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_dog_barking.ogg",
+  "type": "sfx",
+  "words": "dog, barking, bark, कुत्ता, भौंकना, भौंक",
+  "title": "Dog Barking (Moodist)",
+  "seconds": 16.2,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_frog.ogg",
+  "type": "amb",
+  "words": "frog, frogs, pond, croak, मेंढक, तालाब",
+  "title": "Frog (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_horse_gallop.ogg",
+  "type": "sfx",
+  "words": "horse, gallop, galloping, hooves, rider, घोड़ा, घोड़े, सरपट, टाप",
+  "title": "Horse Gallop (Moodist)",
+  "seconds": 9.1,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_owl.ogg",
+  "type": "amb",
+  "words": "owl, hoot, night forest, उल्लू",
+  "title": "Owl (Moodist)",
+  "seconds": 12.9,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_seagulls.ogg",
+  "type": "amb",
+  "words": "seagulls, gulls, beach, harbour, समुद्री पक्षी, बंदरगाह",
+  "title": "Seagulls (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_sheep.ogg",
+  "type": "amb",
+  "words": "sheep, flock, bleat, goats, भेड़, बकरी, मेमना",
+  "title": "Sheep (Moodist)",
+  "seconds": 31.2,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_whale.ogg",
+  "type": "amb",
+  "words": "whale, deep sea, व्हेल, गहरा समुद्र",
+  "title": "Whale (Moodist)",
+  "seconds": 30.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_wolf.ogg",
+  "type": "sfx",
+  "words": "wolf, howl, wolves, भेड़िया, हुआँ",
+  "title": "Wolf (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_animals_woodpecker.ogg",
+  "type": "amb",
+  "words": "woodpecker, pecking, कठफोड़वा",
+  "title": "Woodpecker (Moodist)",
+  "seconds": 15.3,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_campfire.ogg",
+  "type": "amb",
+  "words": "campfire, fire, crackling, bonfire, आग, अलाव, अंगीठी, चूल्हा",
+  "title": "Campfire (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_droplets.ogg",
+  "type": "amb",
+  "words": "droplets, dripping, cave drips, बूँदें, टपकना, टप-टप",
+  "title": "Droplets (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_howling_wind.ogg",
+  "type": "amb",
+  "words": "howling wind, gale, storm wind, desert wind, आँधी, सनसनाती हवा",
+  "title": "Howling Wind (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_jungle.ogg",
+  "type": "amb",
+  "words": "jungle, forest, wild, जंगल, वन",
+  "title": "Jungle (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_river.ogg",
+  "type": "amb",
+  "words": "river, stream, flowing water, नदी, धारा, बहता पानी",
+  "title": "River (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_walk_in_snow.ogg",
+  "type": "sfx",
+  "words": "walking in snow, snow footsteps, बर्फ़ पर चलना, बर्फ",
+  "title": "Walk in Snow (Moodist)",
+  "seconds": 36.7,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_walk_on_gravel.ogg",
+  "type": "sfx",
+  "words": "walking on gravel, footsteps, path, कंकड़, बजरी, कदमों की आवाज़",
+  "title": "Walk on Gravel (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_walk_on_leaves.ogg",
+  "type": "sfx",
+  "words": "walking on leaves, dry leaves, footsteps, सूखे पत्ते, पत्तों पर चलना",
+  "title": "Walk on Leaves (Moodist)",
+  "seconds": 20.6,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_waterfall.ogg",
+  "type": "amb",
+  "words": "waterfall, falls, cascade, झरना, प्रपात",
+  "title": "Waterfall (Moodist)",
+  "seconds": 23.5,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_waves.ogg",
+  "type": "amb",
+  "words": "waves, sea, ocean, beach, लहरें, समुद्र, सागर, तट",
+  "title": "Waves (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_wind.ogg",
+  "type": "amb",
+  "words": "wind, breeze, हवा, पवन",
+  "title": "Wind (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_nature_wind_in_trees.ogg",
+  "type": "amb",
+  "words": "wind in trees, rustling leaves, tree, पेड़, पत्ते सरसराना, सरसराहट",
+  "title": "Wind in Trees (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_airport.ogg",
+  "type": "amb",
+  "words": "airport, terminal, announcements, हवाई अड्डा",
+  "title": "Airport (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_cafe.ogg",
+  "type": "amb",
+  "words": "cafe, coffee shop, chatter, tea shop, कैफ़े, चाय की दुकान, बातचीत",
+  "title": "Cafe (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_carousel.ogg",
+  "type": "amb",
+  "words": "carousel, fair, merry-go-round, mela, मेला, झूला",
+  "title": "Carousel (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_church.ogg",
+  "type": "amb",
+  "words": "church, hall, choir echo, गिरजाघर, चर्च",
+  "title": "Church (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_construction_site.ogg",
+  "type": "amb",
+  "words": "construction, building site, hammering, निर्माण, मज़दूर, हथौड़ा",
+  "title": "Construction Site (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_crowded_bar.ogg",
+  "type": "amb",
+  "words": "crowded room, party, chatter, भीड़, दावत, शोर",
+  "title": "Crowded Bar (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_laboratory.ogg",
+  "type": "amb",
+  "words": "laboratory, lab, machines, प्रयोगशाला",
+  "title": "Laboratory (Moodist)",
+  "seconds": 21.2,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_laundry_room.ogg",
+  "type": "amb",
+  "words": "laundry, washing, कपड़े धोना",
+  "title": "Laundry Room (Moodist)",
+  "seconds": 32.5,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_library.ogg",
+  "type": "amb",
+  "words": "library, quiet room, pages, पुस्तकालय, लाइब्रेरी, शांत",
+  "title": "Library (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_night_village.ogg",
+  "type": "amb",
+  "words": "village at night, night village, गाँव, गांव, रात, देहात",
+  "title": "Night Village (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_office.ogg",
+  "type": "amb",
+  "words": "office, typing, phones, दफ़्तर, ऑफिस",
+  "title": "Office (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_restaurant.ogg",
+  "type": "amb",
+  "words": "restaurant, dining, plates, dhaba, रेस्टोरेंट, ढाबा, खाना",
+  "title": "Restaurant (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_subway_station.ogg",
+  "type": "amb",
+  "words": "subway, metro station, platform, मेट्रो, स्टेशन",
+  "title": "Subway Station (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_supermarket.ogg",
+  "type": "amb",
+  "words": "supermarket, shop, store, market, दुकान, बाज़ार, मॉल",
+  "title": "Supermarket (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_temple.ogg",
+  "type": "amb",
+  "words": "temple, bells, prayer, मंदिर, घंटी, पूजा, आरती",
+  "title": "Temple (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_places_underwater.ogg",
+  "type": "amb",
+  "words": "underwater, under water, diving, पानी के नीचे, गोता",
+  "title": "Underwater (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_heavy_rain.ogg",
+  "type": "amb",
+  "words": "heavy rain, downpour, monsoon, मूसलाधार, तेज़ बारिश, बरसात",
+  "title": "Heavy Rain (Moodist)",
+  "seconds": 21.8,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_light_rain.ogg",
+  "type": "amb",
+  "words": "light rain, drizzle, rain, बूँदाबाँदी, हल्की बारिश, बारिश",
+  "title": "Light Rain (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_rain_on_car_roof.ogg",
+  "type": "amb",
+  "words": "rain on car roof, car, कार पर बारिश",
+  "title": "Rain on Car Roof (Moodist)",
+  "seconds": 10.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_rain_on_leaves.ogg",
+  "type": "amb",
+  "words": "rain on leaves, forest rain, पत्तों पर बारिश",
+  "title": "Rain on Leaves (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_rain_on_tent.ogg",
+  "type": "amb",
+  "words": "rain on tent, tent, shed, tin roof, तंबू, टीन की छत",
+  "title": "Rain on Tent (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_rain_on_umbrella.ogg",
+  "type": "amb",
+  "words": "rain on umbrella, umbrella, छाता, छतरी",
+  "title": "Rain on Umbrella (Moodist)",
+  "seconds": 26.6,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_rain_on_window.ogg",
+  "type": "amb",
+  "words": "rain on window, window, glass, खिड़की पर बारिश",
+  "title": "Rain on Window (Moodist)",
+  "seconds": 33.1,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_rain_thunder.ogg",
+  "type": "sfx",
+  "words": "thunder, thunderstorm, storm, बिजली, गरज, कड़कना, तूफ़ान",
+  "title": "Thunder (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_boiling_water.ogg",
+  "type": "sfx",
+  "words": "boiling water, kettle, tea, cooking, उबलता पानी, केतली, चाय, चूल्हा",
+  "title": "Boiling Water (Moodist)",
+  "seconds": 18.5,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_bubbles.ogg",
+  "type": "sfx",
+  "words": "bubbles, fish tank, water, बुलबुले",
+  "title": "Bubbles (Moodist)",
+  "seconds": 6.4,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_ceiling_fan.ogg",
+  "type": "amb",
+  "words": "ceiling fan, fan, whirring, पंखा, घर-घर, घरघर",
+  "title": "Ceiling Fan (Moodist)",
+  "seconds": 15.6,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_clock.ogg",
+  "type": "amb",
+  "words": "clock, ticking, tick tock, घड़ी, टिक-टिक",
+  "title": "Clock (Moodist)",
+  "seconds": 15.9,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_dryer.ogg",
+  "type": "amb",
+  "words": "dryer, machine hum, मशीन",
+  "title": "Dryer (Moodist)",
+  "seconds": 28.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_keyboard.ogg",
+  "type": "sfx",
+  "words": "keyboard, typing, computer, कंप्यूटर, टाइपिंग",
+  "title": "Keyboard (Moodist)",
+  "seconds": 12.1,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_morse_code.ogg",
+  "type": "sfx",
+  "words": "morse code, telegraph, signal, तार, संदेश",
+  "title": "Morse Code (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_paper.ogg",
+  "type": "sfx",
+  "words": "paper, pages, turning pages, letter, book, काग़ज़, पन्ने, चिट्ठी, किताब",
+  "title": "Paper (Moodist)",
+  "seconds": 17.2,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_singing_bowl.ogg",
+  "type": "sfx",
+  "words": "singing bowl, meditation, prayer, ध्यान, कटोरा",
+  "title": "Singing Bowl (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_slide_projector.ogg",
+  "type": "sfx",
+  "words": "projector, slides, clicking, प्रोजेक्टर",
+  "title": "Slide Projector (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_tuning_radio.ogg",
+  "type": "sfx",
+  "words": "radio, tuning, static, रेडियो",
+  "title": "Tuning Radio (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_typewriter.ogg",
+  "type": "sfx",
+  "words": "typewriter, typing letter, टाइपराइटर",
+  "title": "Typewriter (Moodist)",
+  "seconds": 21.8,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_vinyl_effect.ogg",
+  "type": "amb",
+  "words": "old record, gramophone, crackle, nostalgia, पुराना रिकॉर्ड, ग्रामोफ़ोन, यादें",
+  "title": "Vinyl Effect (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_washing_machine.ogg",
+  "type": "amb",
+  "words": "washing machine, laundry, वॉशिंग मशीन",
+  "title": "Washing Machine (Moodist)",
+  "seconds": 22.5,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_wind_chimes.ogg",
+  "type": "amb",
+  "words": "wind chimes, chimes, magic, घंटियाँ, विंड चाइम",
+  "title": "Wind Chimes (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_things_windshield_wipers.ogg",
+  "type": "amb",
+  "words": "windshield wipers, car in rain, वाइपर",
+  "title": "Windshield Wipers (Moodist)",
+  "seconds": 15.1,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_transport_airplane.ogg",
+  "type": "amb",
+  "words": "airplane, plane, flight, cabin, हवाई जहाज़, विमान",
+  "title": "Airplane (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_transport_inside_a_train.ogg",
+  "type": "amb",
+  "words": "inside a train, train journey, compartment, रेल का डिब्बा, सफ़र",
+  "title": "Inside a Train (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_transport_rowing_boat.ogg",
+  "type": "amb",
+  "words": "rowing boat, oars, boat, river, नाव, चप्पू, नाविक",
+  "title": "Rowing Boat (Moodist)",
+  "seconds": 25.5,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_transport_sailboat.ogg",
+  "type": "amb",
+  "words": "sailboat, boat, sea, sail, नाव, पाल, समुद्र",
+  "title": "Sailboat (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_transport_submarine.ogg",
+  "type": "amb",
+  "words": "submarine, deep water, पनडुब्बी",
+  "title": "Submarine (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_transport_train.ogg",
+  "type": "amb",
+  "words": "train, railway, passing train, रेल, रेलगाड़ी, ट्रेन",
+  "title": "Train (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_urban_ambulance_siren.ogg",
+  "type": "sfx",
+  "words": "ambulance, siren, hospital, एम्बुलेंस, सायरन, अस्पताल",
+  "title": "Ambulance Siren (Moodist)",
+  "seconds": 22.6,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_urban_busy_street.ogg",
+  "type": "amb",
+  "words": "busy street, city, traffic, bazaar, शहर, भीड़भाड़, बाज़ार",
+  "title": "Busy Street (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_urban_crowd.ogg",
+  "type": "amb",
+  "words": "crowd, people, gathering, market crowd, भीड़, लोग, मेला",
+  "title": "Crowd (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_urban_fireworks.ogg",
+  "type": "sfx",
+  "words": "fireworks, diwali, crackers, celebration, पटाखे, आतिशबाज़ी, दिवाली",
+  "title": "Fireworks (Moodist)",
+  "seconds": 34.5,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_urban_highway.ogg",
+  "type": "amb",
+  "words": "highway, cars passing, हाईवे, राजमार्ग",
+  "title": "Highway (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_urban_road.ogg",
+  "type": "amb",
+  "words": "road, street, cars, सड़क, गाड़ियाँ",
+  "title": "Road (Moodist)",
+  "seconds": 40.0,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "moodist_urban_traffic.ogg",
+  "type": "amb",
+  "words": "traffic, horns, city, ट्रैफ़िक, हॉर्न",
+  "title": "Traffic (Moodist)",
+  "seconds": 39.9,
+  "licence": "CC0 or Pixabay Content License (moodist, github.com/remvze/moodist)"
+ },
+ {
+  "file": "voxelibre_cow_moo.ogg",
+  "type": "sfx",
+  "words": "cow, moo, cattle, गाय, रंभाना, बछड़ा, गौ",
+  "title": "Cow moo",
+  "seconds": 1.7,
+  "licence": "CC0 1.0 (VoxeLibre mods/ENTITIES/mobs_mc/LICENSE-media.md: Zozzy, freesound #59245)",
+  "source": "https://raw.githubusercontent.com/VoxeLibre/VoxeLibre/4492ce6ff8d856daa4567abe2ea689f4e7a39842/mods/ENTITIES/mobs_mc/sounds/mobs_mc_cow.ogg",
+  "author": "Zozzy (freesound)"
+ },
+ {
+  "file": "djwoodz_cow_moo.ogg",
+  "type": "sfx",
+  "words": "cow mooing, moo, गाय रंभा, रंभाना, गोशाला",
+  "title": "Cow moo (long)",
+  "seconds": 1.8,
+  "licence": "CC0 1.0 (DJWoodZ/Animal-Sounds README: derivative of freesound #177253 by josephsardin, CC0)",
+  "source": "https://raw.githubusercontent.com/DJWoodZ/Animal-Sounds/0fd2848e54f6278c47ed7592e7ff90488e3a6e87/src/sounds/cow-moo.ogg",
+  "author": "josephsardin / DJ WoodZ"
+ },
+ {
+  "file": "esc50_cow_moo_field.ogg",
+  "type": "sfx",
+  "words": "cows in the field, moo, गाय रंभाती, रंभाना",
+  "title": "Cow mooing in field",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #163727 by felix.blume, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-163727-A-3.wav",
+  "author": "felix.blume"
+ },
+ {
+  "file": "esc50_rooster_crow.ogg",
+  "type": "sfx",
+  "words": "rooster, cock-a-doodle-doo, मुर्गा, कुकड़ूँ कूँ",
+  "title": "Rooster crowing",
+  "seconds": 1.8,
+  "licence": "CC0 1.0 (original Freesound #149189 by videog, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-149189-A-1.wav",
+  "author": "videog"
+ },
+ {
+  "file": "esc50_rooster_crow_outside.ogg",
+  "type": "sfx",
+  "words": "rooster crowing, मुर्गे की बांग, बांग",
+  "title": "Rooster crowing outside",
+  "seconds": 3.9,
+  "licence": "CC0 1.0 (original Freesound #200339 by jsbarrett, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/5-200339-A-1.wav",
+  "author": "jsbarrett"
+ },
+ {
+  "file": "wikimedia_rooster_crow.ogg",
+  "type": "sfx",
+  "words": "rooster crow, मुर्गा बांग दे, बांग",
+  "title": "Rooster crow (Wikimedia)",
+  "seconds": 4.9,
+  "licence": "Public domain (Wikimedia Commons \"File:Medium rooster crowing.ogg\" by alys; per learntoread animals/credits.json)",
+  "source": "https://raw.githubusercontent.com/Courtside-live01/learntoread/0baca75e483d1991498d3b884a0d912db86abb26/animals/clips/rooster.mp3",
+  "author": "alys (Wikimedia Commons)"
+ },
+ {
+  "file": "esc50_hen_cackle.ogg",
+  "type": "sfx",
+  "words": "hen, chicken, cackle, मुर्गी, कुड़कुड़",
+  "title": "Hen cackling",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #232495 by eksaa, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/4-232495-A-6.wav",
+  "author": "eksaa"
+ },
+ {
+  "file": "esc50_bird_chirps.ogg",
+  "type": "sfx",
+  "words": "sparrow, birds chirping, chirp, गौरैया, चहचहाना, चहचहा",
+  "title": "Small birds chirping",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #181132 by keweldog, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-181132-A-14.wav",
+  "author": "keweldog"
+ },
+ {
+  "file": "esc50_birdsong_morning.ogg",
+  "type": "amb",
+  "words": "morning birdsong, birdsong, चिड़ियों की चहचहाहट, पक्षियों का गाना",
+  "title": "Morning birdsong",
+  "seconds": 5.0,
+  "licence": "CC0 1.0 (original Freesound #223127 by keweldog, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/4-223127-A-14.wav",
+  "author": "keweldog"
+ },
+ {
+  "file": "esc50_small_dog_bark.ogg",
+  "type": "sfx",
+  "words": "puppy, small dog, pup barking, पिल्ला, पिल्ले",
+  "title": "Small dog / puppy bark",
+  "seconds": 2.1,
+  "licence": "CC0 1.0 (original Freesound #163459 by LittleBigSounds, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-163459-A-0.wav",
+  "author": "LittleBigSounds"
+ },
+ {
+  "file": "esc50_cat_meow.ogg",
+  "type": "sfx",
+  "words": "cat, meow, बिल्ली, म्याऊँ",
+  "title": "Cat meow",
+  "seconds": 1.5,
+  "licence": "CC0 1.0 (original Freesound #110011 by tuberatanka, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/2-110011-A-5.wav",
+  "author": "tuberatanka"
+ },
+ {
+  "file": "benburnes_kitten_meow.ogg",
+  "type": "sfx",
+  "words": "kitten, meow, बिल्ली का बच्चा, म्याऊँ, बिलौटा",
+  "title": "Kitten meow",
+  "seconds": 0.6,
+  "licence": "CC0 1.0 / public domain (Ben Burnes \"Abstraction\" micro pack, via lavenderdotpet/CC0-Public-Domain-Sounds; _README.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/Micro%20Pack%20-%20Cat%20Meows/Cat%20Meows%20-%20Tiny%20Tito.wav",
+  "author": "Benjamin Burnes (abstractionmusic.com)"
+ },
+ {
+  "file": "voxelibre_cat_meow.ogg",
+  "type": "sfx",
+  "words": "cat meowing, meow, बिल्ली, म्याऊँ",
+  "title": "Cat meow (short)",
+  "seconds": 1.8,
+  "licence": "CC0 1.0 (VoxeLibre mobs_mc LICENSE-media.md: SelsRoyalNavy, freesound #427081)",
+  "source": "https://raw.githubusercontent.com/VoxeLibre/VoxeLibre/4492ce6ff8d856daa4567abe2ea689f4e7a39842/mods/ENTITIES/mobs_mc/sounds/mobs_mc_cat_idle.2.ogg",
+  "author": "SelsRoyalNavy (freesound)"
+ },
+ {
+  "file": "esc50_baby_cry.ogg",
+  "type": "sfx",
+  "words": "baby crying, infant crying, शिशु रो, बच्चा रो रहा, नन्हा बच्चा",
+  "title": "Baby crying (winding down)",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #151081 by PickleJones, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-151081-A-20.wav",
+  "author": "PickleJones"
+ },
+ {
+  "file": "esc50_girl_laughing.ogg",
+  "type": "sfx",
+  "words": "child laughing, girl giggling, giggle, खिलखिला, बच्चे हँस",
+  "title": "Young girl laughing",
+  "seconds": 4.4,
+  "licence": "CC0 1.0 (original Freesound #164243 by caculo, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/4-164243-A-26.wav",
+  "author": "caculo"
+ },
+ {
+  "file": "esc50_breath_sigh.ogg",
+  "type": "sfx",
+  "words": "sigh, deep breath, आह, लंबी साँस, आह भर",
+  "title": "Breath / sigh",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #30709 by UncleSigmund, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/1-30709-A-23.wav",
+  "author": "UncleSigmund"
+ },
+ {
+  "file": "esc50_female_deep_breathing.ogg",
+  "type": "sfx",
+  "words": "deep breathing, heavy breathing, गहरी साँस, हाँफ",
+  "title": "Woman deep breathing",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #18631 by Walter_Odington, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/1-18631-A-23.wav",
+  "author": "Walter_Odington"
+ },
+ {
+  "file": "esc50_clapping_small_crowd.ogg",
+  "type": "sfx",
+  "words": "clapping, applause, ताली, तालियाँ",
+  "title": "Small crowd clapping",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #138114 by snakebarney, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-138114-A-22.wav",
+  "author": "snakebarney"
+ },
+ {
+  "file": "esc50_man_snoring.ogg",
+  "type": "sfx",
+  "words": "snoring, snore, खर्राटे",
+  "title": "Man snoring",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #233312 by trentbh, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/5-233312-A-28.wav",
+  "author": "trentbh"
+ },
+ {
+  "file": "esc50_man_coughing.ogg",
+  "type": "sfx",
+  "words": "cough, coughing, खाँसी, खाँस",
+  "title": "Man coughing",
+  "seconds": 3.3,
+  "licence": "CC0 1.0 (original Freesound #125418 by jyoung20, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-125418-A-24.wav",
+  "author": "jyoung20"
+ },
+ {
+  "file": "esc50_tea_pour_teapot.ogg",
+  "type": "sfx",
+  "words": "pouring tea from the teapot, चाय उंडेल, कप में चाय डाल",
+  "title": "Filling teapot / pouring",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #182839 by LanDub, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/4-182839-A-17.wav",
+  "author": "LanDub"
+ },
+ {
+  "file": "esc50_pour_into_cup.ogg",
+  "type": "sfx",
+  "words": "pouring into a cup, कप में डाल, गिलास में पानी डाल",
+  "title": "Pouring water into a cup",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #145719 by Zabuhailo, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-145719-A-17.wav",
+  "author": "Zabuhailo"
+ },
+ {
+  "file": "esc50_sipping_tea.ogg",
+  "type": "sfx",
+  "words": "sip, sipping, slurp, चुस्की, घूँट",
+  "title": "Sipping from a cup",
+  "seconds": 3.1,
+  "licence": "CC0 1.0 (original Freesound #204202 by scottc6115, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/4-204202-A-29.wav",
+  "author": "scottc6115"
+ },
+ {
+  "file": "kenney_cup_saucer_clink.ogg",
+  "type": "sfx",
+  "words": "cup and saucer, clink, तश्तरी, कप-प्लेट",
+  "title": "Cup/plate clink",
+  "seconds": 0.5,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/impactPlate_light_000.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "rubberduck_dishes_clatter.ogg",
+  "type": "sfx",
+  "words": "dishes clatter, utensils clattering, बर्तन खड़क, खड़खड़",
+  "title": "Dishes clatter",
+  "seconds": 0.8,
+  "licence": "CC0 1.0 (OpenGameArt CC0 SFX pack, via lavenderdotpet/CC0-Public-Domain-Sounds; repo LICENSE = CC0 1.0) [pack \"100 CC0 SFX\"]",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/100-CC0-SFX/dishes_01.ogg",
+  "author": "rubberduck (OpenGameArt)"
+ },
+ {
+  "file": "misslav_pots_pans_kitchen.ogg",
+  "type": "sfx",
+  "words": "pots and pans, washing up, बर्तन धो, बर्तन माँज, कड़ाही",
+  "title": "Pots and pans clatter",
+  "seconds": 12.0,
+  "licence": "CC0 1.0 (lavenderdotpet/CC0-Public-Domain-Sounds \"MissLavs Sounds\" folder; repo LICENSE = CC0 1.0)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/MissLavs%20Sounds/potsandpansclean.ogg",
+  "author": "MissLav (lavenderdotpet)"
+ },
+ {
+  "file": "kenney_metal_pot.ogg",
+  "type": "sfx",
+  "words": "metal pot clank, लोटा गिर, बर्तन गिर",
+  "title": "Metal pot knock",
+  "seconds": 1.4,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_rpgaudio/Audio/metalPot1.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "benburnes_table_fan_hum.ogg",
+  "type": "amb",
+  "words": "table fan, टेबल फैन",
+  "title": "Small fan hum",
+  "seconds": 40.0,
+  "licence": "CC0 1.0 / public domain (Ben Burnes \"Abstraction\" monthly pack \"Fans and Drones\", via lavenderdotpet/CC0-Public-Domain-Sounds; _README.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/bb%20-%20Fans%20and%20Drones%20%28Jul%202021%29/Small%20Fan.wav",
+  "author": "Benjamin Burnes (abstractionmusic.com)"
+ },
+ {
+  "file": "esc50_old_alarm_clock_ring.ogg",
+  "type": "sfx",
+  "words": "alarm clock, अलार्म",
+  "title": "Old alarm clock ringing",
+  "seconds": 3.1,
+  "licence": "CC0 1.0 (original Freesound #102435 by tuberatanka, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/2-102435-A-37.wav",
+  "author": "tuberatanka"
+ },
+ {
+  "file": "kenney_door_creak.ogg",
+  "type": "sfx",
+  "words": "door creaks, creaky door, दरवाज़ा चरमराया, चरमराता दरवाज़ा, किवाड़ चरमरा",
+  "title": "Door creak",
+  "seconds": 0.6,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_rpgaudio/Audio/creak1.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "kenney_door_open.ogg",
+  "type": "sfx",
+  "words": "door opens, दरवाज़ा खुल, किवाड़ खुल",
+  "title": "Door open",
+  "seconds": 0.9,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_rpgaudio/Audio/doorOpen_1.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "kenney_door_close.ogg",
+  "type": "sfx",
+  "words": "door closes, door shut, दरवाज़ा बंद, किवाड़ बंद",
+  "title": "Door close",
+  "seconds": 0.7,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_rpgaudio/Audio/doorClose_1.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "esc50_door_open_close.ogg",
+  "type": "sfx",
+  "words": "opens and closes the door, दरवाज़ा खोल",
+  "title": "Door open and close",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #118624 by E-Audio, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/2-118624-A-30.wav",
+  "author": "E-Audio"
+ },
+ {
+  "file": "esc50_wood_door_knock.ogg",
+  "type": "sfx",
+  "words": "knock, knocking, खटखट, दस्तक, खटखटा",
+  "title": "Knocking on large wooden door",
+  "seconds": 2.1,
+  "licence": "CC0 1.0 (original Freesound #133889 by aroth4, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/2-133889-A-30.wav",
+  "author": "aroth4"
+ },
+ {
+  "file": "rubberduck_wood_bench_creak.ogg",
+  "type": "sfx",
+  "words": "bench creaks, chair creaks, बेंच चरमरा, कुर्सी चरमरा, खाट चरमरा, चरमराई",
+  "title": "Wood squeak (bench/chair creak)",
+  "seconds": 0.5,
+  "licence": "CC0 1.0 (OpenGameArt CC0 SFX pack, via lavenderdotpet/CC0-Public-Domain-Sounds; repo LICENSE = CC0 1.0) [pack \"100 CC0 wood and metal SFX\"]",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/100-CC0-wood-metal-SFX/wood_squeak_01.ogg",
+  "author": "rubberduck (OpenGameArt)"
+ },
+ {
+  "file": "kenney_wood_creak_2.ogg",
+  "type": "sfx",
+  "words": "wood creak, swing creaks, झूला चरमरा, चरमराहट",
+  "title": "Wood creak",
+  "seconds": 0.8,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_rpgaudio/Audio/creak2.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "kenney_footsteps_wood.ogg",
+  "type": "sfx",
+  "words": "footsteps on the wooden floor, लकड़ी के फर्श पर कदम",
+  "title": "Footsteps on wooden floor",
+  "seconds": 2.1,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_000.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_001.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_002.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_003.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_004.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "kenney_footsteps_concrete.ogg",
+  "type": "sfx",
+  "words": "footsteps on stone, कदमों की आहट, आहट",
+  "title": "Footsteps on stone floor",
+  "seconds": 2.2,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_000.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_001.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_002.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_003.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_004.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "benburnes_page_turn.ogg",
+  "type": "sfx",
+  "words": "turns the page, page turn, पन्ना पलट, पन्ने पलट",
+  "title": "Book page turn",
+  "seconds": 3.4,
+  "licence": "CC0 1.0 / public domain (Ben Burnes \"Abstraction\" monthly pack \"Books, Paper, Writing\", via lavenderdotpet/CC0-Public-Domain-Sounds; _README.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/bb%20-%20Books%2C%20Paper%2C%20Writing%20%28Jan%202021%29/Page%20Turn%201.wav",
+  "author": "Benjamin Burnes (abstractionmusic.com)"
+ },
+ {
+  "file": "kenney_book_flip.ogg",
+  "type": "sfx",
+  "words": "flips through the book, पन्ने फड़फड़",
+  "title": "Book flip",
+  "seconds": 0.7,
+  "licence": "CC0 1.0 (Kenney.nl pack, via lavenderdotpet/CC0-Public-Domain-Sounds; License.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_rpgaudio/Audio/bookFlip1.ogg",
+  "author": "Kenney (kenney.nl)"
+ },
+ {
+  "file": "benburnes_pen_writing.ogg",
+  "type": "sfx",
+  "words": "pen scratching, writing with a pen, कलम से लिख, कलम चल",
+  "title": "Pen writing",
+  "seconds": 9.1,
+  "licence": "CC0 1.0 / public domain (Ben Burnes \"Abstraction\" monthly pack \"Books, Paper, Writing\", via lavenderdotpet/CC0-Public-Domain-Sounds; _README.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/bb%20-%20Books%2C%20Paper%2C%20Writing%20%28Jan%202021%29/Pen%20Writing%201.wav",
+  "author": "Benjamin Burnes (abstractionmusic.com)"
+ },
+ {
+  "file": "benburnes_paper_flutter.ogg",
+  "type": "sfx",
+  "words": "unfolds the letter, paper rustles, खत खोल, चिट्ठी खोल, कागज़ खोल, कागज़ सरसरा",
+  "title": "Paper flutter (letter unfolding)",
+  "seconds": 1.3,
+  "licence": "CC0 1.0 / public domain (Ben Burnes \"Abstraction\" micro pack, via lavenderdotpet/CC0-Public-Domain-Sounds; _README.txt in pack folder)",
+  "source": "https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/Micro%20Pack%20-%20Paper%20Cutter/Paper%20Flutter.wav",
+  "author": "Benjamin Burnes (abstractionmusic.com)"
+ },
+ {
+  "file": "esc50_car_horn.ogg",
+  "type": "sfx",
+  "words": "horn, honk, हॉर्न",
+  "title": "Vehicle horn honk",
+  "seconds": 2.1,
+  "licence": "CC0 1.0 (original Freesound #178402 by genel, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/4-178402-A-43.wav",
+  "author": "genel"
+ },
+ {
+  "file": "esc50_train_passing.ogg",
+  "type": "sfx",
+  "words": "train passing, रेलगाड़ी, ट्रेन गुज़र",
+  "title": "Train passing by",
+  "seconds": 5.1,
+  "licence": "CC0 1.0 (original Freesound #136451 by felix.blume, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-136451-A-45.wav",
+  "author": "felix.blume"
+ },
+ {
+  "file": "esc50_rain_on_roof.ogg",
+  "type": "amb",
+  "words": "rain on the tin roof, टीन की छत",
+  "title": "Rain on plastic/tin roof",
+  "seconds": 5.0,
+  "licence": "CC0 1.0 (original Freesound #82367 by gynation, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/2-82367-A-10.wav",
+  "author": "gynation"
+ },
+ {
+  "file": "esc50_night_insects.ogg",
+  "type": "amb",
+  "words": "night insects, cicadas, झींगुर",
+  "title": "Crickets and other insects",
+  "seconds": 5.0,
+  "licence": "CC0 1.0 (original Freesound #155766 by kslagerman, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-155766-A-13.wav",
+  "author": "kslagerman"
+ },
+ {
+  "file": "esc50_glass_shatter.ogg",
+  "type": "sfx",
+  "words": "glass breaks, shatter, काँच टूट, गिलास टूट",
+  "title": "Glass shattering",
+  "seconds": 1.5,
+  "licence": "CC0 1.0 (original Freesound #203375 by C_Rogers, as listed in ESC-50 LICENSE per-clip attribution; 5 s excerpt from ESC-50 dataset whose compilation is CC BY-NC 3.0)",
+  "source": "https://raw.githubusercontent.com/karolpiczak/ESC-50/33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6/audio/3-203375-A-39.wav",
+  "author": "C_Rogers"
+ },
+ {
+  "file": "sonicpi_tabla_na.ogg",
+  "type": "sfx",
+  "words": "tabla, तबला, थाप",
+  "title": "Tabla hit \"na\"",
+  "seconds": 0.6,
+  "licence": "CC0 1.0 (Sonic Pi bundled samples from freesound.org; LICENSE.md \"Samples\" section + etc/samples/README.md) [freesound #130421 by dio_333]",
+  "source": "https://raw.githubusercontent.com/sonic-pi-net/sonic-pi/ded292311304f97f7efb7ff94630f27bc27f7259/etc/samples/tabla_na.flac",
+  "author": "dio_333 (freesound)"
+ },
+ {
+  "file": "sonicpi_tabla_tas.ogg",
+  "type": "sfx",
+  "words": "tabla beat, तबले की थाप",
+  "title": "Tabla hit \"tas\"",
+  "seconds": 1.1,
+  "licence": "CC0 1.0 (Sonic Pi bundled samples from freesound.org; LICENSE.md \"Samples\" section + etc/samples/README.md) [freesound #130427 by dio_333]",
+  "source": "https://raw.githubusercontent.com/sonic-pi-net/sonic-pi/ded292311304f97f7efb7ff94630f27bc27f7259/etc/samples/tabla_tas1.flac",
+  "author": "dio_333 (freesound)"
+ },
+ {
+  "file": "sonicpi_tabla_ghe.ogg",
+  "type": "sfx",
+  "words": "tabla bass, डग्गा",
+  "title": "Tabla bass \"ghe\"",
+  "seconds": 0.6,
+  "licence": "CC0 1.0 (Sonic Pi bundled samples from freesound.org; LICENSE.md \"Samples\" section + etc/samples/README.md) [freesound #130406 by dio_333]",
+  "source": "https://raw.githubusercontent.com/sonic-pi-net/sonic-pi/ded292311304f97f7efb7ff94630f27bc27f7259/etc/samples/tabla_ghe1.flac",
+  "author": "dio_333 (freesound)"
+ },
+ {
+  "file": "sonicpi_tabla_dhec.ogg",
+  "type": "sfx",
+  "words": "tabla dha, धा",
+  "title": "Tabla hit \"dhec\"",
+  "seconds": 0.3,
+  "licence": "CC0 1.0 (Sonic Pi bundled samples from freesound.org; LICENSE.md \"Samples\" section + etc/samples/README.md) [freesound #130407 by dio_333]",
+  "source": "https://raw.githubusercontent.com/sonic-pi-net/sonic-pi/ded292311304f97f7efb7ff94630f27bc27f7259/etc/samples/tabla_dhec.flac",
+  "author": "dio_333 (freesound)"
+ },
+ {
+  "file": "sonicpi_tabla_loop.ogg",
+  "type": "music",
+  "words": "tabla rhythm, festive, तबला, ताल, लय, उत्सव",
+  "title": "Tabla rhythm loop",
+  "seconds": 10.7,
+  "licence": "CC0 1.0 (Sonic Pi bundled samples from freesound.org; LICENSE.md \"Samples\" section + etc/samples/README.md) [freesound #242591 by lezaarth]",
+  "source": "https://raw.githubusercontent.com/sonic-pi-net/sonic-pi/ded292311304f97f7efb7ff94630f27bc27f7259/etc/samples/loop_tabla.flac",
+  "author": "lezaarth (freesound)"
+ },
+ {
+  "file": "sonicpi_ambient_piano.ogg",
+  "type": "music",
+  "words": "soft piano, emotional, memory, भावुक, याद",
+  "title": "Ambient piano sting",
+  "seconds": 2.8,
+  "licence": "CC0 1.0 (Sonic Pi bundled samples from freesound.org; LICENSE.md \"Samples\" section + etc/samples/README.md) [freesound #51245 by RutgerMuller]",
+  "source": "https://raw.githubusercontent.com/sonic-pi-net/sonic-pi/ded292311304f97f7efb7ff94630f27bc27f7259/etc/samples/ambi_piano.flac",
+  "author": "RutgerMuller (freesound)"
+ },
+ {
+  "file": "freepd_lovely_piano_song.ogg",
+  "type": "music",
+  "words": "piano, love, tender, emotional, प्यार, भावुक, स्नेह",
+  "title": "Lovely Piano Song",
+  "seconds": 45.0,
+  "licence": "Public domain / CC0 (FreePD.com track, via SoundSafari/CC0-1.0-Music; repo LICENSE = CC0 1.0)",
+  "source": "https://raw.githubusercontent.com/SoundSafari/CC0-1.0-Music/655388f987eacf6d08d73080fcc3e727f267bfde/freepd.com/Lovely%20Piano%20Song.mp3",
+  "author": "FreePD.com (composer not listed in source)"
+ },
+ {
+  "file": "freepd_nostalgic_piano.ogg",
+  "type": "music",
+  "words": "nostalgia, memories, flashback, यादें, पुरानी यादें",
+  "title": "Nostalgic Piano",
+  "seconds": 45.0,
+  "licence": "Public domain / CC0 (FreePD.com track, via SoundSafari/CC0-1.0-Music; repo LICENSE = CC0 1.0)",
+  "source": "https://raw.githubusercontent.com/SoundSafari/CC0-1.0-Music/655388f987eacf6d08d73080fcc3e727f267bfde/freepd.com/Nostalgic%20Piano.mp3",
+  "author": "FreePD.com (composer not listed in source)"
+ },
+ {
+  "file": "freepd_relaxing_ballad.ogg",
+  "type": "music",
+  "words": "ballad, calm, gentle, शांत, सुकून",
+  "title": "Relaxing Ballad",
+  "seconds": 45.0,
+  "licence": "Public domain / CC0 (FreePD.com track, via SoundSafari/CC0-1.0-Music; repo LICENSE = CC0 1.0)",
+  "source": "https://raw.githubusercontent.com/SoundSafari/CC0-1.0-Music/655388f987eacf6d08d73080fcc3e727f267bfde/freepd.com/Relaxing%20Ballad.mp3",
+  "author": "FreePD.com (composer not listed in source)"
+ },
+ {
+  "file": "freepd_hopeful.ogg",
+  "type": "music",
+  "words": "hopeful, uplifting, new beginning, उम्मीद, आशा, नई शुरुआत",
+  "title": "Hopeful",
+  "seconds": 45.0,
+  "licence": "Public domain / CC0 (FreePD.com track, via SoundSafari/CC0-1.0-Music; repo LICENSE = CC0 1.0)",
+  "source": "https://raw.githubusercontent.com/SoundSafari/CC0-1.0-Music/655388f987eacf6d08d73080fcc3e727f267bfde/freepd.com/Hopeful.mp3",
+  "author": "FreePD.com (composer not listed in source)"
+ },
+ {
+  "file": "freepd_bollywood_groove.ogg",
+  "type": "music",
+  "words": "bollywood, dance, celebration, wedding, बॉलीवुड, नाच, शादी, जश्न",
+  "title": "Bollywood Groove",
+  "seconds": 45.0,
+  "licence": "Public domain / CC0 (FreePD.com track, via SoundSafari/CC0-1.0-Music; repo LICENSE = CC0 1.0)",
+  "source": "https://raw.githubusercontent.com/SoundSafari/CC0-1.0-Music/655388f987eacf6d08d73080fcc3e727f267bfde/freepd.com/Bollywood%20Groove.mp3",
+  "author": "FreePD.com (composer not listed in source)"
+ },
+ {
+  "file": "freepd_river_meditation.ogg",
+  "type": "music",
+  "words": "meditation, peaceful, spiritual, ध्यान, शांति, आध्यात्मिक",
+  "title": "River Meditation",
+  "seconds": 45.0,
+  "licence": "Public domain / CC0 (FreePD.com track, via SoundSafari/CC0-1.0-Music; repo LICENSE = CC0 1.0)",
+  "source": "https://raw.githubusercontent.com/SoundSafari/CC0-1.0-Music/655388f987eacf6d08d73080fcc3e727f267bfde/freepd.com/River%20Meditation.mp3",
+  "author": "FreePD.com (composer not listed in source)"
+ }
 ]

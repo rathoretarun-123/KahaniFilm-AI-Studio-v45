@@ -8,7 +8,7 @@ import java.util.Map;
  * v47.13 (the user: "narrator voices and include them in apk library with proper metadata"): the studio's narrator
  * voices, read from {@code assets/voices/narrators.json} — each with its name (Hindi and English), language, gender,
  * age, tone, pace, what it suits and a sample line, and how it is spoken: offline by the phone's own speech engine at
- * a pitch and a pace, online by a named neural voice. No recording is bundled; the speech is made with the film.
+ * a pitch and a pace, online by a named neural voice. A short recorded sample of each is bundled to hear it; the film's speech is made with the film.
  */
 public final class NarratorVoices {
     private NarratorVoices() {}
@@ -18,6 +18,8 @@ public final class NarratorVoices {
     /** One narrator voice and its metadata. */
     public static final class Voice {
         public String id = "", name = "", nameEn = "", language = "", gender = "", age = "", tone = "", pace = "", bestFor = "", sample = "";
+        /** The asset of its recorded sample (voices/samples/…), "" when none, and what it was made with. */
+        public String recording = "", recordingMadeWith = "";
         /** The phone's speech engine: pitch and speech rate (1 = the engine's own). */
         public float phonePitch = 1f, phoneRate = 1f;
         /** The online neural voice and its pitch (Hz) and rate (%) changes. */
@@ -48,6 +50,7 @@ public final class NarratorVoices {
             v.language = Json.str(o, "language", ""); v.gender = Json.str(o, "gender", ""); v.age = Json.str(o, "age", "");
             v.tone = Json.str(o, "tone", ""); v.pace = Json.str(o, "pace", ""); v.bestFor = Json.str(o, "best_for", "");
             v.sample = Json.str(o, "sample", "");
+            v.recording = Json.str(o, "recording", ""); v.recordingMadeWith = Json.str(o, "recording_made_with", "");
             Map<String, Object> ph = Json.obj(o, "phone"), nat = Json.obj(o, "natural");
             if (ph != null) { v.phonePitch = (float) Json.num(ph, "pitch", 1); v.phoneRate = (float) Json.num(ph, "rate", 1); }
             if (nat != null) {

@@ -1245,6 +1245,28 @@ every spoken line. One frame a second is kept.
   a ▶ to hear the sample. No recording is bundled (every licensed source of narrator recordings was out of reach;
   none was made up); a recorded voice from the user's library can still be chosen. The voice chosen for the narrator
   was saved and never used — the film always spoke with the default narrator; it is used now (`NarratorVoicesTest`).
+- **More sounds (59, CC0 or public domain).** Searched on the web and fetched only from sources whose licence file says
+  CC0 or public domain: cows, roosters, a hen, sparrows and morning birdsong, a puppy, cats and a kitten, a baby's cry,
+  a girl's giggle, a sigh, coughing, snoring, clapping, tea poured from a teapot and into a cup, a sip, a cup on its
+  saucer, dishes and pots, a table fan, doors that creak, open, close and are knocked on, a bench that creaks,
+  footsteps on wood and stone, a page turned, a pen writing, a letter unfolded, a horn, a train, rain on a tin roof,
+  night insects, tabla and gentle piano, hopeful and festive music (Kenney, Ben Burnes, OpenGameArt, Sonic Pi,
+  FreePD, ESC-50's CC0 clips, VoxeLibre). Each entry in `assets/sounds/index.json` carries its licence, source URL and
+  author; `CREDITS-cc0.txt` lists the sources. They answer only words that make the sound (a rooster "बांग", a cup "कप में
+  चाय डाल") — never a bare "सुबह", "बेंच", "चाय" or "दादाजी" (`SoundLibraryTest`). Four music files whose CC0 could not
+  be checked at the source were left out; no goat, koel, peacock, pressure cooker or bicycle bell was found under such a
+  licence on a reachable site.
+- **Narrator voices you can hear.** Each of the 13 narrator voices now has a recorded sample in the APK
+  (`assets/voices/samples/`, 460 KB), made with the open Kokoro-82M speech model (Apache 2.0) at the voice's pitch and
+  pace; ▶ plays it offline. Every sample was checked by a speech recogniser (Whisper): all 13 came back as the sample
+  line, in meaning.
+- **Natural voices in the desktop films.** The films rendered on the desktop were spoken by espeak-ng — a speech
+  recogniser could not make out its Hindi at all ("I am not a human being" for "आज भी नहीं आई"). MakeFilm can now speak
+  the lines with Kokoro-82M (`KOKORO=…`, `tools/tts/kokoro_batch.py`): Hindi women and girls in its two Hindi women's
+  voices, men and boys in its two men's voices, a child's raised and an old man's lowered and slower, English lines in
+  British voices; the recogniser understood its Hindi ("Not even today, son, maybe tomorrow will come"). The phone still
+  speaks with its own speech engine or the online neural voices (Kokoro's model is 160 MB and its Hindi needs a GPL
+  phonemiser, so it is not in the APK).
 - **The body's joints (MoveNet).** A trained pose model (MoveNet Thunder, Apache 2.0, 12.6 MB in the APK) finds the
   shoulders, elbows, wrists, hips, knees and ankles in every rigged picture. The rig's hips and knees are put at the
   joints — a long kurta hides them from the outline — so a seated picture folds where the legs bend; the forearm

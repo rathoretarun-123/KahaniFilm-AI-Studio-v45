@@ -1,0 +1,184 @@
+Sounds added to KahaniFilm on 19 October 2026 (59 files; the entries in index.json carry each file's licence, source URL and author).
+Not shipped: freesound_india_street_market, freesound_bamboo_flute, freesound_flute_solo, freesound_indian_drums (their CC0 status could not be checked at the source).
+ESC-50 clips: only those whose original Freesound recording is listed as CC0 in ESC-50's LICENSE; 5 s excerpts.
+
+KahaniFilm - new sound credits (generated)
+============================================================
+All files: converted to mono Ogg Vorbis 44.1 kHz (q4), trimmed (sfx <=12 s, amb <=40 s, music <=45 s),
+short fades, loudnorm I=-20 LUFS TP=-2. Only CC0 / public-domain sources were used.
+
+## https://github.com/lavenderdotpet/CC0-Public-Domain-Sounds  (commit f2b6264f9ab89fabc266914c3654685d68c5a39b)
+Licence: repository LICENSE = "Creative Commons Legal Code / CC0 1.0 Universal" (full CC0 text).
+Per-pack licence files inside the repo:
+  kenney_rpgaudio/License.txt, kenney_impactsounds/License.txt: "License (Creative Commons Zero, CC0) ...
+     Credit (Kenney or www.kenney.nl) would be nice but is not mandatory."
+  "bb - Books, Paper, Writing (Jan 2021)/_README.txt", "bb - Fans and Drones (Jul 2021)/_README.txt",
+  "Micro Pack - Cat Meows/_README.txt", "Micro Pack - Paper Cutter/_README.txt" (Benjamin Burnes / abstractionmusic.com):
+     "These sounds are public domain (Creative Commons 0). ... linking back ... is encouraged, but not required."
+  100-CC0-SFX, 100-CC0-wood-metal-SFX: OpenGameArt "CC0" packs (author rubberduck on OpenGameArt; no per-folder licence file,
+     covered by the repository CC0 LICENSE and the pack names).
+  "MissLavs Sounds": repo owner's own recordings, covered by the repository CC0 LICENSE.
+Files taken (17):
+  benburnes_kitten_meow.ogg            <- Micro Pack - Cat Meows/Cat Meows - Tiny Tito.wav
+                                          author: Benjamin Burnes (abstractionmusic.com)
+  kenney_cup_saucer_clink.ogg          <- kenney_impactsounds/Audio/impactPlate_light_000.ogg
+                                          author: Kenney (kenney.nl)
+  rubberduck_dishes_clatter.ogg        <- 100-CC0-SFX/dishes_01.ogg
+                                          author: rubberduck (OpenGameArt)
+  misslav_pots_pans_kitchen.ogg        <- MissLavs Sounds/potsandpansclean.ogg
+                                          author: MissLav (lavenderdotpet)
+  kenney_metal_pot.ogg                 <- kenney_rpgaudio/Audio/metalPot1.ogg
+                                          author: Kenney (kenney.nl)
+  benburnes_table_fan_hum.ogg          <- bb - Fans and Drones (Jul 2021)/Small Fan.wav
+                                          author: Benjamin Burnes (abstractionmusic.com)
+  kenney_door_creak.ogg                <- kenney_rpgaudio/Audio/creak1.ogg
+                                          author: Kenney (kenney.nl)
+  kenney_door_open.ogg                 <- kenney_rpgaudio/Audio/doorOpen_1.ogg
+                                          author: Kenney (kenney.nl)
+  kenney_door_close.ogg                <- kenney_rpgaudio/Audio/doorClose_1.ogg
+                                          author: Kenney (kenney.nl)
+  rubberduck_wood_bench_creak.ogg      <- 100-CC0-wood-metal-SFX/wood_squeak_01.ogg
+                                          author: rubberduck (OpenGameArt)
+  kenney_wood_creak_2.ogg              <- kenney_rpgaudio/Audio/creak2.ogg
+                                          author: Kenney (kenney.nl)
+  kenney_footsteps_wood.ogg            <- kenney_impactsounds/Audio/footstep_wood_000.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_001.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_002.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_003.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_wood_004.ogg
+                                          author: Kenney (kenney.nl)
+  kenney_footsteps_concrete.ogg        <- kenney_impactsounds/Audio/footstep_concrete_000.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_001.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_002.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_003.ogg + https://raw.githubusercontent.com/lavenderdotpet/CC0-Public-Domain-Sounds/f2b6264f9ab89fabc266914c3654685d68c5a39b/kenney_impactsounds/Audio/footstep_concrete_004.ogg
+                                          author: Kenney (kenney.nl)
+  benburnes_page_turn.ogg              <- bb - Books%2C Paper%2C Writing (Jan 2021)/Page Turn 1.wav
+                                          author: Benjamin Burnes (abstractionmusic.com)
+  kenney_book_flip.ogg                 <- kenney_rpgaudio/Audio/bookFlip1.ogg
+                                          author: Kenney (kenney.nl)
+  benburnes_pen_writing.ogg            <- bb - Books%2C Paper%2C Writing (Jan 2021)/Pen Writing 1.wav
+                                          author: Benjamin Burnes (abstractionmusic.com)
+  benburnes_paper_flutter.ogg          <- Micro Pack - Paper Cutter/Paper Flutter.wav
+                                          author: Benjamin Burnes (abstractionmusic.com)
+
+## https://github.com/sonic-pi-net/sonic-pi  (commit ded292311304f97f7efb7ff94630f27bc27f7259)
+Licence: LICENSE.md, section "Samples": "All the bundled samples are individually licensed under a CC0 1.0 Universal
+Public Domain Dedication ... obtained from freesound.org and links to their sources can be found in etc/samples/README.md".
+tbd_* samples donated by The Black Dog under CC0. Per-file freesound links: etc/samples/README.md.
+Files taken (6):
+  sonicpi_tabla_na.ogg                 <- etc/samples/tabla_na.flac
+                                          author: dio_333 (freesound)
+  sonicpi_tabla_tas.ogg                <- etc/samples/tabla_tas1.flac
+                                          author: dio_333 (freesound)
+  sonicpi_tabla_ghe.ogg                <- etc/samples/tabla_ghe1.flac
+                                          author: dio_333 (freesound)
+  sonicpi_tabla_dhec.ogg               <- etc/samples/tabla_dhec.flac
+                                          author: dio_333 (freesound)
+  sonicpi_tabla_loop.ogg               <- etc/samples/loop_tabla.flac
+                                          author: lezaarth (freesound)
+  sonicpi_ambient_piano.ogg            <- etc/samples/ambi_piano.flac
+                                          author: RutgerMuller (freesound)
+
+## https://github.com/karolpiczak/ESC-50  (commit 33c8ce9eb2cf0b1c2f8bcf322eb349b6be34dbb6)
+Licence: LICENSE file. The ESC-50 dataset AS A WHOLE is CC BY-NC 3.0, but the same LICENSE file lists each clip's
+original Freesound source and licence. Only clips whose source is marked "[CC0]" were taken. These are 5-second
+excerpts of CC0 recordings (no creative change). If you want zero doubt, re-download the full originals from
+freesound.org (IDs in index_new.json "licence" field) on a network that can reach freesound.
+Files taken (26):
+  esc50_cow_moo_field.ogg              <- audio/3-163727-A-3.wav
+                                          author: felix.blume
+  esc50_rooster_crow.ogg               <- audio/3-149189-A-1.wav
+                                          author: videog
+  esc50_rooster_crow_outside.ogg       <- audio/5-200339-A-1.wav
+                                          author: jsbarrett
+  esc50_hen_cackle.ogg                 <- audio/4-232495-A-6.wav
+                                          author: eksaa
+  esc50_bird_chirps.ogg                <- audio/3-181132-A-14.wav
+                                          author: keweldog
+  esc50_birdsong_morning.ogg           <- audio/4-223127-A-14.wav
+                                          author: keweldog
+  esc50_small_dog_bark.ogg             <- audio/3-163459-A-0.wav
+                                          author: LittleBigSounds
+  esc50_cat_meow.ogg                   <- audio/2-110011-A-5.wav
+                                          author: tuberatanka
+  esc50_baby_cry.ogg                   <- audio/3-151081-A-20.wav
+                                          author: PickleJones
+  esc50_girl_laughing.ogg              <- audio/4-164243-A-26.wav
+                                          author: caculo
+  esc50_breath_sigh.ogg                <- audio/1-30709-A-23.wav
+                                          author: UncleSigmund
+  esc50_female_deep_breathing.ogg      <- audio/1-18631-A-23.wav
+                                          author: Walter_Odington
+  esc50_clapping_small_crowd.ogg       <- audio/3-138114-A-22.wav
+                                          author: snakebarney
+  esc50_man_snoring.ogg                <- audio/5-233312-A-28.wav
+                                          author: trentbh
+  esc50_man_coughing.ogg               <- audio/3-125418-A-24.wav
+                                          author: jyoung20
+  esc50_tea_pour_teapot.ogg            <- audio/4-182839-A-17.wav
+                                          author: LanDub
+  esc50_pour_into_cup.ogg              <- audio/3-145719-A-17.wav
+                                          author: Zabuhailo
+  esc50_sipping_tea.ogg                <- audio/4-204202-A-29.wav
+                                          author: scottc6115
+  esc50_old_alarm_clock_ring.ogg       <- audio/2-102435-A-37.wav
+                                          author: tuberatanka
+  esc50_door_open_close.ogg            <- audio/2-118624-A-30.wav
+                                          author: E-Audio
+  esc50_wood_door_knock.ogg            <- audio/2-133889-A-30.wav
+                                          author: aroth4
+  esc50_car_horn.ogg                   <- audio/4-178402-A-43.wav
+                                          author: genel
+  esc50_train_passing.ogg              <- audio/3-136451-A-45.wav
+                                          author: felix.blume
+  esc50_rain_on_roof.ogg               <- audio/2-82367-A-10.wav
+                                          author: gynation
+  esc50_night_insects.ogg              <- audio/3-155766-A-13.wav
+                                          author: kslagerman
+  esc50_glass_shatter.ogg              <- audio/3-203375-A-39.wav
+                                          author: C_Rogers
+
+## https://github.com/VoxeLibre/VoxeLibre  (commit 4492ce6ff8d856daa4567abe2ea689f4e7a39842)
+Licence: mods/ENTITIES/mobs_mc/LICENSE-media.md, section "Sounds" (per-file; only files marked CC0 taken):
+  mobs_mc_cow.ogg: "Zozzy from Freesound.org (CC0)"; mobs_mc_cat_idle.2.ogg: "SelsRoyalNavy ... (CC0)".
+Files taken (2):
+  voxelibre_cow_moo.ogg                <- mods/ENTITIES/mobs_mc/sounds/mobs_mc_cow.ogg
+                                          author: Zozzy (freesound)
+  voxelibre_cat_meow.ogg               <- mods/ENTITIES/mobs_mc/sounds/mobs_mc_cat_idle.2.ogg
+                                          author: SelsRoyalNavy (freesound)
+
+## https://github.com/DJWoodZ/Animal-Sounds  (commit 0fd2848e54f6278c47ed7592e7ff90488e3a6e87)
+Licence: LICENSE + README.md: "sounds (src/sounds/) are licensed under CC0 1.0"; cow-moo is a derivative of
+freesound #177253 by josephsardin (CC0).
+Files taken (1):
+  djwoodz_cow_moo.ogg                  <- src/sounds/cow-moo.ogg
+                                          author: josephsardin / DJ WoodZ
+
+## https://github.com/Courtside-live01/learntoread  (commit 0baca75e483d1991498d3b884a0d912db86abb26)
+Licence: animals/credits.json entry "rooster": {"file": "File:Medium rooster crowing.ogg", "license": "Public domain",
+"author": "alys", "page": "https://commons.wikimedia.org/wiki/File:Medium_rooster_crowing.ogg"} (trimmed clip).
+Files taken (1):
+  wikimedia_rooster_crow.ogg           <- animals/clips/rooster.mp3
+                                          author: alys (Wikimedia Commons)
+
+## https://github.com/SoundSafari/CC0-1.0-Music  (commit 655388f987eacf6d08d73080fcc3e727f267bfde)
+Licence: repository LICENSE (CC0 1.0) + README: "A collection of public-domain/CC0-1.0-licensed music ...".
+freepd.com/* : FreePD.com music, which FreePD publishes as public domain.
+freesound.org/* : declared CC0 by the aggregator only. The original Freesound pages could NOT be checked from
+  this container (freesound.org blocked). Marked "VERIFY before shipping" in index_new.json.
+Files taken (10):
+  freesound_india_street_market.ogg    <- freesound.org/263635__alcappuccino__india-trivandrum-street-market-voices-indistinguishable-music-traffic-tuktuks-honking.wav
+                                          author: alcappuccino (freesound)
+  freesound_bamboo_flute.ogg           <- freesound.org/328273__asrstar__148845__iluppai__bamboo-flute_seg.wav
+                                          author: asrstar / iluppai (freesound)
+  freesound_flute_solo.ogg             <- freesound.org/119157__jaava73__flute_01.wav
+                                          author: jaava73 (freesound)
+  freesound_indian_drums.ogg           <- freesound.org/331466__maurolupo__indian-drums-atmosphere.wav
+                                          author: maurolupo (freesound)
+  freepd_lovely_piano_song.ogg         <- freepd.com/Lovely Piano Song.mp3
+                                          author: FreePD.com (composer not listed in source)
+  freepd_nostalgic_piano.ogg           <- freepd.com/Nostalgic Piano.mp3
+                                          author: FreePD.com (composer not listed in source)
+  freepd_relaxing_ballad.ogg           <- freepd.com/Relaxing Ballad.mp3
+                                          author: FreePD.com (composer not listed in source)
+  freepd_hopeful.ogg                   <- freepd.com/Hopeful.mp3
+                                          author: FreePD.com (composer not listed in source)
+  freepd_bollywood_groove.ogg          <- freepd.com/Bollywood Groove.mp3
+                                          author: FreePD.com (composer not listed in source)
+  freepd_river_meditation.ogg          <- freepd.com/River Meditation.mp3
+                                          author: FreePD.com (composer not listed in source)
+
+Total files: 63

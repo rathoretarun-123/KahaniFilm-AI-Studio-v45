@@ -2792,7 +2792,8 @@ public class MainActivity extends Activity {
         p.presetPlayer = new Picker.Player() {
             public void play(final Library.Item it) {
                 com.tarun.kahani.core.NarratorVoices.Voice nv = library.narrator(it.path);
-                if (nv != null) speakPreset(nv.natural().key(), nv.sample.length() > 0 ? nv.sample : line, nv.hindi());
+                if (nv != null && nv.recording.length() > 0) Picker.play(MainActivity.this, "asset:" + nv.recording);     // v47.13: its own recorded sample, offline
+                else if (nv != null) speakPreset(nv.natural().key(), nv.sample.length() > 0 ? nv.sample : line, nv.hindi());
                 else speakPreset(it.path.substring(7), line, st == null || st.hindi);
             }
         };
@@ -5394,7 +5395,10 @@ public class MainActivity extends Activity {
                 if (it.path.startsWith(Library.NARRATOR)) {
                     final com.tarun.kahani.core.NarratorVoices.Voice lnv = library.narrator(it.path);
                     if (lnv != null) r.addView(Ui.small(this, "▶", Ui.BLUE, new View.OnClickListener() {
-                        public void onClick(View v) { speakPreset(lnv.natural().key(), lnv.sample, lnv.hindi()); }
+                        public void onClick(View v) {
+                            if (lnv.recording.length() > 0) Picker.play(MainActivity.this, "asset:" + lnv.recording);
+                            else speakPreset(lnv.natural().key(), lnv.sample, lnv.hindi());
+                        }
                     }));
                 } else if (!it.path.startsWith("preset:")) r.addView(Picker.controls(this, it.path));
                 if (!it.builtIn && Library.SOUND.equals(it.type)) r.addView(Ui.small(this, "✎", Ui.GREEN, new View.OnClickListener() {

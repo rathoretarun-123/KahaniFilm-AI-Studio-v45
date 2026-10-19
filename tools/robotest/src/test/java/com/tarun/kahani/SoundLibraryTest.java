@@ -46,4 +46,31 @@ public class SoundLibraryTest {
         assertEquals("moodist_things_boiling_water.ogg", lib.best("केतली में चाय का पानी उबल रहा है", "sfx", null).path);
         assertEquals("a word the old library answered keeps its recording", "rain.ogg", lib.best("बारिश हो रही है", "amb", null).path);
     }
+
+    /** v47.13 (the user: "websearch for more voice samples and natural sounds and background sounds"): the CC0 sounds. */
+    @Test public void theNewOpenSoundsAnswerTheirOwnWordsOnly() throws Exception {
+        SoundLib lib = new SoundLib(null);
+        lib.addIndex(index(), "");
+        int cc0 = 0;
+        for (Object x : (List<?>) Json.parseLoose(index())) {
+            String f = Json.str(x, "file", "");
+            if (f.matches("(esc50|kenney|benburnes|rubberduck|misslav|sonicpi|freepd|voxelibre|djwoodz|wikimedia)_.*")) {
+                cc0++;
+                String lic = Json.str(x, "licence", "");
+                assertTrue(f + " says its licence", lic.contains("CC0") || lic.toLowerCase().contains("public domain"));
+                assertTrue(f + " says where it came from", Json.str(x, "source", "").startsWith("https://"));
+            }
+        }
+        assertTrue("the open sounds are in: " + cc0, cc0 >= 55);
+        assertTrue(lib.best("दूर से एक मुर्गा बांग दे रहा है", "sfx", null).path.contains("rooster"));
+        assertTrue(lib.best("गाय रंभाती है", "sfx", null).path.contains("cow"));
+        assertTrue(lib.best("पिल्ला दौड़ता हुआ आता है", "sfx", null).path.contains("dog"));
+        assertTrue(lib.best("दादी कप में चाय डालती हैं", "sfx", null).path.contains("pour"));
+        assertTrue(lib.best("परी चिट्ठी खोलती है", "sfx", null).path.contains("paper"));
+        // a word that only names a thing or a person plays nothing of these: the bench, the morning, the old man, the tea
+        for (String t : new String[]{"रघुवीर जी बेंच पर बैठे हैं", "सुबह का समय है", "दादाजी सो रहे हैं", "चाय की दुकान"}) {
+            SoundLib.Entry e = lib.best(t, "sfx", null);
+            assertTrue(t + " -> " + (e == null ? "-" : e.path), e == null || !e.path.matches("(esc50|kenney|benburnes|rubberduck|misslav|voxelibre|djwoodz|wikimedia)_.*"));
+        }
+    }
 }

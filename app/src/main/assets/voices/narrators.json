@@ -1,47 +1,309 @@
 {
-  "library": "KahaniFilm narrator voices",
-  "version": 1,
-  "about": "The studio's narrator voices. No recording is bundled: each voice is made when the film is made — offline by the phone's own speech engine (Android TextToSpeech) at the pitch and pace given under 'phone', or online by the neural voice named under 'natural' (the studio's natural voices). A recorded narrator can always be chosen instead from the user's own voice library.",
-  "licence": "Voice definitions: part of KahaniFilm. The speech is produced by the phone's speech engine or the online neural voice service at the time the film is made; no third-party audio is distributed in the app.",
-  "voices": [
-    {"id": "hi_dadi", "name": "दादी माँ की कहानी", "name_en": "Grandmother storyteller", "language": "hi", "gender": "female", "age": "elderly", "tone": "warm, gentle, affectionate", "pace": "slow", "best_for": "bedtime stories, folk tales, family stories, gentle morals",
-     "sample": "बहुत समय पहले की बात है, एक छोटे से गाँव में एक बूढ़ी दादी रहती थीं।",
-     "phone": {"pitch": 0.86, "rate": 0.80}, "natural": {"voice": "hi-IN-SwaraNeural", "pitch_hz": -16, "rate_pct": -10}},
-    {"id": "hi_nana", "name": "नाना जी", "name_en": "Grandfather storyteller", "language": "hi", "gender": "male", "age": "elderly", "tone": "deep, calm, wise", "pace": "slow", "best_for": "old tales, village stories, lessons of life",
-     "sample": "सुनो बच्चों, आज मैं तुम्हें एक ऐसी कहानी सुनाता हूँ जो मेरे दादा ने मुझे सुनाई थी।",
-     "phone": {"pitch": 0.78, "rate": 0.80}, "natural": {"voice": "hi-IN-MadhurNeural", "pitch_hz": -18, "rate_pct": -12}},
-    {"id": "hi_kathavachak", "name": "कथावाचक", "name_en": "Storyteller", "language": "hi", "gender": "male", "age": "adult", "tone": "warm, clear, inviting", "pace": "measured", "best_for": "any story — the studio's default Hindi narrator",
-     "sample": "यह कहानी है दोस्ती की, भरोसे की, और एक छोटी सी चिट्ठी की।",
-     "phone": {"pitch": 0.92, "rate": 0.90}, "natural": {"voice": "hi-IN-MadhurNeural", "pitch_hz": -6, "rate_pct": -14}, "default": true},
-    {"id": "hi_sutradhar", "name": "गंभीर सूत्रधार", "name_en": "Serious narrator", "language": "hi", "gender": "male", "age": "adult", "tone": "deep, firm, dramatic", "pace": "measured", "best_for": "mythology, history, suspense, drama",
-     "sample": "उस रात आसमान में बादल गरज रहे थे, और महल के दरवाज़े पर कोई खड़ा था।",
-     "phone": {"pitch": 0.82, "rate": 0.88}, "natural": {"voice": "hi-IN-MadhurNeural", "pitch_hz": -12, "rate_pct": -6}},
-    {"id": "hi_maa", "name": "माँ की आवाज़", "name_en": "Mother's voice", "language": "hi", "gender": "female", "age": "adult", "tone": "warm, calm, loving", "pace": "measured", "best_for": "family stories, lullaby-like tales, emotional moments",
-     "sample": "मेरी गुड़िया, आज तुम्हें एक प्यारी सी कहानी सुनाती हूँ।",
-     "phone": {"pitch": 1.00, "rate": 0.90}, "natural": {"voice": "hi-IN-SwaraNeural", "pitch_hz": -8, "rate_pct": -4}},
-    {"id": "hi_didi", "name": "चुलबुली दीदी", "name_en": "Lively elder sister", "language": "hi", "gender": "female", "age": "young adult", "tone": "bright, cheerful, playful", "pace": "brisk", "best_for": "children's fun stories, adventure, school stories",
-     "sample": "तो चलो दोस्तों, आज चलते हैं एक मज़ेदार सफ़र पर!",
-     "phone": {"pitch": 1.10, "rate": 1.00}, "natural": {"voice": "hi-IN-SwaraNeural", "pitch_hz": 10, "rate_pct": 4}},
-    {"id": "hi_bal", "name": "बाल कथावाचक", "name_en": "Child narrator", "language": "hi", "gender": "female", "age": "child", "tone": "bright, innocent, curious", "pace": "medium", "best_for": "stories told through a child's eyes",
-     "sample": "मेरा नाम परी है, और आज मैं आपको अपनी सबसे अच्छी दोस्त की कहानी सुनाऊँगी।",
-     "phone": {"pitch": 1.25, "rate": 0.98}, "natural": {"voice": "hi-IN-SwaraNeural", "pitch_hz": 34, "rate_pct": 6}},
-    {"id": "en_grandma", "name": "Grandma Storyteller", "name_en": "Grandma Storyteller", "language": "en", "gender": "female", "age": "elderly", "tone": "warm, gentle, affectionate", "pace": "slow", "best_for": "bedtime stories, fairy tales, gentle morals",
-     "sample": "Once upon a time, in a little village by the river, there lived a kind old woman.",
-     "phone": {"pitch": 0.88, "rate": 0.82}, "natural": {"voice": "en-IN-NeerjaNeural", "pitch_hz": -14, "rate_pct": -10}},
-    {"id": "en_grandpa", "name": "Grandpa Storyteller", "name_en": "Grandpa Storyteller", "language": "en", "gender": "male", "age": "elderly", "tone": "deep, calm, wise", "pace": "slow", "best_for": "old tales, adventures remembered, lessons of life",
-     "sample": "Come closer, children. This is a story my own grandfather told me.",
-     "phone": {"pitch": 0.80, "rate": 0.82}, "natural": {"voice": "en-GB-RyanNeural", "pitch_hz": -14, "rate_pct": -12}},
-    {"id": "en_narrator", "name": "Warm Narrator", "name_en": "Warm Narrator (Indian English)", "language": "en", "gender": "male", "age": "adult", "tone": "warm, clear, inviting", "pace": "measured", "best_for": "any story — the studio's default English narrator",
-     "sample": "This is a story of friendship, of trust, and of one small letter.",
-     "phone": {"pitch": 0.92, "rate": 0.90}, "natural": {"voice": "en-IN-PrabhatNeural", "pitch_hz": -4, "rate_pct": -6}, "default": true},
-    {"id": "en_narrator_f", "name": "Warm Narrator (female)", "name_en": "Warm Narrator (Indian English, female)", "language": "en", "gender": "female", "age": "adult", "tone": "warm, calm, kind", "pace": "measured", "best_for": "family stories, emotional moments",
-     "sample": "Every evening, when the sun went down, the whole street came alive.",
-     "phone": {"pitch": 1.00, "rate": 0.90}, "natural": {"voice": "en-IN-NeerjaNeural", "pitch_hz": -4, "rate_pct": -6}},
-    {"id": "en_classic", "name": "Classic British Narrator", "name_en": "Classic British Narrator", "language": "en", "gender": "male", "age": "adult", "tone": "rich, dramatic, storybook", "pace": "measured", "best_for": "fairy tales, fantasy, suspense",
-     "sample": "Deep in the forest, where the old oak stood, something was waiting.",
-     "phone": {"pitch": 0.86, "rate": 0.88}, "natural": {"voice": "en-GB-RyanNeural", "pitch_hz": -8, "rate_pct": -8}},
-    {"id": "en_child", "name": "Child Narrator", "name_en": "Child Narrator", "language": "en", "gender": "female", "age": "child", "tone": "bright, innocent, curious", "pace": "medium", "best_for": "stories told through a child's eyes",
-     "sample": "Hi! My name is Pari, and this is the story of my very best friend.",
-     "phone": {"pitch": 1.25, "rate": 0.98}, "natural": {"voice": "en-US-AnaNeural", "pitch_hz": 0, "rate_pct": 0}}
-  ]
+ "library": "KahaniFilm narrator voices",
+ "version": 2,
+ "about": "The studio's narrator voices. Each has a short recorded sample in the app (voices/samples/, made with the open Kokoro-82M speech model and checked by a speech recogniser) to hear it before choosing. In a film the voice is made when the film is made — offline by the phone's own speech engine (Android TextToSpeech) at the pitch and pace under 'phone', or online by the neural voice under 'natural'. A recorded narrator can always be chosen instead from the user's own voice library.",
+ "licence": "Voice definitions: part of KahaniFilm. The sample recordings were synthesised for KahaniFilm with Kokoro-82M (hexgrad, Apache License 2.0, https://www.apache.org/licenses/LICENSE-2.0) through sherpa-onnx; they contain no third-party recording. Film speech is produced by the phone's speech engine or the online neural voice service.",
+ "voices": [
+  {
+   "id": "hi_dadi",
+   "name": "दादी माँ की कहानी",
+   "name_en": "Grandmother storyteller",
+   "language": "hi",
+   "gender": "female",
+   "age": "elderly",
+   "tone": "warm, gentle, affectionate",
+   "pace": "slow",
+   "best_for": "bedtime stories, folk tales, family stories, gentle morals",
+   "sample": "बहुत समय पहले की बात है, एक छोटे से गाँव में एक बूढ़ी दादी रहती थीं।",
+   "phone": {
+    "pitch": 0.86,
+    "rate": 0.8
+   },
+   "natural": {
+    "voice": "hi-IN-SwaraNeural",
+    "pitch_hz": -16,
+    "rate_pct": -10
+   },
+   "recording": "voices/samples/hi_dadi.ogg",
+   "recording_made_with": "Kokoro-82M voice hf_alpha (Apache-2.0), pitch x0.92, pace x0.85"
+  },
+  {
+   "id": "hi_nana",
+   "name": "नाना जी",
+   "name_en": "Grandfather storyteller",
+   "language": "hi",
+   "gender": "male",
+   "age": "elderly",
+   "tone": "deep, calm, wise",
+   "pace": "slow",
+   "best_for": "old tales, village stories, lessons of life",
+   "sample": "सुनो बच्चों, आज मैं तुम्हें एक ऐसी कहानी सुनाता हूँ जो मेरे दादा ने मुझे सुनाई थी।",
+   "phone": {
+    "pitch": 0.78,
+    "rate": 0.8
+   },
+   "natural": {
+    "voice": "hi-IN-MadhurNeural",
+    "pitch_hz": -18,
+    "rate_pct": -12
+   },
+   "recording": "voices/samples/hi_nana.ogg",
+   "recording_made_with": "Kokoro-82M voice hm_omega (Apache-2.0), pitch x0.88, pace x0.84"
+  },
+  {
+   "id": "hi_kathavachak",
+   "name": "कथावाचक",
+   "name_en": "Storyteller",
+   "language": "hi",
+   "gender": "male",
+   "age": "adult",
+   "tone": "warm, clear, inviting",
+   "pace": "measured",
+   "best_for": "any story — the studio's default Hindi narrator",
+   "sample": "यह कहानी है दोस्ती की, भरोसे की, और एक छोटी सी चिट्ठी की।",
+   "phone": {
+    "pitch": 0.92,
+    "rate": 0.9
+   },
+   "natural": {
+    "voice": "hi-IN-MadhurNeural",
+    "pitch_hz": -6,
+    "rate_pct": -14
+   },
+   "default": true,
+   "recording": "voices/samples/hi_kathavachak.ogg",
+   "recording_made_with": "Kokoro-82M voice hm_psi (Apache-2.0), pitch x1.00, pace x0.92"
+  },
+  {
+   "id": "hi_sutradhar",
+   "name": "गंभीर सूत्रधार",
+   "name_en": "Serious narrator",
+   "language": "hi",
+   "gender": "male",
+   "age": "adult",
+   "tone": "deep, firm, dramatic",
+   "pace": "measured",
+   "best_for": "mythology, history, suspense, drama",
+   "sample": "उस रात आसमान में बादल गरज रहे थे, और महल के दरवाज़े पर कोई खड़ा था।",
+   "phone": {
+    "pitch": 0.82,
+    "rate": 0.88
+   },
+   "natural": {
+    "voice": "hi-IN-MadhurNeural",
+    "pitch_hz": -12,
+    "rate_pct": -6
+   },
+   "recording": "voices/samples/hi_sutradhar.ogg",
+   "recording_made_with": "Kokoro-82M voice hm_omega (Apache-2.0), pitch x0.95, pace x0.90"
+  },
+  {
+   "id": "hi_maa",
+   "name": "माँ की आवाज़",
+   "name_en": "Mother's voice",
+   "language": "hi",
+   "gender": "female",
+   "age": "adult",
+   "tone": "warm, calm, loving",
+   "pace": "measured",
+   "best_for": "family stories, lullaby-like tales, emotional moments",
+   "sample": "मेरी गुड़िया, आज तुम्हें एक प्यारी सी कहानी सुनाती हूँ।",
+   "phone": {
+    "pitch": 1.0,
+    "rate": 0.9
+   },
+   "natural": {
+    "voice": "hi-IN-SwaraNeural",
+    "pitch_hz": -8,
+    "rate_pct": -4
+   },
+   "recording": "voices/samples/hi_maa.ogg",
+   "recording_made_with": "Kokoro-82M voice hf_alpha (Apache-2.0), pitch x1.00, pace x0.92"
+  },
+  {
+   "id": "hi_didi",
+   "name": "चुलबुली दीदी",
+   "name_en": "Lively elder sister",
+   "language": "hi",
+   "gender": "female",
+   "age": "young adult",
+   "tone": "bright, cheerful, playful",
+   "pace": "brisk",
+   "best_for": "children's fun stories, adventure, school stories",
+   "sample": "तो चलो दोस्तों, आज चलते हैं एक मज़ेदार सफ़र पर!",
+   "phone": {
+    "pitch": 1.1,
+    "rate": 1.0
+   },
+   "natural": {
+    "voice": "hi-IN-SwaraNeural",
+    "pitch_hz": 10,
+    "rate_pct": 4
+   },
+   "recording": "voices/samples/hi_didi.ogg",
+   "recording_made_with": "Kokoro-82M voice hf_beta (Apache-2.0), pitch x1.05, pace x1.00"
+  },
+  {
+   "id": "hi_bal",
+   "name": "बाल कथावाचक",
+   "name_en": "Child narrator",
+   "language": "hi",
+   "gender": "female",
+   "age": "child",
+   "tone": "bright, innocent, curious",
+   "pace": "medium",
+   "best_for": "stories told through a child's eyes",
+   "sample": "नमस्ते! आज मैं आपको अपनी सबसे अच्छी दोस्त की कहानी सुनाऊँगी।",
+   "phone": {
+    "pitch": 1.25,
+    "rate": 0.98
+   },
+   "natural": {
+    "voice": "hi-IN-SwaraNeural",
+    "pitch_hz": 34,
+    "rate_pct": 6
+   },
+   "recording": "voices/samples/hi_bal.ogg",
+   "recording_made_with": "Kokoro-82M voice hf_beta (Apache-2.0), pitch x1.18, pace x1.00"
+  },
+  {
+   "id": "en_grandma",
+   "name": "Grandma Storyteller",
+   "name_en": "Grandma Storyteller",
+   "language": "en",
+   "gender": "female",
+   "age": "elderly",
+   "tone": "warm, gentle, affectionate",
+   "pace": "slow",
+   "best_for": "bedtime stories, fairy tales, gentle morals",
+   "sample": "Once upon a time, in a little village by the river, there lived a kind old woman.",
+   "phone": {
+    "pitch": 0.88,
+    "rate": 0.82
+   },
+   "natural": {
+    "voice": "en-IN-NeerjaNeural",
+    "pitch_hz": -14,
+    "rate_pct": -10
+   },
+   "recording": "voices/samples/en_grandma.ogg",
+   "recording_made_with": "Kokoro-82M voice bf_emma (Apache-2.0), pitch x0.92, pace x0.86"
+  },
+  {
+   "id": "en_grandpa",
+   "name": "Grandpa Storyteller",
+   "name_en": "Grandpa Storyteller",
+   "language": "en",
+   "gender": "male",
+   "age": "elderly",
+   "tone": "deep, calm, wise",
+   "pace": "slow",
+   "best_for": "old tales, adventures remembered, lessons of life",
+   "sample": "Come closer, children. This is a story my own grandfather told me.",
+   "phone": {
+    "pitch": 0.8,
+    "rate": 0.82
+   },
+   "natural": {
+    "voice": "en-GB-RyanNeural",
+    "pitch_hz": -14,
+    "rate_pct": -12
+   },
+   "recording": "voices/samples/en_grandpa.ogg",
+   "recording_made_with": "Kokoro-82M voice bm_george (Apache-2.0), pitch x0.90, pace x0.85"
+  },
+  {
+   "id": "en_narrator",
+   "name": "Warm Narrator",
+   "name_en": "Warm Narrator (Indian English)",
+   "language": "en",
+   "gender": "male",
+   "age": "adult",
+   "tone": "warm, clear, inviting",
+   "pace": "measured",
+   "best_for": "any story — the studio's default English narrator",
+   "sample": "This is a story of friendship, of trust, and of one small letter.",
+   "phone": {
+    "pitch": 0.92,
+    "rate": 0.9
+   },
+   "natural": {
+    "voice": "en-IN-PrabhatNeural",
+    "pitch_hz": -4,
+    "rate_pct": -6
+   },
+   "default": true,
+   "recording": "voices/samples/en_narrator.ogg",
+   "recording_made_with": "Kokoro-82M voice bm_daniel (Apache-2.0), pitch x1.00, pace x0.92"
+  },
+  {
+   "id": "en_narrator_f",
+   "name": "Warm Narrator (female)",
+   "name_en": "Warm Narrator (Indian English, female)",
+   "language": "en",
+   "gender": "female",
+   "age": "adult",
+   "tone": "warm, calm, kind",
+   "pace": "measured",
+   "best_for": "family stories, emotional moments",
+   "sample": "Every evening, when the sun went down, the whole street came alive.",
+   "phone": {
+    "pitch": 1.0,
+    "rate": 0.9
+   },
+   "natural": {
+    "voice": "en-IN-NeerjaNeural",
+    "pitch_hz": -4,
+    "rate_pct": -6
+   },
+   "recording": "voices/samples/en_narrator_f.ogg",
+   "recording_made_with": "Kokoro-82M voice bf_isabella (Apache-2.0), pitch x1.00, pace x0.92"
+  },
+  {
+   "id": "en_classic",
+   "name": "Classic British Narrator",
+   "name_en": "Classic British Narrator",
+   "language": "en",
+   "gender": "male",
+   "age": "adult",
+   "tone": "rich, dramatic, storybook",
+   "pace": "measured",
+   "best_for": "fairy tales, fantasy, suspense",
+   "sample": "Deep in the forest, where the old oak stood, something was waiting.",
+   "phone": {
+    "pitch": 0.86,
+    "rate": 0.88
+   },
+   "natural": {
+    "voice": "en-GB-RyanNeural",
+    "pitch_hz": -8,
+    "rate_pct": -8
+   },
+   "recording": "voices/samples/en_classic.ogg",
+   "recording_made_with": "Kokoro-82M voice bm_fable (Apache-2.0), pitch x0.95, pace x0.90"
+  },
+  {
+   "id": "en_child",
+   "name": "Child Narrator",
+   "name_en": "Child Narrator",
+   "language": "en",
+   "gender": "female",
+   "age": "child",
+   "tone": "bright, innocent, curious",
+   "pace": "medium",
+   "best_for": "stories told through a child's eyes",
+   "sample": "Hi! Today I will tell you the story of my very best friend.",
+   "phone": {
+    "pitch": 1.25,
+    "rate": 0.98
+   },
+   "natural": {
+    "voice": "en-US-AnaNeural",
+    "pitch_hz": 0,
+    "rate_pct": 0
+   },
+   "recording": "voices/samples/en_child.ogg",
+   "recording_made_with": "Kokoro-82M voice bf_lily (Apache-2.0), pitch x1.18, pace x1.00"
+  }
+ ]
 }

@@ -88,9 +88,13 @@ public class MakeFilm {
             sampleWho = sv[0];
             sampleProfile = VoiceFx.profile(readWav(new File(sv[1])), Synth.SR);
         }
+        // v47.13: KOKORO=<model dir>:<espeak-ng-data dir>[:<python>] — the lines spoken by Kokoro-82M (Apache-2.0)
+        float[][] natural = System.getenv("KOKORO") != null ? kokoro(film, tmp) : null;
+        int byKokoro = 0;
         for (int i = 0; i < film.lines.size(); i++) {
             Film.Line l = film.lines.get(i);
-            voices[i] = espeak(l, tmp, i);
+            voices[i] = natural != null && natural[i] != null ? natural[i] : espeak(l, tmp, i);
+            if (natural != null && natural[i] != null) byKokoro++;
             if (voices[i] != null && sampleProfile != null && l.who != null && l.who.displayName.equals(sampleWho))
                 voices[i] = VoiceFx.matchVoice(voices[i], sampleProfile, Synth.SR);
             // raspy / trembling / booming… from the description, shouting / crying… from the line (as on the phone)
@@ -107,7 +111,7 @@ public class MakeFilm {
         // v47.9: the films had no voices when espeak-ng was missing, and nothing said so — the count is in the log now
         int spoken = 0;
         for (float[] v : voices) if (v != null) spoken++;
-        System.out.println("VOICES: " + spoken + " of " + film.lines.size() + " lines spoken (espeak-ng)" + (spoken < film.lines.size() ? " — install espeak-ng for the rest" : ""));
+        System.out.println("VOICES: " + spoken + " of " + film.lines.size() + " lines spoken (" + (byKokoro > 0 ? byKokoro + " by Kokoro-82M, " + (spoken - byKokoro) + " by espeak-ng" : "espeak-ng") + ")" + (spoken < film.lines.size() ? " — install espeak-ng for the rest" : ""));
         film = dir.direct(art);
         // WIDE=1: every scene seen whole by one still camera — for looking at the staging itself (who stands where,
         // vehicles, doors), not at the film's shots
@@ -325,6 +329,72 @@ public class MakeFilm {
         for (int i = 0, o = 0; i < n; i++, o += 3) px[i] = 0xFF000000 | ((b[o + 2] & 255) << 16) | ((b[o + 1] & 255) << 8) | (b[o] & 255);
         look.apply(px, p);
         for (int i = 0, o = 0; i < n; i++, o += 3) { int c = px[i]; b[o] = (byte) c; b[o + 1] = (byte) (c >> 8); b[o + 2] = (byte) (c >> 16); }
+    }
+
+    /**
+     * v47.13: every line spoken by Kokoro-82M (Apache-2.0, through sherpa-onnx: tools/tts/kokoro_batch.py), in one run:
+     * a voice for each character by who they are — its Hindi voices hf_alpha / hf_beta (women, girls) and hm_omega /
+     * hm_psi (men, boys), the British ones for English lines — raised for a child, lowered and slower for the old, a
+     * second woman or man of the story in the other voice. A line it cannot speak is left to espeak-ng.
+     */
+    static float[][] kokoro(Film film, File dir) {
+        float[][] out = new float[film.lines.size()][];
+        try {
+            String[] k = System.getenv("KOKORO").split(":");
+            String py = k.length > 2 ? k[2] : "python3";
+            File repo = new File(System.getProperty("kahani.assets", "app/src/main/assets")).getAbsoluteFile().getParentFile().getParentFile().getParentFile().getParentFile();
+            File script = new File(repo, "tools/tts/kokoro_batch.py");
+            java.util.Map<Story.CharacterDef, float[]> cast = new java.util.HashMap<Story.CharacterDef, float[]>();
+            int women = 0, men = 0;
+            StringBuilder j = new StringBuilder("[");
+            for (int i = 0; i < film.lines.size(); i++) {
+                Film.Line l = film.lines.get(i);
+                float[] v = cast.get(l.who);
+                if (v == null) {
+                    Look lk = l.who == null ? null : l.who.look;
+                    int age = l.who == null ? -1 : l.who.age;
+                    boolean old = lk != null && (lk.kind == Look.OLD_MAN || age >= 60);
+                    // {Hindi sid, English sid, speed, pitch}
+                    if (lk == null) v = new float[]{33, 26, 0.92f, 1f};
+                    else if (lk.kind == Look.GIRL) v = new float[]{32, 23, 1f, 1.14f};
+                    else if (lk.kind == Look.BOY) v = new float[]{34, 27, 1.02f, 1.18f};
+                    else if (lk.kind == Look.MONSTER) v = new float[]{33, 26, 0.9f, 0.78f};
+                    else if (lk.kind == Look.MONKEY || lk.kind == Look.ANIMAL || lk.kind == Look.BIRD) v = new float[]{32, 23, 1.04f, 1.16f};
+                    else if (lk.female || lk.kind == Look.WOMAN || lk.kind == Look.WITCH) v = old ? new float[]{31, 21, 0.88f, 0.94f} : new float[]{women++ % 2 == 0 ? 31 : 32, women % 2 == 1 ? 21 : 22, 0.98f, 1f};
+                    else v = old ? new float[]{33, 26, 0.86f, 0.9f} : new float[]{men++ % 2 == 0 ? 34 : 33, men % 2 == 1 ? 24 : 25, 0.98f, 1f};
+                    cast.put(l.who, v);
+                }
+                File w = new File(dir, "k" + i + ".wav");
+                if (j.length() > 1) j.append(',');
+                j.append("{\"text\":").append(jsonString(l.text)).append(",\"sid\":").append((int) (l.hindi ? v[0] : v[1]))
+                        .append(",\"speed\":").append(v[2]).append(",\"pitch\":").append(v[3])
+                        .append(",\"lang\":\"").append(l.hindi ? "hi" : "en-us").append("\",\"out\":").append(jsonString(w.getAbsolutePath())).append('}');
+            }
+            j.append(']');
+            File jobs = new File(dir, "kokoro_jobs.json");
+            Files.write(jobs.toPath(), j.toString().getBytes("UTF-8"));
+            Process p = new ProcessBuilder(py, "-I", script.getAbsolutePath(), k[0], k[1], jobs.getAbsolutePath()).redirectErrorStream(true).start();
+            String said = new String(p.getInputStream().readAllBytes(), "UTF-8");
+            p.waitFor();
+            if (!said.contains("spoke")) System.out.println("KOKORO: nothing spoken — " + said.substring(Math.max(0, said.length() - 400)).replace('\n', ' '));
+            for (int i = 0; i < out.length; i++) {
+                File w = new File(dir, "k" + i + ".wav");
+                if (w.isFile() && w.length() > 1000) out[i] = readWav(w);
+            }
+        } catch (Exception e) {
+            System.out.println("KOKORO: " + e);
+        }
+        return out;
+    }
+
+    static String jsonString(String s) {
+        StringBuilder b = new StringBuilder("\"");
+        for (char c : s.toCharArray()) {
+            if (c == '"' || c == '\\') b.append('\\').append(c);
+            else if (c < 0x20) b.append(String.format("\\u%04x", (int) c));
+            else b.append(c);
+        }
+        return b.append('"').toString();
     }
 
     public static float[] espeak(Film.Line l, File dir, int i) {

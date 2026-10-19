@@ -289,6 +289,7 @@ public final class Library {
         it.setMeta("sample", v.sample);
         it.setMeta("natural", v.natural().key());
         it.setMeta("phone", v.phonePitch + "|" + v.phoneRate);
+        if (v.recording.length() > 0) { it.setMeta("recording", "asset:" + v.recording); it.setMeta("recordingMadeWith", v.recordingMadeWith); }
         return it;
     }
 
