@@ -55,6 +55,15 @@ public final class Txt {
         return false;
     }
 
+    private static boolean asciiWord(String s) {
+        if (s.isEmpty()) return false;
+        for (int i = 0; i < s.length(); i++) {
+            char c = s.charAt(i);
+            if (!((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'))) return false;
+        }
+        return true;
+    }
+
     /** True when a complete word or phrase occurs, with Hindi combining marks treated as word characters. */
     public static boolean hasWholeWord(String hay, String... needles) {
         String h = norm(hay);
@@ -66,6 +75,16 @@ public final class Txt {
                 int e = i + x.length();
                 boolean left = i == 0 || !wordChar(h.charAt(i - 1));
                 boolean right = e >= h.length() || !wordChar(h.charAt(e));
+                // English screenplay directions commonly use plural props: cups, doors, boxes, babies.
+                // Permit ordinary plural endings without reopening substring matches such as "bat" in "bathroom".
+                if (!right && asciiWord(x)) {
+                    if (h.charAt(e) == 's' && (e + 1 == h.length() || !wordChar(h.charAt(e + 1)))) right = true;
+                    if (!right && x.endsWith("y") && h.startsWith("ies", e)
+                            && (e + 3 == h.length() || !wordChar(h.charAt(e + 3)))) right = true;
+                    if (!right && (x.endsWith("s") || x.endsWith("x") || x.endsWith("z")
+                            || x.endsWith("ch") || x.endsWith("sh")) && h.startsWith("es", e)
+                            && (e + 2 == h.length() || !wordChar(h.charAt(e + 2)))) right = true;
+                }
                 if (left && right) return true;
                 i = h.indexOf(x, i + 1);
             }

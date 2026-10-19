@@ -149,6 +149,11 @@ public class StudioRequestsTest {
         assertTrue("the physical action's door is requested", bathroomRequests.contains("obj:door"));
         assertFalse("a substring of bathroom is not a prop", bathroomRequests.contains("obj:bat"));
 
+        Project pluralProps = project(ENGLISH.replace("[Rahul flies the kite on the roof. He picks up a stick.]",
+                "[Rahul picks up cups.]"));
+        assertTrue("plural screenplay props still match their singular asset name",
+                requests(FilmJob.storyOf(pluralProps)).contains("obj:cup"));
+
         // Hindi material adjectives describe a prop, not a second object asset of raw wood/metal.
         Project woodenDoor = project(HINDI.replace("[राहुल छड़ी उठाता है।]", "[राहुल लकड़ी का दरवाज़ा खोलता है।]"));
         Set<String> woodenRequests = requests(FilmJob.storyOf(woodenDoor));
