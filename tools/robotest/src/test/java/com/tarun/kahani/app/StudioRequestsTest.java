@@ -120,21 +120,27 @@ public class StudioRequestsTest {
         Story st = FilmJob.storyOf(p);
         Set<String> want = new TreeSet<String>();
         want.add("char:राहुल"); want.add("char:माँ");
-        want.add("obj:पतंग"); want.add("obj:चरखी");
+        want.add("obj:पतंग"); want.add("obj:चरखी"); want.add("obj:छड़ी");
         want.add("scene:घर की छत"); want.add("scene:बाज़ार");
         assertEquals("the Studio asks for exactly the script's characters, objects and places", want, requests(st));
-        // the walking stick the action mentions is no request; the narrators and "सब" are never characters to picture
+        // The stick is introduced only by an action, so it must still be requested; narrators and "सब" are never pictured.
         for (Story.CharacterDef c : st.characters) if (StudioPlan.narratorLike(c)) assertTrue(c.displayName + " is a voice only", c.voiceOnly);
         for (Story.CharacterDef c : st.cast()) assertFalse("the narrator is not in the cast: " + c.displayName, StudioPlan.narratorLike(c) || StudioPlan.groupWord(c.displayName));
 
         Project e = project(ENGLISH);
         Story es = FilmJob.storyOf(e);
         Set<String> wantEn = new TreeSet<String>();
-        wantEn.add("char:Rahul"); wantEn.add("char:Mother"); wantEn.add("obj:Kite");
+        wantEn.add("char:Rahul"); wantEn.add("char:Mother"); wantEn.add("obj:Kite"); wantEn.add("obj:stick");
         for (StudioPlan.Place pl : StudioPlan.places(es)) wantEn.add("scene:" + pl.shown);
-        assertEquals("two places in the English script: " + wantEn, 5, wantEn.size());
+        assertEquals("two places plus the action-only stick: " + wantEn, 6, wantEn.size());
         assertEquals(wantEn, requests(es));
-        for (StudioPlan.Request r : StudioPlan.requests(es)) assertFalse("no stick, no narrator, no voice-over, no everyone: " + r, r.shown.equalsIgnoreCase("stick") || r.shown.contains("Narrator") || r.shown.contains("Voice") || r.shown.contains("Everyone"));
+        for (StudioPlan.Request r : StudioPlan.requests(es)) assertFalse("no narrator, no voice-over, no everyone: " + r, r.shown.contains("Narrator") || r.shown.contains("Voice") || r.shown.contains("Everyone"));
+
+        // A prop mentioned only in dialogue is not an asset request: only scripted physical-action directions add props.
+        Project spokenOnly = project(HINDI.replace("[राहुल छड़ी उठाता है।]", "[राहुल घर में खड़ा है।]")
+                .replace("राहुल: \\"माँ, चरखी लो।\\"", "राहुल: \\"माँ, छड़ी लो।\\""));
+        for (StudioPlan.Request r : StudioPlan.requests(FilmJob.storyOf(spokenOnly)))
+            assertFalse("dialogue alone must not request a stick: " + r, r.kind.equals(StudioPlan.OBJECT) && r.shown.equals("छड़ी"));
 
         // the Studio page shows one picture card per request and none for the narrator
         ActivityController<MainActivity> ac = Robolectric.buildActivity(MainActivity.class).setup();

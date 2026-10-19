@@ -110,7 +110,62 @@ final class StudioPlan {
             if (nm.length() < 2 || names.contains(Txt.norm(nm)) || Bible.intangible(nm) || !seen.add(Txt.norm(nm))) continue;
             out.add(new String[]{nm, st.shown(nm), th.description == null ? "" : th.description});
         }
+        // Also ask for tangible things that the screenplay introduces through an action rather than a separate
+        // "Objects" list. Only direction beats count; dialogue, narrator text, scene headings and descriptions
+        // elsewhere must not create asset requests. Reuse the renderer's vocabulary so rigid and soft props share
+        // the same names, and suppress a word when it is already part of a longer matching thing or a place name.
+        Set<String> placeNames = new HashSet<String>();
+        for (String[] pl : Bible.places(st)) placeNames.add(Txt.norm(pl[0]));
+        List<String> vocabulary = new ArrayList<String>();
+        for (String word : com.tarun.kahani.core.Rigidity.RIGID_WORDS) vocabulary.add(word);
+        for (String word : com.tarun.kahani.core.Rigidity.SOFT_WORDS) vocabulary.add(word);
+        // Material adjectives describe an object's appearance; they are not props by themselves.
+        String[] materialOnly = {"wooden", "wood", "iron", "brass", "copper", "steel", "metal"};
+        List<String> actionObjects = new ArrayList<String>();
+        Set<String> actionSeen = new HashSet<String>();
+        for (Story.Scene scene : st.scenes) for (Story.Beat beat : scene.beats) {
+            if (beat.type != Story.Beat.DIRECTION || !hasPhysicalAction(beat.text)) continue;
+            for (String word : vocabulary) {
+                String key = Txt.norm(word);
+                if (key.length() < 2 || !Txt.hasStart(beat.text, word) || Bible.intangible(word)) continue;
+                boolean material = false;
+                for (String m : materialOnly) if (key.equals(Txt.norm(m))) { material = true; break; }
+                if (material || names.contains(key) || actionSeen.contains(key)) continue;
+                boolean isPlace = false;
+                for (String place : placeNames) if (place.contains(key) || key.equals(place)) { isPlace = true; break; }
+                if (isPlace) continue;
+                actionObjects.add(word);
+                actionSeen.add(key);
+            }
+        }
+        // Prefer the longest matched word ("बाल्टी", not "बाल"; "walking stick", not a second "stick" request).
+        for (String word : actionObjects) {
+            String key = Txt.norm(word);
+            boolean partOfLonger = false;
+            for (String other : actionObjects) {
+                String otherKey = Txt.norm(other);
+                if (otherKey.length() > key.length() && otherKey.contains(key)) { partOfLonger = true; break; }
+            }
+            if (partOfLonger || !seen.add(key)) continue;
+            out.add(new String[]{word, st.shown(word), ""});
+        }
         return out;
+    }
+
+    /** A prop mentioned in a physical action, in Hindi or English, not a mere topic or setting. */
+    private static boolean hasPhysicalAction(String text) {
+        if (text == null || text.trim().isEmpty()) return false;
+        return Txt.hasStart(text,
+                "उठ", "पकड़", "थाम", "रख", "लेकर", "लेता", "लेती", "लिया", "लिये", "लाए", "लाता", "लाती",
+                "देता", "देती", "दिया", "दिए", "खोल", "बंद", "लिख", "पढ़", "पहन", "फेंक", "उछाल", "खींच",
+                "धकेल", "घसीट", "पीता", "पीती", "खाता", "खाती", "डाल", "भरता", "भरती", "चलाता", "चलाती",
+                "बजाता", "बजाती", "झाड़ता", "झाड़ती", "साफ़", "साफ", "टूट", "गिराता", "गिराती", "उड़ाता", "उड़ाती",
+                "बैठता", "बैठती", "लेटता", "लेटती", "सहारा", "ओढ़", "लपेट", "चढ़ता", "चढ़ती", "उतार",
+                "picks up", "pick up", "picking up", "holds", "hold", "holding", "takes", "take", "taking",
+                "puts", "put", "placing", "places", "opens", "open", "closes", "close", "writes", "write",
+                "reads", "read", "wears", "wear", "throws", "throw", "carries", "carry", "grabs", "grab",
+                "lifts", "lift", "pulls", "pull", "pushes", "push", "drinks", "drink", "eats", "eat",
+                "pours", "pour", "uses", "use", "swings", "swing", "plays", "play", "sits on", "leans on");
     }
 
     /** One place of the script and the scenes set there (none: a place seen around the scenes, given on the first). */
