@@ -18,7 +18,7 @@ def engine(lang):
     if lang not in engines:
         cfg = sherpa_onnx.OfflineTtsConfig(model=sherpa_onnx.OfflineTtsModelConfig(
             kokoro=sherpa_onnx.OfflineTtsKokoroModelConfig(
-                model=model_dir + "/model.int8.onnx", voices=model_dir + "/voices.bin", tokens=model_dir + "/tokens.txt",
+                model=model_dir + ("/model.int8.onnx" if __import__("os").path.isfile(model_dir + "/model.int8.onnx") else "/model.onnx"), voices=model_dir + "/voices.bin", tokens=model_dir + "/tokens.txt",
                 data_dir=espeak_data, lexicon=model_dir + "/lexicon-us-en.txt", lang=lang),
             num_threads=2))
         engines[lang] = sherpa_onnx.OfflineTts(cfg)

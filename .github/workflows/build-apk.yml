@@ -203,6 +203,8 @@ jobs:
             --tests com.tarun.kahani.PoseModelTest \
             --tests com.tarun.kahani.MeshPrecisionTest \
             --tests com.tarun.kahani.VoiceModulationTest \
+            --tests com.tarun.kahani.RigidSoftTest \
+            --tests com.tarun.kahani.KokoroCastTest \
             --tests com.tarun.kahani.app.StudioRequestsTest \
             --tests com.tarun.kahani.UiShotsTest \
             --tests com.tarun.kahani.FrameAuditTest \

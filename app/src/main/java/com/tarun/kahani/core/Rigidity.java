@@ -60,8 +60,22 @@ public final class Rigidity {
         if (text == null || text.length() == 0) return UNKNOWN;
         String t = " " + text.toLowerCase(java.util.Locale.ROOT).replace('_', ' ').replace('-', ' ') + " ";
         boolean rigid = Txt.hasStart(t, RIGID_WORDS), soft = Txt.hasStart(t, SOFT_WORDS);
-        if (soft && rigid) return Txt.has(t, "की लकड़ी", "का डंडा", "की छड़ी", "handle", "wooden", "of wood") ? RIGID : SOFT;
+        if (soft && rigid) {
+            if (Txt.has(t, "की लकड़ी", "का डंडा", "की छड़ी", "handle", "wooden", "of wood")) return RIGID;
+            // v47.13 (the user: "check rigid body objects and non rigid body objects are meshed properly"): the longer
+            // word is the thing — a बाल्टी (bucket) is no बाल (hair), a पंखा (fan) no पंख (feather), but a कपड़ा (cloth) is
+            // no कप (cup)
+            int r = longestStart(t, RIGID_WORDS), f = longestStart(t, SOFT_WORDS);
+            return r > f ? RIGID : SOFT;
+        }
         return soft ? SOFT : rigid ? RIGID : UNKNOWN;
+    }
+
+    /** The length of the longest of the words that begins a word of the text (0 when none does). */
+    static int longestStart(String text, String[] words) {
+        int best = 0;
+        for (String w : words) if (w.length() > best && Txt.hasStart(text, w)) best = w.length();
+        return best;
     }
 
     /** v47.4: a thing that opens like a book in the hands — a book, a notebook, a diary, a letter, a newspaper. */

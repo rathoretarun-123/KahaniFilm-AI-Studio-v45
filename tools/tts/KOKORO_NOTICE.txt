@@ -1,0 +1,9 @@
+Kokoro voices in KahaniFilm
+
+model.onnx, voices.bin, tokens.txt — Kokoro-82M v1.0 (hexgrad), Apache License 2.0 (LICENSE in this folder), as
+packaged for sherpa-onnx (k2-fsa, Apache License 2.0): kokoro-multi-lang-v1_0, the full-precision model.
+lexicon-us-en.txt, lexicon-gb-en.txt — from the same package.
+espeak-ng-data — eSpeak NG's language data (GNU General Public License v3.0 or later), used by sherpa-onnx to turn
+Hindi and other text into phonemes. The sherpa-onnx native libraries in this app include eSpeak NG (GPL-3.0); the
+app's source code is published at https://github.com/rathoretarun-123/KahaniFilm-AI-Studio-v45 and eSpeak NG's at
+https://github.com/espeak-ng/espeak-ng.

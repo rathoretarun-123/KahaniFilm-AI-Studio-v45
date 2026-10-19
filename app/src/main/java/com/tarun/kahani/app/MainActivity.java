@@ -2776,6 +2776,7 @@ public class MainActivity extends Activity {
                 com.tarun.kahani.core.NarratorVoices.Voice nv = library.narrator(it.path);
                 if (nv != null && nv.recording.length() > 0) Picker.play(MainActivity.this, "asset:" + nv.recording);     // v47.13: its own recorded sample, offline
                 else if (nv != null) speakPreset(nv.natural().key(), nv.sample.length() > 0 ? nv.sample : line, nv.hindi());
+                else if (it.path.startsWith("asset:")) Picker.play(MainActivity.this, it.path);     // v47.13: a Kokoro voice's sample
                 else speakPreset(it.path.substring(7), line, st == null || st.hindi);
             }
         };
@@ -2783,12 +2784,19 @@ public class MainActivity extends Activity {
                 new String[]{"record", "phone"}, new Picker.Listener() {
                     public void picked(Library.Item it) {
                         com.tarun.kahani.core.NarratorVoices.Voice nv = library.narrator(it.path);
+                        project.setSetting("kvoice." + name, "");
                         if (nv != null) {
                             // v47.13: one of the studio's narrator voices — its pitch and pace on the phone, its neural voice online
                             project.setSetting("vsample." + name, "");
                             project.setSetting("nvoice." + name, nv.id);
                             project.setSetting("evoice." + name, nv.natural().key());
                             project.setSetting("evoiceIdx." + name, "");
+                            toast("✅ " + (c != null ? c.shown() : "Narrator") + " will speak with: " + it.label());
+                        } else if (it.path.startsWith("asset:voices/kokoro/")) {
+                            // v47.13: one of the Kokoro voices the film speaks with offline
+                            project.setSetting("vsample." + name, "");
+                            project.setSetting("nvoice." + name, "");
+                            project.setSetting("kvoice." + name, it.meta("speaker") == null ? "" : it.meta("speaker"));
                             toast("✅ " + (c != null ? c.shown() : "Narrator") + " will speak with: " + it.label());
                         } else if (it.path.startsWith("preset:")) {
                             project.setSetting("vsample." + name, "");

@@ -358,34 +358,15 @@ public class MakeFilm {
             String py = k.length > 2 ? k[2] : "python3";
             File repo = new File(System.getProperty("kahani.assets", "app/src/main/assets")).getAbsoluteFile().getParentFile().getParentFile().getParentFile().getParentFile();
             File script = new File(repo, "tools/tts/kokoro_batch.py");
-            java.util.Map<Story.CharacterDef, float[]> cast = new java.util.HashMap<Story.CharacterDef, float[]>();
-            float[] pitchOf = new float[out.length], formantOf = new float[out.length];
-            int women = 0, men = 0;
+            KokoroCast cast = new KokoroCast();
             StringBuilder j = new StringBuilder("[");
             for (int i = 0; i < film.lines.size(); i++) {
                 Film.Line l = film.lines.get(i);
-                float[] v = cast.get(l.who);
-                if (v == null) {
-                    Look lk = l.who == null ? null : l.who.look;
-                    int age = l.who == null ? -1 : l.who.age;
-                    boolean old = lk != null && (lk.kind == Look.OLD_MAN || age >= 60);
-                    // {Hindi sid, English sid, speed, pitch, formant} — the pitch and the throat moved by TD-PSOLA afterwards
-                    if (lk == null) v = new float[]{33, 26, 0.92f, 1f, 1f};
-                    else if (lk.kind == Look.GIRL) v = new float[]{32, 23, 1f, 1.22f, 1.1f};
-                    else if (lk.kind == Look.BOY) v = new float[]{34, 27, 1.02f, 1.3f, 1.12f};
-                    else if (lk.kind == Look.MONSTER) v = new float[]{33, 26, 0.9f, 0.78f, 0.88f};
-                    else if (lk.kind == Look.MONKEY || lk.kind == Look.ANIMAL || lk.kind == Look.BIRD) v = new float[]{32, 23, 1.04f, 1.16f, 1.08f};
-                    else if (lk.female || lk.kind == Look.WOMAN || lk.kind == Look.WITCH) v = old ? new float[]{31, 21, 0.88f, 0.94f, 0.98f} : new float[]{women++ % 2 == 0 ? 31 : 32, women % 2 == 1 ? 21 : 22, 0.98f, 1f, 1f};
-                    else v = old ? new float[]{33, 26, 0.86f, 0.9f, 0.97f} : new float[]{men++ % 2 == 0 ? 34 : 33, men % 2 == 1 ? 24 : 25, 0.98f, 1f, 1f};
-                    cast.put(l.who, v);
-                }
                 File w = new File(dir, "k" + i + ".wav");
                 if (j.length() > 1) j.append(',');
                 // (the feeling's pace here, its pitch with the character's below: v47.13 voice modulation)
-                float[] ef = VoiceFx.emotionFactors(l.emotion);
-                pitchOf[i] = v[3] * ef[1]; formantOf[i] = v[4];
-                j.append("{\"text\":").append(jsonString(l.text)).append(",\"sid\":").append((int) (l.hindi ? v[0] : v[1]))
-                        .append(",\"speed\":").append(v[2] * ef[0]).append(",\"pitch\":1")
+                j.append("{\"text\":").append(jsonString(l.text)).append(",\"sid\":").append(cast.speaker(l))
+                        .append(",\"speed\":").append(cast.pace(l)).append(",\"pitch\":1")
                         .append(",\"lang\":\"").append(l.hindi ? "hi" : "en-us").append("\",\"out\":").append(jsonString(w.getAbsolutePath())).append('}');
             }
             j.append(']');
@@ -397,7 +378,7 @@ public class MakeFilm {
             if (!said.contains("spoke")) System.out.println("KOKORO: nothing spoken — " + said.substring(Math.max(0, said.length() - 400)).replace('\n', ' '));
             for (int i = 0; i < out.length; i++) {
                 File w = new File(dir, "k" + i + ".wav");
-                if (w.isFile() && w.length() > 1000) out[i] = VoiceFx.psola(readWav(w), Synth.SR, pitchOf[i], formantOf[i], 1f);
+                if (w.isFile() && w.length() > 1000) out[i] = cast.shape(film.lines.get(i), readWav(w), Synth.SR);
             }
         } catch (Exception e) {
             System.out.println("KOKORO: " + e);

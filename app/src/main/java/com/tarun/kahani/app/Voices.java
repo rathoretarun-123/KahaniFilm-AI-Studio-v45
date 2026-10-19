@@ -38,6 +38,11 @@ public final class Voices {
     private final Map<String, Boolean> ok = new ConcurrentHashMap<String, Boolean>();
     private Locale locale;
     private boolean storyHindi = true;
+    /** v47.13: the offline Kokoro voices (null when the app or the phone has none) and the film's cast of them. */
+    private Kokoro kokoro;
+    private boolean kokoroTried;
+    private final com.tarun.kahani.core.KokoroCast kokoroCast = new com.tarun.kahani.core.KokoroCast();
+    private Context appCtx;
 
     /** v47.9: the speech engine that really spoke the test line ("com.google.android.tts"), or "" when none did. */
     public String engineUsed = "";
@@ -53,6 +58,7 @@ public final class Voices {
      * Latin letters, see phoneTts).
      */
     public boolean init(Context ctx, boolean hindi) {
+        appCtx = ctx.getApplicationContext() != null ? ctx.getApplicationContext() : ctx;
         List<String> engines = new ArrayList<String>();
         engines.add(null);                                   // the phone's default engine
         engines.add("com.google.android.tts");
@@ -161,6 +167,7 @@ public final class Voices {
     }
 
     public void shutdown() {
+        if (kokoro != null) { kokoro.release(); kokoro = null; kokoroTried = false; }
         try { if (tts != null) { tts.stop(); tts.shutdown(); } } catch (Exception ignored) {}
         tts = null;
         ready = false;
@@ -200,6 +207,8 @@ public final class Voices {
             if (p != null) {
                 String v = p.setting("voice." + c.displayName, "");
                 try { if (v.length() > 0) k.voice = Integer.parseInt(v); } catch (NumberFormatException ignored) {}
+                String kv = p.setting("kvoice." + c.displayName, "");
+                try { if (kv.length() > 0) kokoroCast.choose(c, Integer.parseInt(kv)); } catch (NumberFormatException ignored) {}
                 String pi = p.setting("pitch." + c.displayName, "");
                 try { if (pi.length() > 0) k.pitch = Float.parseFloat(pi); } catch (NumberFormatException ignored) {}
             }
@@ -213,6 +222,8 @@ public final class Voices {
             k.style = com.tarun.kahani.core.VoiceStyle.forCharacter(c);
             m.put(c, k);
         }
+        // v47.13: the narrator's Kokoro voice, when the user chose one in the library
+        if (p != null) try { String kv = p.setting("kvoice.narrator", ""); if (kv.length() > 0) kokoroCast.choose(null, Integer.parseInt(kv)); } catch (NumberFormatException ignored) {}
         return m;
     }
 
@@ -422,6 +433,19 @@ public final class Voices {
                 if (err != null) err[0] = e.getMessage();
                 if (++edgeFails >= 3) edgeOff = true;
                 usedFallback = true;
+            }
+        }
+        // v47.13: offline, the lines in Kokoro's natural voices (the story's language) before the phone's own engine
+        if (pcm == null && line.hindi == storyHindi && appCtx != null) {
+            if (!kokoroTried) { kokoroTried = true; kokoro = Kokoro.open(appCtx, storyHindi); }
+            if (kokoro != null) {
+                Object[] r = kokoro.speak(line.text, kokoroCast.speaker(line), kokoroCast.pace(line) * (1 + ls.ratePct / 100f));
+                if (r != null) {
+                    float[] raw = Mixer.resample((float[]) r[0], (Integer) r[1]);
+                    pcm = k.sample != null ? raw : kokoroCast.shape(line, raw, Synth.SR);
+                    shaped = k.sample == null;
+                    lastEngine = "kokoro";
+                }
             }
         }
         if (pcm == null) {

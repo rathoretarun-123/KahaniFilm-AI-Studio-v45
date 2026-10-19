@@ -1203,7 +1203,9 @@ public class AppTest {
         for (String[] sf : sheetFor) {
             List<?> fam = (List<?>) save.invoke(null, lib, sf[0], sf[2], Files.readAllBytes(new File(dir, sf[1]).toPath()), "test");
             rep.append(String.format(java.util.Locale.US, "library: %-9s ← %s split into %d pictures%n", sf[0], sf[1], fam.size()));
-            assertTrue(sf[0] + " split: " + fam.size(), fam.size() >= 8);
+            // v47.13 (the user: "no splitting beyond 3x2"): a sheet comes apart into two to six pictures, or is kept whole
+            assertTrue(sf[0] + " split: " + fam.size(), fam.size() == 0 || (fam.size() >= 2 && fam.size() <= 6));
+            if (fam.isEmpty()) lib.addBytes("pic", sf[2], sf[0], "", Files.readAllBytes(new File(dir, sf[1]).toPath()), ".jpg", "test");
         }
         lib.addBytes("pic", "place", "महल का बगीचा", "", Files.readAllBytes(new File(ASSETS, "sample/bg_garden.jpg").toPath()), ".jpg", "test");
         String[] titles = {"मीना और राजू की तितली (Hindi)", "Asha and the Beast (English)", "Vrinda aur Bull (Hinglish)"};
@@ -3203,7 +3205,16 @@ public class AppTest {
             String[] f = l.split("\\|");
             if (f.length >= 6 && f[0].equals("pose") && f[1].equals(key) && p.has(f[2]) && java.util.Arrays.equals(Files.readAllBytes(p.file(f[2]).toPath()), mainBytes)) mainTag = f;
         }
-        assertNotNull("the main picture is one of the sheet's figures", mainTag);
+        int poses = 0;
+        for (String l : p.read("cast.txt").split("\n")) { String[] f = l.split("\\|"); if (f.length >= 6 && f[0].equals("pose") && f[1].equals(key)) poses++; }
+        // v47.13 (the user: "no splitting beyond 3x2"): sheet 15 holds more than six figures — it is kept whole, the main picture
+        assertTrue("never more than 3x2 pictures from one sheet: " + poses, poses <= 6);
+        if (mainTag == null) {
+            assertEquals("a sheet of more than 3x2 is kept whole: no figures cut from it", 0, poses);
+            assertTrue("the whole sheet is the main picture", mainBytes.length > 0);
+            ac.pause().stop().destroy();
+            return;
+        }
         System.out.println("MAIN PICTURE of sheet 15: angle " + mainTag[3] + " pose " + mainTag[4] + " emotion " + mainTag[5] + "; lion line framed " + ls.size + ", back at " + back);
         assertTrue("the main picture faces front: " + mainTag[3], Math.abs(Float.parseFloat(mainTag[3])) < 1);
         assertTrue("the main picture stands: " + mainTag[4], Integer.parseInt(mainTag[4]) == com.tarun.kahani.core.PoseSense.STAND);

@@ -200,6 +200,8 @@ public final class Library {
             }
             // Reference art for the user's Aakhiri Chitthi story is bundled in the same browsable library.
             addFilmBuiltIns("film_library/aakhiri_chitthi/stills", "आखिरी चिट्ठी");
+            addUserLibrary();
+            addKokoroVoices();
             String json = Project.readAsset(ctx.getAssets(), "sounds/index.json");
             Object o = Json.parseLoose(json);
             if (o instanceof List) for (Object x : (List<?>) o) {
@@ -299,6 +301,60 @@ public final class Library {
     }
 
     /** Story-specific reference images shipped in the APK and exposed as read-only library items. */
+    /**
+     * v47.13 (the user: "include all the pictures uploaded till now … in apk library"): the user's own pictures of
+     * their stories, put in an APK built for them (assets/user_library/index.json: file, story, kind, name, angle) —
+     * found by the story's name and by who or what each one shows.
+     */
+    private void addUserLibrary() {
+        try {
+            Object o = Json.parseLoose(Project.readAsset(ctx.getAssets(), "user_library/index.json"));
+            if (!(o instanceof List)) return;
+            for (Object x : (List<?>) o) {
+                Item it = new Item();
+                it.path = "asset:" + Json.str(x, "file", ""); it.id = it.path; it.type = PIC; it.builtIn = true; it.source = "app";
+                it.kind = Json.str(x, "kind", "reference");
+                String story = Json.str(x, "story", ""), name = Json.str(x, "name", "");
+                it.name = name + (story.length() > 0 ? " — " + story : "");
+                if (Json.str(x, "angle", "").length() > 0) it.setMeta("view", Json.str(x, "angle", ""));
+                it.setMeta("story", story);
+                it.tags = name + ", " + story + ", " + it.kind;
+                items.add(it);
+            }
+        } catch (Exception ignored) {
+            // (an APK without the user's pictures: nothing to add)
+        }
+    }
+
+    /**
+     * v47.13 (the user: "include … voices generated in apk library"): the Kokoro character voices the films speak with
+     * (core.KokoroCast), one recorded sample of each (assets/voices/kokoro/index.json: file, voice, speaker, language,
+     * gender, sample, made_with), to be heard in the library.
+     */
+    private void addKokoroVoices() {
+        try {
+            Object o = Json.parseLoose(Project.readAsset(ctx.getAssets(), "voices/kokoro/index.json"));
+            if (!(o instanceof List)) return;
+            for (Object x : (List<?>) o) {
+                Item it = new Item();
+                it.path = "asset:" + Json.str(x, "file", ""); it.id = it.path; it.type = VOICE; it.builtIn = true; it.source = "app";
+                it.kind = "character";
+                String lang = Json.str(x, "language", ""), gender = Json.str(x, "gender", "");
+                it.name = "Kokoro " + Json.str(x, "voice", "") + " — " + ("hi".equals(lang) ? "Hindi" : "English") + " " + gender;
+                it.tags = "kokoro, character voice, " + lang + ", " + gender;
+                it.setMeta("language", lang);
+                it.setMeta("gender", gender);
+                it.setMeta("sample", Json.str(x, "sample", ""));
+                it.setMeta("speaker", String.valueOf((int) Json.num(x, "speaker", -1)));
+                it.setMeta("recording", it.path);
+                it.setMeta("recordingMadeWith", Json.str(x, "made_with", ""));
+                items.add(it);
+            }
+        } catch (Exception ignored) {
+            // (no samples in this build: nothing to add)
+        }
+    }
+
     private void addFilmBuiltIns(String assetDir, String storyTitle) {
         try {
             String[] files = ctx.getAssets().list(assetDir);

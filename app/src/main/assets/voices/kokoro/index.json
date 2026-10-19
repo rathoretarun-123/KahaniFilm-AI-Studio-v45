@@ -1,0 +1,74 @@
+[
+ {
+  "file": "voices/kokoro/hf_alpha.ogg",
+  "voice": "hf_alpha",
+  "speaker": 31,
+  "language": "hi",
+  "gender": "female",
+  "sample": "नमस्ते, मैं एक कहानी की आवाज़ हूँ। आज का दिन बहुत सुंदर है।",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 31"
+ },
+ {
+  "file": "voices/kokoro/hf_beta.ogg",
+  "voice": "hf_beta",
+  "speaker": 32,
+  "language": "hi",
+  "gender": "female",
+  "sample": "चलो, आज हम कुछ नया सीखते हैं!",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 32"
+ },
+ {
+  "file": "voices/kokoro/hm_omega.ogg",
+  "voice": "hm_omega",
+  "speaker": 33,
+  "language": "hi",
+  "gender": "male",
+  "sample": "बहुत समय पहले की बात है, एक छोटे से गाँव में।",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 33"
+ },
+ {
+  "file": "voices/kokoro/hm_psi.ogg",
+  "voice": "hm_psi",
+  "speaker": 34,
+  "language": "hi",
+  "gender": "male",
+  "sample": "अरे भाई, ज़रा सुनो तो सही।",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 34"
+ },
+ {
+  "file": "voices/kokoro/bf_emma.ogg",
+  "voice": "bf_emma",
+  "speaker": 21,
+  "language": "en",
+  "gender": "female",
+  "sample": "Hello, I am one of the story's voices. What a lovely day it is.",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 21"
+ },
+ {
+  "file": "voices/kokoro/bf_isabella.ogg",
+  "voice": "bf_isabella",
+  "speaker": 22,
+  "language": "en",
+  "gender": "female",
+  "sample": "Come along, let's learn something new today!",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 22"
+ },
+ {
+  "file": "voices/kokoro/bm_daniel.ogg",
+  "voice": "bm_daniel",
+  "speaker": 24,
+  "language": "en",
+  "gender": "male",
+  "sample": "A long time ago, in a small village by the river.",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 24"
+ },
+ {
+  "file": "voices/kokoro/bm_george.ogg",
+  "voice": "bm_george",
+  "speaker": 26,
+  "language": "en",
+  "gender": "male",
+  "sample": "Well now, listen to this, my friend.",
+  "made_with": "Kokoro-82M v1.0 (Apache-2.0) via sherpa-onnx 1.13.8, speaker 26"
+ }
+]

@@ -1285,9 +1285,8 @@ every spoken line. One frame a second is kept.
   recogniser could not make out its Hindi at all ("I am not a human being" for "आज भी नहीं आई"). MakeFilm can now speak
   the lines with Kokoro-82M (`KOKORO=…`, `tools/tts/kokoro_batch.py`): Hindi women and girls in its two Hindi women's
   voices, men and boys in its two men's voices, a child's raised and an old man's lowered and slower, English lines in
-  British voices; the recogniser understood its Hindi ("Not even today, son, maybe tomorrow will come"). The phone still
-  speaks with its own speech engine or the online neural voices (Kokoro's model is 160 MB and its Hindi needs a GPL
-  phonemiser, so it is not in the APK).
+  British voices; the recogniser understood its Hindi ("Not even today, son, maybe tomorrow will come"). (Later the same
+  day the full model was put in the APK as well: see section 17.)
 - **The body's joints (MoveNet).** A trained pose model (MoveNet Thunder, Apache 2.0, the full 25 MB model in the APK) finds the
   shoulders, elbows, wrists, hips, knees and ankles in every rigged picture. The rig's hips and knees are put at the
   joints — a long kurta hides them from the outline — so a seated picture folds where the legs bend; the forearm
@@ -1333,3 +1332,36 @@ every spoken line. One frame a second is kept.
 - An old man's picture whose own face is sad smiles only a little: the picture's face is where the acting starts, and
   his moustache hides his mouth.
 - The drawn people and places are simple shaded shapes.
+
+## 17. Thirteenth round (19 October, afternoon): Kokoro in the APK, the user's pictures, things that bend
+
+The user: "include full size kokoro in apk as well as other softwares like movenet, and also include all the pictures
+uploaded till now and voices generated in apk library, don't worry about its size … check rigid body objects and non
+rigid body objects are meshed properly, some objects can be both".
+
+- **Kokoro on the phone.** The full Kokoro-82M multi-language model (v1.0, 326 MB, Apache 2.0) and sherpa-onnx 1.13.8
+  (Apache 2.0) are in the APK (`assets/kokoro/`, stored uncompressed; `build.sh`, `WITH_KOKORO=1` by default). Offline,
+  a film's lines are spoken with it before the phone's own speech engine (`app/Kokoro.java`), each character in the
+  voice `core.KokoroCast` gives it — the same cast as the desktop's (`MakeFilm KOKORO=…`): Hindi women and girls in
+  hf_alpha / hf_beta, men and boys in hm_omega / hm_psi, English lines in British voices, a child raised and an old
+  voice lowered by TD-PSOLA, the feeling's pace and pitch on top. It opens only on a phone with 3.5 GB of memory or
+  more; any failure leaves the lines to the phone's engine, and the film goes on. Its Hindi needs the espeak-ng
+  phonemiser data (GPL-3.0), shipped with its notice (`assets/kokoro/NOTICE.txt`). sherpa-onnx's ONNX Runtime 1.28.2
+  replaces 1.20's native library; the face, pose and face-mesh models run on it through its stable C API.
+  **Not yet run on a real phone.**
+- **Kokoro's voices in the library.** One sample of each of the eight voices (`assets/voices/kokoro/`, each checked by a
+  speech recogniser) is a voice in the library, ▶ plays it, and choosing it for a character (or the narrator) makes that
+  the voice its lines are spoken in (`kvoice.<name>`, `KokoroCastTest`).
+- **The user's own pictures.** All the pictures the user has given for their stories (121 files, 88 MB: आखिरी चिट्ठी,
+  the sofa story, नीम के नीचे, the expressions) are in an APK built on this machine (`private_assets/user_library/`,
+  listed in the library by story and by who or what each shows). The repository is public, so they are never
+  committed: `private_assets/` is ignored by git, and the APK built by CI has none of them.
+- **Rigid, soft, and both.** A thing's name decides whether it keeps its shape (a bench, a cup, a stick), bends with
+  the body and the wind (cloth, hair, a rope), or is rigid in its parts but opens (a door, a box, a book). Where two
+  words match, the longer one is the thing: "बाल्टी" (a bucket) was read as "बाल" (hair) and bent, "पंखा" (a fan) as
+  "पंख" (a feather); both keep their shape now (`Rigidity`, `RigidSoftTest`).
+- **Sheets kept whole beyond 3×2.** Two old tests expected a sheet of eight or more figures to be cut into eight or more
+  pictures; by the user's rule ("no splitting beyond 3x2") such a sheet is kept whole now, and the tests check that.
+- **The mesh.** The face is meshed at 0.33 px cells (its largest error 0.063 px); the body stays at 1 px cells (99 in
+  100 of its points within 0.06 px, the largest 0.1–0.7 px), because a body mesh fine enough for 0.06 px everywhere
+  makes a film 3.5 times slower for no difference the eye can see (`MeshPrecisionTest`; `MESH=…` sets it).
