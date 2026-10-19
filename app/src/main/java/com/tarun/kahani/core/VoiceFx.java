@@ -68,8 +68,176 @@ public final class VoiceFx {
         return o;
     }
 
-    /** Shifts pitch by a factor (1.2 = higher) keeping the same duration. */
+    /**
+     * v47.13 (the user: "voice modulation properly"; the web's answer: plain resampling moves the formants with the
+     * pitch — the "chipmunk" — while pitch-synchronous overlap-add, TD-PSOLA, keeps them for modest changes): the pitch
+     * moved by pitch (1.2 = higher), the formants — the size of the vocal tract, what makes a voice a child's or a grown
+     * man's — by formant (1.1 = a smaller throat), and the length by time (> 1 = slower), each on its own. Voiced parts
+     * are cut into two-period grains at the voice's own pulses and laid down again closer together or further apart;
+     * unvoiced parts (s, sh, breaths) keep their spacing.
+     */
+    public static float[] psola(float[] x, int sr, float pitch, float formant, float time) {
+        if (x == null || x.length < sr / 20) return x;
+        if (Math.abs(pitch - 1) < 0.005f && Math.abs(formant - 1) < 0.005f && Math.abs(time - 1) < 0.005f) return x;
+        float[] in = x;
+        int want = Math.max(1, Math.round(x.length * time));      // the length asked for, whatever the resampling rounds to
+        if (Math.abs(formant - 1) >= 0.005f) {
+            // the formants by resampling (which moves the pitch and the length with them), corrected below
+            int n = Math.max(2, (int) (x.length / formant));
+            in = new float[n];
+            for (int i = 0; i < n; i++) {
+                float q = i * formant; int a = (int) q; float f = q - a;
+                float x0 = a < x.length ? x[a] : 0, x1 = a + 1 < x.length ? x[a + 1] : 0;
+                in[i] = x0 + (x1 - x0) * f;
+            }
+            pitch /= formant;
+            time *= formant;
+        }
+        int[] marks = pitchMarks(in, sr);
+        int nm = marks.length;
+        if (nm < 2) return in;
+        boolean[] voiced = new boolean[nm];
+        int[] period = new int[nm];
+        int uv = sr / 100;
+        for (int k = 0; k < nm; k++) {
+            int prev = k > 0 ? marks[k] - marks[k - 1] : marks[1] - marks[0], next = k + 1 < nm ? marks[k + 1] - marks[k] : prev;
+            period[k] = Math.max(16, (prev + next) / 2);
+            voiced[k] = Math.abs(prev - next) < 0.35f * Math.max(prev, next) && period[k] < sr / 55 && period[k] != uv;
+        }
+        int outLen = want;
+        float[] out = new float[outLen + sr / 25];
+        float[] wsum = new float[out.length];
+        float ts = marks[0] * time;
+        int k = 0;
+        while (ts < outLen) {
+            float ta = ts / time;
+            while (k + 1 < nm && Math.abs(marks[k + 1] - ta) <= Math.abs(marks[k] - ta)) k++;
+            int P = period[k], m = marks[k];
+            int c = Math.round(ts);
+            for (int i = -P; i < P; i++) {
+                int si = m + i, oi = c + i;
+                if (si < 0 || si >= in.length || oi < 0 || oi >= out.length) continue;
+                float w = 0.5f - 0.5f * (float) Math.cos(Math.PI * (i + P) / P);
+                out[oi] += w * in[si];
+                wsum[oi] += w;
+            }
+            ts += voiced[k] ? P / pitch : P;
+        }
+        float[] o = new float[outLen];
+        for (int i = 0; i < outLen; i++) o[i] = wsum[i] > 0.15f ? out[i] / wsum[i] : out[i];
+        return o;
+    }
+
+    /**
+     * The voice's pulses (sample positions): in voiced parts one at each period's strongest peak, the period found by
+     * autocorrelation (60–500 Hz); elsewhere every 10 ms.
+     */
+    static int[] pitchMarks(float[] x, int sr) {
+        int hop = sr / 100, win = sr * 3 / 100, minLag = sr / 500, maxLag = sr / 60;
+        int frames = Math.max(1, (x.length - win) / hop + 1);
+        int[] per = new int[frames];
+        double eMax = 1e-9;
+        double[] en = new double[frames];
+        for (int f = 0; f < frames; f++) {
+            int a = f * hop; double e = 0;
+            for (int i = 0; i < win && a + i < x.length; i++) e += x[a + i] * x[a + i];
+            en[f] = e; eMax = Math.max(eMax, e);
+        }
+        for (int f = 0; f < frames; f++) {
+            int a = f * hop;
+            if (en[f] < eMax * 0.002) continue;
+            double best = 0; int lag = 0;
+            double[] rr = new double[maxLag + 2];
+            for (int L = minLag; L <= maxLag; L++) {
+                double c = 0, e1 = 0, e2 = 0;
+                for (int i = 0; i + L < win && a + i + L < x.length; i += 2) { float u = x[a + i], v = x[a + i + L]; c += u * v; e1 += u * u; e2 += v * v; }
+                double r = c / Math.sqrt(e1 * e2 + 1e-12);
+                rr[L] = r;
+                if (r > best) { best = r; lag = L; }
+            }
+            // (twice the period repeats as well as the period: the shortest lag that repeats nearly as well is the pitch)
+            for (int L = minLag + 1; L < lag; L++) if (rr[L] >= 0.9 * best && rr[L] >= rr[L - 1] && rr[L] >= rr[L + 1]) { lag = L; break; }
+            if (best > 0.55) per[f] = lag;
+        }
+        // (a lone voiced or unvoiced frame among the others is a mistake of the tracker)
+        int[] sm = per.clone();
+        for (int f = 1; f + 1 < frames; f++) {
+            int a = per[f - 1], b = per[f], c = per[f + 1];
+            int[] t = {a, b, c}; java.util.Arrays.sort(t); sm[f] = t[1];
+        }
+        java.util.ArrayList<Integer> m = new java.util.ArrayList<Integer>();
+        int t = 0;
+        while (t < x.length) {
+            int f = Math.min(frames - 1, t / hop), P = sm[f];
+            if (P <= 0) { m.add(t); t += hop; continue; }
+            // the next pulse: the strongest peak a third of a period either side of one period after the last (at the
+            // start of a voiced run, within its first period)
+            int last = m.isEmpty() ? -1 : m.get(m.size() - 1);
+            boolean run = last >= 0 && t - last <= P + P / 3 && t - last >= P - P / 3;
+            int from = run ? last + P - P / 3 : t, to = Math.min(x.length - 1, run ? last + P + P / 3 : t + P);
+            if (from > x.length - 1) break;
+            int pk = from; float best = -1e9f;
+            for (int i = from; i <= to; i++) if (x[i] > best) { best = x[i]; pk = i; }
+            m.add(pk);
+            t = pk + P;
+        }
+        int[] r = new int[m.size()];
+        for (int i = 0; i < r.length; i++) r[i] = m.get(i);
+        return r;
+    }
+
+    /**
+     * v47.13: a voice made older or younger without the chipmunk: the pitch and the formants moved together but apart —
+     * a child's voice higher with a smaller throat, an old man's lower and a little slower — the length kept.
+     */
+    public static float[] voiceAge(float[] x, int sr, float pitch, float formant) { return psola(x, sr, pitch, formant, 1f); }
+
+    /**
+     * v47.13 (the web's rule for emotional prosody: arousal raises rate, pitch and loudness, low valence and low arousal
+     * lower them): how loud a line of this feeling is against a calm one — after every line has been brought to the same
+     * speaking loudness. A shout carries, a sad line is quieter, a whisper quieter still.
+     */
+    public static float emotionLoudness(int emotion) {
+        switch (emotion) {
+            case Pose.ANGRY: return 1.25f;
+            case Pose.SURPRISED: return 1.12f;
+            case Pose.SCARED: case Pose.LAUGH: case Pose.PAIN: return 1.1f;
+            case Pose.HAPPY: return 1.06f;
+            case Pose.PROUD: return 1.04f;
+            case Pose.EVIL: return 0.95f;
+            case Pose.SAD: return 0.85f;
+            case Pose.WHISPER: return 0.8f;
+            default: return 1f;
+        }
+    }
+
+    /** How a feeling changes a line's pace and pitch: {rate, pitch} factors (shared by the phone and the desktop). */
+    public static float[] emotionFactors(int emotion) {
+        switch (emotion) {
+            case Pose.ANGRY: return new float[]{1.06f, 0.94f};
+            case Pose.SAD: return new float[]{0.88f, 0.96f};
+            case Pose.SCARED: return new float[]{1.1f, 1.06f};
+            case Pose.LAUGH: return new float[]{1.04f, 1.07f};
+            case Pose.HAPPY: return new float[]{1.02f, 1.04f};
+            case Pose.SURPRISED: return new float[]{1.03f, 1.08f};
+            case Pose.WHISPER: return new float[]{0.9f, 1f};
+            case Pose.PAIN: return new float[]{1.1f, 1.08f};
+            case Pose.EVIL: return new float[]{0.92f, 0.95f};
+            case Pose.PROUD: return new float[]{0.96f, 0.98f};
+            default: return new float[]{1f, 1f};
+        }
+    }
+
+    /** The old way: the pitch and the formants moved together (a squeak, a chipmunk — what a mouse should sound like). */
+    public static float[] pitchAndTone(float[] x, float factor) { return pitchResampled(x, factor); }
+
+    /** Shifts pitch by a factor (1.2 = higher) keeping the same duration and the formants (TD-PSOLA). */
     public static float[] pitch(float[] x, float factor) {
+        if (Math.abs(factor - 1) < 0.01f || x == null) return x;
+        return psola(x, Synth.SR, factor, 1f, 1f);
+    }
+
+    static float[] pitchResampled(float[] x, float factor) {
         if (Math.abs(factor - 1) < 0.01f) return x;
         float[] s = stretch(x, factor);           // longer by factor
         int n = x.length;

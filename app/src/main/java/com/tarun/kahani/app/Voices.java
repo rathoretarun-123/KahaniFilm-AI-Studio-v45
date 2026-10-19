@@ -239,21 +239,7 @@ public final class Voices {
     // -------------------------------------------------------------- synthesis
 
     /** How an emotion changes speed and pitch (applied after matching the user's sample, so it is never lost). */
-    static float[] emotionFactors(int emotion) {
-        switch (emotion) {
-            case Pose.ANGRY: return new float[]{1.06f, 0.94f};
-            case Pose.SAD: return new float[]{0.88f, 0.96f};
-            case Pose.SCARED: return new float[]{1.1f, 1.06f};
-            case Pose.LAUGH: return new float[]{1.04f, 1.07f};
-            case Pose.HAPPY: return new float[]{1.02f, 1.04f};
-            case Pose.SURPRISED: return new float[]{1.03f, 1.08f};
-            case Pose.WHISPER: return new float[]{0.9f, 1f};
-            case Pose.PAIN: return new float[]{1.1f, 1.08f};
-            case Pose.EVIL: return new float[]{0.92f, 0.95f};
-            case Pose.PROUD: return new float[]{0.96f, 0.98f};
-            default: return new float[]{1f, 1f};
-        }
-    }
+    static float[] emotionFactors(int emotion) { return com.tarun.kahani.core.VoiceFx.emotionFactors(emotion); }
 
     /** Acting direction for the AI voice, e.g. "Say in a scared, trembling whisper (डरते हुए)". */
     static String direction(Film.Line line, Story.CharacterDef who) {
@@ -459,8 +445,11 @@ public final class Voices {
         return pcm;
     }
 
-    /** Lower (factor < 1) or raise the voice by resampling. */
+    /** Lower (factor < 1) or raise the voice (v47.13: by TD-PSOLA; resampling only for a clip too short for it). */
     static float[] shift(float[] in, float f) {
+        // v47.13: a younger or older voice without the chipmunk — the pitch by f, the throat by half as much (TD-PSOLA),
+        // the pace as it was spoken
+        if (Math.abs(f - 1) >= 0.01f && in.length > Synth.SR / 10) return com.tarun.kahani.core.VoiceFx.voiceAge(in, Synth.SR, f, 1 + (f - 1) * 0.5f);
         int n = (int) (in.length / f);
         float[] o = new float[n];
         for (int i = 0; i < n; i++) {

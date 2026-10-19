@@ -46,4 +46,24 @@ public final class NarratorOnlyWrittenTest {
         assertEquals(2, f.lines.size());
         assertEquals("the narrator speaks exactly its one written line", 1, narrated(f));
     }
+
+    @Test public void onlyTheQuotedWordsWrittenAgainstTheNarrator() throws Exception {
+        Film f = film("शीर्षक: बेंच\n\nपात्र\nपरी (7 साल)\n\nकहानी\n\nदृश्य 1\n(सुबह।)\n"
+                + "नैरेटर: \"गाँव में सुबह हो चुकी थी।\"\n"
+                + "कथावाचक: उस दिन कोई नहीं आया।\n"
+                + "कथावाचक (धीरे से): \"पर परी आई।\" और फिर वह मुस्कुराई।\n"
+                + "परी: \"नमस्ते!\"\n\nसमाप्त\n");
+        java.util.List<String> said = new java.util.ArrayList<String>();
+        for (Film.Line l : f.lines) if (l.who == null) said.add(l.shown == null ? l.text : l.shown);
+        assertEquals("the narrator speaks its two quoted lines only: " + said, 2, said.size());
+        assertTrue(said.get(0), said.get(0).contains("गाँव में सुबह हो चुकी थी"));
+        assertTrue("nothing outside the quotes: " + said.get(1), said.get(1).contains("पर परी आई") && !said.get(1).contains("मुस्कुराई"));
+        for (String t : said) assertFalse("unquoted words are never spoken: " + t, t.contains("कोई नहीं आया"));
+        assertEquals("the girl's line", 1, f.lines.size() - said.size());
+    }
+
+    @Test public void aGroupWordWithNobodyIsNotTheNarrator() throws Exception {
+        Story st = ScriptParser.parse("Title: Fair\n\nScene 1\n(The fair.)\nEveryone: \"Hurray!\"\n\nEND\n");
+        assertFalse("no narrator is made up", st.hasNarrator);
+    }
 }

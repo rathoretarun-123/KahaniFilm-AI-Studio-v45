@@ -672,7 +672,7 @@ public final class ScriptParser {
 
     static Story.Beat copyLine(Story.Beat b) {
         Story.Beat n = new Story.Beat();
-        n.type = b.type; n.speakerRaw = b.speakerRaw; n.speaker = b.speaker; n.narrator = b.narrator; n.offScreen = b.offScreen; n.cue = b.cue;
+        n.type = b.type; n.speakerRaw = b.speakerRaw; n.speaker = b.speaker; n.narrator = b.narrator; n.said = b.said; n.offScreen = b.offScreen; n.cue = b.cue;
         n.chorus.addAll(b.chorus);
         return n;
     }
@@ -1499,7 +1499,7 @@ public final class ScriptParser {
                     b.type = Story.Beat.DIALOGUE;
                     b.speakerRaw = who;
                     b.manner = nq.group(2) == null ? "" : nq.group(2).trim();
-                    b.text = Txt.stripQuotes(nq.group(3).trim());
+                    b.said = nq.group(3).trim(); b.text = Txt.stripQuotes(b.said);
                     if (b.text.length() > 0) { sc.beats.add(b); lastSpeaker = who; continue; }
                 }
             }
@@ -1528,7 +1528,7 @@ public final class ScriptParser {
                         String paren = alone.indexOf('(') >= 0 && alone.lastIndexOf(')') > alone.indexOf('(') ? alone.substring(alone.indexOf('(') + 1, alone.lastIndexOf(')')).trim() : "";
                         b.offScreen = paren.toLowerCase(java.util.Locale.ROOT).matches("v\\.?o\\.?|o\\.?s\\.?|o\\.?c\\.?|voice ?over|off ?screen") || Txt.has(paren, "आवाज़", "आवाज", "फ़ोन", "फोन");
                         b.manner = (manner + (paren.length() > 0 && !b.offScreen ? (manner.length() > 0 ? ", " : "") + paren : "")).trim();
-                        b.text = Txt.stripQuotes(words);
+                        b.said = words; b.text = Txt.stripQuotes(b.said);
                         if (b.text.length() > 0) { sc.beats.add(b); lastSpeaker = nm; i = j; continue; }
                     }
                 }
@@ -1544,7 +1544,7 @@ public final class ScriptParser {
                     b.type = Story.Beat.DIALOGUE;
                     b.speakerRaw = who;
                     b.manner = dl.group(2) == null ? "" : dl.group(2).trim();
-                    b.text = Txt.stripQuotes(dl.group(3).trim());
+                    b.said = dl.group(3).trim(); b.text = Txt.stripQuotes(b.said);
                     if (b.text.length() > 0) { sc.beats.add(b); lastSpeaker = who; continue; }
                 }
             }
@@ -1582,7 +1582,7 @@ public final class ScriptParser {
                     b.manner = (rest + (inside.length() > 0 ? (rest.length() > 0 ? ", " : "") + inside : "")).trim();
                     // "एल्गोरा की आवाज़ मीठी होकर": heard from somewhere else, not brought on to the stage
                     b.offScreen = Txt.has(rest, "की आवाज़", "की आवाज", "'s voice", "voice of", "फ़ोन से", "फोन से", "स्पीकर से", "headset", "हेडसेट", "रेडियो से", "दूर से आवाज़");
-                    b.text = Txt.stripQuotes(said);
+                    b.said = said; b.text = Txt.stripQuotes(b.said);
                     if (b.text.length() > 0) { sc.beats.add(b); lastSpeaker = lead; continue; }
                 }
                 if (!who.contains("।") && said.length() > 0 && Txt.withoutParens(who).length() > 0
@@ -1592,7 +1592,7 @@ public final class ScriptParser {
                     b.speakerRaw = Txt.withoutParens(who);
                     int a = who.indexOf('('), z = who.lastIndexOf(')');
                     if (a >= 0 && z > a) b.manner = who.substring(a + 1, z).trim();
-                    b.text = Txt.stripQuotes(said);
+                    b.said = said; b.text = Txt.stripQuotes(b.said);
                     // A dialogue may itself contain (action) parts: move them to manner.
                     if (b.text.startsWith("(")) {
                         int zz = b.text.indexOf(')');
@@ -1699,7 +1699,7 @@ public final class ScriptParser {
             Story.Beat b = new Story.Beat();
             b.type = Story.Beat.DIALOGUE;
             b.speakerRaw = speaker;
-            b.text = Txt.stripQuotes(q);
+            b.said = q; b.text = Txt.stripQuotes(b.said);
             // the manner: the clause before the line ("जोर से हँसता है")
             String[] cl = pre.split("[।.!?]");
             String last = cl.length > 0 ? cl[cl.length - 1].trim() : "";
@@ -1717,8 +1717,17 @@ public final class ScriptParser {
     // ------------------------------------------------------------------ speakers & aliases
 
     /** "कथावाचक", "सूत्रधार", "Narrator", "वाचक" … speak as a voice-over, never stand on screen. */
+    /** v47.13: only the words inside quotes ("…", “…”) of a written line, joined; "" when nothing is quoted. */
+    static String quotedOnly(String said) {
+        if (said == null) return "";
+        java.util.regex.Matcher m = java.util.regex.Pattern.compile("[\"“]([^\"“”]+)[\"”]").matcher(said);
+        StringBuilder b = new StringBuilder();
+        while (m.find()) { String q = m.group(1).trim(); if (q.length() > 0) b.append(b.length() > 0 ? " " : "").append(q); }
+        return b.toString();
+    }
+
     public static boolean isNarrator(String who) {
-        return Txt.has(who, "कथावाचक", "सूत्रधार", "वाचक", "narrator", "voice over", "voiceover", "वॉयस ओवर", "कथाकार");
+        return Txt.has(who, "कथावाचक", "सूत्रधार", "वाचक", "narrator", "voice over", "voiceover", "वॉयस ओवर", "कथाकार", "नैरेटर", "नरेटर", "नेरेटर", "नैरेटर");
     }
 
     public static boolean isTitleWord(String w) {
@@ -1906,7 +1915,14 @@ public final class ScriptParser {
                     for (int k = ms.size() - 1; k >= 0; k--) { Story.CharacterDef m = ms.get(k); if (m.voiceOnly) continue; recent.remove(m); recent.add(0, m); }
                     continue;
                 }
-                if (isNarrator(b.speakerRaw)) { b.speaker = null; b.narrator = true; story.hasNarrator = true; continue; }
+                if (isNarrator(b.speakerRaw)) {
+                    // v47.13 (the user: "narrator to speak only those lines which are written against narrator … in “” nothing
+                    // else"): the narrator says the quoted words written after its name, and nothing else — unquoted words
+                    // after "कथावाचक:" are a note, not a line
+                    String q = b.said.length() > 0 ? quotedOnly(b.said) : b.text;
+                    if (q.length() == 0) { b.type = Story.Beat.DIRECTION; b.text = b.speakerRaw + ": " + b.text; b.speakerRaw = ""; continue; }
+                    b.text = q; b.speaker = null; b.narrator = true; story.hasNarrator = true; continue;
+                }
                 List<Story.CharacterDef> group = groupOf(story, b.speakerRaw, inScene, recent, b.text, together);
                 if (group != null) {
                     b.speaker = group.get(0);
@@ -1936,8 +1952,9 @@ public final class ScriptParser {
                     }
                 }
                 if (groupCount(b.speakerRaw) >= 0) {
-                    // a group word with nobody to stand for (no characters at all yet): a voice-over, never a character
-                    b.speaker = null; b.narrator = true; story.hasNarrator = true;
+                    // a group word with nobody to stand for (no characters at all yet): never a character — and (v47.13) never
+                    // the narrator either, who says only its own lines: the words stay in the story as a note
+                    b.type = Story.Beat.DIRECTION; b.text = b.speakerRaw + ": " + b.text; b.speakerRaw = ""; b.speaker = null;
                     continue;
                 }
                 Story.CharacterDef c = resolve(story, b.speakerRaw);

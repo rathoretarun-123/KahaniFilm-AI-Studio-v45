@@ -115,6 +115,8 @@ public final class Story {
         public CharacterDef speaker;
         public String manner = "";       // text inside parentheses after speaker
         public String text = "";
+        /** v47.13: the words after the speaker's name as written (quotes and all) — the narrator says only what is quoted. */
+        public String said = "";
         public boolean narrator;         // voice-over line (no character on screen)
         /** Spoken from off-screen ("एल्गोरा की आवाज़ …:"): the speaker is heard, not brought on to the stage. */
         public boolean offScreen;

@@ -385,7 +385,7 @@ public final class Mixer {
         for (int i = 0; i < film.lines.size(); i++) {
             final Film.Line l = film.lines.get(i);
             final int idx = i;
-            float g = ed.gainFor(l.who == null ? null : l.who.displayName) * (l.whisper ? 0.8f : 1.0f);
+            float g = ed.gainFor(l.who == null ? null : l.who.displayName) * (l.whisper ? 0.8f : 1.0f) * VoiceFx.emotionLoudness(l.emotion);
             LazyClip c = new LazyClip((int) (l.start * Synth.SR), (int) (Math.max(0.1f, l.dur) * Synth.SR), g, new LazyClip.Maker() {
                 public float[] make() {
                     float[] v = vs == null ? null : vs.voice(idx);

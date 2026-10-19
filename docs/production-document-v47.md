@@ -1245,6 +1245,27 @@ every spoken line. One frame a second is kept.
   a ▶ to hear the sample. No recording is bundled (every licensed source of narrator recordings was out of reach;
   none was made up); a recorded voice from the user's library can still be chosen. The voice chosen for the narrator
   was saved and never used — the film always spoke with the default narrator; it is used now (`NarratorVoicesTest`).
+- **The narrator says only its own quoted words.** Only the words in quotes after कथावाचक / सूत्रधार / नैरेटर / Narrator are
+  spoken; unquoted words after the name are a note, words after the closing quote are not spoken, and a group word
+  ("सब:") with nobody to stand for is never turned into the narrator (`NarratorOnlyWrittenTest`, 5 tests).
+- **Voice modulation (from the web: TD-PSOLA keeps the formants, resampling moves them; arousal raises rate, pitch and
+  loudness).** The studio's pitch change was a stretch and a resample — the "chipmunk": the voice's formants moved
+  with its pitch. It is pitch-synchronous overlap-add now (`VoiceFx.psola`, written for KahaniFilm): the pitch, the
+  formants (the size of the throat) and the length each on their own. A child's voice is higher with a smaller throat,
+  an old man's lower with a larger one and slower; each line's feeling sets its pace and pitch (as before) and now its
+  loudness too (a shout carries, a sad line is quieter, a whisper quieter still). On the phone the character voices
+  use it, on the desktop the Kokoro voices. Checked: the pitch moves by the factor asked (±6%), the length is kept,
+  the formant stays put (or moves by its own factor), and a speech recogniser understood every shifted line
+  (`VoiceModulationTest`). A bug found on the way: the pitch tracker locked onto every second pulse of a steady voice
+  (an octave too low) and doubled the period of a child's voice; fixed.
+- **The mesh, measured (the user: "decrease meshing to the level of 0.06 px").** `Rig.meshError` compares the exact
+  bend with the drawn mesh at the middle of every cell. With one cell per screen pixel, 99% of the mesh was already
+  within 0.007–0.06 px, the largest error 0.1–0.7 px at the strongest bends — and the seated and kneeling old man's
+  mesh tore 8 to 38 px along the line between his legs (a hard switch from one leg to the other). The switch is eased
+  now: the largest error seated is 0.21 px. At a third of a pixel a cell (`MESH=0.33:3:3072`) the largest error is
+  0.063 px — but the films render 3.5 times slower and the frames differ from the pixel mesh by 0.1–0.3 of 255 on
+  average (not visible), so the desktop films use the third-of-a-pixel mesh for the face (lips, eyes, lids: about
+  1.5 times the time) and the pixel mesh for the body; the phone keeps the pixel mesh (`MeshPrecisionTest`).
 - **More sounds (59, CC0 or public domain).** Searched on the web and fetched only from sources whose licence file says
   CC0 or public domain: cows, roosters, a hen, sparrows and morning birdsong, a puppy, cats and a kitten, a baby's cry,
   a girl's giggle, a sigh, coughing, snoring, clapping, tea poured from a teapot and into a cup, a sip, a cup on its
@@ -1267,7 +1288,7 @@ every spoken line. One frame a second is kept.
   British voices; the recogniser understood its Hindi ("Not even today, son, maybe tomorrow will come"). The phone still
   speaks with its own speech engine or the online neural voices (Kokoro's model is 160 MB and its Hindi needs a GPL
   phonemiser, so it is not in the APK).
-- **The body's joints (MoveNet).** A trained pose model (MoveNet Thunder, Apache 2.0, 12.6 MB in the APK) finds the
+- **The body's joints (MoveNet).** A trained pose model (MoveNet Thunder, Apache 2.0, the full 25 MB model in the APK) finds the
   shoulders, elbows, wrists, hips, knees and ankles in every rigged picture. The rig's hips and knees are put at the
   joints — a long kurta hides them from the outline — so a seated picture folds where the legs bend; the forearm
   bends at the elbow (a gesture, a cup or a plate held up) where both arms hang free; a side picture looks the way its

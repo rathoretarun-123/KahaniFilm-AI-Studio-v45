@@ -36,6 +36,20 @@ public class MakeFilm {
             System.out.println("pictures read at: characters " + sides[0] + " px, places " + sides[1] + " px");
         }
         if (System.getenv("SPRITE_SIDE") != null) Art.spriteSide = Integer.parseInt(System.getenv("SPRITE_SIDE"));
+        // v47.13: MESH=<screen px per cell>:<cells per picture pixel>:<most rows> — the mesh's fineness (Rig.SOURCE_CELLS)
+        String mesh = System.getenv().getOrDefault("MESH", "");
+        // (the face's own mesh: a third of a pixel a cell, up to three cells a picture pixel — FACE_MESH="" for the old one)
+        String fm = System.getenv().getOrDefault("FACE_MESH", "0.33:3:1536");
+        if (fm.length() > 0) {
+            String[] m = fm.split(":");
+            Rig.FACE_CELL_PX = Float.parseFloat(m[0]); Rig.FACE_SOURCE_CELLS = Float.parseFloat(m[1]); Rig.MAX_FACE_CELLS = Integer.parseInt(m[2]);
+        }
+        if (mesh.length() > 0) {
+            String[] m = mesh.split(":");
+            Rig.CELL_PX = Float.parseFloat(m[0]); Rig.SOURCE_CELLS = Float.parseFloat(m[1]);
+            Rig.MAX_CELLS = Integer.parseInt(m[2]); Rig.MAX_FACE_CELLS = Math.max(Rig.MAX_FACE_CELLS, Rig.MAX_CELLS / 2);
+            System.out.println("mesh: " + Rig.CELL_PX + " screen px a cell, up to " + Rig.SOURCE_CELLS + " cells a picture pixel, " + Rig.MAX_CELLS + " rows");
+        }
         if (System.getenv("BACKDROP_SIDE") != null) Art.backdropSide = Integer.parseInt(System.getenv("BACKDROP_SIDE"));
         Art art = new Art();
         if (System.getenv("REFART") != null) {
@@ -345,6 +359,7 @@ public class MakeFilm {
             File repo = new File(System.getProperty("kahani.assets", "app/src/main/assets")).getAbsoluteFile().getParentFile().getParentFile().getParentFile().getParentFile();
             File script = new File(repo, "tools/tts/kokoro_batch.py");
             java.util.Map<Story.CharacterDef, float[]> cast = new java.util.HashMap<Story.CharacterDef, float[]>();
+            float[] pitchOf = new float[out.length], formantOf = new float[out.length];
             int women = 0, men = 0;
             StringBuilder j = new StringBuilder("[");
             for (int i = 0; i < film.lines.size(); i++) {
@@ -354,20 +369,23 @@ public class MakeFilm {
                     Look lk = l.who == null ? null : l.who.look;
                     int age = l.who == null ? -1 : l.who.age;
                     boolean old = lk != null && (lk.kind == Look.OLD_MAN || age >= 60);
-                    // {Hindi sid, English sid, speed, pitch}
-                    if (lk == null) v = new float[]{33, 26, 0.92f, 1f};
-                    else if (lk.kind == Look.GIRL) v = new float[]{32, 23, 1f, 1.14f};
-                    else if (lk.kind == Look.BOY) v = new float[]{34, 27, 1.02f, 1.18f};
-                    else if (lk.kind == Look.MONSTER) v = new float[]{33, 26, 0.9f, 0.78f};
-                    else if (lk.kind == Look.MONKEY || lk.kind == Look.ANIMAL || lk.kind == Look.BIRD) v = new float[]{32, 23, 1.04f, 1.16f};
-                    else if (lk.female || lk.kind == Look.WOMAN || lk.kind == Look.WITCH) v = old ? new float[]{31, 21, 0.88f, 0.94f} : new float[]{women++ % 2 == 0 ? 31 : 32, women % 2 == 1 ? 21 : 22, 0.98f, 1f};
-                    else v = old ? new float[]{33, 26, 0.86f, 0.9f} : new float[]{men++ % 2 == 0 ? 34 : 33, men % 2 == 1 ? 24 : 25, 0.98f, 1f};
+                    // {Hindi sid, English sid, speed, pitch, formant} — the pitch and the throat moved by TD-PSOLA afterwards
+                    if (lk == null) v = new float[]{33, 26, 0.92f, 1f, 1f};
+                    else if (lk.kind == Look.GIRL) v = new float[]{32, 23, 1f, 1.22f, 1.1f};
+                    else if (lk.kind == Look.BOY) v = new float[]{34, 27, 1.02f, 1.3f, 1.12f};
+                    else if (lk.kind == Look.MONSTER) v = new float[]{33, 26, 0.9f, 0.78f, 0.88f};
+                    else if (lk.kind == Look.MONKEY || lk.kind == Look.ANIMAL || lk.kind == Look.BIRD) v = new float[]{32, 23, 1.04f, 1.16f, 1.08f};
+                    else if (lk.female || lk.kind == Look.WOMAN || lk.kind == Look.WITCH) v = old ? new float[]{31, 21, 0.88f, 0.94f, 0.98f} : new float[]{women++ % 2 == 0 ? 31 : 32, women % 2 == 1 ? 21 : 22, 0.98f, 1f, 1f};
+                    else v = old ? new float[]{33, 26, 0.86f, 0.9f, 0.97f} : new float[]{men++ % 2 == 0 ? 34 : 33, men % 2 == 1 ? 24 : 25, 0.98f, 1f, 1f};
                     cast.put(l.who, v);
                 }
                 File w = new File(dir, "k" + i + ".wav");
                 if (j.length() > 1) j.append(',');
+                // (the feeling's pace here, its pitch with the character's below: v47.13 voice modulation)
+                float[] ef = VoiceFx.emotionFactors(l.emotion);
+                pitchOf[i] = v[3] * ef[1]; formantOf[i] = v[4];
                 j.append("{\"text\":").append(jsonString(l.text)).append(",\"sid\":").append((int) (l.hindi ? v[0] : v[1]))
-                        .append(",\"speed\":").append(v[2]).append(",\"pitch\":").append(v[3])
+                        .append(",\"speed\":").append(v[2] * ef[0]).append(",\"pitch\":1")
                         .append(",\"lang\":\"").append(l.hindi ? "hi" : "en-us").append("\",\"out\":").append(jsonString(w.getAbsolutePath())).append('}');
             }
             j.append(']');
@@ -379,7 +397,7 @@ public class MakeFilm {
             if (!said.contains("spoke")) System.out.println("KOKORO: nothing spoken — " + said.substring(Math.max(0, said.length() - 400)).replace('\n', ' '));
             for (int i = 0; i < out.length; i++) {
                 File w = new File(dir, "k" + i + ".wav");
-                if (w.isFile() && w.length() > 1000) out[i] = readWav(w);
+                if (w.isFile() && w.length() > 1000) out[i] = VoiceFx.psola(readWav(w), Synth.SR, pitchOf[i], formantOf[i], 1f);
             }
         } catch (Exception e) {
             System.out.println("KOKORO: " + e);

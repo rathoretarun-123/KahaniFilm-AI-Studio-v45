@@ -223,7 +223,7 @@ public final class VoiceStyle {
         float[] y = x;
         float shout = aiVoice ? 0 : this.shout, cry = aiVoice ? 0 : this.cry, laugh = aiVoice ? 0 : this.laugh, sing = aiVoice ? 0 : this.sing;
         float breathy = aiVoice ? Math.min(this.breathy, 0.3f) : this.breathy;
-        if (squeak > 0) y = VoiceFx.pitch(y, 1f + 0.4f * squeak);
+        if (squeak > 0) y = VoiceFx.pitchAndTone(y, 1f + 0.4f * squeak);
         // pitch wobble: trembling, crying, singing, laughing
         float vibDepth = 0.05f * tremble + 0.05f * cry + 0.035f * sing + 0.02f * laugh + 0.015f * ghost;
         if (vibDepth > 0) {
@@ -409,7 +409,7 @@ public final class VoiceStyle {
 
     /** A soft, sparkling double of the voice (fairies, gods, a voice from the sky). */
     static float[] shimmer(float[] x, int sr, float amt) {
-        float[] up = VoiceFx.pitch(x, 2f);
+        float[] up = VoiceFx.pitchAndTone(x, 2f);
         float[] y = new float[x.length];
         int d0 = (int) (0.012f * sr);
         for (int i = 0; i < x.length; i++) {

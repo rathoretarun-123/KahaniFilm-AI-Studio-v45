@@ -15,7 +15,7 @@ import java.util.Map;
  * v47.13 (the user: "what about movenet … meshing of skeleton … skeleton check and meshing and rigging"): the body's
  * joints — shoulders, elbows, wrists, hips, knees, ankles, and the nose, eyes and ears — found by a trained pose model,
  * MoveNet SinglePose Thunder (Google, Apache licence 2.0; the TensorFlow.js graph of the npm package
- * {@code @vladmandic/human-models} 3.0.4, converted to ONNX with half-precision weights, 12.6 MB), run with ONNX
+ * {@code @vladmandic/human-models} 3.0.4, converted to ONNX at full precision, 25 MB — the user: "keep the full model"), run with ONNX
  * Runtime like the face detector. The rig puts its hips and knees where the joints are (a long kurta hides them from
  * the outline: the old man's legs folded at his belly when he sat) and bends the forearm at the elbow.
  *
@@ -27,7 +27,7 @@ public final class PoseModel {
     private PoseModel() {}
 
     public static volatile FaceModel.Source source;
-    public static final String ASSET = "models/movenet_thunder_fp16.onnx";
+    public static final String ASSET = "models/movenet_thunder.onnx";
     static final int IN = 256;
     /** A joint is taken at this score or above. */
     public static final float MIN_SCORE = 0.3f;

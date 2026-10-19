@@ -62,6 +62,19 @@ public final class Rig {
      */
     public static final int BW = 80, BH = 160, FW = 96, FH = 96;
     public static final int MAX_ROWS = 1024, MAX_FACE = 512;
+    /**
+     * v47.13 (the user: "decrease meshing to the level of 0.06 px"): the finest the mesh may go — cells per picture pixel
+     * (1 = never finer than the picture) and the most rows. The desktop's film renders go to two cells a pixel and 2048
+     * rows (the drawn mesh then within a tenth of a pixel of the exact bend almost everywhere); the phone keeps 1 and 1024.
+     */
+    public static float SOURCE_CELLS = 1f;
+    public static int MAX_CELLS = MAX_ROWS, MAX_FACE_CELLS = MAX_FACE;
+    /**
+     * v47.13: the face's mesh — the lips, the eyes, the lids — on its own, finer setting: a third of a screen pixel a cell
+     * and up to three cells a picture pixel by default on the desktop (the face is a small part of the picture: a fine
+     * face costs little; the whole body as fine renders three and a half times slower).
+     */
+    public static float FACE_CELL_PX = 1f, FACE_SOURCE_CELLS = 1f;
     /** The shape of the mesh: tall for people (1 : 2), wide for animals (2 : 1). */
     public int mw = BW, mh = BH;
     /** Screen pixels per mesh cell (2 = pixel level: a cell is never bigger than two pixels). */
@@ -600,10 +613,10 @@ public final class Rig {
         float hCos = 1, hSin, lCos = 1, lSin, nodS = 1, nodDy;
         final float[] armC = new float[2], armS = new float[2], foreC = {1, 1}, foreS = new float[2], legC = new float[3], legS = new float[3];
         final float[] tmp = new float[2], legTmp = new float[2], o = new float[2], bumps = new float[5 * 40];
-        public final float[] body = new float[(MAX_ROWS / 2 + 1) * (MAX_ROWS + 1) * 2];
+        public float[] body = new float[(MAX_ROWS / 2 + 1) * (MAX_ROWS + 1) * 2];
         /** The mesh size used in this frame (pass these to Gfx.imageMesh). */
         public int cols = BW, rows = BH;
-        public final float[] face = new float[(MAX_FACE + 1) * (MAX_FACE + 1) * 2];
+        public float[] face = new float[(MAX_FACE + 1) * (MAX_FACE + 1) * 2];
         /** The face mesh size used in this frame. */
         public int fcols = FW, frows = FH;
         /** The picture's height on screen in this frame (pixels). */
@@ -856,7 +869,7 @@ public final class Rig {
             if (legs) {
                 if (v < knee) sy2 = hy + (y - hy) * (1 - 0.8f * s.sit);
                 else sy2 = ky - (knee - hipY) * f.H0 * 0.8f * s.sit + (y - ky) * (1 - shin);
-                sx2 = x + (u < gapX ? -1 : 1) * (s.floor ? 0.09f : 0.035f) * f.W0 * s.sit * smooth(hipY, knee, v);
+                sx2 = x + legSide(u) * (s.floor ? 0.09f : 0.035f) * f.W0 * s.sit * smooth(hipY, knee, v);
             } else if (s.floor) {
                 // a skirt or a saree on the floor: the lap and the folded legs make a wide, low mound
                 if (v < knee) sy2 = hy + (y - hy) * (1 - 0.8f * s.sit);
@@ -877,7 +890,7 @@ public final class Rig {
             // read as a shorter person standing.)
             float knee = knee(), ky = f.T0 + knee * f.H0;
             if (v > knee) sy2 = ky + (y - ky) * (1 - KNEEL_FOLD * s.kneel);
-            if (legs) sx2 = x + (u < gapX ? -1 : 1) * 0.04f * f.W0 * s.kneel * smooth(hipY, knee, v);
+            if (legs) sx2 = x + legSide(u) * 0.04f * f.W0 * s.kneel * smooth(hipY, knee, v);
         }
         if (legs) {
             float side = smooth(gapX - 0.02f, gapX + 0.02f, u);     // 0 = left leg, 1 = right leg
@@ -894,6 +907,12 @@ public final class Rig {
         o[0] = ux + (lx - ux) * wLow;
         o[1] = uy + (ly - uy) * wLow;
     }
+
+    /**
+     * v47.13: which side of the gap between the legs a point is on, -1 .. 1, eased across the gap as the stride's legs
+     * are (a hard switch tore the seated old man's mesh open 8 to 38 px along the line between his legs).
+     */
+    private float legSide(float u) { return 2 * smooth(gapX - 0.02f, gapX + 0.02f, u) - 1; }
 
     /** which: 0 left leg, 1 right leg, 2 skirt. */
     private static void legPoint(Frame f, float x, float y, float jx, float jy, int which, float lift, float scale) {
@@ -927,14 +946,15 @@ public final class Rig {
         // as fine as the picture's size on screen allows: about one cell per CELL_PX pixels
         int rows, cols;
         if (mw <= mh) {     // a person: rows along the height
-            rows = clampCells(screenPx / CELL_PX, BH, Math.min(MAX_ROWS, srcH));
-            cols = Math.max(BW, Math.min(Math.min(MAX_ROWS / 2, srcW), rows / 2));
+            rows = clampCells(screenPx / CELL_PX, BH, Math.min(MAX_CELLS, (int) (srcH * SOURCE_CELLS)));
+            cols = Math.max(BW, Math.min(Math.min(MAX_CELLS / 2, (int) (srcW * SOURCE_CELLS)), rows / 2));
         } else {            // an animal: columns along the length
             float wide = screenPx * (srcW / (float) Math.max(1, srcH));
-            cols = clampCells(wide / CELL_PX, BH, Math.min(MAX_ROWS, srcW));
-            rows = Math.max(BW, Math.min(Math.min(MAX_ROWS / 2, srcH), cols / 2));
+            cols = clampCells(wide / CELL_PX, BH, Math.min(MAX_CELLS, (int) (srcW * SOURCE_CELLS)));
+            rows = Math.max(BW, Math.min(Math.min(MAX_CELLS / 2, (int) (srcH * SOURCE_CELLS)), cols / 2));
         }
         f.rows = rows; f.cols = cols;
+        if (f.body.length < (rows + 1) * (cols + 1) * 2) f.body = new float[(rows + 1) * (cols + 1) * 2];
         int k = 0;
         for (int j = 0; j <= rows; j++) {
             float y = top + h * j / rows;
@@ -945,6 +965,29 @@ public final class Rig {
                 f.body[k++] = f.o[1];
             }
         }
+    }
+
+    /**
+     * v47.13 (the user: "decrease meshing to the level of 0.06 px"): how far the drawn mesh is from the exact bend — the
+     * exact position of the middle of every cell against the middle of its four drawn corners, in screen pixels, for
+     * the picture drawn screenPx tall. Returns {largest, 99th percentile}. The mesh never has more cells than the picture
+     * has pixels (a cell smaller than a pixel holds no more of the picture); this is the error the mesh leaves.
+     */
+    public float[] meshError(State s, float screenPx) {
+        Frame f = new Frame();
+        float h = screenPx, w = h * srcW / (float) Math.max(1, srcH);
+        bodyMesh(f, s, 0, 0, w, h, screenPx);
+        int cols = f.cols, rows = f.rows, n = 0;
+        float[] err = new float[cols * rows];
+        float[] o = new float[2];
+        for (int j = 0; j < rows; j++) for (int i = 0; i < cols; i++) {
+            int a = (j * (cols + 1) + i) * 2, b = a + 2, c = a + (cols + 1) * 2, d = c + 2;
+            float mx = (f.body[a] + f.body[b] + f.body[c] + f.body[d]) / 4, my = (f.body[a + 1] + f.body[b + 1] + f.body[c + 1] + f.body[d + 1]) / 4;
+            move(f, s, w * (i + 0.5f) / cols, h * (j + 0.5f) / rows, o);
+            err[n++] = (float) Math.hypot(o[0] - mx, o[1] - my);
+        }
+        java.util.Arrays.sort(err, 0, n);
+        return new float[]{n > 0 ? err[n - 1] : 0, n > 0 ? err[Math.min(n - 1, (int) (n * 0.99f))] : 0, rows, cols};
     }
 
     /** Mesh points of the face crop with the expression into f.face (call after bodyMesh). */
@@ -1001,7 +1044,8 @@ public final class Rig {
             n = add(d, n, mx + mh, my, 0.6f * mh, 0, 0.15f * mh * s.anger);
         }
         // the face mesh: as fine as the face is large on screen (pixel level in a close-up)
-        int FW = clampCells((fv1 - fv0) * f.screenPx / CELL_PX, Rig.FW, Math.min(MAX_FACE, faceH)), FH = FW;
+        int FW = clampCells((fv1 - fv0) * f.screenPx / Math.min(CELL_PX, FACE_CELL_PX), Rig.FW, Math.min(MAX_FACE_CELLS, (int) (faceH * Math.max(SOURCE_CELLS, FACE_SOURCE_CELLS)))), FH = FW;
+        if (f.face.length < (FW + 1) * (FH + 1) * 2) f.face = new float[(FW + 1) * (FH + 1) * 2];
         f.fcols = FW; f.frows = FH;
         int k = 0;
         for (int j = 0; j <= FH; j++) {
