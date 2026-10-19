@@ -153,7 +153,9 @@ public class StudioRequestsTest {
         Project woodenDoor = project(HINDI.replace("[राहुल छड़ी उठाता है।]", "[राहुल लकड़ी का दरवाज़ा खोलता है।]"));
         Set<String> woodenRequests = requests(FilmJob.storyOf(woodenDoor));
         assertFalse("लकड़ी is the door's material, not a separate prop", woodenRequests.contains("obj:लकड़ी"));
-        assertFalse("लोहे is a material adjective, not a separate prop", woodenRequests.contains("obj:लोहे"));
+        Project ironDoor = project(HINDI.replace("[राहुल छड़ी उठाता है।]", "[राहुल लोहे का दरवाज़ा खोलता है।]"));
+        Set<String> ironRequests = requests(FilmJob.storyOf(ironDoor));
+        assertFalse("लोहे is the door's material, not a separate prop", ironRequests.contains("obj:लोहे"));
 
         // the Studio page shows one picture card per request and none for the narrator
         ActivityController<MainActivity> ac = Robolectric.buildActivity(MainActivity.class).setup();
