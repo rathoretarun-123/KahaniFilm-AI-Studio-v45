@@ -3,6 +3,7 @@
 #   sudo apt-get install -y android-sdk-platform-23 aapt dalvik-exchange zipalign apksigner openjdk-17-jdk
 # Output: release/KahaniFilm-v47.apk (and a KahaniFilm.apk symlink for older automation)
 set -euo pipefail
+trap 'echo "::error::build.sh failed at line $LINENO: $BASH_COMMAND"' ERR
 cd "$(dirname "$0")"
 
 # Ensure the committed story packs are available to direct/local APK builds too.
@@ -20,10 +21,12 @@ fi
 # The android-23 jar has no java.util.function (API 24), which some Android 14 signatures name: the JDK's own
 # classes of it, for compiling only (never dexed).
 FN_JAR=$HOME/.cache/kahani/java-util-function.jar
-if [ ! -f "$FN_JAR" ] && command -v jimage >/dev/null; then
+if [ ! -f "$FN_JAR" ] && ! unzip -l "$ALL_JAR" 2>/dev/null | grep -q 'java/util/function/Consumer.class' && command -v jimage >/dev/null; then
   rm -rf build/fnx && mkdir -p build/fnx
-  jimage extract --dir build/fnx --include 'regex:/java.base/java/util/function/.*' "$(dirname "$(dirname "$(readlink -f "$(command -v javac)")")")/lib/modules"
-  (cd build/fnx/java.base && jar cf "$FN_JAR" java/util/function)
+  if jimage extract --dir build/fnx --include 'regex:/java.base/java/util/function/.*' "$(dirname "$(dirname "$(readlink -f "$(command -v javac)")")")/lib/modules" \
+      && [ -d build/fnx/java.base/java/util/function ]; then
+    (cd build/fnx/java.base && jar cf "$FN_JAR" java/util/function) || rm -f "$FN_JAR"
+  fi
 fi
 BOOT="$ALL_JAR:$ANDROID_JAR"; [ -f "$FN_JAR" ] && BOOT="$BOOT:$FN_JAR"
 # v47.13: ONNX Runtime for the face detector (FaceModel): its Java classes and its native libraries for phones
