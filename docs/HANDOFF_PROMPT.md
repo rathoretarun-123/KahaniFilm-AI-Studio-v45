@@ -97,7 +97,9 @@ popping). Be honest that this is 2D cut-out animation, not Pixar 3D.
 - Verified by actual rendering: MoveNet finds joints in 12/12 pictures of बाबू के लिए and changes staging and framing
   (28% of pixels differ with it off); FaceMesh changes mouths and lids; all lines of the 9 published films
   (branch `films-v47`, 10 films) are spoken by Kokoro on the desktop; frame audit 0 findings.
-- **Not verified on a real Android device:** Kokoro, MoveNet, FaceMesh on the phone (sherpa-onnx's ONNX Runtime 1.28.2
+- **Verified on the user's real phone (20 Oct):** Kokoro speaks every line offline ("9 of 9 lines spoken — 9 in the
+  offline Kokoro voice"). The online natural voice service was refused there (HTTP 403).
+- **Not yet verified on a real Android device:** MoveNet and FaceMesh on the phone (read the `🦴` line on the film's note) (sherpa-onnx's ONNX Runtime 1.28.2
   replaces 1.20's native library — check that the face/pose models still load on the phone).
 
 ## Open work, in priority order

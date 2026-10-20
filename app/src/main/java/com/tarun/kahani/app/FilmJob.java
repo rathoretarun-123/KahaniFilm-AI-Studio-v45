@@ -635,7 +635,7 @@ public final class FilmJob implements Runnable {
             File vdir = new File(project.dir, "voices");
             vdir.mkdirs();
             final File[] lineFiles = new File[film.lines.size()];
-            int failedLines = 0, aiLines = 0, naturalLines = 0, kokoroLines = 0;
+            int failedLines = 0, aiLines = 0, naturalLines = 0, kokoroLines = 0, phoneLines = 0;
             String[] err = new String[1];
             for (int i = 0; i < film.lines.size(); i++) {
                 check();
@@ -667,6 +667,7 @@ public final class FilmJob implements Runnable {
                         if (voices.lastEngine.startsWith("AI")) aiLines++;
                         if (voices.lastEngine.startsWith("natural")) naturalLines++;
                         if (voices.lastEngine.startsWith("kokoro")) kokoroLines++;
+                        if (voices.lastEngine.equals("phone")) phoneLines++;
                         // a fallback voice is not kept, so the next "Make again" tries the natural voice again
                         if (!voices.usedFallback) try { AudioIO.writeRaw(cached, v); } catch (IOException ignored) {}
                     }
@@ -690,8 +691,10 @@ public final class FilmJob implements Runnable {
             }
             if (aiVoices && voices.aiOff && warning.length() == 0)
                 warning = "The AI voice limit for today is used up or the key is wrong — remaining lines used the phone voice. " + (err[0] == null ? "" : err[0]);
-            if (natural && voices.edgeOff && warning.length() == 0)
-                warning = "Could not reach the natural voice service (check internet) — some lines used the phone voice. Tap \"Make again\" with internet on. " + (err[0] == null ? "" : err[0]);
+            // v48 (seen on the user's phone: "9 in the offline Kokoro voice" under "some lines used the phone voice"): the
+            // warning only when a line really fell back to the phone's voice
+            if (natural && voices.edgeOff && phoneLines > 0 && warning.length() == 0)
+                warning = "Could not reach the natural voice service (check internet) — " + phoneLines + " lines used the phone voice. Tap \"Make again\" with internet on. " + (err[0] == null ? "" : err[0]);
             if (failedLines > 0 && warning.length() == 0)
                 warning = failedLines + " lines could not be spoken — check the phone's Text-to-Speech settings.";
             // v47.9 (the user: "no voices are appearing"): how many lines have a voice, and from where, on the screen
