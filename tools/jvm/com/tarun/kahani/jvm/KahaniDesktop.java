@@ -133,11 +133,11 @@ public final class KahaniDesktop {
     /** The folder the program runs from (the app folder of KahaniFilm.exe, or the working folder). */
     static File home() {
         String h = System.getProperty("kahani.home");
-        if (h != null) return new File(h);
+        if (h != null) return new File(h).getAbsoluteFile();
         try {
             File jar = new File(KahaniDesktop.class.getProtectionDomain().getCodeSource().getLocation().toURI());
-            return jar.isFile() ? jar.getParentFile() : new File(".");
-        } catch (Exception e) { return new File("."); }
+            return (jar.isFile() ? jar.getParentFile() : new File(".")).getAbsoluteFile();
+        } catch (Exception e) { return new File(".").getAbsoluteFile(); }
     }
 
     private void makeFilm(File sc, File pics, int width) throws Exception {
@@ -307,7 +307,14 @@ public final class KahaniDesktop {
         File assets = new File(h, "assets");
         if (assets.isDirectory()) cmd.add("-Dkahani.assets=" + assets.getAbsolutePath());
         cmd.add("-cp");
-        cmd.add(System.getProperty("java.class.path"));
+        // (each film runs in its own folder: the class path is made absolute)
+        StringBuilder cpath = new StringBuilder();
+        for (String e : System.getProperty("java.class.path").split(java.util.regex.Pattern.quote(File.pathSeparator))) {
+            if (e.isEmpty()) continue;
+            if (cpath.length() > 0) cpath.append(File.pathSeparator);
+            cpath.append(new File(e).getAbsolutePath());
+        }
+        cmd.add(cpath.toString());
         cmd.addAll(mainAndArgs);
         ProcessBuilder pb = new ProcessBuilder(cmd).directory(work).redirectErrorStream(true);
         File ff = new File(h, isWindows() ? "ffmpeg/ffmpeg.exe" : "ffmpeg/ffmpeg");

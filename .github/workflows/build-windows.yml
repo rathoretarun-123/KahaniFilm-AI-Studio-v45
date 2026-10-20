@@ -112,9 +112,15 @@ jobs:
           APP=build/image/KahaniFilm
           mkdir -p smoke
           cp tools/testdata/aakhiri_jodi/aakhiri_jodi_numbered.txt smoke/story.txt
-          "$APP/runtime/bin/java.exe" -Dkahani.home="$APP/app" -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 \
-            -cp "$APP/app/KahaniFilm.jar;$APP/app/onnxruntime.jar" com.tarun.kahani.jvm.KahaniDesktop smoke/story.txt - 640 | tee smoke/log.txt
-          test -s smoke/story.mp4
+          W=$(pwd -W)
+          A="$W/build/image/KahaniFilm/app"
+          "$APP/runtime/bin/java.exe" -Dkahani.home="$A" -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 \
+            -cp "$A/KahaniFilm.jar;$A/onnxruntime.jar" com.tarun.kahani.jvm.KahaniDesktop "$W/smoke/story.txt" - 640 | tee smoke/log.txt
+          if [ ! -s smoke/story.mp4 ]; then
+            tail -25 smoke/log.txt | sed 's/^/::error::/'
+            [ -f smoke/story_film/log.txt ] && tail -25 smoke/story_film/log.txt | sed 's/^/::error::engine: /'
+            exit 1
+          fi
           grep -q "by Kokoro-82M" smoke/log.txt
           grep "VOICES\|MODELS" smoke/log.txt
 
