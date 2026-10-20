@@ -300,7 +300,7 @@ public final class KahaniDesktop {
         String javaExe = new File(System.getProperty("java.home"), "bin/" + (isWindows() ? "java.exe" : "java")).getAbsolutePath();
         List<String> cmd = new ArrayList<String>();
         cmd.add(javaExe);
-        cmd.add("-Xmx" + Math.max(1024, Math.min(6144, Runtime.getRuntime().maxMemory() >> 20)) + "m");
+        cmd.add("-Xmx" + filmMemoryMb() + "m");
         cmd.add("-Djava.awt.headless=true");
         cmd.add("-Dfile.encoding=UTF-8");
         cmd.add("-Dstdout.encoding=UTF-8");
@@ -333,6 +333,17 @@ public final class KahaniDesktop {
         int code = p.waitFor();
         running = null;
         return code;
+    }
+
+    /** v48: memory for a film's own Java: a third of the computer's (16 GB → about 5 GB), between 1.5 and 8 GB. */
+    static long filmMemoryMb() {
+        long total = 0;
+        try {
+            java.lang.management.OperatingSystemMXBean os = java.lang.management.ManagementFactory.getOperatingSystemMXBean();
+            if (os instanceof com.sun.management.OperatingSystemMXBean) total = ((com.sun.management.OperatingSystemMXBean) os).getTotalMemorySize() >> 20;
+        } catch (Throwable ignored) { }
+        if (total <= 0) return 2048;
+        return Math.max(1536, Math.min(8192, total / 3));
     }
 
     /** The lines of the engine's log worth showing (the rest is in the film's folder). */
