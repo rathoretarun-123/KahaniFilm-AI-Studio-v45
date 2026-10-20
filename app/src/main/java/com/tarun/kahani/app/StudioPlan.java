@@ -199,7 +199,7 @@ final class StudioPlan {
                 for (Story.PlaceDef d : st.places) if (d.name.equals(p[0])) fromList = true;
                 if (fromList) continue;
                 boolean uncovered = false;
-                for (Story.Scene sc : st.scenes) if (!covered.contains(sc.number) && AutoLibrary.placeOf(sc, p[0])) uncovered = true;
+                for (Story.Scene sc : st.scenes) if (!covered.contains(sc.number) && Bible.scenePlaceOf(sc, p[0])) uncovered = true;
                 if (uncovered) add(out, st, p[0], p[1], covered, idents);
             }
         }
@@ -210,7 +210,7 @@ final class StudioPlan {
         String ident = Bible.placeIdentity(name);
         if (ident.length() > 0 && !idents.add(ident)) return;
         List<Story.Scene> here = new ArrayList<Story.Scene>();
-        for (Story.Scene sc : st.scenes) if (!covered.contains(sc.number) && AutoLibrary.placeOf(sc, name)) here.add(sc);
+        for (Story.Scene sc : st.scenes) if (!covered.contains(sc.number) && Bible.scenePlaceOf(sc, name)) here.add(sc);
         Place pl = new Place(name, st.shown(name), desc == null ? "" : desc, here.isEmpty() ? st.scenes.get(0) : here.get(0));
         for (Story.Scene sc : here) { pl.scenes.add(sc); covered.add(sc.number); }
         out.add(pl);

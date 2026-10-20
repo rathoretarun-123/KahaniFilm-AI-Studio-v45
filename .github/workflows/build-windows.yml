@@ -1,6 +1,6 @@
 name: Build KahaniFilm for Windows
 
-# v48 (the user: "convert it to exe"): the film maker for Windows — KahaniFilm.exe (tools/jvm/.../KahaniDesktop): the
+# v48 (the user: "convert it to exe", then "looking like the apk"): KahaniFilm.exe — the app's screens (tools/jvm/.../app/DesktopApp) over the
 # desktop film engine (MakeFilm) with a window, its own Java, ffmpeg, the face/pose models and Kokoro-82M's voices
 # through sherpa-onnx's own program. Published as a GitHub Release: KahaniFilm-Windows.zip (unzip, run KahaniFilm.exe).
 
@@ -10,6 +10,7 @@ on:
     paths:
       - "app/src/main/java/com/tarun/kahani/core/**"
       - "tools/jvm/**"
+      - "app/src/main/java/com/tarun/kahani/app/StudioPlan.java"
       - "app/src/main/assets/models/**"
       - ".github/workflows/build-windows.yml"
   workflow_dispatch:
@@ -57,8 +58,8 @@ jobs:
           trap 'echo "::error::failed at line $LINENO: $BASH_COMMAND"' ERR
           mkdir -p build/classes build/input
           javac -nowarn -encoding UTF-8 -source 17 -target 17 -cp dl/onnxruntime.jar -d build/classes \
-            $(find app/src/main/java/com/tarun/kahani/core tools/jvm -name '*.java')
-          jar cfe build/input/KahaniFilm.jar com.tarun.kahani.jvm.KahaniDesktop -C build/classes .
+            $(find app/src/main/java/com/tarun/kahani/core tools/jvm -name '*.java') app/src/main/java/com/tarun/kahani/app/StudioPlan.java
+          jar cfe build/input/KahaniFilm.jar com.tarun.kahani.app.DesktopApp -C build/classes .
           cp dl/onnxruntime.jar build/input/
 
       - name: Package KahaniFilm.exe (jpackage)
@@ -69,7 +70,7 @@ jobs:
           VER="48.0.${GITHUB_RUN_NUMBER}"
           # (the runtime keeps its java.exe: each film is made in a Java of its own)
           jpackage --type app-image --name KahaniFilm --app-version "48.0" --vendor "KahaniFilm" \
-            --input build/input --main-jar KahaniFilm.jar --main-class com.tarun.kahani.jvm.KahaniDesktop \
+            --input build/input --main-jar KahaniFilm.jar --main-class com.tarun.kahani.app.DesktopApp \
             --java-options "-Xmx2g" --java-options "-Dfile.encoding=UTF-8" --java-options "-Dstdout.encoding=UTF-8" \
             --jlink-options "--strip-debug --no-header-files --no-man-pages" \
             --dest build/image
@@ -145,5 +146,5 @@ jobs:
           tag="win-v48-build-${GITHUB_RUN_NUMBER}-${short}"
           gh release create "$tag" KahaniFilm-Windows.zip --target "$GITHUB_SHA" \
             --title "KahaniFilm for Windows v48 build ${GITHUB_RUN_NUMBER} (${short})" \
-            --notes "Unzip, then run KahaniFilm\\KahaniFilm.exe. Pick the script and the pictures folder, press Make the film. See README.txt."
+            --notes "Unzip, then run KahaniFilm\\KahaniFilm.exe: New story or Open a script, the Studio for the pictures, Make the film. See README.txt."
           echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/KahaniFilm-Windows.zip"

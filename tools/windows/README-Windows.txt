@@ -4,30 +4,22 @@ KahaniFilm for Windows (v48)
 1. Unzip KahaniFilm-Windows.zip anywhere (for example C:\KahaniFilm).
 2. Double-click KahaniFilm\KahaniFilm.exe.
    (Windows may say "Windows protected your PC": click "More info", then "Run anyway". The program is not signed.)
-3. Script: choose your story's .txt file (Hindi or English, saved as UTF-8).
-4. Pictures folder: choose a folder laid out like this (folder names exactly as the script names them):
-
-     my pictures\
-       वृंदा\                         one folder per character
-         front.png                    a file name with front / side / back / three-quarter (or left / right)
-         side_left.png                says which view it is
-         side_right.png
-         back.png
-         three_quarter_left.png
-         sheet_expressions.png        any other picture is read as a sheet of poses (up to 3x2)
-       वनुषा\
-       स्थान\                         the places
-         घर का छोटा लिविंग रूम\        one folder per place, named as in the script
-         सोफे वाला कोना\
-       वस्तुएं\                       the things
-         तीन सीटर वाला सोफा\
-         भूरा टेडी बियर\
-       title.png                      the starting page (optional)
-       end.png                        the ending page (optional)
-
-   Anything you do not give is drawn by the studio. You can also leave the folder empty.
-5. Press "Make the film". The film is saved next to the script as <script name>.mp4, and its working files
-   (the cast, stills, the production document) in the folder <script name>_film.
+3. The app has the phone app's screens and colours:
+   - Stories: "New story" or "Open a script (.txt)" (Hindi or English, saved as UTF-8). Each story is kept in
+     Documents\KahaniFilm\<story name>\.
+   - Script: type or paste the script, Save, "Check the script" (what the Studio will ask for).
+   - Studio: asks only for what the script names, with the phone's limits — each character (up to 18 pictures;
+     say which view each picture is: front, side, back, three-quarter, or a sheet of poses), each object (18),
+     each place (18), the starting and ending page, and additional references (100, kept with the story).
+     Each character can be given one of Kokoro's voices (or left automatic). Anything not given is drawn.
+   - Make the film: choose the size, Start (Stop stops it). The whole log is in script_film\log.txt.
+   - Film: play the MP4, open its folder, save a copy, see its stills.
+   - Library: Kokoro's voices (Listen) and the pictures of every story.
+   Not on Windows: recording your own voice, the phone's speech, the phone's share sheet.
+4. For a film without the window: KahaniFilm\runtime\bin\java.exe -cp "app\KahaniFilm.jar;app\onnxruntime.jar"
+   com.tarun.kahani.jvm.KahaniDesktop <script.txt> <pictures folder or -> [width]
+   (the pictures folder laid out as the Studio saves it: a folder per character with front.png, side_left.png …,
+   स्थान\<place>\, वस्तुएं\<thing>\, title.png, end.png).
 
 What is inside
 - The film engine of KahaniFilm (the same as the desktop films), its own Java runtime.

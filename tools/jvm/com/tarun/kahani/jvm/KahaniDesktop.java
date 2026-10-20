@@ -60,6 +60,17 @@ public final class KahaniDesktop {
     KahaniDesktop(boolean headless) { this.headless = headless; frame = headless ? null : new JFrame("KahaniFilm — film maker"); }
 
     private boolean headless;
+    private java.util.function.Consumer<String> sink;
+    private String kvoices;
+
+    /** v48: the engine for another window (the Windows app): its lines go to the sink. */
+    public KahaniDesktop(java.util.function.Consumer<String> sink) { this(true); this.sink = sink; }
+
+    /** Makes the film of the script with the pictures folder (or null), at the width, with the chosen voices ("name=speaker;…" or null). */
+    public boolean film(File sc, File pics, int width, String voices) throws Exception { kvoices = voices; return makeFilm(sc, pics, width); }
+
+    /** Stops the film being made. */
+    public void stop() { Process p = running; if (p != null) p.destroyForcibly(); }
 
     /** With arguments (script [pictures folder or -] [width]) the film is made without a window. */
     public static void main(String[] a) throws Exception {
@@ -115,7 +126,7 @@ public final class KahaniDesktop {
         return b;
     }
 
-    private void say(final String s) { if (headless) { System.out.println(s); return; } SwingUtilities.invokeLater(() -> { log.append(s + "\n"); log.setCaretPosition(log.getDocument().getLength()); }); }
+    private void say(final String s) { if (sink != null) { sink.accept(s); return; } if (headless) { System.out.println(s); return; } SwingUtilities.invokeLater(() -> { log.append(s + "\n"); log.setCaretPosition(log.getDocument().getLength()); }); }
 
     private void start() {
         final File sc = new File(script.getText().trim());
@@ -131,7 +142,7 @@ public final class KahaniDesktop {
     }
 
     /** The folder the program runs from (the app folder of KahaniFilm.exe, or the working folder). */
-    static File home() {
+    public static File home() {
         String h = System.getProperty("kahani.home");
         if (h != null) return new File(h).getAbsoluteFile();
         try {
@@ -140,7 +151,7 @@ public final class KahaniDesktop {
         } catch (Exception e) { return new File(".").getAbsoluteFile(); }
     }
 
-    private void makeFilm(File sc, File pics, int width) throws Exception {
+    private boolean makeFilm(File sc, File pics, int width) throws Exception {
         String text = new String(Files.readAllBytes(sc.toPath()), StandardCharsets.UTF_8);
         Story story = ScriptParser.parse(text);
         say("📖 " + story.title + ": " + story.characters.size() + " characters, " + story.scenes.size() + " scenes");
@@ -160,8 +171,9 @@ public final class KahaniDesktop {
         say("🎬 Making the film (this takes a while: every frame is drawn and checked)…");
         int code = java(Arrays.asList("com.tarun.kahani.jvm.MakeFilm", sc.getAbsolutePath(), assets, out.getAbsolutePath(),
                 String.valueOf(width), "24", new File(work, "stills").getAbsolutePath()), work);
-        if (code == 0 && out.isFile()) say("✅ Done: " + out.getAbsolutePath());
-        else say("⚠ The film could not be made (exit " + code + ") — see the lines above.");
+        if (code == 0 && out.isFile()) { say("✅ Done: " + out.getAbsolutePath()); return true; }
+        say("⚠ The film could not be made (exit " + code + ") — see the lines above.");
+        return false;
     }
 
     /** The plan of CastFromUploads from the pictures folder (see the class comment). */
@@ -269,7 +281,16 @@ public final class KahaniDesktop {
         return null;
     }
 
-    static File[] pictures(File dir) {
+    /** v48: the pictures in a folder and the folders inside it. */
+    public static int pictureCount(File dir) {
+        File[] fs = dir.listFiles();
+        if (fs == null) return 0;
+        int n = 0;
+        for (File f : fs) n += f.isDirectory() ? pictureCount(f) : f.getName().toLowerCase(Locale.ROOT).matches(".*\\.(png|jpg|jpeg|webp)$") ? 1 : 0;
+        return n;
+    }
+
+    public static File[] pictures(File dir) {
         File[] fs = dir.listFiles(f -> f.isFile() && f.getName().toLowerCase(Locale.ROOT).matches(".*\\.(png|jpg|jpeg|webp)$"));
         if (fs == null) return new File[0];
         Arrays.sort(fs);
@@ -277,13 +298,13 @@ public final class KahaniDesktop {
     }
 
     /** True when a file's name says which side it shows. */
-    static boolean named(String name) {
+    public static boolean named(String name) {
         String n = name.toLowerCase(Locale.ROOT);
         return n.matches(".*(front|side|left|right|back|three|quarter|3q|3-4|profile|सामने|बगल|पीछे).*");
     }
 
     /** The view a file's name says: 0 front, 90 side, 180 back, -45 three-quarter. */
-    static int angle(String name) {
+    public static int angle(String name) {
         String n = name.toLowerCase(Locale.ROOT);
         if (n.matches(".*(back|पीछे).*")) return 180;
         boolean left = n.matches(".*(left|बाएं|बायें|बाईं).*");
@@ -292,7 +313,7 @@ public final class KahaniDesktop {
         return 0;
     }
 
-    static String stem(File f) { String n = f.getName(); int d = n.lastIndexOf('.'); return d > 0 ? n.substring(0, d) : n; }
+    public static String stem(File f) { String n = f.getName(); int d = n.lastIndexOf('.'); return d > 0 ? n.substring(0, d) : n; }
 
     /** Runs a class of this program in a Java of its own (the settings of one film never leak into the next). */
     private int java(List<String> mainAndArgs, File work) throws Exception {
@@ -323,6 +344,7 @@ public final class KahaniDesktop {
         File kd = new File(h, "kokoro");
         if (tts.isFile() && new File(kd, "voices.bin").isFile()) { pb.environment().put("KOKORO_CLI", tts.getAbsolutePath()); pb.environment().put("KOKORO_DIR", kd.getAbsolutePath()); }
         pb.environment().put("QC", "0");
+        if (kvoices != null && kvoices.length() > 0) pb.environment().put("KVOICES", kvoices);
         Process p = pb.start();
         running = p;
         // (the whole of the engine's log is kept in the film's folder: log.txt)
@@ -353,5 +375,5 @@ public final class KahaniDesktop {
                 || l.startsWith("pictures read at") || l.startsWith("WARNING") || l.startsWith("MAJOR");
     }
 
-    static boolean isWindows() { return System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win"); }
+    public static boolean isWindows() { return System.getProperty("os.name", "").toLowerCase(Locale.ROOT).contains("win"); }
 }

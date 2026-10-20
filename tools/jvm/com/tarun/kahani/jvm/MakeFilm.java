@@ -372,7 +372,7 @@ public class MakeFilm {
             String py = k.length > 2 ? k[2] : "python3";
             File repo = new File(System.getProperty("kahani.assets", "app/src/main/assets")).getAbsoluteFile().getParentFile().getParentFile().getParentFile().getParentFile();
             File script = new File(repo, "tools/tts/kokoro_batch.py");
-            KokoroCast cast = new KokoroCast();
+            KokoroCast cast = castOf(film);
             StringBuilder j = new StringBuilder("[");
             for (int i = 0; i < film.lines.size(); i++) {
                 Film.Line l = film.lines.get(i);
@@ -405,12 +405,28 @@ public class MakeFilm {
      * with the Kokoro model in KOKORO_DIR (model.onnx, voices.bin, tokens.txt, lexicon-us-en.txt, espeak-ng-data) —
      * no Python. The same cast, pace and pitch as the other paths.
      */
+    /** v48: the cast of Kokoro voices, with the user's own choices (KVOICES "name=speaker;name=speaker", the Windows Studio). */
+    static KokoroCast castOf(Film film) {
+        KokoroCast cast = new KokoroCast();
+        String kv = env("KVOICES");
+        if (kv == null || film.story == null) return cast;
+        for (String pair : kv.split(";")) {
+            int eq = pair.lastIndexOf('=');
+            if (eq <= 0) continue;
+            String name = pair.substring(0, eq).trim();
+            int sid;
+            try { sid = Integer.parseInt(pair.substring(eq + 1).trim()); } catch (NumberFormatException e) { continue; }
+            for (Story.CharacterDef c : film.story.characters) if (c.displayName.equals(name)) { cast.choose(c, sid); System.out.println("KOKORO voice chosen: " + name + " = " + sid); }
+        }
+        return cast;
+    }
+
     static float[][] kokoroCli(Film film, File dir) {
         float[][] out = new float[film.lines.size()][];
         String cli = env("KOKORO_CLI");
         File kd = new File(envOr("KOKORO_DIR", "kokoro"));
         File model = new File(kd, new File(kd, "model.onnx").isFile() ? "model.onnx" : "model.int8.onnx");
-        KokoroCast cast = new KokoroCast();
+        KokoroCast cast = castOf(film);
         int spoke = 0;
         String last = "";
         for (int i = 0; i < out.length; i++) {

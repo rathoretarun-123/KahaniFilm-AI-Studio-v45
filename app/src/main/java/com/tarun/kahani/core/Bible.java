@@ -442,4 +442,10 @@ public final class Bible {
         SoundLib.Entry e = lib.best(text, "sfx", null);
         return e == null ? null : e.title;
     }
+
+    /** v48: the scene happens at this place (its setting, or its title, names it) — the Studio's rule, phone and desktop. */
+    public static boolean scenePlaceOf(Story.Scene sc, String place) {
+        String first = sc.setting.length() > 0 ? sc.setting : sc.title;
+        return similar(place, first) || Txt.norm(first).contains(Txt.norm(place)) || similar(firstClauseOf(first), place);
+    }
 }

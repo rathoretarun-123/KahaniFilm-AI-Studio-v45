@@ -168,10 +168,7 @@ final class AutoLibrary {
     }
 
     /** The scene is set in this place (the same test the studio uses when the user places a picture). */
-    static boolean placeOf(Story.Scene sc, String place) {
-        String first = sc.setting.length() > 0 ? sc.setting : sc.title;
-        return Bible.similar(place, first) || Txt.norm(first).contains(Txt.norm(place)) || Bible.similar(Bible.firstClauseOf(first), place);
-    }
+    static boolean placeOf(Story.Scene sc, String place) { return Bible.scenePlaceOf(sc, place); }
 
     /** How many library pictures the AI may look at per film (each takes a few seconds online). */
     static final int VISION_LOOKS = 30;
