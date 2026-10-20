@@ -122,6 +122,12 @@ jobs:
             exit 1
           fi
           grep -q "by Kokoro-82M" smoke/log.txt
+          # the face, body and lips models really run on Windows (ModelCheck prints what each one found)
+          "$APP/runtime/bin/java.exe" -Dkahani.assets="$A/assets" -Dstdout.encoding=UTF-8 -cp "$A/KahaniFilm.jar;$A/onnxruntime.jar" \
+            com.tarun.kahani.jvm.ModelCheck "$W/tools/testdata/aakhiri_chitthi/stills/pari_standing_front.jpg" \
+            "$W/tools/testdata/aakhiri_chitthi/stills/grandpa_standing_front.jpg" | tee smoke/models.txt
+          grep -q "MODELS WORK" smoke/models.txt
+          grep "loaded\|RESULT\|body:" smoke/models.txt | sed 's/^/::notice::/' 
           grep "VOICES\|MODELS" smoke/log.txt
 
       - name: Zip
