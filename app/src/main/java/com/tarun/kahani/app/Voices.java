@@ -466,7 +466,9 @@ public final class Voices {
             lastEngine += "+sample";
         }
         pcm = trim(pcm);
-        if (ls.any()) pcm = ls.apply(pcm, Synth.SR, ai);
+        // (v48: a natural voice — Kokoro's too — gets only the gentle form of the line's manner, not the heavy effects made
+        // for the phone's robotic engine, which made it sound robotic)
+        if (ls.any()) pcm = ls.apply(pcm, Synth.SR, ai || lastEngine.startsWith("kokoro") || lastEngine.startsWith("natural"));
         return pcm;
     }
 

@@ -22,15 +22,17 @@ public final class KokoroCast {
         int age = who == null ? -1 : who.age;
         boolean old = lk != null && (lk.kind == Look.OLD_MAN || age >= 60);
         if (lk == null) v = new float[]{33, 26, 0.92f, 1f, 1f};
-        else if (lk.kind == Look.GIRL) v = new float[]{32, 23, 1f, 1.22f, 1.1f};
-        else if (lk.kind == Look.BOY) v = new float[]{34, 27, 1.02f, 1.3f, 1.12f};
-        else if (lk.kind == Look.MONSTER) v = new float[]{33, 26, 0.9f, 0.78f, 0.88f};
-        else if (lk.kind == Look.MONKEY || lk.kind == Look.ANIMAL || lk.kind == Look.BIRD) v = new float[]{32, 23, 1.04f, 1.16f, 1.08f};
+        // v48 (the user, on the phone: "sounds robotic / squeaky"): Kokoro's voices are natural as they are — a child is
+        // moved only a little (a big TD-PSOLA shift is what sounds squeaky and metallic); a boy from a woman's voice
+        else if (lk.kind == Look.GIRL) v = new float[]{32, 23, 1.02f, 1.07f, 1.03f};
+        else if (lk.kind == Look.BOY) v = new float[]{32, 23, 1.02f, 1.02f, 0.98f};
+        else if (lk.kind == Look.MONSTER) v = new float[]{33, 26, 0.9f, 0.88f, 0.93f};
+        else if (lk.kind == Look.MONKEY || lk.kind == Look.ANIMAL || lk.kind == Look.BIRD) v = new float[]{32, 23, 1.04f, 1.06f, 1.03f};
         else if (lk.female || lk.kind == Look.WOMAN || lk.kind == Look.WITCH) {
-            v = old ? new float[]{31, 21, 0.88f, 0.94f, 0.98f} : new float[]{women % 2 == 0 ? 31 : 32, women % 2 == 0 ? 21 : 22, 0.98f, 1f, 1f};
+            v = old ? new float[]{31, 21, 0.9f, 0.97f, 0.99f} : new float[]{women % 2 == 0 ? 31 : 32, women % 2 == 0 ? 21 : 22, 0.98f, 1f, 1f};
             if (!old) women++;
         } else {
-            v = old ? new float[]{33, 26, 0.86f, 0.9f, 0.97f} : new float[]{men % 2 == 0 ? 34 : 33, men % 2 == 0 ? 24 : 25, 0.98f, 1f, 1f};
+            v = old ? new float[]{33, 26, 0.9f, 0.95f, 0.98f} : new float[]{men % 2 == 0 ? 34 : 33, men % 2 == 0 ? 24 : 25, 0.98f, 1f, 1f};
             if (!old) men++;
         }
         cast.put(who, v);
@@ -58,7 +60,10 @@ public final class KokoroCast {
     public float[] shape(Film.Line l, float[] pcm, int sr) {
         if (pcm == null) return null;
         float[] v = voice(l.who);
-        return VoiceFx.psola(pcm, sr, v[3] * VoiceFx.emotionFactors(l.emotion)[1], v[4], 1f);
+        // the whole move kept within ±12%: beyond it the natural voice turns squeaky or hollow
+        float p = Math.max(0.88f, Math.min(1.12f, v[3] * VoiceFx.emotionFactors(l.emotion)[1]));
+        if (Math.abs(p - 1) < 0.01f && Math.abs(v[4] - 1) < 0.01f) return pcm;
+        return VoiceFx.psola(pcm, sr, p, v[4], 1f);
     }
 
     /** Kokoro's language code for a line ("hi", or American-English rules with a British voice). */
