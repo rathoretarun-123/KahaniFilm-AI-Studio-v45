@@ -84,8 +84,11 @@ jobs:
           mkdir -p dl/sherpa "$APP/sherpa"
           # (7-Zip unpacks the .tar.bz2: the runner's tar may have no bzip2)
           7z x dl/sherpa.tar.bz2 -odl > /dev/null && 7z x dl/sherpa.tar -odl/sherpa > /dev/null
-          SH=$(ls -d dl/sherpa/sherpa-onnx-*)
-          cp "$SH"/bin/sherpa-onnx-offline-tts.exe "$SH"/bin/*.dll "$SH"/lib/*.dll "$APP/sherpa/"
+          EXE=$(find dl/sherpa -name sherpa-onnx-offline-tts.exe | head -1)
+          test -n "$EXE"
+          cp "$EXE" "$APP/sherpa/"
+          find dl/sherpa -name '*.dll' -exec cp -n {} "$APP/sherpa/" \;
+          ls -la "$APP/sherpa"
           # Kokoro-82M (Apache-2.0) with espeak-ng's data (GPL-3.0, its notice beside it)
           mkdir -p "$APP/kokoro"
           7z x dl/kokoro.tar.bz2 -odl > /dev/null && 7z x dl/kokoro.tar -odl/k > /dev/null

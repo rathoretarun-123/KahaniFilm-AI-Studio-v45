@@ -146,6 +146,8 @@ public final class Director {
      */
     private final Map<Story.CharacterDef, float[]> pSeated = new HashMap<Story.CharacterDef, float[]>();
     private Art.Backdrop pBackdrop;
+    /** v48: the place the last part's scene is set at, as the script names it. */
+    private String pPlace;
     private int pSet = -1;
     private boolean pAnyPart;
     private final Map<Story.CharacterDef, Integer> pTurbanColor = new HashMap<Story.CharacterDef, Integer>();
@@ -1519,6 +1521,7 @@ public final class Director {
             else pSeated.remove(a.c);
         }
         pBackdrop = seg.backdrop;
+        pPlace = scenePlaceName(seg.scene);
         pSet = seg.set;
         pAnyPart = true;
         return seg.t1;
@@ -1569,12 +1572,26 @@ public final class Director {
      */
     private boolean samePlaceAsLastPart() {
         if (!pAnyPart) return false;
+        // v48 (the user's film: in scene 2 the girls stood up off the sofa): two scenes set at the same place by the
+        // script are the same place, whichever of that place's pictures each part opens on (a view of the sofa corner,
+        // the room's wide picture)
+        String now = scenePlaceName(seg.scene);
+        if (now != null && now.equals(pPlace)) return true;
         if (seg.backdrop != null || pBackdrop != null) {
             if (seg.backdrop == null || pBackdrop == null) return false;
             if (seg.backdrop == pBackdrop) return true;
             return seg.backdrop.file != null && seg.backdrop.file.equals(pBackdrop.file);
         }
         return seg.set == pSet;
+    }
+
+    /** v48: the place a scene is set at (the first sentence of its setting, as the script names it), or null. */
+    private String scenePlaceName(int si) {
+        if (si < 0 || si >= story.scenes.size()) return null;
+        String st = story.scenes.get(si).setting;
+        if (st == null || st.trim().isEmpty()) return null;
+        String head = st.split("[।.\\n]")[0].trim();
+        return head.isEmpty() ? null : Txt.norm(head);
     }
 
     /** v47: true when a word is already in the engine's known action/emotion vocabulary or a character name. */
