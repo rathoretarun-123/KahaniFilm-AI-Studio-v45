@@ -5299,6 +5299,35 @@ public final class Director {
     }
 
     /** A direction that describes a head actually resting against a shoulder, not someone sitting on it. */
+    /** v48: words for a person by what they are, for the head-rest clause (Look kinds). */
+    private static final String[][] KIND_WORDS = {
+            {"बच्ची", "लड़की", "बेटी", "पोती", "नातिन", "girl", "daughter"}, {"औरत", "महिला", "माँ", "मां", "woman", "mother"},
+            {"आदमी", "पुरुष", "man"}, {"बच्चा", "लड़का", "बेटा", "पोता", "boy", "son"}, {}, {}, {}, {"बूढ़ा", "बुज़ुर्ग", "बुजुर्ग", "दादा", "नाना", "old man", "grandfather"}};
+
+    /** v48: {the one resting the head, the one whose shoulder} from the clause before "कंधे", or null. */
+    private Film.Actor[] headRester(String s, Film.Actor subj) {
+        String n = Txt.norm(s);
+        int at = -1;
+        for (String w : new String[]{"कंधे", "कन्धे", "कंधों", "कन्धों", "shoulder"}) { int i = n.indexOf(Txt.norm(w)); if (i >= 0 && (at < 0 || i < at)) at = i; }
+        if (at < 0) return null;
+        int from = 0;
+        for (String sep : new String[]{",", "।", " और ", " and ", ";"}) { int i = n.lastIndexOf(Txt.norm(sep), at); if (i >= 0) from = Math.max(from, i + sep.length()); }
+        String clause = n.substring(Math.min(from, at), at);
+        List<Film.Actor> cand = new ArrayList<Film.Actor>();
+        for (Film.Actor a : seg.actors) {
+            if (a.c == null || a.look == null) continue;
+            boolean named = clause.contains(Txt.norm(a.c.displayName)) || (a.c.shown() != null && clause.contains(Txt.norm(a.c.shown())));
+            boolean kind = false;
+            int k = a.look.kind;
+            if (k >= 0 && k < KIND_WORDS.length) for (String w : KIND_WORDS[k]) if (clause.contains(Txt.norm(w))) kind = true;
+            if (named || kind) cand.add(a);
+        }
+        if (cand.size() != 1) return null;
+        Film.Actor rester = cand.get(0), owner = rester != subj ? subj : null;
+        if (owner == null) for (Film.Actor a : seg.actors) if (a != rester && a.c != null) { if (owner != null) return null; owner = a; }
+        return owner == null ? null : new Film.Actor[]{rester, owner};
+    }
+
     private static boolean headRestOnShoulder(String s) {
         return Txt.has(s, "सिर", "head")
                 && Txt.has(s, "कंधे", "कन्धे", "कंधों", "कन्धों", "shoulder")
@@ -5382,9 +5411,19 @@ public final class Director {
             }
         } else if (group.size() > 1 && joinedPlural(s)) groupSubject = true;
         float d = 1.4f;
+        // v48: "…एक बूढ़ा आदमी … बैठा है और एक छोटी बच्ची उसके कंधे पर सिर रखे बैठी है" — the one who rests her head
+        // is the person of the clause before the shoulder (by name, or by what she is: बच्ची), on the other one there
+        // (only for the gesture: the rest of the sentence keeps its own subject — the letter stays in his hands)
+        Film.Actor hrSubj = subj, hrTarget = target;
+        if (headRestOnShoulder(s) && (target == null || target == subj) && seg != null) {
+            Film.Actor[] rt = headRester(s, subj);
+            if (rt != null) { hrSubj = rt[0]; hrTarget = rt[1]; }
+        }
         // The resting character's head tilts toward the named/previously named shoulder owner.
-        if (subj != null && target != null && target != subj && headRestOnShoulder(s)
-                && subj.stateAt(t).visible && target.stateAt(t).visible) {
+        if (hrSubj != null && hrTarget != null && hrTarget != hrSubj && headRestOnShoulder(s)
+                && hrSubj.stateAt(t).visible && hrTarget.stateAt(t).visible) {
+            Film.Actor subj0 = subj, target0 = target;
+            subj = hrSubj; target = hrTarget;
             Film.Key posture = subj.stateAt(t);
             boolean sittingHere = Txt.has(s, "बैठ", "बैठे", "बैठी", "sits", "sitting", "sat");
             if (!sittingHere && posture.body != Pose.SIT && posture.body != Pose.LIE && posture.body != Pose.KNEEL)
@@ -5393,6 +5432,7 @@ public final class Director {
             rest.target = target;
             subj.acts.add(rest);
             d = Math.max(d, 2.4f);
+            subj = subj0; target = target0;
         }
         boolean focusSet = false;
         // thought before action (handbook ch. 6): a sound or a sudden sight is perceived first — a pause, the head

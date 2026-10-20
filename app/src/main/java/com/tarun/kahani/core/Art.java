@@ -1147,11 +1147,32 @@ public final class Art {
     public java.util.List<Backdrop> placeViews(int number) {
         java.util.List<Backdrop> out = new java.util.ArrayList<Backdrop>();
         for (int i = 1; i <= 98; i++) { Backdrop b = scenes.get(number + "v" + i); if (b != null) out.add(b); }
+        // v48 (the user's film: in scene 2 the girls stood before the window, the sofa gone): the views of a place are
+        // kept under the first scene set there; a later scene at the same place (the same main picture) has them too
+        int same = out.isEmpty() ? samePlaceScene(number) : -1;
+        if (same > 0) for (int i = 1; i <= 98; i++) { Backdrop b = scenes.get(same + "v" + i); if (b != null) out.add(b); }
         return out;
     }
 
+    /** v48: another scene whose main picture is this scene's (the same place), with views of its own; -1 when none. */
+    int samePlaceScene(int number) {
+        Backdrop main = scenes.get(String.valueOf(number));
+        if (main == null) return -1;
+        for (int n = 1; n <= 99; n++) {
+            if (n == number) continue;
+            Backdrop o = scenes.get(String.valueOf(n));
+            if (o == null || scenes.get(n + "v1") == null) continue;
+            if (o == main || (o.file != null && o.file.equals(main.file)) || (o.img != null && o.img == main.img)) return n;
+        }
+        return -1;
+    }
+
     /** The user's reverse angle of a scene's place (manifest line scene|<number>r|file), or null. */
-    public Backdrop reverseBackdrop(int number) { return scenes.get(number + "r"); }
+    public Backdrop reverseBackdrop(int number) {
+        Backdrop r = scenes.get(number + "r");
+        if (r == null) { int same = samePlaceScene(number); if (same > 0) r = scenes.get(same + "r"); }
+        return r;
+    }
 
     /** The user's picture of the journey into a scene's place (manifest line scene|<number>j|file, ScenePlan), or null. */
     public Backdrop journeyBackdrop(int number) { return scenes.get(number + "j"); }

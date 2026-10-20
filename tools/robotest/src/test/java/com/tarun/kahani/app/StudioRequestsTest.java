@@ -179,7 +179,8 @@ public class StudioRequestsTest {
             assertFalse("no thing outside the script: " + t, t.startsWith("➕"));
         }
         assertEquals("a picture button per character: " + tx, 2, charButtons);
-        assertEquals("a picture button per object: " + tx, 2, objButtons);
+        // (पतंग and चरखी from the list, and the छड़ी राहुल picks up in an action line — requested since the action props)
+        assertEquals("a picture button per object: " + tx, 3, objButtons);
         assertEquals("a picture button per place: " + tx, 2, placeButtons);
         assertNull("the narrator is never offered a picture", byText(a.findViewById(android.R.id.content), "📷 Picture it anyway"));
         boolean narratorRow = false;
@@ -194,7 +195,8 @@ public class StudioRequestsTest {
         android.app.AlertDialog list = org.robolectric.shadows.ShadowAlertDialog.getLatestAlertDialog();
         List<String> items = new ArrayList<String>();
         for (int i = 0; i < list.getListView().getCount(); i++) items.add(String.valueOf(list.getListView().getItemAtPosition(i)));
-        assertEquals("the popup lists the six requests: " + items, 6, items.size());
+        // (2 characters, 2 places, 3 objects — the छड़ी of the action line among them)
+        assertEquals("the popup lists the seven requests: " + items, 7, items.size());
         for (String it : items) assertFalse("no narrator in the popup: " + it, it.contains("सूत्रधार") || it.contains("नैरेटर") || it.contains("कथावाचक"));
         list.dismiss();
         mk.dismiss();

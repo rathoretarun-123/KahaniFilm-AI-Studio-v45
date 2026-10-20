@@ -5704,6 +5704,9 @@ public final class Renderer {
                 // v47.7: the user's own picture of it open fades in; a box opens its lid; a book spreads its leaves
                 if (k > 0.001f && p.heldOpenPic != null) openedPicture(g, p.heldPic, p.heldOpenPic, p.heldOpenAspect, tx, ty, tw, th, k);
                 else if (k > 0.001f && p.heldHinge == Rigidity.HINGE_LID) lidOpen(g, p.heldPic, pw, ph, tx - tw / 2, ty - th / 2, tw, th, k);
+                // v48 (the user's film: a white block over वृंदा's mouth): a book opens only into the user's own
+                // picture of it open; without one, its cover is held as the user made it — no drawn leaves
+                else if (k > 0.001f && !OPEN_DRAWN) g.imageRect(p.heldPic, 0, 0, pw, ph * vis, tx - tw / 2, ty - th / 2, tw, th * vis);
                 else if (k > 0.001f) {
                     // v47.4: opened like a book — two leaves of pages spread from the hinge, the cover turning edge-on at it
                     float lw = tw * 0.92f * k;
@@ -5731,7 +5734,7 @@ public final class Renderer {
         if (vis <= 0.01f) return;
         if (book) {
             // both hands on an open book: a hand at each outer edge (v47.7: on a box's sides, or the open picture's)
-            float k = ease01(Math.max(0, Math.min(1, p.heldOpen))), lw = p.heldOpenPic != null || p.heldHinge == Rigidity.HINGE_LID ? 0 : tw * 0.92f * k;
+            float k = ease01(Math.max(0, Math.min(1, p.heldOpen))), lw = p.heldOpenPic != null || p.heldHinge == Rigidity.HINGE_LID || !OPEN_DRAWN ? 0 : tw * 0.92f * k;
             for (int sd = -1; sd <= 1; sd += 2) {
                 float hx2 = tx + sd * (lw > 4 ? lw * 0.9f : tw * 0.44f), hy2 = ty + th * 0.3f;
                 heldHand(g, hx2, hy2, h, skin, sd);
@@ -5771,6 +5774,9 @@ public final class Renderer {
      * as the hair and the clothes; a rigid thing is drawn as it comes. Drawn in horizontal strips, each displaced by
      * the wind and a travelling wave, so the picture itself bends.
      */
+    /** v48: draw a book's open leaves when the user gave no picture of it open (off: the cover is held as it is). */
+    static boolean OPEN_DRAWN = Boolean.getBoolean("kahani.drawOpenBook");
+
     static void softPicture(Gfx g, Object pic, int pw, int ph, float x, float y, float w, float h, float wind, float time, float bodyH) {
         int n = Math.max(8, Math.min(24, (int) (h / 5)));   // finer strips on a bigger picture: no steps along the edge
         float sway = wind * Math.min(h * 0.6f, bodyH * 0.14f);                    // the bottom edge goes this far with the wind
