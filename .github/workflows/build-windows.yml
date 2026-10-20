@@ -1,0 +1,128 @@
+name: Build KahaniFilm for Windows
+
+# v48 (the user: "convert it to exe"): the film maker for Windows — KahaniFilm.exe (tools/jvm/.../KahaniDesktop): the
+# desktop film engine (MakeFilm) with a window, its own Java, ffmpeg, the face/pose models and Kokoro-82M's voices
+# through sherpa-onnx's own program. Published as a GitHub Release: KahaniFilm-Windows.zip (unzip, run KahaniFilm.exe).
+
+on:
+  push:
+    branches: [ccr-a5fc4eef-d2p2nm]
+    paths:
+      - "app/src/main/java/com/tarun/kahani/core/**"
+      - "tools/jvm/**"
+      - "app/src/main/assets/models/**"
+      - ".github/workflows/build-windows.yml"
+  workflow_dispatch:
+
+concurrency:
+  group: windows-${{ github.ref }}
+  cancel-in-progress: true
+
+permissions:
+  contents: write
+
+jobs:
+  windows:
+    runs-on: windows-latest
+    timeout-minutes: 60
+    steps:
+      - name: Check out source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 21 (with jpackage)
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "21"
+
+      - name: Fetch ONNX Runtime, sherpa-onnx, Kokoro and ffmpeg
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p dl
+          get() { for i in 1 2 3 4; do curl -fL --retry 3 -o "$2" "$1" && return 0; sleep $((i * 8)); done; return 1; }
+          get https://repo1.maven.org/maven2/com/microsoft/onnxruntime/onnxruntime/1.20.0/onnxruntime-1.20.0.jar dl/onnxruntime.jar
+          get https://github.com/k2-fsa/sherpa-onnx/releases/download/v1.13.8/sherpa-onnx-v1.13.8-win-x64-shared-MT-Release.tar.bz2 dl/sherpa.tar.bz2
+          get https://github.com/k2-fsa/sherpa-onnx/releases/download/tts-models/kokoro-multi-lang-v1_0.tar.bz2 dl/kokoro.tar.bz2
+          get https://github.com/GyanD/codexffmpeg/releases/download/7.1/ffmpeg-7.1-essentials_build.zip dl/ffmpeg.zip
+          # (the runtime's debug symbols and the other systems' native libraries are not needed on Windows)
+          7z d dl/onnxruntime.jar "ai/onnxruntime/native/win-x64/*.pdb" "ai/onnxruntime/native/linux-*" "ai/onnxruntime/native/osx-*" > /dev/null
+          ls -la dl
+
+      - name: Compile the film engine and the window
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p build/classes build/input
+          javac -nowarn -encoding UTF-8 -source 17 -target 17 -cp dl/onnxruntime.jar -d build/classes \
+            $(find app/src/main/java/com/tarun/kahani/core tools/jvm -name '*.java')
+          jar cfe build/input/KahaniFilm.jar com.tarun.kahani.jvm.KahaniDesktop -C build/classes .
+          cp dl/onnxruntime.jar build/input/
+
+      - name: Package KahaniFilm.exe (jpackage)
+        shell: bash
+        run: |
+          set -euo pipefail
+          VER="48.0.${GITHUB_RUN_NUMBER}"
+          # (the runtime keeps its java.exe: each film is made in a Java of its own)
+          jpackage --type app-image --name KahaniFilm --app-version "48.0" --vendor "KahaniFilm" \
+            --input build/input --main-jar KahaniFilm.jar --main-class com.tarun.kahani.jvm.KahaniDesktop \
+            --java-options "-Xmx2g" --java-options "-Dfile.encoding=UTF-8" --java-options "-Dstdout.encoding=UTF-8" \
+            --jlink-options "--strip-debug --no-header-files --no-man-pages" \
+            --dest build/image
+          APP=build/image/KahaniFilm/app
+          test -f build/image/KahaniFilm/KahaniFilm.exe
+          test -f build/image/KahaniFilm/runtime/bin/java.exe
+          # the models, sounds, voices and fonts the engine reads (not the bundled story packs)
+          mkdir -p "$APP/assets"
+          for d in models sounds voices fonts sample; do cp -r "app/src/main/assets/$d" "$APP/assets/"; done
+          cp app/src/main/assets/*.txt app/src/main/assets/*.json "$APP/assets/" 2>/dev/null || true
+          # sherpa-onnx's speaker with its libraries beside it
+          mkdir -p dl/sherpa "$APP/sherpa"
+          tar xjf dl/sherpa.tar.bz2 -C dl/sherpa --strip-components=1
+          cp dl/sherpa/bin/sherpa-onnx-offline-tts.exe dl/sherpa/bin/*.dll dl/sherpa/lib/*.dll "$APP/sherpa/"
+          # Kokoro-82M (Apache-2.0) with espeak-ng's data (GPL-3.0, its notice beside it)
+          mkdir -p "$APP/kokoro"
+          tar xjf dl/kokoro.tar.bz2 -C "$APP/kokoro" --strip-components=1 \
+            kokoro-multi-lang-v1_0/model.onnx kokoro-multi-lang-v1_0/voices.bin kokoro-multi-lang-v1_0/tokens.txt \
+            kokoro-multi-lang-v1_0/lexicon-us-en.txt kokoro-multi-lang-v1_0/lexicon-gb-en.txt kokoro-multi-lang-v1_0/LICENSE \
+            kokoro-multi-lang-v1_0/espeak-ng-data
+          cp tools/tts/KOKORO_NOTICE.txt "$APP/kokoro/NOTICE.txt"
+          # ffmpeg (GPL build from gyan.dev, its licence beside it)
+          mkdir -p dl/ff "$APP/ffmpeg"
+          7z x dl/ffmpeg.zip -odl/ff > /dev/null
+          cp dl/ff/*/bin/ffmpeg.exe "$APP/ffmpeg/"
+          cp dl/ff/*/LICENSE "$APP/ffmpeg/LICENSE.txt" 2>/dev/null || true
+          cp tools/windows/README-Windows.txt build/image/KahaniFilm/README.txt
+          du -sh build/image/KahaniFilm
+          echo "VER=$VER" >> "$GITHUB_ENV"
+
+      - name: Smoke test (a film made without a window)
+        shell: bash
+        run: |
+          set -euo pipefail
+          APP=build/image/KahaniFilm
+          mkdir -p smoke
+          cp tools/testdata/aakhiri_jodi/aakhiri_jodi_numbered.txt smoke/story.txt
+          "$APP/runtime/bin/java.exe" -Dkahani.home="$APP/app" -Dfile.encoding=UTF-8 -Dstdout.encoding=UTF-8 \
+            -cp "$APP/app/KahaniFilm.jar;$APP/app/onnxruntime.jar" com.tarun.kahani.jvm.KahaniDesktop smoke/story.txt - 640 | tee smoke/log.txt
+          test -s smoke/story.mp4
+          grep -q "by Kokoro-82M" smoke/log.txt
+          grep "VOICES\|MODELS" smoke/log.txt
+
+      - name: Zip
+        shell: pwsh
+        run: Compress-Archive -Path build/image/KahaniFilm -DestinationPath KahaniFilm-Windows.zip -CompressionLevel Optimal
+
+      - name: Publish as a GitHub Release (direct download link)
+        shell: bash
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          set -euo pipefail
+          short=$(git rev-parse --short HEAD)
+          tag="win-v48-build-${GITHUB_RUN_NUMBER}-${short}"
+          gh release create "$tag" KahaniFilm-Windows.zip --target "$GITHUB_SHA" \
+            --title "KahaniFilm for Windows v48 build ${GITHUB_RUN_NUMBER} (${short})" \
+            --notes "Unzip, then run KahaniFilm\\KahaniFilm.exe. Pick the script and the pictures folder, press Make the film. See README.txt."
+          echo "https://github.com/${GITHUB_REPOSITORY}/releases/download/${tag}/KahaniFilm-Windows.zip"

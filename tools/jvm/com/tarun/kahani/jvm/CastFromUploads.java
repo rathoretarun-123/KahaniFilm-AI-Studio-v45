@@ -44,7 +44,7 @@ public final class CastFromUploads {
             else if (kind.equals("view")) cast.add("view|" + f[1] + "|" + f[2] + "|" + png(base, f[3], out));
             else if (kind.equals("title") || kind.equals("end")) cast.add(kind + "|" + png(base, f[1], out) + "|0");
             else if (kind.equals("figure") || kind.equals("figsheet")) {
-                BufferedImage im = ImageIO.read(new File(base, f[2]));
+                BufferedImage im = ImageIO.read(at(base, f[2]));
                 int w = im.getWidth(), h = im.getHeight();
                 int[] px = im.getRGB(0, 0, w, h, null, 0, w);
                 List<Angles.Piece> pieces;
@@ -55,7 +55,7 @@ public final class CastFromUploads {
                     k++;
                     Cutout.Result r = Cutout.process(p.px.clone(), p.w, p.h, false);
                     PoseSense.Tag t = PoseSense.tag(r, 0, false);
-                    String name = stem(f[2]) + "_" + k + ".png";
+                    String name = uniq() + stem(f[2]) + "_" + k + ".png";
                     BufferedImage o = new BufferedImage(r.w, r.h, BufferedImage.TYPE_INT_ARGB);
                     o.setRGB(0, 0, r.w, r.h, r.px, 0, r.w);
                     ImageIO.write(o, "png", new File(out, name));
@@ -78,23 +78,30 @@ public final class CastFromUploads {
         for (String s : review) System.out.println("  " + s);
     }
 
+    /** v48: a plan's path as written (absolute, from the Windows film maker) or beside the plan. */
+    static File at(File base, String f) { File a = new File(f); return a.isAbsolute() ? a : new File(base, f); }
+
+    /** v48: a prefix that keeps two uploads of the same name ("image.png" in two folders) apart. */
+    private static int made;
+    static String uniq() { return String.format(java.util.Locale.US, "%03d_", ++made); }
+
     static String stem(String f) { String n = new File(f).getName(); int d = n.lastIndexOf('.'); return d > 0 ? n.substring(0, d) : n; }
 
     /** The picture as a PNG in the output folder (a cut-out keeps its transparency; a jpg stays what it is). */
     static String png(File base, String file, File out) throws Exception {
-        BufferedImage im = ImageIO.read(new File(base, file));
-        String name = stem(file) + ".png";
+        BufferedImage im = ImageIO.read(at(base, file));
+        String name = uniq() + stem(file) + ".png";
         ImageIO.write(im, "png", new File(out, name));
         return name;
     }
 
     /** Panel n of a sheet, cut at the sheet's gutters; the whole picture when the sheet has none (noted). */
     static String panel(File base, String file, int panel, File out, List<String> review) throws Exception {
-        BufferedImage im = ImageIO.read(new File(base, file));
+        BufferedImage im = ImageIO.read(at(base, file));
         int w = im.getWidth(), h = im.getHeight();
         int[] px = im.getRGB(0, 0, w, h, null, 0, w);
         List<int[]> panels = Angles.sheetPanels(px, w, h);
-        String name = stem(file) + "_p" + panel + ".png";
+        String name = uniq() + stem(file) + "_p" + panel + ".png";
         if (panels == null || panel >= panels.size()) {
             // a sheet of cut-outs on black has no gutters of its own: its pieces are the panels
             List<Angles.Piece> pieces = Angles.order(Angles.split(px, w, h, false), h);

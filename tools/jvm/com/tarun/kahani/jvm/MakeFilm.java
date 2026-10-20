@@ -12,12 +12,23 @@ import javax.imageio.ImageIO;
  * Usage: MakeFilm <script.txt> <assetDir|-> <out.mp4> <width> <fps> [stillsDir] [maxSeconds]
  */
 public class MakeFilm {
+    /**
+     * v48 (the Windows film maker): a setting from the environment, or from the property env.<name> when the film is
+     * made inside another program (KahaniDesktop sets them; a Windows program cannot set its own environment).
+     */
+    static String env(String k) { String v = System.getenv(k); return v != null ? v : System.getProperty("env." + k); }
+    static String envOr(String k, String d) { String v = env(k); return v != null ? v : d; }
+    static boolean envHas(String k) { return env(k) != null; }
+    /** ffmpeg: on the PATH, or the one shipped with the Windows program (FFMPEG). */
+    static String FFMPEG = envOr("FFMPEG", "ffmpeg");
+
     public static void main(String[] a) throws Exception {
+        FFMPEG = envOr("FFMPEG", "ffmpeg");
         String script = new String(Files.readAllBytes(Paths.get(a[0])), "UTF-8");
         final String assets = a[1];
         String out = a[2];
         int width = Integer.parseInt(a[3]);
-        String aspect = System.getenv().getOrDefault("ASPECT", "16:9");
+        String aspect = envOr("ASPECT", "16:9");
         int height = Math.round(width / com.tarun.kahani.core.PixarLead.spec(aspect).ratio) & ~1;   // every delivery format's exact shape
         int fps = Integer.parseInt(a[4]);
         String stills = a.length > 5 ? a[5] : null;
@@ -26,20 +37,20 @@ public class MakeFilm {
         long t0 = System.currentTimeMillis();
         Story story = ScriptParser.parse(script);
         // the sizes the pictures are read at (SPRITE_SIDE / BACKDROP_SIDE to compare sizes)
-        if (System.getenv("SPRITE_SIDE") == null && !assets.equals("-")) {
+        if (env("SPRITE_SIDE") == null && !assets.equals("-")) {
             // v35: the sizes the phone reads the pictures at for this output (Art.sizesFor): a phone with a 512 MB heap
             // and FREE_MB of free memory (2048 unless given)
             int[] counts = Art.pictureCounts(new String(Files.readAllBytes(Paths.get(assets, "cast.txt")), "UTF-8"));
-            long free = Long.parseLong(System.getenv().getOrDefault("FREE_MB", "2048")) << 20;
+            long free = Long.parseLong(envOr("FREE_MB", "2048")) << 20;
             int[] sides = Art.sizesFor(height, 512L << 20, free, counts[0], counts[1]);
             Art.spriteSide = sides[0]; Art.backdropSide = sides[1];
             System.out.println("pictures read at: characters " + sides[0] + " px, places " + sides[1] + " px");
         }
-        if (System.getenv("SPRITE_SIDE") != null) Art.spriteSide = Integer.parseInt(System.getenv("SPRITE_SIDE"));
+        if (env("SPRITE_SIDE") != null) Art.spriteSide = Integer.parseInt(env("SPRITE_SIDE"));
         // v47.13: MESH=<screen px per cell>:<cells per picture pixel>:<most rows> — the mesh's fineness (Rig.SOURCE_CELLS)
-        String mesh = System.getenv().getOrDefault("MESH", "");
+        String mesh = envOr("MESH", "");
         // (the face's own mesh: a third of a pixel a cell, up to three cells a picture pixel — FACE_MESH="" for the old one)
-        String fm = System.getenv().getOrDefault("FACE_MESH", "0.33:3:1536");
+        String fm = envOr("FACE_MESH", "0.33:3:1536");
         if (fm.length() > 0) {
             String[] m = fm.split(":");
             Rig.FACE_CELL_PX = Float.parseFloat(m[0]); Rig.FACE_SOURCE_CELLS = Float.parseFloat(m[1]); Rig.MAX_FACE_CELLS = Integer.parseInt(m[2]);
@@ -50,22 +61,22 @@ public class MakeFilm {
             Rig.MAX_CELLS = Integer.parseInt(m[2]); Rig.MAX_FACE_CELLS = Math.max(Rig.MAX_FACE_CELLS, Rig.MAX_CELLS / 2);
             System.out.println("mesh: " + Rig.CELL_PX + " screen px a cell, up to " + Rig.SOURCE_CELLS + " cells a picture pixel, " + Rig.MAX_CELLS + " rows");
         }
-        if (System.getenv("BACKDROP_SIDE") != null) Art.backdropSide = Integer.parseInt(System.getenv("BACKDROP_SIDE"));
+        if (env("BACKDROP_SIDE") != null) Art.backdropSide = Integer.parseInt(env("BACKDROP_SIDE"));
         Art art = new Art();
-        if (System.getenv("REFART") != null) {
+        if (env("REFART") != null) {
             // v47.8: a bundled film's own reference pack (film_library/<id>/manifest.json: the user's pictures), cast as the
             // desktop render tests cast it — needs the test classes (ReferenceArtLoader) on the class path
             Class<?> ra = Class.forName("com.tarun.kahani.ReferenceArtLoader");
             java.lang.reflect.Method load = ra.getDeclaredMethod("load", String.class, Story.class, File.class);
             load.setAccessible(true);
-            art = (Art) load.invoke(null, System.getenv("REFART"), story, new File(System.getenv().getOrDefault("REFART_ASSETS", "app/src/main/assets")));
+            art = (Art) load.invoke(null, env("REFART"), story, new File(envOr("REFART_ASSETS", "app/src/main/assets")));
         } else if (!assets.equals("-")) {
             Art.Loader L = new AwtLoader(assets);
             art = Art.fromManifest(new String(Files.readAllBytes(Paths.get(assets, "cast.txt")), "UTF-8"), story, L);
         }
         // v47.8: BOARD=<dir>: the story board's pictures in that folder, in name order (the first the title, the last the end)
-        if (System.getenv("BOARD") != null) {
-            File bd = new File(System.getenv("BOARD"));
+        if (env("BOARD") != null) {
+            File bd = new File(env("BOARD"));
             String[] names = bd.list();
             java.util.List<String> files = new java.util.ArrayList<String>();
             if (names != null) { java.util.Arrays.sort(names); for (String n : names) if (n.toLowerCase(java.util.Locale.ROOT).matches(".*\\.(png|jpe?g|webp)")) files.add(n); }
@@ -78,9 +89,9 @@ public class MakeFilm {
         Director.Options opt = new Director.Options();
         opt.aspect = aspect;
         // the app's switches: SUBS=1 subtitles, TWOS=1 animation on twos, PACE=0.8..1.3 the speed
-        opt.subtitles = System.getenv("SUBS") != null;
-        opt.onTwos = System.getenv("TWOS") != null;
-        opt.pace = Float.parseFloat(System.getenv().getOrDefault("PACE", "1"));
+        opt.subtitles = env("SUBS") != null;
+        opt.onTwos = env("TWOS") != null;
+        opt.pace = Float.parseFloat(envOr("PACE", "1"));
         opt.outHeight = height;      // v35: the close-up's sharpness limit at the film's own size (as on the phone)
         Director dir = new Director(story, opt);
         Film film = dir.prepare();
@@ -97,13 +108,13 @@ public class MakeFilm {
         // SAMPLE="वानुषा=/path/sample.wav": that character's lines are moved to the sample's voice (as on the phone)
         String sampleWho = null;
         VoiceFx.Profile sampleProfile = null;
-        if (System.getenv("SAMPLE") != null) {
-            String[] sv = System.getenv("SAMPLE").split("=", 2);
+        if (env("SAMPLE") != null) {
+            String[] sv = env("SAMPLE").split("=", 2);
             sampleWho = sv[0];
             sampleProfile = VoiceFx.profile(readWav(new File(sv[1])), Synth.SR);
         }
         // v47.13: KOKORO=<model dir>:<espeak-ng-data dir>[:<python>] — the lines spoken by Kokoro-82M (Apache-2.0)
-        float[][] natural = System.getenv("KOKORO") != null && System.getenv("KOKORO").contains(":") ? kokoro(film, tmp) : null;
+        float[][] natural = (env("KOKORO") != null && env("KOKORO").contains(":")) || envHas("KOKORO_CLI") ? kokoro(film, tmp) : null;
         int byKokoro = 0;
         for (int i = 0; i < film.lines.size(); i++) {
             Film.Line l = film.lines.get(i);
@@ -129,65 +140,65 @@ public class MakeFilm {
         film = dir.direct(art);
         // WIDE=1: every scene seen whole by one still camera — for looking at the staging itself (who stands where,
         // vehicles, doors), not at the film's shots
-        if (System.getenv("WIDE") != null) for (Film.Seg sg : film.segs) if (sg.type == Film.S_SCENE) {
+        if (env("WIDE") != null) for (Film.Seg sg : film.segs) if (sg.type == Film.S_SCENE) {
             sg.cams.clear();
             Film.Cam wc = new Film.Cam(sg.t0, 640, 360, 1f, 0);
             wc.still = true;
             sg.cams.add(wc);
         }
         // CAMS=a,b: the camera moves between a and b seconds (time, centre, zoom, ease)
-        if (System.getenv("CAMS") != null) {
-            String[] r = System.getenv("CAMS").split(",");
+        if (env("CAMS") != null) {
+            String[] r = env("CAMS").split(",");
             float c0 = Float.parseFloat(r[0]), c1 = Float.parseFloat(r[1]);
             for (Film.Seg sg : film.segs) for (Film.Cam c : sg.cams) if (c.t >= c0 && c.t <= c1)
                 System.out.printf(java.util.Locale.US, "CAM %.2f x=%.0f y=%.0f zoom=%.2f ease=%.2f%n", c.t, c.cx, c.cy, c.zoom, c.ease);
             for (Film.Shot sh : film.shots) if (sh.t >= c0 && sh.t <= c1) System.out.printf(java.util.Locale.US, "SHOT %.2f size=%d %s | %s%n", sh.t, sh.size, sh.subject, sh.purpose);
         }
         // KEYS=name: that character's keys as made
-        if (System.getenv("KEYS") != null) for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) if (ac.c.displayName.equals(System.getenv("KEYS")))
+        if (env("KEYS") != null) for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) if (ac.c.displayName.equals(env("KEYS")))
             for (Film.Key k : ac.keys) System.out.printf(java.util.Locale.US, "KEY %.2f x=%.0f body=%d seat=%d move=%.2f face=%.0f emo=%d%n", k.t, k.x, k.body, k.seat, k.moveDur, k.facing, k.emotion);
         // ACTS=1: every playground act of the film as made (the swing and the slide, v41)
-        if (System.getenv("ACTS") != null) for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) for (Film.Act x : ac.acts)
-            if (x.type == Film.G_PLAYGROUND || "all".equals(System.getenv("ACTS"))) System.out.printf(java.util.Locale.US, "ACT %s type=%d item=%d %.2f-%.2f how=%d a0=%.0f a1=%.0f%n", ac.c.displayName, x.type, x.item, x.t0, x.t1, x.how, x.a0, x.a1);
+        if (env("ACTS") != null) for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) for (Film.Act x : ac.acts)
+            if (x.type == Film.G_PLAYGROUND || "all".equals(env("ACTS"))) System.out.printf(java.util.Locale.US, "ACT %s type=%d item=%d %.2f-%.2f how=%d a0=%.0f a1=%.0f%n", ac.c.displayName, x.type, x.item, x.t0, x.t1, x.how, x.a0, x.a1);
         // FXS=1: every effect of the film (type, time, place)
-        if (System.getenv("FXS") != null) for (Film.Seg sg : film.segs) for (Film.Fx f : sg.fx)
+        if (env("FXS") != null) for (Film.Seg sg : film.segs) for (Film.Fx f : sg.fx)
             System.out.printf(java.util.Locale.US, "FX type=%d %.2f-%.2f x=%.0f y=%.0f t2=%.2f color=%d%n", f.type, f.t0, f.t1, f.x, f.y, f.t2, f.color);
         // keys made out of time order (a later key placed before an earlier one) — none expected
         for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) for (int i = 1; i < ac.keys.size(); i++)
             if (ac.keys.get(i).t < ac.keys.get(i - 1).t - 1e-3f) System.out.printf(java.util.Locale.US, "KEY ORDER %s %.2f after %.2f%n", ac.c.displayName, ac.keys.get(i).t, ac.keys.get(i - 1).t);
         System.out.println("film: " + film.duration + "s, segs=" + film.segs.size() + " lines=" + film.lines.size() + " sfx=" + film.sfx.size());
         for (String n : film.notes) System.out.println("  " + n);
-        if (System.getenv("SHOTS") != null) Files.write(Paths.get(System.getenv("SHOTS")), film.shotList.getBytes("UTF-8"));
+        if (env("SHOTS") != null) Files.write(Paths.get(env("SHOTS")), film.shotList.getBytes("UTF-8"));
         // PRODDOC=file.json: the production document of this film (as the phone keeps it), written now with the plan and
         // again with the render's verification when the film is made
-        final com.tarun.kahani.core.ProductionDocument pdoc = System.getenv("PRODDOC") == null ? null : com.tarun.kahani.core.ProductionDocument.read(story, null);
+        final com.tarun.kahani.core.ProductionDocument pdoc = env("PRODDOC") == null ? null : com.tarun.kahani.core.ProductionDocument.read(story, null);
         if (pdoc != null) {
             pdoc.bind(story); pdoc.attach(film); pdoc.assets(art); pdoc.validate();
             pdoc.review(com.tarun.kahani.core.ProductionDocument.DIRECTOR, "APPROVED", "the plan follows the script");
-            Files.write(Paths.get(System.getenv("PRODDOC")), pdoc.toJson().getBytes("UTF-8"));
+            Files.write(Paths.get(env("PRODDOC")), pdoc.toJson().getBytes("UTF-8"));
             System.out.println("production check: " + pdoc.report(60));
         }
         // DELIVERY=prefix: the edit list with scene markers (v38, as the app saves it)
-        if (System.getenv("DELIVERY") != null) {
-            Files.write(Paths.get(System.getenv("DELIVERY") + "_edit_list.txt"), com.tarun.kahani.core.FilmCraft.editList(film, fps, film.story != null ? film.story.title : "").getBytes("UTF-8"));
+        if (env("DELIVERY") != null) {
+            Files.write(Paths.get(env("DELIVERY") + "_edit_list.txt"), com.tarun.kahani.core.FilmCraft.editList(film, fps, film.story != null ? film.story.title : "").getBytes("UTF-8"));
         }
         // KEYS=1: every character's keys (time, body, seat, eyes shut, visible) — to check staging against the frames
-        if (System.getenv("KEYS") != null) for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) {
+        if (env("KEYS") != null) for (Film.Seg sg : film.segs) for (Film.Actor ac : sg.actors) {
             StringBuilder kb = new StringBuilder();
             for (Film.Key k : ac.keys) kb.append(String.format(java.util.Locale.US, " [%.2f b%d s%d a%d%s%s]", k.t, k.body, k.seat, k.anchor, k.eyesShut ? " shut" : "", k.visible ? "" : " hidden"));
             for (Film.Act at : ac.acts) kb.append(String.format(java.util.Locale.US, " {act g%d %.2f-%.2f i%d}", at.type, at.t0, at.t1, at.item));
             System.out.printf("  keys seg %.1f-%.1f ground=%.0f %s:%s%n", sg.t0, sg.t1, sg.ground, ac.c.displayName, kb);
         }
-        if (System.getenv("LINES") != null) {
+        if (env("LINES") != null) {
             for (Film.Weather w : film.weather) System.out.printf("  weather %d %.1f-%.1f x%.2f%n", w.type, w.t0, w.t1, w.strength);
             for (Film.Seg sg : film.segs) for (Film.Fx f : sg.fx) if (f.type >= Film.FX_LIGHTNING) System.out.printf("  fx %d @%.1f-%.1f (%.0f,%.0f)%n", f.type, f.t0, f.t1, f.x, f.y);
         }
-        if (System.getenv("LINES") != null) for (Film.Line l : film.lines)
+        if (env("LINES") != null) for (Film.Line l : film.lines)
             System.out.printf("  line %2d @%6.1f +%4.1f %s: %s%n", l.index, l.start, l.dur, l.who == null ? "-" : l.who.displayName, l.text.substring(0, Math.min(30, l.text.length())));
         SoundLib lib = new SoundLib(new SoundLib.Decoder() {
             public float[] decode(String path) {
                 try {
-                    Process p = new ProcessBuilder("ffmpeg", "-loglevel", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", String.valueOf(Synth.SR), "-").start();
+                    Process p = new ProcessBuilder(FFMPEG, "-loglevel", "error", "-i", path, "-f", "f32le", "-ac", "1", "-ar", String.valueOf(Synth.SR), "-").start();
                     byte[] b = p.getInputStream().readAllBytes();
                     p.waitFor();
                     java.nio.FloatBuffer fb = java.nio.ByteBuffer.wrap(b).order(java.nio.ByteOrder.LITTLE_ENDIAN).asFloatBuffer();
@@ -201,16 +212,16 @@ public class MakeFilm {
         if (!new File(sounds, "index.json").exists()) sounds = new File("app/src/main/assets/sounds");
         if (new File(sounds, "index.json").exists())
             lib.addIndex(new String(Files.readAllBytes(new File(sounds, "index.json").toPath()), "UTF-8"), sounds.getAbsolutePath() + "/");
-        Edits edits = Edits.fromJson(System.getenv().getOrDefault("EDITS", "{}"));
+        Edits edits = Edits.fromJson(envOr("EDITS", "{}"));
         film.subtitles = edits.subtitles;
         short[] pcm = Mixer.mix(film, voices, lib, edits, null);
         File wav = new File(tmp, "mix.wav");
         writeWav(wav, pcm, Synth.SR, Mixer.CHANNELS);
         System.out.println("audio mixed (" + (System.currentTimeMillis() - t0) + "ms)");
-        if (System.getenv("AUDIO_ONLY") != null) { Files.copy(wav.toPath(), new File(out).toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING); return; }
+        if (env("AUDIO_ONLY") != null) { Files.copy(wav.toPath(), new File(out).toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING); return; }
 
         float dur = Math.min(film.duration, maxSec);
-        Process ff = new ProcessBuilder("ffmpeg", "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", width + "x" + height,
+        Process ff = new ProcessBuilder(FFMPEG, "-y", "-loglevel", "error", "-f", "rawvideo", "-pix_fmt", "bgr24", "-s", width + "x" + height,
                 "-r", String.valueOf(fps), "-i", "-", "-i", wav.getAbsolutePath(), "-t", String.valueOf(dur),
                 "-c:v", "libx264", "-preset", "veryfast", "-pix_fmt", "yuv420p", "-crf", "24", "-c:a", "aac", "-b:a", "128k", out)
                 .redirectErrorStream(true).redirectOutput(ProcessBuilder.Redirect.INHERIT).start();
@@ -218,13 +229,13 @@ public class MakeFilm {
         BufferedImage img = new BufferedImage(width, height, BufferedImage.TYPE_3BYTE_BGR);
         AwtGfx g = new AwtGfx(img);
         Renderer r = new Renderer(film, art);
-        r.safeZoneOverlay = System.getenv("SAFEZONE") != null;
+        r.safeZoneOverlay = env("SAFEZONE") != null;
         // v47.7: every character in every frame as drawn, read back after the film (AUDIT=0 skips it)
-        final com.tarun.kahani.core.FrameAudit audit = "0".equals(System.getenv("AUDIT")) ? null : new com.tarun.kahani.core.FrameAudit(fps);
+        final com.tarun.kahani.core.FrameAudit audit = "0".equals(env("AUDIT")) ? null : new com.tarun.kahani.core.FrameAudit(fps);
         r.audit = audit;
         if (stills != null) { lockSheets(dir, film, art, new File(stills), width, height); stillPages(dir, film, art, new File(stills)); }
         // pipeline step 6 (FinalQc): every shot played frame by frame at check size before the film; QC=0 skips it
-        if (!"0".equals(System.getenv().getOrDefault("QC", "1")) && System.getenv("ONLY") == null) {
+        if (!"0".equals(envOr("QC", "1")) && env("ONLY") == null) {
             final int qw = 256, qh = Math.max(96, Math.round(256f * height / width)) & ~1;
             final BufferedImage qimg = new BufferedImage(qw, qh, BufferedImage.TYPE_INT_ARGB);
             final AwtGfx qg = new AwtGfx(qimg);
@@ -247,21 +258,21 @@ public class MakeFilm {
         }
         int frames = (int) (dur * fps);
         long tr = System.currentTimeMillis();
-        int stillEvery = Math.max(1, (int) (fps * Float.parseFloat(System.getenv().getOrDefault("STILL_EVERY", "3"))));
-        float only = Float.parseFloat(System.getenv().getOrDefault("ONLY", "-1"));
+        int stillEvery = Math.max(1, (int) (fps * Float.parseFloat(envOr("STILL_EVERY", "3"))));
+        float only = Float.parseFloat(envOr("ONLY", "-1"));
         // the cinematic finish (filmic curve, bloom, colour script), exactly as on the phone
-        final com.tarun.kahani.core.FilmLook look = System.getenv("NO_LOOK") != null ? null : new com.tarun.kahani.core.FilmLook(width, height);
+        final com.tarun.kahani.core.FilmLook look = env("NO_LOOK") != null ? null : new com.tarun.kahani.core.FilmLook(width, height);
         final com.tarun.kahani.core.FilmLook.Params lp = new com.tarun.kahani.core.FilmLook.Params();
         final int[] lookPx = new int[width * height];
         // pipeline step 8 (FinalQc.Meter): the finished film metered frame by frame as it is written
         final com.tarun.kahani.core.FinalQc.Meter meter = look == null ? null : new com.tarun.kahani.core.FinalQc.Meter(film, width, height, fps);
         if (only >= 0) {
             // just write single frames at the given comma separated times
-            for (String ts : System.getenv("TIMES").split(",")) {
+            for (String ts : env("TIMES").split(",")) {
                 float t = Float.parseFloat(ts);
                 r.render(g, t);
                 if (look != null) finish(img, look, com.tarun.kahani.core.FilmLook.at(film, t, lp), lookPx);
-                boolean png = System.getenv("PNG") != null;
+                boolean png = env("PNG") != null;
                 ImageIO.write(img, png ? "png" : "jpg", new File(stills, String.format(png ? "t_%08.3f.png" : "t_%08.3f.jpg", t)));
             }
             System.out.println("frames written");
@@ -270,8 +281,8 @@ public class MakeFilm {
             return;
         }
         // FROM / TO (seconds): only a stretch of the film, for looking at one moment's motion
-        int f0 = Math.max(0, (int) (Float.parseFloat(System.getenv().getOrDefault("FROM", "0")) * fps));
-        int f1 = Math.min(frames, (int) (Float.parseFloat(System.getenv().getOrDefault("TO", "1e6")) * fps));
+        int f0 = Math.max(0, (int) (Float.parseFloat(envOr("FROM", "0")) * fps));
+        int f1 = Math.min(frames, (int) (Float.parseFloat(envOr("TO", "1e6")) * fps));
         for (int f = f0; f < f1; f++) {
             float t = f / (float) fps;
             r.render(g, t);
@@ -289,13 +300,13 @@ public class MakeFilm {
         if (pdoc != null) {
             pdoc.frameAudit(audited);
             com.tarun.kahani.core.ProductionDocument.RenderRecord rr = pdoc.verifyRender(new File(out), "desktop (ffmpeg)", dur);
-            Files.write(Paths.get(System.getenv("PRODDOC")), pdoc.toJson().getBytes("UTF-8"));
+            Files.write(Paths.get(env("PRODDOC")), pdoc.toJson().getBytes("UTF-8"));
             System.out.println("render " + rr.status + ": " + rr.detail);
         }
         System.out.println("STATS " + com.tarun.kahani.core.Renderer.stats());
         if (meter != null) { film.shotList += meter.report(); System.out.print(meter.report()); }
         if (audited != null) { String at = audited.text(); film.shotList += "\n" + at; System.out.print(at); }
-        if (System.getenv("SHOTS") != null) Files.write(Paths.get(System.getenv("SHOTS")), film.shotList.getBytes("UTF-8"));
+        if (env("SHOTS") != null) Files.write(Paths.get(env("SHOTS")), film.shotList.getBytes("UTF-8"));
     }
 
     /** Pipeline steps 1-2: the Character Lock Sheet of every character (480x640) and the Location Lock Plate of every place, next to the stills. */
@@ -330,7 +341,7 @@ public class MakeFilm {
             BufferedImage img = new BufferedImage(sizes[i][0], sizes[i][1], BufferedImage.TYPE_3BYTE_BGR);
             AwtGfx g = new AwtGfx(img);
             Renderer r = new Renderer(film, art);
-            r.safeZoneOverlay = System.getenv("SAFEZONE") != null;
+            r.safeZoneOverlay = env("SAFEZONE") != null;
             r.renderSeg(g, pages[i], 0.5f);
             com.tarun.kahani.core.FilmLook look = new com.tarun.kahani.core.FilmLook(sizes[i][0], sizes[i][1]);
             finish(img, look, com.tarun.kahani.core.FilmLook.forSeg(pages[i], new com.tarun.kahani.core.FilmLook.Params()), new int[sizes[i][0] * sizes[i][1]]);
@@ -354,9 +365,10 @@ public class MakeFilm {
      * second woman or man of the story in the other voice. A line it cannot speak is left to espeak-ng.
      */
     static float[][] kokoro(Film film, File dir) {
+        if (envHas("KOKORO_CLI")) return kokoroCli(film, dir);
         float[][] out = new float[film.lines.size()][];
         try {
-            String[] k = System.getenv("KOKORO").split(":");
+            String[] k = env("KOKORO").split(":");
             String py = k.length > 2 ? k[2] : "python3";
             File repo = new File(System.getProperty("kahani.assets", "app/src/main/assets")).getAbsoluteFile().getParentFile().getParentFile().getParentFile().getParentFile();
             File script = new File(repo, "tools/tts/kokoro_batch.py");
@@ -385,6 +397,41 @@ public class MakeFilm {
         } catch (Exception e) {
             System.out.println("KOKORO: " + e);
         }
+        return out;
+    }
+
+    /**
+     * v48 (the Windows film maker): each line spoken by sherpa-onnx's own program (sherpa-onnx-offline-tts, Apache-2.0)
+     * with the Kokoro model in KOKORO_DIR (model.onnx, voices.bin, tokens.txt, lexicon-us-en.txt, espeak-ng-data) —
+     * no Python. The same cast, pace and pitch as the other paths.
+     */
+    static float[][] kokoroCli(Film film, File dir) {
+        float[][] out = new float[film.lines.size()][];
+        String cli = env("KOKORO_CLI");
+        File kd = new File(envOr("KOKORO_DIR", "kokoro"));
+        File model = new File(kd, new File(kd, "model.onnx").isFile() ? "model.onnx" : "model.int8.onnx");
+        KokoroCast cast = new KokoroCast();
+        int spoke = 0;
+        String last = "";
+        for (int i = 0; i < out.length; i++) {
+            Film.Line l = film.lines.get(i);
+            File w = new File(dir, "k" + i + ".wav");
+            try {
+                java.util.List<String> cmd = new java.util.ArrayList<String>(java.util.Arrays.asList(cli,
+                        "--kokoro-model=" + model.getAbsolutePath(), "--kokoro-voices=" + new File(kd, "voices.bin").getAbsolutePath(),
+                        "--kokoro-tokens=" + new File(kd, "tokens.txt").getAbsolutePath(), "--kokoro-data-dir=" + new File(kd, "espeak-ng-data").getAbsolutePath(),
+                        "--kokoro-lexicon=" + new File(kd, "lexicon-us-en.txt").getAbsolutePath(), "--kokoro-lang=" + (l.hindi ? "hi" : "en-us"),
+                        "--sid=" + cast.speaker(l), "--kokoro-length-scale=" + String.format(java.util.Locale.US, "%.3f", 1f / Math.max(0.3f, cast.pace(l))),
+                        "--num-threads=2", "--output-filename=" + w.getAbsolutePath(), l.text));
+                Process p = new ProcessBuilder(cmd).redirectErrorStream(true).start();
+                last = new String(p.getInputStream().readAllBytes(), "UTF-8");
+                p.waitFor();
+                if (w.isFile() && w.length() > 1000) { out[i] = cast.shape(l, readWav(w), Synth.SR); spoke++; }
+            } catch (Exception e) {
+                last = e.toString();
+            }
+        }
+        if (spoke == 0) System.out.println("KOKORO: nothing spoken — " + last.substring(Math.max(0, last.length() - 400)).replace('\n', ' '));
         return out;
     }
 
